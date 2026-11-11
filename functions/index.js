@@ -598,6 +598,41 @@ async function saveRecordsDay() {
   for (const k of Object.keys(days).sort().slice(0, -10)) delete days[k];
   await ref.set({ days, at: new Date().toISOString() });
 }
+// Weekly recaps, kept so the site can make the recap picture for any past week. guild/recaps holds
+// open: the snapshot taken at the start of this week { wk, at, rows: { <id>: [level, hk, name, cls] } }, and
+// weeks: { "2026-11-09": recap } for finished weeks (the last 52). When the week turns over, the open week is
+// compared with now and saved. A week that started before this existed is marked partial (it starts at open.at).
+async function saveWeekRecap() {
+  const ref = db().doc("guild/recaps"), cur = (await ref.get()).data() || {}, wk = weekKey(), now = new Date().toISOString();
+  const docs = (await db().collection("members").get()).docs.map(x => ({ id: x.id, d: x.data() || {} }));
+  const rowsNow = {};
+  for (const { id, d } of docs) rowsNow[id] = [+d.level || 1, +((d.armory || {}).hk) || 0, plainName(d).slice(0, 41), String(d.cls || "").slice(0, 12)];
+  const open = cur.open, weeks = { ...(cur.weeks || {}) };
+  if (open && open.wk === wk) return;
+  if (open && open.rows) {
+    const from = open.at, inWeek = t => t && t >= from && t < now;
+    const lev = [], kw = [];
+    let levels = 0, hk = 0, blues = 0, epics = 0;
+    for (const { id, d } of docs) {
+      for (const g of Object.values(d.gear || {})) if (g && g.id) { if (+g.q === 3) blues++; else if (+g.q >= 4) epics++; }
+      const a = open.rows[id]; if (!a) continue;
+      const b = rowsNow[id], dl = Math.max(0, b[0] - a[0]), dk = Math.max(0, b[1] - a[1]);
+      levels += dl; hk += dk;
+      if (dl) lev.push([b[2], b[3], dl]); if (dk) kw.push([b[2], b[3], dk]);
+    }
+    const loot = docs.flatMap(({ d }) => (Array.isArray(d.journey) ? d.journey : [])
+      .filter(j => j && /^Equipped /.test(j.t || "") && j.item && +j.item.q >= 3 && inWeek(j.at))
+      .map(j => [plainName(d).slice(0, 41), String(d.cls || "").slice(0, 12), String(j.t).slice(9, 129), +j.item.q, String(j.item.id || ""), j.at]))
+      .sort((x, y) => y[3] - x[3] || String(y[5]).localeCompare(String(x[5]))).slice(0, 5);
+    const fl = ((await db().doc("guild/firsts").get()).data() || {}).list || {};
+    const firsts = Object.entries(fl).filter(([, f]) => f && !f.by && inWeek(f.at)).map(([k, f]) => [k, f.name || "", f.cls || "", f.at, f.item || null]).slice(0, 6);
+    const top = l => l.sort((x, y) => y[2] - x[2]).slice(0, 5);
+    weeks[open.wk] = { from, to: now, partial: !open.full, totals: { levels, hk, blues, epics }, lev: top(lev), kw: top(kw), loot, firsts };
+    for (const k of Object.keys(weeks).sort().slice(0, -52)) delete weeks[k];
+  }
+  // A week opened by the first run after the week turned over counts as the full week.
+  await ref.set({ open: { wk, at: now, full: !!open, rows: rowsNow }, weeks, at: now });
+}
 async function syncAll() {
   let n = 0, changed = 0; const missing = [];
   await moveAlts().catch(err => logger.warn("moving alts", err.message));
@@ -613,6 +648,7 @@ async function syncAll() {
   }
   await updateFirsts().catch(err => logger.warn("firsts", err.message));
   await saveRecordsDay().catch(err => logger.warn("records", err.message));
+  await saveWeekRecap().catch(err => logger.warn("recaps", err.message));
   const now = new Date().toISOString(), prev = (await db().doc("guild/armory").get()).data() || {};
   // Remember when the guild list was last read, and say so if it couldn't be (Blizzard may have changed their site).
   // missing: characters the armory had no page for this time (new, under level 10, or renamed), so the roster can say so.

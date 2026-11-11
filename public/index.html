@@ -605,6 +605,7 @@ nav.bottom{display:none}
 .rv-v.win{color:var(--text);font-weight:700}
 @media (max-width:360px){nav.bottom a{font-size:.6875rem;letter-spacing:-.01em}.brand b{font-size:1.25rem;line-height:1.5rem}}
 .tab-empty{display:none}
+.recap-img{display:block;width:100%;max-height:55vh;object-fit:contain;border-radius:8px;background:#0f0e0e;border:1px solid var(--b-sub)}
 .rank-l{display:inline-flex;align-items:center;gap:.375rem;margin-top:.25rem;font-size:.8125rem;color:var(--sec);text-decoration:none}
 .rank-l .medal{width:1.125rem;height:1.125rem;font-size:.625rem}
 .rank-l:hover span{text-decoration:underline}.rank-l.spoon{color:var(--ter)}
@@ -1589,7 +1590,7 @@ function guildFeed(){
     races.map(x=>line(x.parts,"now",true)),
     items.length?items.slice(0,n).map(x=>line(x.parts,rel(new Date(x.t).toISOString()))):races.length?null:h("p",{class:"empty"},"Nothing yet. Level up or loot something good and it shows up here."),
     h("div",{class:"row",style:"margin-top:.5rem"},items.length>8?h("button",{class:"btn ghost sm",onclick:()=>setUi({feedAll:!S.ui.feedAll})},S.ui.feedAll?"Show less":"Show more"):null,
-      h("a",{class:"btn ghost sm",href:"#history"},"Full history"),h("button",{class:"btn ghost sm",type:"button",onclick:copyRecap},"Copy weekly recap")))}
+      h("a",{class:"btn ghost sm",href:"#history"},"Full history"),h("button",{class:"btn ghost sm",type:"button",onclick:copyRecap},"Weekly recap")))}
 
 /* ---------- History ---------- */
 // Everything the feed knows, grouped by day. Each character keeps its last 40 moments, so the oldest small ones
@@ -1605,7 +1606,7 @@ function viewHistory(){
   const mark=x=>{if(marked||x.t>lastHere)return null;marked=true;return h("div",{class:"hist-mark"},"You were last here")};
   return[h("div",{class:"page-head"},h("div",{},h("a",{href:"#roster",class:"small"},"← Roster"),h("h1",{},"Guild History"),
       h("p",{class:"sub"},"Everything the site has seen, newest first. The smallest moments fade out over time; the Hall of Firsts keeps the big ones.")),
-      h("button",{class:"btn",type:"button",onclick:copyRecap},"Copy weekly recap")),
+      h("button",{class:"btn",type:"button",onclick:copyRecap},"Weekly recap")),
     // One fold per day: today is open (or the latest day, if nothing has happened today), the rest are rolled up.
     // Days opened or closed by hand stay that way while the page updates. The toggle compares with what's saved now,
     // not what was saved when the fold was drawn, so closing then reopening without a redraw is remembered too.
@@ -1618,11 +1619,9 @@ function viewHistory(){
 /* ---------- Weekly recap ---------- */
 // A picture of the last seven days that anyone can paste into Discord (no webhooks needed): totals, top levellers,
 // most kills, new Hall of Firsts and the best loot found.
-async function recapPng(){
-  await document.fonts.ready.catch(()=>{});
-  const W=1080,since=Date.now()-7*864e5,all=S.members,PAD=72,colW=(W-PAD*2-48)/2;
-  const disp=sz=>`700 ${sz}px "Alegreya Sans SC", Georgia, serif`,body=(w,sz)=>`${w} ${sz}px Figtree, sans-serif`;
-  const QC={2:"#1eff00",3:"#3b9cff",4:"#b968f5",5:"#ff8000"};
+// This week so far, worked out live from everyone's characters.
+function liveRecap(){
+  const since=Date.now()-7*864e5,all=S.members;
   const gear=all.flatMap(m=>Object.values(m.gear||{}).filter(g=>g&&g.id));
   const totals=[["+"+all.reduce((t,m)=>t+weekGained(m),0).toLocaleString("en-AU"),"levels gained"],[String(gear.filter(g=>+g.q===3).length),"blue items on"],
     [String(gear.filter(g=>+g.q>=4).length),"epic items on"],["+"+all.reduce((t,m)=>t+hkWeekOf(m),0).toLocaleString("en-AU"),"honourable kills"]];
@@ -1631,6 +1630,20 @@ async function recapPng(){
   const firsts=FIRSTS.map(([k,l])=>[l,(S.firsts||{})[k]]).filter(([,f])=>f&&!f.by&&Date.parse(f.at)>=since).slice(0,4);
   const loot=all.flatMap(m=>(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Equipped /.test(j.t||"")&&j.item&&+j.item.q>=3&&Date.parse(j.at)>=since).map(j=>[m,j.t.slice(9),+j.item.q,Date.parse(j.at)]))
     .sort((a,b)=>b[2]-a[2]||b[3]-a[3]).slice(0,3);
+  return{from:since+864e5,to:Date.now(),totals,lev,kw,firsts,loot}}
+// A finished week saved by the server (guild/recaps), in the same shape. Characters who've since left keep their name.
+function savedRecap(r){const who=(n,c)=>S.members.find(m=>nameOf(m)===n)||{char:n,cls:c};
+  const t=r.totals||{};
+  return{saved:true,from:Date.parse(r.from),to:Date.parse(r.to),partial:r.partial,
+    totals:[["+"+(+t.levels||0).toLocaleString("en-AU"),"levels gained"],[String(+t.blues||0),"blue items on"],[String(+t.epics||0),"epic items on"],["+"+(+t.hk||0).toLocaleString("en-AU"),"honourable kills"]],
+    lev:(r.lev||[]).slice(0,3).map(([n,c,v])=>[who(n,c),"+"+v]),kw:(r.kw||[]).slice(0,3).map(([n,c,v])=>[who(n,c),(+v).toLocaleString("en-AU")]),
+    firsts:(r.firsts||[]).map(([k,n,c,at,item])=>[(FIRSTS.find(f=>f[0]===k)||[k,k])[1],{name:n,cls:c,at,item}]).slice(0,4),
+    loot:(r.loot||[]).slice(0,3).map(([n,c,name,q])=>[who(n,c),name,q])}}
+async function recapPng(data=liveRecap()){
+  await document.fonts.ready.catch(()=>{});
+  const W=1080,PAD=72,colW=(W-PAD*2-48)/2,{totals,lev,kw,firsts,loot}=data;
+  const disp=sz=>`700 ${sz}px "Alegreya Sans SC", Georgia, serif`,body=(w,sz)=>`${w} ${sz}px Figtree, sans-serif`;
+  const QC={2:"#1eff00",3:"#3b9cff",4:"#b968f5",5:"#ff8000"};
   const ROW=58,SEC=56,cols=lev.length||kw.length;
   const H=PAD+112+48+132+48+(cols?SEC+3*ROW+40:0)+(firsts.length?SEC+firsts.length*ROW+40:0)+(loot.length?SEC+loot.length*ROW+40:0)+(cols||firsts.length||loot.length?0:80)+70;
   const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
@@ -1640,9 +1653,9 @@ async function recapPng(){
   const rr=(X,Y,w,hh,r)=>{x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+hh,r);x.arcTo(X+w,Y+hh,X,Y+hh,r);x.arcTo(X,Y+hh,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath()};
   const icon=await new Promise(ok=>{const im=new Image();im.onload=()=>ok(im);im.onerror=()=>ok(null);im.src="icon.svg";setTimeout(()=>ok(null),3000)});
   let y=PAD;if(icon){x.save();rr(PAD,y,112,112,24);x.clip();x.drawImage(icon,PAD,y,112,112);x.restore()}
-  const from=new Date(since+864e5),to=new Date(),dm=d=>d.toLocaleDateString("en-AU",{day:"numeric",month:"short"});
+  const from=new Date(data.from),to=new Date(data.to-1),dm=d=>d.toLocaleDateString("en-AU",{day:"numeric",month:"short"});
   x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#ece7e7";x.font=disp(64);x.fillText("Blood and Tears",PAD+140,y+62);
-  x.fillStyle="#a29595";x.font=body(400,26);x.fillText("Week recap · "+dm(from)+" to "+dm(to),PAD+140,y+100);
+  x.fillStyle="#a29595";x.font=body(400,26);x.fillText((data.partial?"Part week · ":"Week recap · ")+dm(from)+" to "+dm(to),PAD+140,y+100);
   y+=112+48;
   const tw=(W-PAD*2)/4;rr(PAD,y,W-PAD*2,132,16);x.fillStyle="#171515";x.fill();x.strokeStyle="#332e2e";x.lineWidth=1;x.stroke();
   totals.forEach(([v,l],i)=>{const X=PAD+i*tw;if(i){x.beginPath();x.moveTo(X,y);x.lineTo(X,y+132);x.stroke()}
@@ -1658,9 +1671,9 @@ async function recapPng(){
   if(cols){if(lev.length){head("Top levellers",PAD,y);list(lev,PAD,y,colW)}
     if(kw.length){head("Most kills",PAD+colW+48,y);list(kw,PAD+colW+48,y,colW)}
     y+=SEC+3*ROW+40}
-  if(firsts.length){head("New in the Hall of Firsts",PAD,y);firsts.forEach(([l,f],i)=>{const ry=y+SEC+i*ROW+30,m=memberById(f.id)||{cls:f.cls,name:f.name};if(i)line(PAD,ry-38,W-PAD*2);
+  if(firsts.length){head("New in the Hall of Firsts",PAD,y);firsts.forEach(([l,f],i)=>{const ry=y+SEC+i*ROW+30,m=(f.id&&memberById(f.id))||{cls:f.cls,name:f.name};if(i)line(PAD,ry-38,W-PAD*2);
       x.fillStyle="#a29595";x.font=body(400,26);x.fillText(l,PAD,ry);sq(m,PAD+200,ry);x.fillStyle="#ece7e7";x.font=body(500,26);
-      const nm=memberById(f.id)?nameOf(m):f.name;x.fillText(fit(nm,360),PAD+244,ry);
+      const nm=f.id&&memberById(f.id)?nameOf(m):f.name;x.fillText(fit(nm,360),PAD+244,ry);
       if(f.item&&f.item.name){x.fillStyle=QC[f.item.q]||"#ece7e7";x.fillText(fit("["+f.item.name+"]",W-PAD*2-640),PAD+620,ry)}
       x.fillStyle="#a29595";x.textAlign="right";x.fillText(new Date(f.at).toLocaleDateString("en-AU",{weekday:"short"}),W-PAD,ry);x.textAlign="left"});
     y+=SEC+firsts.length*ROW+40}
@@ -1669,13 +1682,28 @@ async function recapPng(){
     y+=SEC+loot.length*ROW+40}
   if(!cols&&!firsts.length&&!loot.length){x.fillStyle="#a29595";x.font=body(400,26);x.fillText("A quiet week. Go level something.",PAD,y+30);y+=80}
   x.fillStyle="#8a7f7f";x.font=body(400,22);x.fillText("bloodandtears.web.app",PAD,H-40);
-  const rc=raidCountdown().replace(/^Open/,"Raids open");x.font=body(500,22);const rw=x.measureText(rc).width+28;rr(W-PAD-rw,H-70,rw,40,8);x.fillStyle="#33181a";x.fill();
-  x.fillStyle="#f07a6e";x.textAlign="right";x.fillText(rc,W-PAD-14,H-43);x.textAlign="left";
+  // The raid countdown is about now, so only this week's picture shows it.
+  if(!data.saved){const rc=raidCountdown().replace(/^Open/,"Raids open");x.font=body(500,22);const rw=x.measureText(rc).width+28;rr(W-PAD-rw,H-70,rw,40,8);x.fillStyle="#33181a";x.fill();
+  x.fillStyle="#f07a6e";x.textAlign="right";x.fillText(rc,W-PAD-14,H-43);x.textAlign="left"}
   return new Promise(ok=>c.toBlob(ok,"image/png"))}
+// The recap dialog: pick this week or any saved week, see the picture, then copy or download it.
 async function copyRecap(){
-  const blob=await recapPng();if(!blob){toast("Couldn't make the recap picture.");return}
-  try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);toast("Weekly recap copied. Paste it in Discord with Ctrl+V.")}
-  catch(e){const a=h("a",{href:URL.createObjectURL(blob),download:"blood-and-tears-weekly-recap.png"});document.body.append(a);a.click();a.remove();toast("Weekly recap saved as a picture. Drag it into Discord.")}}
+  const dlg=$("#dlg"),f=$("#dlgForm"),weeks=Object.entries(S.recapWeeks||{}).sort((a,b)=>b[0].localeCompare(a[0]));
+  const dm=t=>new Date(t).toLocaleDateString("en-AU",{day:"numeric",month:"short"});
+  const pick=h("select",{id:"recap-week"},h("option",{value:""},"This week so far"),weeks.map(([k,r])=>h("option",{value:k},(r.partial?"Part week: ":"Week of ")+dm(r.from)+" to "+dm(Date.parse(r.to)-1))));
+  const img=h("img",{class:"recap-img",alt:"Weekly recap picture"}),status=h("p",{class:"small ter",role:"status"},"Making the picture…");
+  let blob=null,url="";
+  const draw=async()=>{status.textContent="Making the picture…";const r=pick.value&&S.recapWeeks[pick.value];blob=await recapPng(r?savedRecap(r):liveRecap());
+    if(url)URL.revokeObjectURL(url);url=blob?URL.createObjectURL(blob):"";img.src=url;status.textContent=blob?"":"Couldn't make the picture."};
+  pick.addEventListener("change",draw);
+  const name=()=>"blood-and-tears-recap-"+(pick.value||"this-week")+".png";
+  const save=()=>{if(!blob)return;const a=h("a",{href:url,download:name()});document.body.append(a);a.click();a.remove();toast("Recap saved as a picture. Drag it into Discord.")};
+  const copy=async()=>{if(!blob)return;try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);toast("Recap copied. Paste it in Discord with Ctrl+V.")}catch(e){save()}};
+  f.replaceChildren(h("h1",{style:"font-size:1.8125rem;line-height:2.25rem"},"Weekly Recap"),
+    h("p",{class:"sub"},weeks.length?"Pick a week. Each finished week is saved on Monday.":"Each finished week is saved on Monday, so past weeks show up here after this one ends."),
+    h("label",{class:"f"},"Week",pick),img,status,
+    h("div",{class:"dlg-actions"},h("button",{class:"btn",type:"button",onclick:()=>dlg.close()},"Close"),h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:save},"Download"),h("button",{class:"btn primary",type:"button",onclick:copy},"Copy picture"))));
+  f.onsubmit=e=>e.preventDefault();dlg.showModal();draw()}
 
 /* ---------- Level race ---------- */
 // Friendly, not a pressure board: levels gained this week, or who's furthest along. Mains only.
@@ -2565,6 +2593,7 @@ function subscribe(){
   S.unsub.push(onSnapshot(doc(db,"guild","roster"),snap=>{S.guildRoster=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","armory"),snap=>{S.armoryAll=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","info"),snap=>{S.guild=snap.exists()?snap.data():{};schedule()},()=>{}));
+  S.unsub.push(onSnapshot(doc(db,"guild","recaps"),snap=>{S.recapWeeks=snap.exists()?(snap.data().weeks||{}):{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","records"),snap=>{S.recDays=snap.exists()?(snap.data().days||{}):{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","firsts"),snap=>{const d=snap.exists()?snap.data():{};S.firsts=d.list||{};S.milestones=d.milestones||{};S.firstsReady=true;schedule()},()=>{S.firstsReady=true;schedule()}));
 }
