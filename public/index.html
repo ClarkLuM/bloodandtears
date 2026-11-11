@@ -1790,7 +1790,7 @@ function rangeBoard(){
       return h("div",{class:"dg-item"+(open?" open":"")},
         h("div",{class:"dg-sum",onclick:e=>{if(!e.target.closest("a,button"))setUi({rangeD:open?"-":o.name},true)}},
           h("button",{type:"button",class:"dg-name","aria-expanded":String(!!open),onclick:()=>setUi({rangeD:open?"-":o.name},true)},
-            h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon: it doesn't count toward the Horde Spelunker achievement or give Legacy points."},"Alliance · no Legacy points"):null,mine?h("span",{class:"tag gold"},"Your level"):null),
+            h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon. Horde can run it, but it's a trek to get to, and it doesn't count toward the Horde Spelunker achievement or give Legacy points."},"Alliance · no Legacy points"):null,mine?h("span",{class:"tag gold"},"Your level"):null),
           h("span",{class:"dg-n"+(o.active.length?"":" zero")},h("b",{},String(o.active.length)),h("span",{class:"dg-n-l"}," in range")),
           h("span",{class:"dg-n"+(been?"":" zero")},h("b",{},String(been)),h("span",{class:"dg-n-l"}," been"))),
         open?rangeDetail(o):null)}))}
