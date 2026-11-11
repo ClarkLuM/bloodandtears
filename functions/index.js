@@ -15,7 +15,7 @@ const REGION = "australia-southeast1";
 const SITE = "https://bloodandtears.web.app";
 
 setGlobalOptions({ region: REGION, maxInstances: 2 });
-// Discord posts, the daily digest and slash commands are switched off for now (the code is all kept).
+// Discord posts and the daily digest are switched off for now (the code is kept). The old slash commands were removed (Nov 2026).
 // Set this to true, set the Discord secrets (see README), and deploy to turn them back on.
 // The site's "On Discord" box doesn't use any of this, so it keeps working either way.
 const DISCORD_ON = false;
@@ -315,6 +315,9 @@ async function syncChar(coll, id, data) {
         const capWas = prevA.profMax && prevA.profMax[p], cap = a.profMax[p];
         if (capWas && cap > capWas && RANK_BY_MAX[cap]) journey.unshift({ t: `Trained ${RANK_BY_MAX[cap]} ${p}`, at: now });
       } else if (was && v > was && RANK_OF(v) !== RANK_OF(was)) journey.unshift({ t: `${p} reached ${RANK_OF(v)}`, at: now });
+      // Skill milestones for the feed ("Reached 225 Blacksmithing"). Not for a profession that's brand new to them.
+      const hitSk = NOT_PROFS.includes(p) || !was ? 0 : SKILL_MILESTONES.filter(n => was < n && +v >= n).pop();
+      if (hitSk) { journey.unshift({ t: `Reached ${hitSk} ${p}`, at: now }); changed = true; }
     }
     if (!sameMap(next, data.profs)) { patch.profs = next; changed = true; what.push("professions"); }
   }
@@ -326,8 +329,15 @@ async function syncChar(coll, id, data) {
       patch.gear = a.gear; changed = true; what.push("gear");
     }
   }
+  // Honourable kill milestones for the feed. Not on the first sync, so nobody gets news for kills they already had.
+  if (a.hk !== undefined && prevA.at && prevA.hk !== undefined) {
+    const hitHk = HK_MILESTONES.filter(n => +prevA.hk < n && +a.hk >= n).pop();
+    if (hitHk) { journey.unshift({ t: `Reached ${hitHk} honourable kills`, at: now }); changed = true; what.push("honourable kills"); }
+  }
   if (a.rank && prevA.rank !== undefined && a.rank > +prevA.rank) { journey.unshift({ t: "Reached PvP " + pvpRankName(a.rank), at: now }); changed = true; what.push("PvP rank"); }
   if (changed) { patch.updatedAt = now; patch.journey = journey.slice(0, 40); }
+  // What the last sync that changed something changed, so the character page can say so.
+  if (what.length) A.change = { at: now, what: what.slice(0, 8) };
   await db().doc(`${coll}/${id}`).update(patch);
   return { found: true, level: lv, from: old, raised: lv > old, changed: what, updated: a.updated || "" };
 }
@@ -506,6 +516,7 @@ async function moveAlts() {
 // from when they were added, marked "by" that date; if several were added together, whoever was furthest ahead wins.
 // The rest is "first seen with it", so it's as exact as the hourly check.
 const FIRST_LEVELS = [10, 20, 30, 40, 50, 60];
+const SKILL_MILESTONES = [75, 150, 225, 300];
 const NOT_PROFS = ["Lockpicking", "Comprehension"];
 const lvOfText = t => +String(t || "").replace(/\D/g, "");
 const plainName = d => (d.first ? `${d.first} ${d.last || ""}`.trim() : String(d.char || "")) || "Someone";
@@ -567,23 +578,45 @@ async function updateFirsts() {
   if (changed) await ref.set({ list, start, milestones: ms, at: now });
   return list;
 }
+// Records "This week": once a day, each character's level, honourable kills, loot points and profession skills,
+// so the site can show who moved up. guild/records = { days: { "2026-11-12": { <id>: [level, hk, loot, {prof: skill}] } } },
+// the last 10 days only (about 5 KB a day for 50 characters).
+const perthDay = () => new Date(Date.now() + 8 * 36e5).toISOString().slice(0, 10);
+async function saveRecordsDay() {
+  const ref = db().doc("guild/records"), cur = (await ref.get()).data() || {}, key = perthDay();
+  const days = { ...(cur.days || {}) };
+  if (days[key]) return;
+  const row = {};
+  for (const doc of (await db().collection("members").get()).docs) {
+    const d = doc.data() || {}, a = d.armory || {};
+    const loot = Object.values(d.gear || {}).reduce((t, g) => t + (g && g.id ? Math.max(0, +g.q - 1) : 0), 0);
+    const profs = {};
+    for (const [p, v] of Object.entries(d.profs || {})) if (!NOT_PROFS.includes(p) && +v > 0) profs[p] = +v;
+    row[doc.id] = [+d.level || 1, +a.hk || 0, loot, profs];
+  }
+  days[key] = row;
+  for (const k of Object.keys(days).sort().slice(0, -10)) delete days[k];
+  await ref.set({ days, at: new Date().toISOString() });
+}
 async function syncAll() {
-  let n = 0, changed = 0;
+  let n = 0, changed = 0; const missing = [];
   await moveAlts().catch(err => logger.warn("moving alts", err.message));
   const roster = await syncRoster();
   await updateOfficers().catch(err => logger.warn("officers", err.message));
   for (const coll of ["members", "alts"]) {
     const snap = await db().collection(coll).get();
     for (const d of snap.docs) {
-      try { const r = await syncChar(coll, d.id, d.data()); n++; if (r && (r.changed || []).length) changed++; }
+      try { const r = await syncChar(coll, d.id, d.data()); n++; if (r && (r.changed || []).length) changed++; if (r && !r.found) missing.push(plainName(d.data()).slice(0, 41)); }
       catch (e) { logger.warn("armory sync failed", d.id, e.message); }
       await new Promise(r => setTimeout(r, 400)); // be gentle with Blizzard's site
     }
   }
   await updateFirsts().catch(err => logger.warn("firsts", err.message));
+  await saveRecordsDay().catch(err => logger.warn("records", err.message));
   const now = new Date().toISOString(), prev = (await db().doc("guild/armory").get()).data() || {};
   // Remember when the guild list was last read, and say so if it couldn't be (Blizzard may have changed their site).
-  await db().doc("guild/armory").set({ at: now, checked: n, changed, roster: roster ? { ...roster, at: now } : { ...(prev.roster || {}), error: now } });
+  // missing: characters the armory had no page for this time (new, under level 10, or renamed), so the roster can say so.
+  await db().doc("guild/armory").set({ at: now, checked: n, changed, missing: missing.slice(0, 20), missingN: missing.length, roster: roster ? { ...roster, at: now } : { ...(prev.roster || {}), error: now } });
   return { checked: n, changed, roster };
 }
 // Every hour, check everyone.
@@ -611,125 +644,5 @@ exports.armorySync = onCall({ region: REGION, maxInstances: 2, timeoutSeconds: 3
   return r;
 });
 
-// ---------- Discord slash commands ----------
-// A Discord app (Developer Portal) points its Interactions Endpoint URL at discordInteractions. Discord sends each
-// command here; nothing runs between commands, so there's no bot to keep online. Secrets: DISCORD_APP_ID,
-// DISCORD_PUBLIC_KEY (both from the app's General Information page) and DISCORD_BOT_TOKEN (Bot page, used only to
-// install the commands on a server).
-const { onRequest } = require("firebase-functions/v2/https");
-const DC_APP = dcSecret("DISCORD_APP_ID"), DC_KEY = dcSecret("DISCORD_PUBLIC_KEY"), DC_TOKEN = dcSecret("DISCORD_BOT_TOKEN");
-const DUNGEONS = [["Ragefire Chasm","13–18"],["Hall of Thanes","13–18"],["Ruins of Lordaeron","15–20"],["The Deadmines","15–22"],["Wailing Caverns","17–24"],
-  ["Shadowfang Keep","20–26"],["Blackfathom Deeps","22–28"],["Excavation Site: Wetlands","24–29"],["The Stockade","25–29"],["City of Dalaran","28–33"],
-  ["Gnomeregan","29–38"],["Razorfen Kraul","29–38"],["Scarlet Monastery: Graveyard","30–38"],["Scarlet Monastery: Library","33–41"],["The Drowned City","35–40"],
-  ["Scarlet Monastery: Armory","36–44"],["Uldaman","36–45"],["Razorfen Downs","37–46"],["Scarlet Monastery: Cathedral","38–46"],["Zul'Farrak","40–47"],
-  ["Krol'Dok Stronghold","40–45"],["Maraudon","45–51"],["Alcaz Island Prison","48–53"],["Sunken Temple","50–55"],["Blackrock Depths","52–60"],
-  ["Blackmaw Hold","55–60"],["Lower Blackrock Spire","57–60"],["Dire Maul: East","58–60"],["Shaper's Terrace","58–60"],["Stratholme: Living","58–60"],
-  ["Stratholme: Undead","58–60"],["Scholomance","58–60"],["Upper Blackrock Spire","60"],["Dire Maul: West","60"],["Dire Maul: North","60"]];
-const CLASS_HEX = { Warrior: 0xC69B6D, Paladin: 0xF48CBA, Hunter: 0xAAD372, Rogue: 0xFFF468, Priest: 0xFFFFFF, Shaman: 0x0070DD, Mage: 0x3FC7EB, Warlock: 0x8788EE, Druid: 0xFF7C0A };
-const rangeOf = r => { const m = /^(\d+)(?:–(\d+))?$/.exec(r || ""); return m ? [+m[1], +(m[2] || m[1])] : null; };
-const WHEN = [["now", "Now"], ["1h", "In an hour"], ["2h", "In two hours"], ["t19", "Today 7pm"], ["t20", "Today 8pm"], ["m19", "Tomorrow 7pm"], ["m20", "Tomorrow 8pm"]];
-const COMMANDS = [
-  { name: "card", description: "Show a guildie's character card", options: [{ type: 3, name: "name", description: "Character name", required: true, autocomplete: true }] },
-  { name: "who", description: "Who's in range for a dungeon", options: [{ type: 3, name: "dungeon", description: "Dungeon", required: true, autocomplete: true }] },
-  { name: "lfg", description: "Post a group on the guild site", options: [
-    { type: 3, name: "dungeon", description: "Dungeon (or type anything)", required: true, autocomplete: true },
-    { type: 3, name: "when", description: "When", required: false, choices: WHEN.map(([value, name]) => ({ name, value })) },
-    { type: 3, name: "note", description: "A short note, like 'need a healer'", required: false, max_length: 140 },
-    { type: 3, name: "character", description: "Which of your characters (if you have more than one)", required: false, autocomplete: true }] },
-  { name: "link", description: "Link your Discord to your character on the guild site", options: [
-    { type: 3, name: "code", description: "The code from 'Link Discord' on your character page", required: true, min_length: 6, max_length: 6 }] }];
-const charName = c => c.first ? `${c.first} ${c.last || ""}`.trim() : String(c.char || "Someone");
-const reply = (res, content, extra = {}) => res.json({ type: 4, data: { content, allowed_mentions: { parse: [] }, ...extra } });
-const secret = (res, content) => reply(res, content, { flags: 64 }); // only the person who typed it sees it
-function verifyDiscord(req) {
-  try {
-    const sig = req.get("x-signature-ed25519"), ts = req.get("x-signature-timestamp");
-    if (!sig || !ts || !req.rawBody) return false;
-    const crypto = require("crypto");
-    const key = crypto.createPublicKey({ key: { kty: "OKP", crv: "Ed25519", x: Buffer.from(DC_KEY.value().trim(), "hex").toString("base64url") }, format: "jwk" });
-    return crypto.verify(null, Buffer.concat([Buffer.from(ts), req.rawBody]), key, Buffer.from(sig, "hex"));
-  } catch (e) { logger.warn("discord signature", e.message); return false; }
-}
-// Times for /lfg, in the character's own time zone (AWST, ACST or AEST, with daylight saving where they use it).
-function whenIso(code, c) {
-  const now = Date.now(); if (!code || code === "now") return new Date(now).toISOString();
-  if (code === "1h" || code === "2h") return new Date(now + (code === "1h" ? 1 : 2) * 36e5).toISOString();
-  const base = { AWST: 8, ACST: 9.5, AEST: 10 }[c.tz] || 8, off = base + (c.tz !== "AWST" && c.dst ? 1 : 0);
-  const local = new Date(now + off * 36e5); if (code[0] === "m") local.setUTCDate(local.getUTCDate() + 1);
-  local.setUTCHours(+code.slice(1), 0, 0, 0); return new Date(local.getTime() - off * 36e5).toISOString();
-}
-const statLine = a => { const s = (a && a.stats) || {}; return [s.health ? `${Math.round(s.health).toLocaleString("en-AU")} HP` : "", a && a.ilvl ? `item level ${a.ilvl}` : "", a && a.hk ? `${a.hk} kills` : ""].filter(Boolean).join(" · "); };
-exports.discordInteractions = onRequest({ region: REGION, secrets: DISCORD_ON ? [DC_KEY] : [], maxInstances: 3, timeoutSeconds: 10 }, async (req, res) => {
-  if (req.method !== "POST" || !verifyDiscord(req)) { res.status(401).send("bad signature"); return; }
-  const i = req.body || {};
-  if (i.type === 1) { res.json({ type: 1 }); return; } // Discord checking the URL works
-  const cmd = i.data && i.data.name, opts = Object.fromEntries(((i.data && i.data.options) || []).map(o => [o.name, o.value]));
-  const user = (i.member && i.member.user) || i.user || {};
-  const members = () => db().collection("members").get().then(s => s.docs.map(d => ({ id: d.id, ...d.data() })));
-  try {
-    // Autocomplete: names and dungeons as you type.
-    if (i.type === 4) {
-      const focus = ((i.data.options || []).find(o => o.focused) || {}), q = String(focus.value || "").toLowerCase();
-      let list = [];
-      if (focus.name === "dungeon") list = DUNGEONS.filter(([n]) => n.toLowerCase().includes(q)).map(([n, r]) => ({ name: `${n} (${r})`, value: n }));
-      else if (focus.name === "character") list = (await members()).filter(c => c.discordId === user.id).map(c => ({ name: charName(c), value: c.id }));
-      else list = (await members()).filter(c => charName(c).toLowerCase().includes(q)).sort((a, b) => (+b.level || 0) - (+a.level || 0)).map(c => ({ name: `${charName(c)} · ${c.level || 1}`, value: charName(c) }));
-      res.json({ type: 8, data: { choices: list.slice(0, 25) } }); return;
-    }
-    if (cmd === "card") {
-      const q = String(opts.name || "").toLowerCase(), all = await members();
-      const c = all.find(x => charName(x).toLowerCase() === q) || all.find(x => charName(x).toLowerCase().includes(q));
-      if (!c) return secret(res, `Couldn't find "${clean(opts.name)}" on the guild site.`);
-      const a = c.armory || {}, profs = Object.entries(c.profs || {}).sort((x, y) => y[1] - x[1]).slice(0, 2).map(([p, v]) => `${p} ${v}`).join(" · ");
-      const pic = typeof a.avatar === "string" && /^https:\/\/render\.worldofwarcraft\.com\//.test(a.avatar) ? a.avatar : "";
-      return reply(res, "", { embeds: [{ title: charName(c), url: `${SITE}/#char/members/${c.id}`, color: CLASS_HEX[c.cls] || GOLD,
-        description: `Level ${c.level || 1} ${[c.race, c.spec || (a.spec || ""), c.cls].filter(Boolean).join(" ")} · ${c.role || "DPS"}${c.role2 ? " / " + c.role2 : ""}`,
-        fields: [statLine(a) ? { name: "Stats", value: statLine(a), inline: true } : null, profs ? { name: "Professions", value: profs, inline: true } : null].filter(Boolean),
-        ...(pic ? { thumbnail: { url: pic } } : {}), footer: { text: "Blood and Tears" } }] });
-    }
-    if (cmd === "who") {
-      const d = DUNGEONS.find(([n]) => n.toLowerCase() === String(opts.dungeon || "").toLowerCase()) || DUNGEONS.find(([n]) => n.toLowerCase().includes(String(opts.dungeon || "").toLowerCase()));
-      if (!d) return secret(res, "Pick a dungeon from the list.");
-      const [lo, hi] = rangeOf(d[1]), ppl = (await members()).filter(c => +c.level >= lo && +c.level <= hi).sort((a, b) => (+b.level || 0) - (+a.level || 0));
-      const roles = ["Tank", "Healer", "DPS"].map(r => { const n = ppl.filter(c => c.role === r || c.role2 === r).length; return `${n} ${r === "DPS" ? "DPS" : r.toLowerCase() + (n === 1 ? "" : "s")}`; }).join(" · ");
-      return reply(res, "", { embeds: [{ title: `Who's in range for ${d[0]} (${d[1]})`, url: `${SITE}/#lfg`, color: GOLD,
-        description: ppl.length ? `${roles}\n\n` + ppl.slice(0, 25).map(c => `**${clean(charName(c))}** · ${c.role || "DPS"}${c.role2 ? "/" + c.role2 : ""} ${c.level}`).join("\n") : "Nobody's at the right level yet." }] });
-    }
-    if (cmd === "link") {
-      const code = String(opts.code || "").toUpperCase().replace(/[^A-Z0-9]/g, ""), ref = db().doc(`dlinks/${code}`), l = (await ref.get()).data();
-      if (!l || !l.member) return secret(res, "That code didn't work. On the guild site, open your character and tap Link Discord for a new one.");
-      await db().doc(`members/${l.member}`).update({ discordId: String(user.id) }); await ref.delete();
-      const c = (await db().doc(`members/${l.member}`).get()).data() || {};
-      return secret(res, `Linked! You're **${clean(charName(c))}**. Now try \`/lfg\`.`);
-    }
-    if (cmd === "lfg") {
-      const mine = (await members()).filter(c => c.discordId === String(user.id)).sort((a, b) => (+b.level || 0) - (+a.level || 0));
-      if (!mine.length) return secret(res, `Link your character first: on ${SITE}, open your character, tap **Link Discord**, then type \`/link\` with the code.`);
-      const c = mine.find(x => x.id === opts.character) || mine[0];
-      const d = DUNGEONS.find(([n]) => n.toLowerCase() === String(opts.dungeon || "").toLowerCase());
-      const goal = { id: Math.random().toString(36).slice(2, 10), ...(d ? { kind: "dungeon", t: d[0], range: d[1] } : { kind: "other", t: String(opts.dungeon || "").slice(0, 80) }),
-        lfg: true, done: false, at: new Date().toISOString(), when: whenIso(opts.when, c), ...(opts.note ? { note: String(opts.note).slice(0, 140) } : {}) };
-      const goals = Array.isArray(c.goals) ? c.goals : [];
-      if (goals.length >= 50) return secret(res, "That character has 50 goals. Clear some finished ones on the site first.");
-      await db().doc(`members/${c.id}`).update({ goals: [...goals, goal], updatedAt: new Date().toISOString() });
-      return secret(res, `Posted **${clean(goal.t)}** for ${clean(charName(c))}, <t:${Math.floor(Date.parse(goal.when) / 1000)}:R>. It's on the site's Groups page and in the LFG channel.`);
-    }
-    return secret(res, "I don't know that command yet.");
-  } catch (e) { logger.error("discord command failed", cmd, e.message); return secret(res, "Something went wrong. Try again in a moment."); }
-});
-// Officers install (or update) the commands on a server from the site. The app must be added to that server first.
-exports.discordRegister = onCall({ region: REGION, secrets: DISCORD_ON ? [DC_APP, DC_TOKEN] : [] }, async req => {
-  if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
-  const off = (await db().doc("guild/officers").get()).data() || {};
-  if (!(off.uids || []).includes(req.auth.uid)) throw new HttpsError("permission-denied", "Only officers can do that.");
-  const app = DC_APP.value().trim(), guild = String((req.data && req.data.guild) || "").replace(/\D/g, "");
-  const invite = `https://discord.com/oauth2/authorize?client_id=${app}&scope=applications.commands`;
-  if (!guild) return { ok: false, invite };
-  const r = await fetch(`https://discord.com/api/v10/applications/${app}/guilds/${guild}/commands`, { method: "PUT",
-    headers: { authorization: "Bot " + DC_TOKEN.value().trim(), "content-type": "application/json" }, body: JSON.stringify(COMMANDS) });
-  if (!r.ok) { const t = await r.text(); logger.warn("discord register", r.status, t); return { ok: false, status: r.status, invite, error: r.status === 403 || r.status === 50001 ? "The app isn't on that server yet." : t.slice(0, 200) }; }
-  return { ok: true, invite, count: COMMANDS.length };
-});
-
 // While Discord is off, these aren't deployed at all, so deploys don't need the Discord secrets.
-if (!DISCORD_ON) for (const k of ["newMember", "memberChanged", "altChanged", "dailyDigest", "discordInteractions", "discordRegister"]) delete exports[k];
+if (!DISCORD_ON) for (const k of ["newMember", "memberChanged", "altChanged", "dailyDigest"]) delete exports[k];

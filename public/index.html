@@ -460,6 +460,7 @@ nav.bottom{display:none}
   .char-tabs{display:block;position:sticky;top:0;z-index:5;background:var(--base);padding:.5rem 0}
   .profile[data-tab="overview"] [data-sec]:not([data-sec="overview"]),.profile[data-tab="gear"] [data-sec]:not([data-sec="gear"]),
   .profile[data-tab="profs"] [data-sec]:not([data-sec="profs"]){display:none}
+  .profile .tab-empty{display:flex}
 }
 /* Since you were last here */
 .since{border-color:var(--accent-b);background:linear-gradient(100deg,var(--accent-subtle),var(--raised) 70%);gap:.625rem}
@@ -490,6 +491,7 @@ nav.bottom{display:none}
 .r-top{display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:center}
 /* Dungeons: who's been, what drops */
 .dg-list{margin-top:1rem;padding:0;gap:0}.dg-list-head{padding:1.25rem 1.25rem .75rem}
+.dg-ach{margin:.5rem 0 0}.dg-ach b{color:var(--sec)}
 .dg-bands{margin-top:.75rem;overflow-x:auto;max-width:100%}.dg-bands .seg span{color:var(--ter);font-variant-numeric:tabular-nums}
 .dg-cols,.dg-sum{display:grid;grid-template-columns:minmax(0,1fr) 7rem 5rem;gap:1rem;align-items:center;padding:0 1.25rem}
 .dg-cols{padding-bottom:.375rem;border-bottom:1px solid var(--sep)}.dg-cols span+span,.dg-n{text-align:right}
@@ -517,7 +519,7 @@ nav.bottom{display:none}
 .pf-sk{font-size:.875rem;color:var(--sec);font-variant-numeric:tabular-nums}.pf-sk.max{color:var(--accent-text);font-weight:600}
 .pf-more{align-self:flex-start;margin-left:-.75rem}
 .dg-block{display:flex;flex-direction:column;gap:.5rem;padding-top:.75rem;border-top:1px solid var(--sep)}
-.dg-h{display:flex;align-items:baseline;gap:.5rem;font-size:1rem;line-height:1.375rem;margin:0}
+.dg-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .5rem;font-size:1rem;line-height:1.375rem;margin:0}
 .dg-loot>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem}
 .dg-loot>summary::-webkit-details-marker{display:none}
 .dg-loot>summary::before{content:"";width:.4375rem;height:.4375rem;border-right:2px solid var(--ter);border-bottom:2px solid var(--ter);transform:rotate(-45deg);transition:transform .15s}
@@ -557,7 +559,7 @@ nav.bottom{display:none}
 .rec-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .rec-row{display:flex;align-items:center;gap:.625rem;min-height:2.5rem;padding:.25rem .375rem;border-radius:6px}
 .rec-row.me{background:color-mix(in srgb,var(--accent) 12%,transparent)}
-.rec-who{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem .5rem;flex:1;min-width:0}.rec-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec-who{display:flex;align-items:center;gap:.5rem;flex:1;min-width:0}.rec-who .tag{flex:none}.rec-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rec-v{font-variant-numeric:tabular-nums;color:var(--sec);white-space:nowrap;font-size:.875rem}
 .rec-gap{color:var(--ter);padding-left:.875rem;line-height:1rem;font-size:.75rem}
 .spoon-tag{white-space:nowrap}
@@ -580,10 +582,33 @@ nav.bottom{display:none}
   .rp-who{flex-direction:row;align-items:baseline;gap:.5rem}.rp-c.empty{display:none}
   .rp-c.spoon{margin-top:.125rem}.rp-c.spoon .rp-spoon{display:inline;font-size:.75rem;color:var(--ter);white-space:nowrap}
   .rp-c .medal{width:1.25rem;height:1.25rem;font-size:.6875rem}}
+.arm-line{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .875rem;margin:0}.arm-bits span+span::before{content:"·";margin:0 .5rem;color:var(--ter)}
+@media (max-width:600px){.arm-bits{display:flex;flex-direction:column;gap:.125rem;flex-basis:100%}.arm-bits span+span::before{content:none}}
+.miss-btn{font:inherit;cursor:pointer;border:0;color:inherit;position:relative}.miss-btn::after{content:"";position:absolute;inset:-.625rem -.25rem}.miss-list{flex-basis:100%;color:var(--sec)}
+.wk{gap:.75rem}.wk-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.wk-list li{display:flex;align-items:center;gap:.75rem;min-height:2.5rem;padding:.25rem 0;border-top:1px solid var(--sep)}.wk-list li:first-child{border-top:0}
+.wk-b{flex:none;display:inline-grid;place-items:center;min-width:3rem;height:1.5rem;padding:0 .375rem;border-radius:999px;font-size:.75rem;font-weight:700;font-variant-numeric:tabular-nums;background:var(--sunken);color:var(--sec)}
+.wk-b.crown{background:none;padding:0}.wk-b.up{color:#7fd69a}:root[data-theme="light"] .wk-b.up{color:#2a7d12}
+.titles{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.25rem}
+.title-tag{display:inline-flex;align-items:center;gap:.375rem;padding:.125rem .625rem .125rem .5rem;border-radius:999px;font-size:.8125rem;font-weight:600;text-decoration:none;color:#f3d48a;background:rgb(226 181 82/.12);border:1px solid rgb(226 181 82/.35)}
+:root[data-theme="light"] .title-tag{color:#7a5410;background:rgb(226 181 82/.18);border-color:rgb(184 140 40/.5)}
+.title-tag:hover{text-decoration:underline}
+.title-ic{width:.625rem;height:.625rem;background:currentColor;clip-path:polygon(0 100%,0 25%,25% 55%,50% 0,75% 55%,100% 25%,100% 100%)}
+.rv{gap:.75rem}.rv select{max-width:14rem}
+.rv-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:.75rem}
+.rv-who{display:flex;align-items:center;gap:.5rem;min-width:0}.rv-who.r{justify-content:flex-end}.rv-who b,.rv-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rv-score{align-self:center;text-align:center;font-size:.875rem;font-weight:700;padding:.375rem .875rem;border-radius:999px;background:var(--sunken)}.rv-score.win{color:#7fd69a}.rv-score.lose{color:var(--accent-text)}
+:root[data-theme="light"] .rv-score.win{color:#2a7d12}
+.rv-list{list-style:none;margin:0;padding:0}
+.rv-row{display:grid;grid-template-columns:4.5rem minmax(0,1fr) 4.5rem;align-items:center;gap:.5rem;min-height:2.25rem;border-top:1px solid var(--sep)}
+.rv-l{text-align:center;font-size:.8125rem;color:var(--sec)}.rv-v{font-variant-numeric:tabular-nums;color:var(--ter)}.rv-row .rv-v:last-child{text-align:right}
+.rv-v.win{color:var(--text);font-weight:700}
+@media (max-width:360px){nav.bottom a{font-size:.6875rem;letter-spacing:-.01em}.brand b{font-size:1.25rem;line-height:1.5rem}}
+.tab-empty{display:none}
 .rank-l{display:inline-flex;align-items:center;gap:.375rem;margin-top:.25rem;font-size:.8125rem;color:var(--sec);text-decoration:none}
 .rank-l .medal{width:1.125rem;height:1.125rem;font-size:.625rem}
 .rank-l:hover span{text-decoration:underline}.rank-l.spoon{color:var(--ter)}
-.stats .rank-l{grid-column:auto}
+.stats .rank-l{grid-column:auto}.stats .rank-l,.stats .rank-l.spoon{color:#b3a9a9}
 /* Who can make it */
 .rc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .rc{display:flex;flex-direction:column;gap:.375rem;padding:.625rem 0;border-top:1px solid var(--sep)}
@@ -677,8 +702,6 @@ import * as cfg from "./firebase-config.js";
 const firebaseConfig=cfg.firebaseConfig;
 // Officers are listed by character ID (shown on your own character page). Keep in sync with firestore.rules.
 const OFFICER_CHARS=Array.isArray(cfg.OFFICER_CHARS)?cfg.OFFICER_CHARS:[];
-// Discord posts and slash commands are off for now (the site's "On Discord" box still works). Match functions/index.js.
-const DISCORD_ON=false;
 const DISCORD_SERVER_ID=/^\d{15,22}$/.test(String(cfg.DISCORD_SERVER_ID||""))?String(cfg.DISCORD_SERVER_ID):"";
 
 /* ---------- game data ---------- */
@@ -708,7 +731,7 @@ const DUNGEONS=[["Ragefire Chasm","13–18"],["Hall of Thanes","13–20"],["Ruin
   ["Scarlet Monastery: Armory","36–44"],["Razorfen Downs","37–46"],["Scarlet Monastery: Cathedral","38–46"],["Krol'Dok Stronghold","40–47"],["Uldaman","41–51"],
   ["Zul'Farrak","44–54"],["Maraudon","46–55"],["Alcaz Island Prison","48–55"],["Sunken Temple","50–60"],["Blackrock Depths","52–60"],
   ["Dire Maul: East","54–60"],["Lower Blackrock Spire","55–60"],["Blackmaw Hold","55–60"],["Dire Maul: West","56–60"],["Dire Maul: North","56–60"],
-  ["Shaper's Terrace","58–60"],["Stratholme: Living","58–60"],["Stratholme: Undead","58–60"],["Scholomance","58–60"],["Upper Blackrock Spire","59–60"]];
+  ["Shaper's Terrace","58–60"],["Stratholme: Living","58–60"],["Stratholme: Undead","58–60"],["Scholomance","58–60"],["Upper Blackrock Spire","55–60"]];
 // Boss drops that only one dungeon has, by item name: [dungeon, boss]. Wearing or having looted one means the
 // character has very likely been there, so the passport stamps it automatically.
 /* DUNGEON_LOOT:start (built by tools/dungeon-loot/build.py; edit the lists, not this line) */
@@ -1530,6 +1553,8 @@ function feedItems(){
       else if(/^Trained /.test(t))push(j.at,[who(m)," trained "+t.slice(8)]);
       else if(/ reached (Apprentice|Journeyman|Expert|Artisan)$/.test(t)){const i=t.lastIndexOf(" reached "),r=t.slice(i+9);push(j.at,[who(m)," is now "+(/^[AEIOU]/.test(r)?"an ":"a ")+r+" in "+t.slice(0,i)])}
       else if(/^Joined /.test(t))push(j.at,[who(m)," joined "+t.slice(7)]);
+      else if(/^Reached \d+ honourable kills$/.test(t))push(j.at,[who(m)," hit ",h("b",{},(+t.split(" ")[1]).toLocaleString("en-AU")+" honourable kills")]);
+      else if(/^Reached \d+ .+$/.test(t)){const x=/^Reached (\d+) (.+)$/.exec(t);push(j.at,[who(m)," reached ",h("b",{},x[1])," in "+x[2]])}
       else if(t)push(j.at,[who(m),": "+t])}
     if(m.createdAt)push(m.createdAt,[who(m)," joined the roster"])
   }
@@ -1743,20 +1768,23 @@ function rangeBoard(){
   const all=DUNGEONS.map(([name,range])=>{const r=rangeOf(range);if(!r)return null;
     const ppl=chars.filter(m=>{const lv=+m.level||1;return lv>=r[0]&&lv<=r[1]}).sort(sortPpl);
     return{name,range,ppl,active:ppl.filter(p=>!isAway(p))}}).filter(Boolean);
-  // Level bands keep the list short. It starts on the band for your level; "All" shows every dungeon.
-  const bandOf=x=>DG_BANDS.filter(b=>rangeOf(x.range)[0]>=b[1]).pop()[0];
-  const myBand=my?DG_BANDS.filter(b=>(+my.level||1)>=b[1]).pop()[0]:DG_BANDS[0][0];
-  const band=S.ui.dgBand&&(S.ui.dgBand==="All"||DG_BANDS.some(b=>b[0]===S.ui.dgBand))?S.ui.dgBand:myBand;
+  // Grouped like the game's Spelunker achievements. Opens on the first group with a dungeon at your level.
+  const bandOf=x=>(DG_GROUPS.find(g=>g[2]&&g[2].includes(x.name))||DG_GROUPS[DG_GROUPS.length-1])[0];
+  const lv=my?+my.level||1:0,fits=x=>{const r=rangeOf(x.range);return r&&lv>=r[0]&&lv<=r[1]};
+  const myBand=(my&&DG_GROUPS.find(g=>all.some(x=>bandOf(x)===g[0]&&fits(x)))||DG_GROUPS[0])[0];
+  const band=S.ui.dgGroup&&(S.ui.dgGroup==="All"||DG_GROUPS.some(b=>b[0]===S.ui.dgGroup))?S.ui.dgGroup:myBand;
   const opts=band==="All"?all:all.filter(x=>bandOf(x)===band);
-  const head=h("div",{},h("h2",{id:"range-h"},"Dungeons by Level"),
+  const head=h("div",{},h("h2",{id:"range-h"},"Dungeons"),
     h("p",{class:"sub"},"How many of the guild are the right level and how many have been. Open one to see who, and what drops."));
   if(!opts.length)return h("section",{class:"card","aria-labelledby":"range-h",style:"gap:.75rem;margin-top:1rem"},head,h("p",{class:"empty"},"Nobody else is in range of a dungeon at your level yet."));
   // Start on the saved pick, else the busiest dungeon at your level, else the busiest one overall.
   const busiest=list=>list.slice().sort((a,b)=>b.active.length-a.active.length)[0];
   // "-" means they closed every dungeon on purpose.
   const x=S.ui.rangeD==="-"?null:opts.find(o=>o.name===S.ui.rangeD)||(my&&busiest(opts.filter(o=>o.ppl.some(isMine))))||busiest(opts);
-  const bandSeg=seg("Levels",[...DG_BANDS.map(([k])=>[k,k,all.filter(x=>bandOf(x)===k).length]),["All","All"]],band,k=>setUi({dgBand:k},true));
-  return h("section",{class:"card dg-list","aria-labelledby":"range-h"},h("div",{class:"dg-list-head"},head,h("div",{class:"dg-bands"},bandSeg)),
+  const bandSeg=seg("Achievement",[...DG_GROUPS.map(([k,l])=>[k,l,all.filter(x=>bandOf(x)===k).length]),["All","All"]],band,k=>setUi({dgGroup:k},true));
+  return h("section",{class:"card dg-list","aria-labelledby":"range-h"},h("div",{class:"dg-list-head"},head,h("div",{class:"dg-bands"},bandSeg),
+    band!=="All"?h("p",{class:"small ter dg-ach"},(()=>{const g=DG_GROUPS.find(x=>x[0]===band),l=all.filter(x=>bandOf(x)===band).map(x=>rangeOf(x.range));
+      return["Counts toward ",h("b",{},g[3])," · levels "+Math.min(...l.map(r=>r[0]))+"–"+Math.max(...l.map(r=>r[1]))]})()):null),
     h("div",{class:"dg-cols small ter","aria-hidden":"true"},h("span",{},"Dungeon"),h("span",{},"In range"),h("span",{},"Been")),
     opts.map(o=>{const open=x&&o.name===x.name,been=beenCount(o.name),mine=o.ppl.some(isMine);
       return h("div",{class:"dg-item"+(open?" open":"")},
@@ -1767,7 +1795,11 @@ function rangeBoard(){
           h("span",{class:"dg-n"+(been?"":" zero")},h("b",{},String(been)),h("span",{class:"dg-n-l"}," been"))),
         open?rangeDetail(o):null)}))}
 // How many current characters have a dungeon stamped (by hand or from loot).
-const DG_BANDS=[["13–24",0],["25–39",25],["40–51",40],["52–60",52]];
+// The game's Spelunker achievements (legacy points). Master is everything not in the first two.
+const DG_GROUPS=[["novice","Novice",["Ragefire Chasm","Ruins of Lordaeron","Wailing Caverns","The Deadmines","Shadowfang Keep","Excavation Site: Wetlands"],"Novice Spelunker"],
+  ["experienced","Experienced",["City of Dalaran","Blackfathom Deeps","Gnomeregan","The Drowned City","Scarlet Monastery: Graveyard","Scarlet Monastery: Library",
+    "Scarlet Monastery: Armory","Scarlet Monastery: Cathedral","Razorfen Kraul","Krol'Dok Stronghold"],"Experienced Spelunker"],
+  ["master","Master",null,"Master Spelunker"]];
 const beenCount=name=>[...S.members,...S.alts].filter(m=>(isMine(m)||memberState(m)==="current")&&passportOf(m).some(p=>p.name===name)).length;
 // The open dungeon: who's in range by role, a suggested group, who's been, what drops.
 function rangeDetail(x){
@@ -1921,7 +1953,7 @@ function recList(k,rows,fmt,n=3){const open=recOpen(k),top=open?rows:rows.slice(
 function boardCard([k,title,get,fmt]){
   const rows=ranked(get);if(!rows.length)return null;
   return h("section",{class:"card rec-card","aria-label":title},
-    h("div",{class:"spread"},h("h3",{},title),h("span",{class:"small ter"},rows.length+(rows.length===1?" character":" characters"))),
+    h("div",{class:"spread"},h("h3",{},title),h("span",{class:"small ter"},TITLES[k]&&rows.length>1&&rows[1][2]!==1?"Title: "+TITLES[k]:rows.length+(rows.length===1?" character":" characters"))),
     recList(k,rows,fmt))}
 // Professions as one tidy table: a row each, the top three across, the wooden spoon at the end.
 function profTable(list){
@@ -1941,6 +1973,7 @@ function viewRecords(){
   const u=S.ui,kind=u.recKind||"All";
   const profs=[...PRIMARY,...SECONDARY].filter(p=>kind==="All"||(kind==="Primary"?PRIMARY:SECONDARY).includes(p)).map(profBoard);
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs."))),
+    weekCard(),
     h("div",{class:"rec-grid rec-main"},REC_BOARDS.map(b=>boardCard(b))),
     h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"prof-h"},"Professions"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],kind,k=>setUi({recKind:k},true))),
     profTable(profs),
@@ -1950,6 +1983,83 @@ function rankLine(get,m,noun){const r=rankOfIn(get,m);if(!r||r.of<2)return null;
   const t=r.place===1&&!r.tied?"Best "+noun+" in the guild":(r.tied?"Joint ":"")+ordinal(r.place)+" of "+r.of+" in the guild";
   return h("a",{class:"rank-l"+(r.last?" spoon":""),href:"#records"},r.place<=3?medal(r.place):null,h("span",{},t+(r.last?" · wooden spoon":"")))}
 const PROF_NOUN={Alchemy:"alchemist",Blacksmithing:"blacksmith",Enchanting:"enchanter",Engineering:"engineer",Herbalism:"herbalist",Leatherworking:"leatherworker",Mining:"miner",Skinning:"skinner",Tailoring:"tailor",Cooking:"cook","First Aid":"medic",Fishing:"angler"};
+
+/* ---------- This week ---------- */
+// Compares today's rankings with the daily snapshot from about a week ago (guild/records, saved by the hourly sync):
+// new number ones, big climbs and the biggest grinds. Dungeons aren't in the snapshot, so they're left out.
+const WEEK_BOARDS=()=>[["hk","honourable kills",REC_BOARDS[0][2],r=>r[1]],["level","level",REC_BOARDS[1][2],r=>r[0]],["gear","Best geared",REC_BOARDS[3][2],r=>r[2]],
+  ...[...PRIMARY,...SECONDARY].map(p=>["p:"+p,p,profBoard(p)[2],r=>(r[3]||{})[p]||0])];
+function weekBase(){const days=S.recDays||{},keys=Object.keys(days).sort(),today=new Date(Date.now()+8*36e5).toISOString().slice(0,10);
+  const past=keys.filter(k=>k<today);if(!past.length)return null;
+  const target=new Date(Date.parse(today)-7*864e5).toISOString().slice(0,10);
+  const k=past.filter(x=>x<=target).pop()||past[0];return{key:k,row:days[k],days:Math.round((Date.parse(today)-Date.parse(k))/864e5)}}
+function weekMoves(){
+  const base=weekBase();if(!base)return null;
+  const pool=recPool().filter(m=>base.row[m.id]),out=[];
+  const placeMap=pairs=>{const l=pairs.filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),mp=new Map();for(const[m,v]of l)mp.set(m.id,1+l.filter(x=>x[1]>v).length);return{l,mp}};
+  for(const[k,label,get,then]of WEEK_BOARDS()){
+    const now=placeMap(pool.map(m=>[m,get(m)||0])),was=placeMap(pool.map(m=>[m,then(base.row[m.id])||0]));
+    const lead=now.l[0],solo=lead&&!(now.l[1]&&now.l[1][1]===lead[1]),oldLead=was.l[0],oldSolo=oldLead&&!(was.l[1]&&was.l[1][1]===oldLead[1]);
+    // A new sole number one, taking it from someone else.
+    if(solo&&oldSolo&&lead[0].id!==oldLead[0].id&&k!=="level")out.push({w:100,kind:"crown",parts:[charLink(lead[0])," took the top spot in "+(k.startsWith("p:")?label:label.replace(/^Best/,"best"))+" from ",charLink(oldLead[0])]});
+    // Climbs of two places or more into the top five.
+    for(const[m]of now.l){const a=was.mp.get(m.id),b=now.mp.get(m.id);
+      if(a&&b<=5&&a-b>=2&&!(solo&&lead[0].id===m.id&&oldSolo&&oldLead[0].id!==m.id))out.push({w:a-b,kind:"up",n:a-b,parts:[charLink(m)," climbed from "+ordinal(a)+" to "+ordinal(b)+" in "+(k.startsWith("p:")?label:k==="gear"?"best geared":label)]})}}
+  // The biggest grind of the week for kills and levels.
+  const gain=(i,get)=>pool.map(m=>[m,(get(m)||0)-(base.row[m.id][i]||0)]).sort((a,b)=>b[1]-a[1])[0];
+  const hk=gain(1,REC_BOARDS[0][2]),lv=gain(0,REC_BOARDS[1][2]);
+  if(hk&&hk[1]>=10)out.push({w:50,kind:"gain",n:"+"+hk[1].toLocaleString("en-AU"),parts:[charLink(hk[0])," got the most honourable kills: "+hk[1].toLocaleString("en-AU")]});
+  if(lv&&lv[1]>=2)out.push({w:49,kind:"gain",n:"+"+lv[1],parts:[charLink(lv[0])," gained the most levels: "+lv[1]]});
+  return{base,list:out.sort((a,b)=>b.w-a.w)}}
+function weekCard(){
+  const x=weekMoves(),open=S.ui.weekAll;
+  const since=x?(x.base.days<=1?"since yesterday":"since "+shortDate(x.base.key+"T12:00:00+08:00")):"";
+  const badge=e=>e.kind==="crown"?h("span",{class:"wk-b crown"},medal(1)):h("span",{class:"wk-b "+e.kind},e.kind==="up"?"▲"+e.n:e.n);
+  const list=x?x.list:[],shown=open?list:list.slice(0,5);
+  return h("section",{class:"card wk","aria-labelledby":"wk-h"},
+    h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"wk-h"},"This Week"),x?h("span",{class:"small ter"},"Since "+shortDate(x.base.key+"T12:00:00+08:00")):null),
+    !x?h("p",{class:"empty"},"This fills in after the first day: the site saves everyone's numbers once a day and compares."):
+    !list.length?h("p",{class:"empty"},"No big moves "+since+". Somebody go grind."):
+    [h("ul",{class:"wk-list"},shown.map(e=>h("li",{},badge(e),h("span",{},e.parts)))),
+     list.length>5?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(!!open),onclick:()=>setUi({weekAll:!open},true)},open?"Show fewer":"See all "+list.length):null])}
+
+/* ---------- Titles ---------- */
+// Whoever is on their own at the top of a board holds its title, until someone overtakes them. Needs two or more on the board.
+const TITLES={hk:"Most Wanted",dungeons:"Dungeon Crawler",gear:"Best Dressed",Mining:"Master Miner",Herbalism:"Green Thumb",Skinning:"Master Skinner",
+  Alchemy:"Master Alchemist",Blacksmithing:"Master Smith",Enchanting:"Master Enchanter",Engineering:"Chief Engineer",Leatherworking:"Master Leatherworker",
+  Tailoring:"Master Tailor",Cooking:"Head Chef","First Aid":"Field Medic",Fishing:"Master Angler"};
+let _titles=null,_titlesAt=0;
+function titleMap(){if(_titles&&Date.now()-_titlesAt<2000)return _titles;const mp=new Map();
+  const boards=[...REC_BOARDS.filter(b=>TITLES[b[0]]),...[...PRIMARY,...SECONDARY].map(profBoard)];
+  for(const[k,title,get]of boards){const r=ranked(get);if(r.length<2||r[1][2]===1)continue;const t=TITLES[k];if(!t)continue;
+    (mp.get(r[0][0].id)||mp.set(r[0][0].id,[]).get(r[0][0].id)).push({t,board:title,v:r[0][1]})}
+  _titles=mp;_titlesAt=Date.now();return mp}
+const titlesOf=m=>titleMap().get(m.id)||[];
+// Up to three titles by name; the rest fold into "+N", which lists them on hover.
+const titleTags=m=>{const l=titlesOf(m);if(!l.length)return null;const tag=x=>h("a",{class:"title-tag",href:"#records",title:"Top of the guild in "+x.board.toLowerCase()},h("span",{class:"title-ic","aria-hidden":"true"}),x.t);
+  return h("div",{class:"titles"},l.slice(0,3).map(tag),l.length>3?h("a",{class:"title-tag more",href:"#records",title:l.slice(3).map(x=>x.t).join(", ")},"+"+(l.length-3)+" more"):null)};
+
+/* ---------- Rivals ---------- */
+// Pick a guildie as your rival on one of your characters (saved on this device). Your character page then keeps score.
+const rivalOf=m=>{const id=(S.ui.rivals||{})[m.id];return id?memberById(id)||null:null};
+function rivalCard(m){
+  if(!isMine(m))return null;
+  const r=rivalOf(m),others=recPool().filter(x=>x.id!==m.id&&!isMine(x)).sort((a,b)=>nameOf(a).localeCompare(nameOf(b)));
+  const pick=h("select",{"aria-label":"Pick a rival"},h("option",{value:""},r?"No rival":"Pick a guildie…"),others.map(x=>h("option",{value:x.id},nameOf(x))));
+  pick.value=r?r.id:"";pick.addEventListener("change",()=>setUi({rivals:{...(S.ui.rivals||{}),[m.id]:pick.value||undefined}},true));
+  const head=h("div",{class:"spread",style:"align-items:baseline;gap:.5rem 1rem"},h("h2",{},"Rival"),pick);
+  if(!r)return h("section",{class:"card rv"},head,h("p",{class:"small ter",style:"margin:0"},"Pick someone to keep score against: level, honourable kills, dungeons, gear and every profession you both have. Only you see this, on this device."));
+  const rows=[["Level",m=>+m.level||1],["Honourable kills",REC_BOARDS[0][2]],["Dungeons stamped",REC_BOARDS[2][2]],["Loot points",REC_BOARDS[3][2]],
+    ...[...PRIMARY,...SECONDARY].filter(p=>m.profs&&r.profs&&+m.profs[p]>0&&+r.profs[p]>0).map(p=>[p,x=>+(x.profs||{})[p]||0])];
+  let me=0,them=0;
+  const lines=rows.map(([l,get])=>{const a=+get(m)||0,b=+get(r)||0;if(a>b)me++;else if(b>a)them++;
+    const f=v=>v.toLocaleString("en-AU");
+    return h("li",{class:"rv-row"},h("span",{class:"rv-v"+(a>b?" win":"")},f(a)),h("span",{class:"rv-l"},l),h("span",{class:"rv-v"+(b>a?" win":"")},f(b)))});
+  const verdict=me>them?"You lead "+me+"–"+them:them>me?nameOf(r)+" leads "+them+"–"+me:"All square at "+me+"–"+them;
+  return h("section",{class:"card rv"},head,
+    h("span",{class:"rv-score"+(me>them?" win":them>me?" lose":"")},verdict),
+    h("div",{class:"rv-top"},h("span",{class:"rv-who"},classIcon(m.cls),h("b",{},nameOf(m))),h("span",{class:"rv-who r"},charLink(r),classIcon(r.cls))),
+    h("ol",{class:"rv-list"},lines))}
 function viewProfessions(){
   const chars=[...S.members,...S.alts];
   const by={};for(const m of chars)for(const[p,sk]of Object.entries(m.profs||{}))(by[p]=by[p]||[]).push({m,sk:+sk||0});
@@ -1989,7 +2099,7 @@ function raidsCard(){
 function aboutCard(){
   const gi=S.guild||{},basics=[["Guild Master","gm"],["Officers","officers"],["Loot rules","loot"],["Guild events","events"]].filter(([,k])=>gi[k]);
   if(!basics.length&&!isOfficer())return null;
-  return h("aside",{class:"card","aria-labelledby":"about-h"},h("div",{class:"spread"},h("h2",{id:"about-h"},"About the Guild"),isOfficer()?h("div",{class:"row",style:"gap:.375rem"},DISCORD_ON?h("button",{class:"btn ghost sm",onclick:openDiscordSetup},"Discord commands"):null,h("button",{class:"btn sm",onclick:openGuild},"Edit")):null),
+  return h("aside",{class:"card","aria-labelledby":"about-h"},h("div",{class:"spread"},h("h2",{id:"about-h"},"About the Guild"),isOfficer()?h("div",{class:"row",style:"gap:.375rem"},h("button",{class:"btn sm",onclick:openGuild},"Edit")):null),
     basics.length?basics.map(([l,k])=>h("div",{style:"display:flex;flex-direction:column;gap:2px;padding:.5rem 0;border-top:1px solid var(--sep)"},h("span",{class:"small ter",style:"font-weight:600"},l),h("span",{style:"white-space:pre-wrap;overflow-wrap:anywhere"},gi[k])))
       :h("p",{class:"empty"},"Add the Guild Master, officers, loot rules and guild events so new guildies know how things work."))}
 
@@ -2020,12 +2130,11 @@ function viewChar(coll,id){
     groups.length?groups.map(([t,l])=>h("div",{style:"display:flex;flex-direction:column;gap:.625rem"},h("span",{class:"small ter",style:"font-weight:600"},t),l.map(p=>h("div",{class:"pbar-wrap"},profBar(p,m.profs[p]),rankLine(profBoard(p)[2],m,PROF_NOUN[p]||p.toLowerCase()))))):h("p",{class:"empty"},"No professions logged yet."),
     canMake(m));
   const out=[h("div",{},h("div",{class:"page-head"},h("div",{style:"display:flex;flex-direction:column;gap:.25rem"},h("a",{href:"#roster",class:"small"},"← Roster"),h("h1",{},nameOf(m)),
-      h("p",{class:"sub"},[classLine(m),roleText(m),m.level||1].filter(Boolean).join(" · ")),
+      h("p",{class:"sub"},[classLine(m),roleText(m),m.level||1].filter(Boolean).join(" · ")),titleTags(m),
       h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—"))),
     can||isOfficer()?h("div",{class:"row"},moreMenu([
         ["",null,"This character"],
         !m.isAlt&&owns(m)?["Use on another device",()=>makeCode(m)]:null,
-        DISCORD_ON&&can&&!m.isAlt?[m.discordId?"Discord linked ✓":"Link Discord",()=>linkDiscord(m)]:null,
         isOfficer()&&!m.isAlt?["",null,"Officers"]:null,
         isOfficer()&&!m.isAlt&&Array.isArray(m.owners)&&!owns(m)?[isOfficerChar(m)?"Remove officer":"Make officer",()=>setOfficer(m,!isOfficerChar(m))]:null,
         isOfficer()&&!m.isAlt&&Array.isArray(m.owners)&&m.owners.length?["Free up for claiming",()=>freeUp(m)]:null]),
@@ -2042,10 +2151,12 @@ function viewChar(coll,id){
   // the character pane, the passport and professions; the narrow one holds the card, talents and journey.
   // On phones the columns dissolve and --o puts each tab's sections back in reading order.
   const o=(el,n)=>{if(el)el.style.setProperty("--o",n);return el};
-  const cells=[h("div",{class:"col col-main"},o(sec(gearCard(m),"gear"),4),m.isAlt?null:o(sec(passportCard(m),"overview"),3),o(sec(profCard,"profs"),6)),
+  const cells=[h("div",{class:"col col-main"},o(sec(gearCard(m),"gear"),4),m.isAlt?null:o(sec(passportCard(m),"overview"),3),o(sec(rivalCard(m),"overview"),3),o(sec(profCard,"profs"),6)),
     h("div",{class:"col col-side"},o(sec(cardSection(m),"overview"),1),o(sec(talentsCard(m),"gear"),5),o(sec(journeyCard,"overview"),2))];
   const tab=["overview","gear","profs"].includes(S.ui.charTab)?S.ui.charTab:"overview";
   out.push(h("div",{class:"char-tabs"},seg("Section",[["overview","Overview"],["gear","Gear"],["profs","Professions"]],tab,k=>{S.ui.charTab=k;render()})));
+  const anyIn=[...cells].some(c=>c.querySelector(`[data-sec="${tab}"]`));
+  if(!anyIn)cells[0].append(h("section",{class:"card tab-empty","data-sec":tab},h("p",{class:"empty"},"Nothing here yet. Gear and talents fill in once the armory finds this character.")));
   out.push(h("div",{class:"profile","data-tab":tab},cells));
   return out}
 /* ---------- Gear ---------- */
@@ -2128,7 +2239,10 @@ function armoryAllLine(){
     catch(e){toast("The armory didn't answer. Try again later.")}
     S.ui.armAll=false;render()};
   return h("p",{class:"small ter row",style:"gap:.625rem;align-items:center;margin-top:.375rem"},
-    h("span",{},a.at?"Armory checked "+ago(a.at)+" · every hour":"Armory checks every hour"),
+    h("span",{},a.at?"Armory checked "+ago(a.at)+(a.checked?" · "+(a.changed||0)+" of "+a.checked+" updated":"")+" · every hour":"Armory checks every hour"),
+    // A button rather than a hover, so it works on phones too.
+    a.missingN?h("button",{type:"button",class:"tag miss-btn","aria-expanded":String(!!S.ui.missOpen),onclick:()=>setUi({missOpen:!S.ui.missOpen})},a.missingN+(a.missingN===1?" character":" characters")+" not found"):null,
+    a.missingN&&S.ui.missOpen?h("span",{class:"miss-list"},"No armory page for "+(a.missing||[]).join(", ")+(a.missingN>(a.missing||[]).length?" and more":"")+". New characters show up after they log out past level 10; a renamed one needs its name fixed on the site."):null,
     a.roster&&a.roster.error?h("span",{class:"tag",style:"color:var(--danger)",title:"Blizzard may have changed their guild page. The rest of the sync still works."},"Couldn't read the guild list "+ago(a.roster.error))
       :a.roster&&a.roster.at?h("span",{},"Guild list read "+ago(a.roster.at)):null,
     S.user?h("button",{class:"btn sm",disabled:!!busy,onclick:go},busy?"Syncing everyone…":"⟳ Sync everyone"):null)}
@@ -2140,9 +2254,15 @@ function armoryLine(m,can){
         :(r.changed||[]).length?"Updated from the armory: "+r.changed.join(", "):"Nothing new on the armory"+(r.updated?". Its data is from "+ago(r.updated)+", and it updates when you log out":""))}
     catch(e){toast("The armory didn't answer. Try again later.")}
     S.ui.armBusy=null;render()};
-  return h("p",{class:"small ter row",style:"gap:.75rem;align-items:center"},syncChip(m),
-    a&&a.at?[h("span",{},"Armory: level "+a.level+(a.spec?" "+a.spec:"")+(a.guild?" · "+a.guild:"")+(a.updated?" · data from "+ago(a.updated):"")+" · checked "+ago(a.at)),h("a",{href:a.url,target:"_blank",rel:"noopener"},"View on armory")]:h("span",{},"Not synced with the armory yet"),
-    can?h("button",{class:"btn",style:"margin-left:.25rem",disabled:busy,onclick:sync},busy?"Syncing…":"⟳ Sync from armory"):null)}
+  // Three times worth knowing: when the site last looked, how fresh the game's own data was, and when something last changed.
+  const ch=a&&a.change,bits=a&&a.at?[
+      h("span",{},"Checked "+ago(a.at)),
+      a.updated?h("span",{title:"The armory updates when a character logs out."},"Game data from "+ago(a.updated)):null,
+      ch&&ch.at?h("span",{},"Last change "+ago(ch.at)+": "+(ch.what||[]).join(", ")):h("span",{},"No changes seen yet")]
+    :[h("span",{},"Not synced with the armory yet")];
+  return h("div",{class:"arm-line small ter"},syncChip(m),h("span",{class:"arm-bits"},bits),
+    a&&a.url?h("a",{href:a.url,target:"_blank",rel:"noopener"},"View on armory"):null,
+    can?h("button",{class:"btn sm",disabled:busy,onclick:sync},busy?"Syncing…":"⟳ Sync now"):null)}
 /* ---------- Edit character dialog ---------- */
 // Most of a character fills itself in from the armory (level, class, race, spec, professions and gear), so the form is
 // short: the name the armory knows them by, their role, and when they joined. Race, class and level are only asked
@@ -2228,33 +2348,6 @@ function openEdit(m,opts={}){
     if(fns&&(!m||fromArmory||renamed))saving.then(()=>httpsCallable(fns,"armorySync")({coll:isAlt?"alts":"members",id:ref.id})).catch(()=>{});
     if(!m)location.hash=`#char/${isAlt?"alts":"members"}/${ref.id}`};
   dlg.showModal();fFirst.focus()}
-// Link Discord: a one-time code to type as /link in Discord, so /lfg posts as this character.
-function linkDiscord(m){
-  const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let code="";for(const b of crypto.getRandomValues(new Uint8Array(6)))code+=A[b%A.length];
-  write(setDoc(doc(db,"dlinks",code),{member:m.id,at:nowIso()}));
-  const dlg=$("#dlg"),f=$("#dlgForm"),cmd="/link code:"+code;
-  f.replaceChildren(h("h1",{style:"font-size:1.8125rem;line-height:2.25rem"},"Link Discord"),
-    h("p",{class:"sub"},(m.discordId?"Already linked. To link a different Discord account, ":"")+"In the guild Discord, type this. After that, /lfg posts groups as "+nameOf(m)+"."),
-    h("div",{class:"row"},h("code",{style:"font-size:1.25rem;letter-spacing:.06em"},cmd),h("button",{class:"btn sm",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(cmd);toast("Copied")}catch(e){toast("Couldn't copy. Type it in Discord instead.")}}},"Copy")),
-    h("p",{class:"small ter"},"The code works once. Only the person who types it sees Discord's reply."),
-    h("div",{class:"dlg-actions"},h("span"),h("button",{class:"btn primary",type:"button",onclick:()=>dlg.close()},"Done")));
-  f.onsubmit=e=>e.preventDefault();dlg.showModal()}
-// Officers: set up the slash commands on a Discord server (the app has to be added to it first).
-function openDiscordSetup(){
-  const dlg=$("#dlg"),f=$("#dlgForm");
-  const gid=h("input",{id:"dc-guild",inputmode:"numeric",placeholder:"Server ID",value:S.ui.dcGuild||"1567406475599417505",style:"max-width:16.25rem"});
-  const out=h("p",{class:"sub",role:"status"},"");
-  const go=async add=>{if(!fns){out.textContent="Functions aren't switched on yet.";return}out.textContent="Working…";S.ui.dcGuild=gid.value.trim();
-    try{const r=(await httpsCallable(fns,"discordRegister")({guild:add?"":gid.value.trim()})).data||{};
-      if(add){if(r.invite)window.open(r.invite,"_blank","noopener");out.textContent="Pick the server in the Discord window that opened, then come back and tap Install commands.";return}
-      out.textContent=r.ok?`Installed ${r.count} commands. In Discord, type / to see them: /card, /who, /lfg and /link.`:(r.error||"Discord said no ("+r.status+").")+(r.invite?" Add the app first.":"")}
-    catch(x){out.textContent=x&&x.message&&!/internal/i.test(x.message)?x.message:"Couldn't reach Discord. Check the three Discord secrets are set, then try again."}};
-  f.replaceChildren(h("h1",{style:"font-size:1.8125rem;line-height:2.25rem"},"Discord Commands"),
-    h("p",{class:"sub"},"Adds /card, /who, /lfg and /link to a Discord server. Start with your test server."),
-    h("label",{class:"f"},"Server ID",gid),
-    h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>go(true)},"1. Add the app to a server"),h("button",{class:"btn primary",type:"button",onclick:()=>go(false)},"2. Install commands")),out,
-    h("div",{class:"dlg-actions"},h("span"),h("button",{class:"btn",type:"button",onclick:()=>dlg.close()},"Close")));
-  f.onsubmit=e=>e.preventDefault();dlg.showModal()}
 // Officers: who's one (from guild/officers), and making or removing one (server checks you're an officer).
 // Who to ask when a character is stuck on someone else's device.
 const officerNames=()=>{const n=((S.officers&&S.officers.members)||[]).map(memberById).filter(Boolean).map(nameOf);return n.length?n.join(" or "):"an officer"};
@@ -2470,6 +2563,7 @@ function subscribe(){
   S.unsub.push(onSnapshot(doc(db,"guild","roster"),snap=>{S.guildRoster=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","armory"),snap=>{S.armoryAll=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","info"),snap=>{S.guild=snap.exists()?snap.data():{};schedule()},()=>{}));
+  S.unsub.push(onSnapshot(doc(db,"guild","records"),snap=>{S.recDays=snap.exists()?(snap.data().days||{}):{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","firsts"),snap=>{const d=snap.exists()?snap.data():{};S.firsts=d.list||{};S.milestones=d.milestones||{};S.firstsReady=true;schedule()},()=>{S.firstsReady=true;schedule()}));
 }
 addEventListener("online",render);addEventListener("offline",render);

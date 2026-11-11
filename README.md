@@ -112,6 +112,16 @@ A **Records** tab ranks everyone on what the armory already says: honourable kil
 - **Dungeons:** the dropdown is gone. **Dungeons by Level** splits them into four bands (13–24, 25–39, 40–51, 52–60, by each dungeon's starting level, plus All) and opens on the band for your level; the old "Suits my level" box is gone. Each band lists its dungeons in level order with how many current characters are the right level ("in range") and how many have been. Dungeons at your level are tagged. Click one to open it in place: who's in range by role, Suggest a group, Who's Been, and What Drops (now folded shut until you open it). Suits my level still filters the list.
 - **Professions:** the secondary professions are cards like the primary ones (the long table is gone). Who Has What is one even 3-column grid (gathering first, then crafting, each card labelled), one line per character with the skill number on the right and the bar underneath, so long names no longer push things onto a second line. The rank (Expert and so on) is in the tooltip. Each card shows the top 5 with an "N more" button.
 
+## This week, titles, rivals, milestones and sync status (12 Nov)
+
+- **This Week** (top of Records): once a day the hourly sync saves everyone's level, honourable kills, loot points and profession skills to `guild/records` (the last 10 days, server-only in the rules). Records compares today with about a week ago and lists new number ones ("took the top spot in Alchemy from …"), climbs of two places or more into the top 5, and the week's biggest kill and level gains. Dungeons aren't in the snapshot. It starts filling in the day after this is deployed.
+- **Titles:** whoever is alone at the top of a board (with at least two on it) holds its title, e.g. Most Wanted (kills), Dungeon Crawler, Best Dressed (loot points), Master Miner, Green Thumb (Herbalism), Head Chef, Field Medic, Master Angler. Shown under the name on the character page (three, then "+N more") and on each Records board. Worked out in the browser; nothing stored.
+- **Rival:** on your own character's page, pick a guildie and get a head-to-head (level, kills, dungeons, loot points and every profession you share) with a running score. Saved on this device only.
+- **Feed milestones:** the sync adds "Reached 500 honourable kills" (100, 250, 500, 1,000, 2,500, 5,000, 10,000, 25,000) and "Reached 225 Blacksmithing" (75, 150, 225, 300) to the journey, so they show in the feed. Not on a character's first sync, and not for a profession that's new to them.
+- **Sync status:** each character page says when the armory was checked, how old the game's own data is (it updates when the character logs out), and what the last change was ("Last change 2 days ago: level 23 → 24, gear", saved as `armory.change`). The roster says how many characters the last check updated and, as a button, which ones the armory couldn't find (`guild/armory.missing`).
+- **Dungeons** are grouped like the game's Spelunker achievements: **Novice** (Ragefire Chasm, Ruins of Lordaeron, Wailing Caverns, Deadmines, Shadowfang Keep, Excavation Site), **Experienced** (City of Dalaran, Blackfathom Deeps, Gnomeregan, The Drowned City, the four Scarlet Monastery wings, Razorfen Kraul, Krol'Dok Stronghold) and **Master** (the rest). Upper Blackrock Spire is 55–60, as the game shows it.
+- **Phone pass:** every page checked at 390 and 320 px: Records rows keep the class dot, name and "You" on one line; What Drops' heading wraps properly; the bottom menu's five labels shrink a little under 360 px; a character tab with nothing in it (no gear yet) says so instead of showing a blank page.
+
 ## Text size
 
 Text, spacing and sizes are in rem, so the whole site grows with the browser's text-size setting (someone who sets their browser to bigger text gets bigger text and roomier spacing to match). At the normal setting it looks exactly as it did in pixels. Borders, rounded corners, shadows and the screen-width breakpoints stay in px on purpose. If you add styles in px, run `python3 tools/scale/to_rem.py` to convert them. Checked at 125% on phone and desktop: nothing scrolls sideways or gets cut off; long names and labels wrap instead.
@@ -190,17 +200,9 @@ Big moments post straight away: someone joining, level 60, being first in the gu
 
 - Raid sign-ups and a raid calendar
 
-## Discord slash commands (switched off)
+## Discord slash commands (removed)
 
-`/card name` shows a character's card, `/who dungeon` lists who's in range, `/lfg dungeon when note` posts a group (from before group posts were cut; the site no longer shows them), and `/link code` ties someone's Discord to their character (from **Link Discord** on their character page) so `/lfg` knows who they are. They run in the `discordInteractions` function, so nothing has to stay online.
-
-1. At https://discord.com/developers/applications make a **New Application**. From **General Information** copy the Application ID and Public Key; from **Bot**, reset and copy the token.
-2. `firebase functions:secrets:set DISCORD_APP_ID`, `DISCORD_PUBLIC_KEY` and `DISCORD_BOT_TOKEN` (paste each when asked), then `FUNCTIONS_DISCOVERY_TIMEOUT=60 firebase deploy`.
-3. Copy the `discordInteractions` URL from the deploy output (or Firebase console, Functions) into **Interactions Endpoint URL** on the app's General Information page and save.
-4. On the site, as an officer: **About the Guild → Discord commands → Add the app to a server**, then **Install commands** with that server's ID.
-
-The first command after a long quiet spell can take a few seconds to wake the function; if Discord says the app didn't respond, try again.
-
+The old `/card`, `/who`, `/lfg` and `/link` commands were never switched on and were removed in Nov 2026, with the site's "Link Discord" and "Discord commands" buttons and the `dlinks` rule. Discord posting through webhooks (also switched off) is still in `functions/index.js`.
 
 ## Link previews and icon
 

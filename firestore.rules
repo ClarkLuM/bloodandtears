@@ -71,12 +71,6 @@ service cloud.firestore {
       allow delete: if signedIn() && (resource.data.get('owners', []).hasAny([uid()]) || isOfficer());
     }
 
-    // One-time codes for /link in Discord. Made on the site by whoever can edit the character; only the server reads them.
-    match /dlinks/{code} {
-      allow get, list: if false;
-      allow create: if ownsMember(request.resource.data.member) && request.resource.data.keys().hasOnly(['member', 'at']);
-    }
-
     // One-time device codes. Anyone who knows a code can read it; nobody can list them.
     match /links/{code} {
       allow get: if signedIn();
@@ -108,9 +102,9 @@ service cloud.firestore {
     // Guild basics and the Discord invite: everyone reads, officers change them.
     match /guild/{docId} {
       allow read: if signedIn();
-      // officers, officerPicks, roster, armory, digest, firsts (the Hall of Firsts) and itemIds (Wowhead IDs for items)
+      // officers, officerPicks, roster, armory, digest, firsts (the Hall of Firsts), itemIds (Wowhead IDs for items) and records (daily snapshots for Records' This week)
       // are written by the server only.
-      allow write: if !(docId in ['officers', 'officerPicks', 'roster', 'armory', 'digest', 'firsts', 'itemIds']) && isOfficer() &&
+      allow write: if !(docId in ['officers', 'officerPicks', 'roster', 'armory', 'digest', 'firsts', 'itemIds', 'records']) && isOfficer() &&
         optStr(request.resource.data, 'discord', 200) && optStr(request.resource.data, 'gm', 60) &&
         optStr(request.resource.data, 'officers', 500) && optStr(request.resource.data, 'loot', 500) &&
         optStr(request.resource.data, 'events', 500);
