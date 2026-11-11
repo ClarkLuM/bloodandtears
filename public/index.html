@@ -1790,13 +1790,15 @@ function rangeBoard(){
       return h("div",{class:"dg-item"+(open?" open":"")},
         h("div",{class:"dg-sum",onclick:e=>{if(!e.target.closest("a,button"))setUi({rangeD:open?"-":o.name},true)}},
           h("button",{type:"button",class:"dg-name","aria-expanded":String(!!open),onclick:()=>setUi({rangeD:open?"-":o.name},true)},
-            h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),mine?h("span",{class:"tag gold"},"Your level"):null),
+            h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon: it doesn't count toward the Horde Spelunker achievement."},"Alliance · doesn't count"):null,mine?h("span",{class:"tag gold"},"Your level"):null),
           h("span",{class:"dg-n"+(o.active.length?"":" zero")},h("b",{},String(o.active.length)),h("span",{class:"dg-n-l"}," in range")),
           h("span",{class:"dg-n"+(been?"":" zero")},h("b",{},String(been)),h("span",{class:"dg-n-l"}," been"))),
         open?rangeDetail(o):null)}))}
 // How many current characters have a dungeon stamped (by hand or from loot).
 // The game's Spelunker achievements (legacy points). Master is everything not in the first two.
-const DG_GROUPS=[["novice","Novice",["Ragefire Chasm","Ruins of Lordaeron","Wailing Caverns","The Deadmines","Shadowfang Keep","Excavation Site: Wetlands"],"Novice Spelunker"],
+// Hall of Thanes and The Stockade sit with Novice by level, but they're Alliance-side, so they don't count for us.
+const DG_ALLIANCE=["Hall of Thanes","The Stockade"];
+const DG_GROUPS=[["novice","Novice",["Ragefire Chasm","Hall of Thanes","Ruins of Lordaeron","Wailing Caverns","The Deadmines","Shadowfang Keep","The Stockade","Excavation Site: Wetlands"],"Novice Spelunker"],
   ["experienced","Experienced",["City of Dalaran","Blackfathom Deeps","Gnomeregan","The Drowned City","Scarlet Monastery: Graveyard","Scarlet Monastery: Library",
     "Scarlet Monastery: Armory","Scarlet Monastery: Cathedral","Razorfen Kraul","Krol'Dok Stronghold"],"Experienced Spelunker"],
   ["master","Master",null,"Master Spelunker"]];
