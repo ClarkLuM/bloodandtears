@@ -1623,17 +1623,19 @@ function viewHistory(){
 // A picture of the last seven days that anyone can paste into Discord (no webhooks needed): totals, top levellers,
 // most kills, new Hall of Firsts and the best loot found.
 // This week so far, worked out live from everyone's characters.
-function liveRecap(){
-  const since=Date.now()-7*864e5,all=S.members;
+// past: rebuild an earlier stretch (like launch week) from everyone's history. Kills per week weren't kept back then,
+// so a rebuilt week shows how many characters joined instead, and no kills column.
+function liveRecap(past){
+  const since=past?past.from:Date.now()-7*864e5,until=past?past.to:Infinity,inR=t=>t>=since&&t<until,all=S.members;
   const gear=all.flatMap(m=>Object.values(m.gear||{}).filter(g=>g&&g.id));
-  const totals=[["+"+all.reduce((t,m)=>t+weekGained(m),0).toLocaleString("en-AU"),"levels gained"],[String(gear.filter(g=>+g.q===3).length),"blue items on"],
-    [String(gear.filter(g=>+g.q>=4).length),"epic items on"],["+"+all.reduce((t,m)=>t+hkWeekOf(m),0).toLocaleString("en-AU"),"honourable kills"]];
-  const lev=all.map(m=>[m,weekGained(m)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([m,v])=>[m,"+"+v]);
-  const kw=all.map(m=>[m,hkWeekOf(m)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([m,v])=>[m,v.toLocaleString("en-AU")]);
-  const firsts=FIRSTS.map(([k,l])=>[l,(S.firsts||{})[k]]).filter(([,f])=>f&&!f.by&&Date.parse(f.at)>=since).slice(0,4);
-  const loot=all.flatMap(m=>(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Equipped /.test(j.t||"")&&j.item&&+j.item.q>=3&&Date.parse(j.at)>=since).map(j=>[m,j.t.slice(9),+j.item.q,Date.parse(j.at)]))
+  const totals=[["+"+all.reduce((t,m)=>t+weekGained(m,since,until),0).toLocaleString("en-AU"),"levels gained"],[String(gear.filter(g=>+g.q===3).length),"blue items on"],
+    [String(gear.filter(g=>+g.q>=4).length),"epic items on"],past?[String(all.filter(m=>inR(Date.parse(m.createdAt||""))).length),"joined the site"]:["+"+all.reduce((t,m)=>t+hkWeekOf(m),0).toLocaleString("en-AU"),"honourable kills"]];
+  const lev=all.map(m=>[m,weekGained(m,since,until)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([m,v])=>[m,"+"+v]);
+  const kw=past?[]:all.map(m=>[m,hkWeekOf(m)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([m,v])=>[m,v.toLocaleString("en-AU")]);
+  const firsts=FIRSTS.map(([k,l])=>[l,(S.firsts||{})[k]]).filter(([,f])=>f&&!f.by&&inR(Date.parse(f.at))).slice(0,4);
+  const loot=all.flatMap(m=>(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Equipped /.test(j.t||"")&&j.item&&+j.item.q>=3&&inR(Date.parse(j.at))).map(j=>[m,j.t.slice(9),+j.item.q,Date.parse(j.at)]))
     .sort((a,b)=>b[2]-a[2]||b[3]-a[3]).slice(0,3);
-  return{from:since+864e5,to:Date.now(),totals,lev,kw,firsts,loot}}
+  return past?{saved:true,label:past.label,from:since,to:until,totals,lev,kw,firsts,loot}:{from:since+864e5,to:Date.now(),totals,lev,kw,firsts,loot}}
 // A finished week saved by the server (guild/recaps), in the same shape. Characters who've since left keep their name.
 function savedRecap(r){const who=(n,c)=>S.members.find(m=>nameOf(m)===n)||{char:n,cls:c};
   const t=r.totals||{};
@@ -1658,7 +1660,7 @@ async function recapPng(data=liveRecap()){
   let y=PAD;if(icon){x.save();rr(PAD,y,112,112,24);x.clip();x.drawImage(icon,PAD,y,112,112);x.restore()}
   const from=new Date(data.from),to=new Date(data.to-1),dm=d=>d.toLocaleDateString("en-AU",{day:"numeric",month:"short"});
   x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e3";x.font=disp(64);x.fillText("Blood and Tears",PAD+140,y+62);
-  x.fillStyle="#a6948f";x.font=body(400,26);x.fillText((data.partial?"Part week · ":"Week recap · ")+dm(from)+" to "+dm(to),PAD+140,y+100);
+  x.fillStyle="#a6948f";x.font=body(400,26);x.fillText((data.label?data.label+" · ":data.partial?"Part week · ":"Week recap · ")+dm(from)+" to "+dm(to),PAD+140,y+100);
   y+=112+48;
   const tw=(W-PAD*2)/4;rr(PAD,y,W-PAD*2,132,16);x.fillStyle="#161012";x.fill();x.strokeStyle="#31262a";x.lineWidth=1;x.stroke();
   totals.forEach(([v,l],i)=>{const X=PAD+i*tw;if(i){x.beginPath();x.moveTo(X,y);x.lineTo(X,y+132);x.stroke()}
@@ -1693,10 +1695,13 @@ async function recapPng(data=liveRecap()){
 async function copyRecap(){
   const dlg=$("#dlg"),f=$("#dlgForm"),weeks=Object.entries(S.recapWeeks||{}).sort((a,b)=>b[0].localeCompare(a[0]));
   const dm=t=>new Date(t).toLocaleDateString("en-AU",{day:"numeric",month:"short"});
-  const pick=h("select",{id:"recap-week"},h("option",{value:""},"This week so far"),weeks.map(([k,r])=>h("option",{value:k},(r.partial?"Part week: ":"Week of ")+dm(r.from)+" to "+dm(Date.parse(r.to)-1))));
+  // Launch week is rebuilt from history (it was before weeks were saved), unless a saved week already covers it.
+  const launchOn=Date.now()>=LAUNCH_WEEK&&!weeks.some(([,r])=>!r.partial&&Date.parse(r.from)<LAUNCH_WEEK&&Date.parse(r.to)>LAUNCH+864e5);
+  const pick=h("select",{id:"recap-week"},h("option",{value:""},"This week so far"),weeks.map(([k,r])=>h("option",{value:k},(r.partial?"Part week: ":"Week of ")+dm(r.from)+" to "+dm(Date.parse(r.to)-1))),launchOn?h("option",{value:"launch"},"Launch week: "+dm(LAUNCH)+" to "+dm(LAUNCH_WEEK-1)):null);
   const img=h("img",{class:"recap-img",alt:"Weekly recap picture"}),status=h("p",{class:"small ter",role:"status"},"Making the picture…");
   let blob=null,url="";
-  const draw=async()=>{status.textContent="Making the picture…";const r=pick.value&&S.recapWeeks[pick.value];blob=await recapPng(r?savedRecap(r):liveRecap());
+  const draw=async()=>{status.textContent="Making the picture…";const r=pick.value&&S.recapWeeks[pick.value];
+    blob=await recapPng(pick.value==="launch"?liveRecap({from:LAUNCH,to:LAUNCH_WEEK,label:"Launch week"}):r?savedRecap(r):liveRecap());
     if(url)URL.revokeObjectURL(url);url=blob?URL.createObjectURL(blob):"";img.src=url;status.textContent=blob?"":"Couldn't make the picture."};
   pick.addEventListener("change",draw);
   const name=()=>"blood-and-tears-recap-"+(pick.value||"this-week")+".png";
@@ -1728,10 +1733,10 @@ function firstsList(){
 // also gets the levels from 1 up to where the site first saw them, while launch day is inside the 7 days.
 // Anyone added after launch week only counts levels gained since they were added.
 const LAUNCH=Date.parse("2026-11-05T00:00:00+08:00"),LAUNCH_WEEK=LAUNCH+7*864e5;
-function weekGained(m,since=Date.now()-7*864e5){const lv=+m.level||1;
+function weekGained(m,since=Date.now()-7*864e5,until=Infinity){const lv=+m.level||1;
   const ups=(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Reached level \d+/.test(j.t||"")).sort((x,y)=>String(x.at).localeCompare(String(y.at)));
-  let n=ups.filter(j=>Date.parse(j.at)>=since).reduce((t,j)=>{const to=+String(j.t).replace(/\D/g,"");return t+Math.max(1,to-(+j.from||to-1))},0);
-  if(LAUNCH>=since&&(Date.parse(m.createdAt||"")||0)<LAUNCH_WEEK){const f=ups[0],first=f?(f.from!=null?+f.from:+String(f.t).replace(/\D/g,"")-1):lv;n+=Math.max(0,first-1)}
+  let n=ups.filter(j=>Date.parse(j.at)>=since&&Date.parse(j.at)<until).reduce((t,j)=>{const to=+String(j.t).replace(/\D/g,"");return t+Math.max(1,to-(+j.from||to-1))},0);
+  if(LAUNCH>=since&&LAUNCH<until&&(Date.parse(m.createdAt||"")||0)<LAUNCH_WEEK){const f=ups[0],first=f?(f.from!=null?+f.from:+String(f.t).replace(/\D/g,"")-1):lv;n+=Math.max(0,first-1)}
   return n}
 function leaderboards(){
   if(!S.members.length)return null;
