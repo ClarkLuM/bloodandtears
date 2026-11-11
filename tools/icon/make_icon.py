@@ -33,17 +33,17 @@ def pt(x,y):return f"{X(x):.1f} {Y(y):.1f}"
 C='#9a0628';w=S*2.2
 # Angry eyes: a round eye with its top cut off at a slant (low on the inside), under a thick slanted brow.
 def eye(ex,ey,side):
-  rx=S*2.6;x0,y0=X(ex),Y(ey)
+  rx=S*2.25;x0,y0=X(ex),Y(ey)
   # clip: keep the part below a line from (outer, high) to (inner, low)
   inner=1 if side=="L" else -1
   return (f'<clipPath id="e{side}"><path d="M{x0-rx*1.6:.1f} {y0-rx*(0.55 if side=="L" else -0.25)*1:.1f}'
           f'L{x0+rx*1.6:.1f} {y0-rx*(-0.25 if side=="L" else 0.55):.1f}L{x0+rx*1.6:.1f} {y0+rx*2:.1f}L{x0-rx*1.6:.1f} {y0+rx*2:.1f}Z"/></clipPath>'
           f'<ellipse cx="{x0:.1f}" cy="{y0:.1f}" rx="{rx:.1f}" ry="{rx*1.05:.1f}" clip-path="url(#e{side})"/>')
-eyes=f'<g fill="{C}">{eye(48.4,34.6,"L")}{eye(56.8,34.6,"R")}</g>'
-brows=f'<path d="M{pt(45.4,29.4)}L{pt(51.0,32.2)}M{pt(59.8,29.4)}L{pt(54.2,32.2)}"/>'
+eyes=f'<g fill="{C}">{eye(49.5,34.2,"L")}{eye(55.7,34.2,"R")}</g>'
+brows=f'<path d="M{pt(46.6,29.6)}L{pt(51.6,32.4)}M{pt(58.6,29.6)}L{pt(53.6,32.4)}"/>'
 feat=f'''<g fill="none" stroke="{C}" stroke-width="{w:.1f}" stroke-linecap="round" stroke-linejoin="round">
 {brows}
-<path d="M{pt(47.4,43.6)}Q{pt(52.6,38.6)} {pt(57.8,43.6)}"/>
+<path d="M{pt(48.4,41.6)}Q{pt(52.6,37.4)} {pt(56.8,41.6)}"/>
 <path d="M{pt(37.4,46.6)}Q{pt(33.8,51.2)} {pt(35.2,57.6)}M{pt(67.8,46.6)}Q{pt(71.4,51.2)} {pt(70.0,57.6)}"/>
 <path d="M{pt(35.4,84.0)}L{pt(42.8,93.4)}M{pt(69.8,84.0)}L{pt(62.4,93.4)}"/></g>
 {eyes}
