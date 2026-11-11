@@ -489,6 +489,32 @@ nav.bottom{display:none}
 .r-tools{display:flex;flex-direction:column;gap:.625rem}
 .r-top{display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:center}
 /* Dungeons: who's been, what drops */
+.dg-list{margin-top:1rem;padding:0;gap:0}.dg-list-head{padding:1.25rem 1.25rem .75rem}
+.dg-cols,.dg-sum{display:grid;grid-template-columns:minmax(0,1fr) 7rem 5rem;gap:1rem;align-items:center;padding:0 1.25rem}
+.dg-cols{padding-bottom:.375rem;border-bottom:1px solid var(--sep)}.dg-cols span+span,.dg-n{text-align:right}
+.dg-item+.dg-item{border-top:1px solid var(--sep)}
+.dg-sum{min-height:3rem;cursor:pointer}.dg-sum:hover,.dg-item.open .dg-sum{background:var(--subtle)}
+.dg-name{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .625rem;font:inherit;color:inherit;background:none;border:0;padding:.625rem 0;text-align:left;cursor:pointer;min-width:0}
+.dg-name:focus-visible{outline:2px solid var(--accent-text);outline-offset:2px;border-radius:4px}
+.dg-chev{width:.4375rem;height:.4375rem;border-right:2px solid var(--ter);border-bottom:2px solid var(--ter);transform:rotate(-45deg);margin-right:.25rem;align-self:center;transition:transform 150ms ease}
+.dg-item.open .dg-chev{transform:rotate(45deg)}
+.dg-n{font-variant-numeric:tabular-nums;color:var(--sec)}.dg-n b{color:var(--text);font-weight:600}.dg-n.zero,.dg-n.zero b{color:var(--ter);font-weight:400}
+.dg-n-l{display:none}
+.dg-detail{display:flex;flex-direction:column;gap:.75rem;padding:.25rem 1.25rem 1.25rem;background:color-mix(in srgb,var(--subtle) 50%,transparent)}
+.dg-detail>.range-row{border-top:0}
+@media (max-width:600px){.dg-cols{display:none}.dg-sum{grid-template-columns:minmax(0,1fr) auto;row-gap:0;padding-bottom:.5rem}.dg-name{grid-column:1/-1;padding-bottom:.125rem}
+  .dg-n{text-align:left;font-size:.8125rem;padding-left:1.3125rem}.dg-n+.dg-n{padding-left:0;text-align:left}.dg-sum{grid-template-columns:auto 1fr;column-gap:1rem}.dg-n-l{display:inline}}
+.pf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;align-items:start}
+@media (max-width:960px){.pf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (max-width:600px){.pf-grid{grid-template-columns:minmax(0,1fr)}}
+.pf-card{gap:.5rem}.pf-top{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:.5rem;align-items:baseline}
+.pf-kind{grid-column:1/-1;font-size:.6875rem;line-height:1rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
+.pf-top h3{margin:0}
+.pf-list{list-style:none;margin:0;padding:0}
+.pf-row{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:.75rem;row-gap:.3125rem;align-items:center;padding:.5rem 0;border-top:1px solid var(--sep)}
+.pf-row .track{grid-column:1/-1}
+.pf-who{display:flex;align-items:center;gap:.5rem;min-width:0}.pf-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pf-sk{font-size:.875rem;color:var(--sec);font-variant-numeric:tabular-nums}.pf-sk.max{color:var(--accent-text);font-weight:600}
+.pf-more{align-self:flex-start;margin-left:-.75rem}
 .dg-block{display:flex;flex-direction:column;gap:.5rem;padding-top:.75rem;border-top:1px solid var(--sep)}
 .dg-h{display:flex;align-items:baseline;gap:.5rem;font-size:1rem;line-height:1.375rem;margin:0}
 .dg-loot>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem}
@@ -1716,15 +1742,27 @@ function rangeBoard(){
     const ppl=chars.filter(m=>{const lv=+m.level||1;return lv>=r[0]&&lv<=r[1]}).sort(sortPpl);
     return{name,range,ppl,active:ppl.filter(p=>!isAway(p))}}).filter(Boolean);
   const opts=S.ui.suits&&my?all.filter(x=>x.ppl.some(isMine)):all;
-  const head=h("div",{},h("h2",{id:"range-h"},"Who's in Range"),
-    h("p",{class:"sub"},"Pick a dungeon to see who's the right level for it. Faded names haven't been seen in game for two weeks."));
+  const head=h("div",{},h("h2",{id:"range-h"},"Every Dungeon"),
+    h("p",{class:"sub"},"Every dungeon, with how many of the guild are the right level and how many have been. Open one to see who, and what drops."));
   if(!opts.length)return h("section",{class:"card","aria-labelledby":"range-h",style:"gap:.75rem;margin-top:1rem"},head,h("p",{class:"empty"},"Nobody else is in range of a dungeon at your level yet."));
   // Start on the saved pick, else the busiest dungeon at your level, else the busiest one overall.
   const busiest=list=>list.slice().sort((a,b)=>b.active.length-a.active.length)[0];
-  const x=opts.find(o=>o.name===S.ui.rangeD)||(my&&busiest(opts.filter(o=>o.ppl.some(isMine))))||busiest(opts);
-  // No id on purpose: the page keeps typed values across redraws by id, and this one should always show the pick.
-  const sel=h("select",{class:"range-d"},opts.map(o=>h("option",{value:o.name},`${o.name} · ${o.range} · ${o.active.length} in range`)));
-  sel.value=x.name;sel.addEventListener("change",()=>setUi({rangeD:sel.value},true));
+  // "-" means they closed every dungeon on purpose.
+  const x=S.ui.rangeD==="-"?null:opts.find(o=>o.name===S.ui.rangeD)||(my&&busiest(opts.filter(o=>o.ppl.some(isMine))))||busiest(opts);
+  return h("section",{class:"card dg-list","aria-labelledby":"range-h"},h("div",{class:"dg-list-head"},head),
+    h("div",{class:"dg-cols small ter","aria-hidden":"true"},h("span",{},"Dungeon"),h("span",{},"In range"),h("span",{},"Been")),
+    opts.map(o=>{const open=x&&o.name===x.name,been=beenCount(o.name),mine=o.ppl.some(isMine);
+      return h("div",{class:"dg-item"+(open?" open":"")},
+        h("div",{class:"dg-sum",onclick:e=>{if(!e.target.closest("a,button"))setUi({rangeD:open?"-":o.name},true)}},
+          h("button",{type:"button",class:"dg-name","aria-expanded":String(!!open),onclick:()=>setUi({rangeD:open?"-":o.name},true)},
+            h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),mine?h("span",{class:"tag gold"},"Your level"):null),
+          h("span",{class:"dg-n"+(o.active.length?"":" zero")},h("b",{},String(o.active.length)),h("span",{class:"dg-n-l"}," in range")),
+          h("span",{class:"dg-n"+(been?"":" zero")},h("b",{},String(been)),h("span",{class:"dg-n-l"}," been"))),
+        open?rangeDetail(o):null)}))}
+// How many current characters have a dungeon stamped (by hand or from loot).
+const beenCount=name=>[...S.members,...S.alts].filter(m=>(isMine(m)||memberState(m)==="current")&&passportOf(m).some(p=>p.name===name)).length;
+// The open dungeon: who's in range by role, a suggested group, who's been, what drops.
+function rangeDetail(x){
   const have=fillRoles(x.active,{Tank:1,Healer:1,DPS:3});
   const need=[!have.Tank?"a tank":"",!have.Healer?"a healer":""].filter(Boolean),short=5-x.active.length;
   const status=!x.active.length?h("span",{class:"tag"},"Nobody in range"):!need.length&&short<=0?h("span",{class:"tag info"},"Enough for a full group"):h("span",{class:"tag"},"Needs "+need.join(", ")+(need.length&&short>need.length?" and "+(short-need.length)+" more":need.length?"":short+" more"));
@@ -1742,10 +1780,9 @@ function rangeBoard(){
     suggestEl=h("div",{class:"suggest"},h("span",{class:"small",style:"font-weight:600;color:var(--sec)"},"Suggested group"),
       slots.map(([r,p])=>h("div",{class:"suggest-row"},h("span",{class:"ter"},r),p?h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap;min-width:0"},classIcon(p.cls),charLink(p),h("span",{class:"small ter"},String(p.level||1)+(seenOf(p)?" · seen "+ago(seenOf(p)):""))):h("span",{class:"ter"},"Nobody in range"))),
       h("div",{class:"row",style:"align-items:center"},h("span",{class:"small ter"},"Whisper them in game, or ask on Discord."),h("button",{class:"btn ghost sm",type:"button",onclick:()=>setUi({suggest:""})},"Close")))}
-  return h("section",{class:"card","aria-labelledby":"range-h",style:"gap:.75rem;margin-top:1rem"},head,
-    h("label",{class:"f tiny",style:"max-width:26.25rem"},"Dungeon",sel),
+  return h("div",{class:"dg-detail"},
     h("div",{class:"range-row"},
-      h("div",{class:"spread",style:"align-items:baseline"},h("span",{},h("b",{},x.name),h("span",{class:"ter"}," · levels "+x.range)),status),
+      h("div",{class:"spread",style:"align-items:baseline"},h("span",{class:"small ter"},"Faded names haven't been seen in game for two weeks."),status),
       cols,suggestEl,
       h("div",{class:"row"},x.active.length>=2&&S.ui.suggest!==x.name?h("button",{class:"btn ghost sm",type:"button",onclick:()=>setUi({suggest:x.name})},"Suggest a group"):null)),
     dungeonBeen(x.name),dungeonLoot(x.name))}
@@ -1766,7 +1803,7 @@ function dungeonLoot(name){
     const names=new Set([...Object.values(m.gear||{}).map(g=>g&&g.name),...(Array.isArray(m.journey)?m.journey:[]).map(j=>{const x=/^(?:Equipped|Got) (.+)$/.exec(String(j.t||""));return x&&x[1]})].filter(Boolean).map(n=>String(n).trim().toLowerCase()));
     for(const n of names)(owned.get(n)||owned.set(n,[]).get(n)).push(m)}
   const bosses=[];for(const v of items){let b=bosses.find(x=>x[0]===v[1]);if(!b)bosses.push(b=[v[1],[]]);b[1].push(v[2])}
-  const open=(S.ui.dgLoot||{})[name]!==false;
+  const open=(S.ui.dgLoot||{})[name]===true;
   return h("details",{class:"dg-block dg-loot",open:open||null,ontoggle:e=>{if(e.target.open!==((S.ui.dgLoot||{})[name]??open))S.ui.dgLoot={...(S.ui.dgLoot||{}),[name]:e.target.open}}},
     h("summary",{},h("h3",{class:"dg-h"},"What Drops",h("span",{class:"small ter"},items.length+" items from "+bosses.length+(bosses.length===1?" boss":" bosses")))),
     h("div",{class:"dg-bosses"},bosses.map(([b,list])=>h("div",{class:"dg-boss"},h("b",{},b),
@@ -1910,19 +1947,22 @@ function viewProfessions(){
   const by={};for(const m of chars)for(const[p,sk]of Object.entries(m.profs||{}))(by[p]=by[p]||[]).push({m,sk:+sk||0});
   for(const p in by)by[p].sort((a,b)=>b.sk-a.sk);
   const t=S.ui.profTab;
-  const who=({m,sk},p)=>h("div",{style:"display:flex;flex-direction:column;gap:.25rem;padding:.5rem 0;border-top:1px solid var(--sep)"},
-    h("span",{class:"spread"},h("span",{class:"row",style:"gap:.5rem"},classIcon(m.cls),charLink(m)),
-      h("span",{class:"small "+(sk>=300?"":"ter"),style:sk>=300?"color:var(--accent-text)":""},(CLASS_SKILLS[p]?"":rankOf(sk)+" · ")+sk)),
+  // One line per character: name and skill, the bar underneath. The rank (Expert and so on) is in the tooltip.
+  const who=({m,sk},p)=>h("li",{class:"pf-row",title:CLASS_SKILLS[p]?"":rankOf(sk)+" · "+sk+" / 300"},
+    h("span",{class:"pf-who"},classIcon(m.cls),charLink(m)),h("span",{class:"pf-sk"+(sk>=300?" max":"")},String(sk)),
     h("span",{class:"track","aria-hidden":"true"},h("i",{class:sk>=300?"max":"",style:`width:${(sk/300*100).toFixed(1)}%`})));
-  const profCard=p=>h("section",{class:"card"},h("div",{class:"spread"},h("h3",{},p),h("span",{class:"small ter"},by[p]?by[p].length+(by[p].length===1?" person":" people"):"")),
-    by[p]?by[p].map(x=>who(x,p)):h("p",{class:"empty"},"Nobody yet."));
+  // Top 5, then "N more" opens the rest, so the cards stay close in height.
+  const profCard=p=>{const l=by[p]||[],more=(S.ui.pfMore||{})[p],shown=more?l:l.slice(0,5);
+    return h("section",{class:"card pf-card"},h("div",{class:"pf-top"},h("span",{class:"pf-kind"},GATHERING.includes(p)?"Gathering":"Crafting"),h("h3",{},p),h("span",{class:"small ter"},l.length?l.length+(l.length===1?" person":" people"):"")),
+      l.length?h("ol",{class:"pf-list"},shown.map(x=>who(x,p))):h("p",{class:"empty"},"Nobody yet."),
+      l.length>5?h("button",{type:"button",class:"btn ghost sm pf-more","aria-expanded":String(!!more),onclick:()=>setUi({pfMore:{...(S.ui.pfMore||{}),[p]:!more}},true)},more?"Show top 5":(l.length-5)+" more"):null)};
   const missing=PRIMARY.filter(p=>!by[p]);
   // The finder first; the All / Primary / Secondary switch sits with the profession cards it filters.
   const out=[h("div",{class:"page-head"},h("div",{},h("h1",{},"Professions"),h("p",{class:"sub"},"Who to whisper for crafts and mats."))),recipeFinder(),
     h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"big"},"Who Has What"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],t,k=>setUi({profTab:k},true)))];
   if(t==="All"||t==="Primary"){
-    out.push(h("div",{class:"spread"},h("h3",{class:"prof-h"},"Primary"),h("span",{class:"sub"},missing.length?"Nobody has "+missing.join(", "):`All ${PRIMARY.length} covered`)));
-    out.push(h("h3",{class:"sub"},"Gathering"),h("div",{class:"grid sm"},GATHERING.map(profCard)),h("h3",{class:"sub"},"Crafting"),h("div",{class:"grid sm"},PRIMARY.filter(p=>!GATHERING.includes(p)).map(profCard)))}
+    out.push(h("div",{class:"spread",style:"align-items:baseline"},h("h3",{class:"prof-h"},"Primary"),missing.length?h("span",{class:"small ter"},"Nobody has "+missing.join(", ")+" yet"):null),
+      h("div",{class:"pf-grid"},[...GATHERING,...PRIMARY.filter(p=>!GATHERING.includes(p))].map(profCard)))}
   if(t==="All"||t==="Secondary"){
     const sec=chars.filter(m=>SECONDARY.some(p=>m.profs&&p in m.profs)).sort((a,b)=>nameOf(a).localeCompare(nameOf(b)));
     const cell=(m,p)=>{const sk=m.profs&&m.profs[p];return h("td",{"data-label":p},sk?h("span",{style:+sk>=300?"color:var(--accent-text);font-weight:600":""},String(sk)):h("span",{class:"ter"},"—"))};
