@@ -59,7 +59,7 @@ a{color:var(--accent-text)}a:hover{color:var(--link-hover)}
 /* Header */
 header.top{background:var(--sunken);border-bottom:3px solid var(--trim);box-shadow:inset 0 -1px 0 var(--trim-deep);padding-top:env(safe-area-inset-top,0px)}
 header.top .wrap{padding-block:.75rem;display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:baseline;gap:.75rem;text-decoration:none}
+.brand{display:flex;align-items:center;gap:.75rem;text-decoration:none}.brand-logo{width:2.5rem;height:2.5rem;flex:none;filter:drop-shadow(0 1px 2px rgb(0 0 0/.4))}
 .brand b{font-family:var(--display);font-weight:700;font-size:1.5rem;line-height:2rem;color:var(--accent-text)}
 .brand span{font-size:.75rem;color:var(--ter)}
 nav.main{display:flex;flex-wrap:wrap;gap:.25rem;font-weight:600}
@@ -606,7 +606,9 @@ nav.bottom{display:none}
 .rv-row{display:grid;grid-template-columns:4.5rem minmax(0,1fr) 4.5rem;align-items:center;gap:.5rem;min-height:2.25rem;border-top:1px solid var(--sep)}
 .rv-l{text-align:center;font-size:.8125rem;color:var(--sec)}.rv-v{font-variant-numeric:tabular-nums;color:var(--ter)}.rv-row .rv-v:last-child{text-align:right}
 .rv-v.win{color:var(--text);font-weight:700}
-@media (max-width:360px){nav.bottom a{font-size:.6875rem;letter-spacing:-.01em}.brand b{font-size:1.25rem;line-height:1.5rem}}
+@media (max-width:360px){nav.bottom a{font-size:.6875rem;letter-spacing:-.01em}.brand b{font-size:1.25rem;line-height:1.5rem}.brand-logo{width:2rem;height:2rem}}
+@media (max-width:480px){.brand{gap:.5rem;min-width:0}.brand b{font-size:1.25rem;line-height:1.5rem;white-space:nowrap}.brand-logo{width:2.25rem;height:2.25rem}}
+@media (max-width:360px){.brand{gap:.375rem}.brand b{font-size:.9375rem}.brand-logo{width:1.875rem;height:1.875rem}}
 .tab-empty{display:none}
 .recap-img{display:block;width:100%;max-height:55vh;object-fit:contain;border-radius:8px;background:#0f0a09;border:1px solid var(--b-sub)}
 .rank-l{display:inline-flex;align-items:center;gap:.375rem;margin-top:.25rem;font-size:.8125rem;color:var(--sec);text-decoration:none}
@@ -912,7 +914,7 @@ const seg=(label,opts,cur,pick)=>h("div",{class:"seg",role:"group","aria-label":
 function header(page){
   const dc=S.guild.discord&&DISCORD_RE.test(S.guild.discord)?S.guild.discord:"";
   return h("header",{class:"top"},h("div",{class:"wrap"},
-    h("a",{class:"brand",href:"#roster"},h("b",{},"Blood and Tears"),h("span",{},"Horde · WoW Forever")),
+    h("a",{class:"brand",href:"#roster"},h("img",{class:"brand-logo",src:"logo.svg",alt:"",width:"40",height:"40"}),h("b",{},"Blood and Tears"),h("span",{},"Horde · WoW Forever")),
     h("nav",{class:"main","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null},l))),
     // On phones the menu moves to a bar along the bottom.
     h("nav",{class:"bottom","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null},l))),
