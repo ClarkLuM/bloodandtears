@@ -1784,13 +1784,13 @@ function rangeBoard(){
   const bandSeg=seg("Achievement",[...DG_GROUPS.map(([k,l])=>[k,l,all.filter(x=>bandOf(x)===k).length]),["All","All"]],band,k=>setUi({dgGroup:k},true));
   return h("section",{class:"card dg-list","aria-labelledby":"range-h"},h("div",{class:"dg-list-head"},head,h("div",{class:"dg-bands"},bandSeg),
     band!=="All"?h("p",{class:"small ter dg-ach"},(()=>{const g=DG_GROUPS.find(x=>x[0]===band),l=all.filter(x=>bandOf(x)===band).map(x=>rangeOf(x.range));
-      return["Counts toward ",h("b",{},g[3])," · levels "+Math.min(...l.map(r=>r[0]))+"–"+Math.max(...l.map(r=>r[1]))]})()):null),
+      return["Legacy achievement: ",h("b",{},g[3])," · levels "+Math.min(...l.map(r=>r[0]))+"–"+Math.max(...l.map(r=>r[1]))]})()):null),
     h("div",{class:"dg-cols small ter","aria-hidden":"true"},h("span",{},"Dungeon"),h("span",{},"In range"),h("span",{},"Been")),
     opts.map(o=>{const open=x&&o.name===x.name,been=beenCount(o.name),mine=o.ppl.some(isMine);
       return h("div",{class:"dg-item"+(open?" open":"")},
         h("div",{class:"dg-sum",onclick:e=>{if(!e.target.closest("a,button"))setUi({rangeD:open?"-":o.name},true)}},
           h("button",{type:"button",class:"dg-name","aria-expanded":String(!!open),onclick:()=>setUi({rangeD:open?"-":o.name},true)},
-            h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon: it doesn't count toward the Horde Spelunker achievement."},"Alliance · doesn't count"):null,mine?h("span",{class:"tag gold"},"Your level"):null),
+            h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon: it doesn't count toward the Horde Spelunker achievement or give Legacy points."},"Alliance · no Legacy points"):null,mine?h("span",{class:"tag gold"},"Your level"):null),
           h("span",{class:"dg-n"+(o.active.length?"":" zero")},h("b",{},String(o.active.length)),h("span",{class:"dg-n-l"}," in range")),
           h("span",{class:"dg-n"+(been?"":" zero")},h("b",{},String(been)),h("span",{class:"dg-n-l"}," been"))),
         open?rangeDetail(o):null)}))}
