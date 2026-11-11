@@ -1,0 +1,120 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // There's no sign-in screen. Each browser quietly gets an anonymous ID (Firebase Anonymous sign-in),
+    // and each main character keeps a list of the IDs ('owners') allowed to edit it.
+    function signedIn() { return request.auth != null; }
+    function uid() { return request.auth.uid; }
+    function memberDoc(id) { return /databases/$(database)/documents/members/$(id); }
+    // True if this device can edit the main character with this ID (and its alts).
+    function ownsMember(id) {
+      return signedIn() && id is string && exists(memberDoc(id)) &&
+        get(memberDoc(id)).data.get('owners', []).hasAny([uid()]);
+    }
+    // Officers can edit or remove anything. The server keeps guild/officers up to date with the devices
+    // of the characters named in OFFICER_NAMES (functions/index.js); nobody can change that list from the site.
+    function officersDoc() { return /databases/$(database)/documents/guild/officers; }
+    function isOfficer() {
+      return signedIn() && exists(officersDoc()) && get(officersDoc()).data.get('uids', []).hasAny([uid()]);
+    }
+
+    function optStr(d, k, max) { return !(k in d) || (d[k] is string && d[k].size() <= max); }
+    function optList(d, k, max) { return !(k in d) || (d[k] is list && d[k].size() <= max); }
+    // Armory data (talents, stats, honourable kills...) is only written by the sync on the server, never from the site,
+    // so nobody can fake their way up the Honour Board.
+    function armoryKept() {
+      return request.resource.data.get('armory', null) == (resource == null ? null : resource.data.get('armory', null));
+    }
+    function validChar(d) {
+      return d.char is string && d.char.size() > 0 && d.char.size() <= 41 &&
+        optStr(d, 'first', 20) && optStr(d, 'last', 20) &&
+        d.level is int && d.level >= 1 && d.level <= 60 &&
+        d.role in ['Tank', 'Healer', 'DPS'] &&
+        (!('role2' in d) || d.role2 in ['Tank', 'Healer', 'DPS']) &&
+        optStr(d, 'notes', 1000) &&
+        optList(d, 'goals', 50) && optList(d, 'journey', 40) && optList(d, 'owners', 10) &&
+        optList(d, 'wishlist', 30) && optList(d, 'crafts', 150) &&
+        optList(d, 'shots', 6) && optStr(d, 'pic', 20) && optStr(d, 'spec', 30) &&
+        (!('gear' in d) || (d.gear is map && d.gear.size() <= 19)) &&
+        (!('tz' in d) || d.tz in ['AWST', 'ACST', 'AEST']) &&
+        (!('avail' in d) || d.avail is map) &&
+        (!('showoff' in d) || (d.showoff is map && d.showoff.get('name', '') is string && d.showoff.get('name', '').size() <= 120)) &&
+        optStr(d, 'flavour', 40) && optStr(d, 'visitedAt', 40) &&
+        (!('cleared' in d) || (d.cleared is map && d.cleared.size() <= 40)) &&
+        armoryKept() &&
+        request.resource.data.get('discordId', null) == (resource == null ? null : resource.data.get('discordId', null));
+    }
+
+    match /members/{memberId} {
+      allow read: if signedIn();
+      // New character: it's yours (a device can have several). Officers can add someone else (with no owners yet).
+      allow create: if validChar(request.resource.data) && (
+        request.resource.data.owners == [uid()] ||
+        (isOfficer() && !('owners' in request.resource.data)));
+      allow update: if validChar(request.resource.data) && (
+        // Editing your own character (you can't remove every device, including your own).
+        (resource.data.get('owners', []).hasAny([uid()]) && request.resource.data.owners.hasAny([uid()])) ||
+        isOfficer() ||
+        // "This is me": unclaimed characters (added by the guild list, or before devices were tracked) can be claimed once.
+        (!('owners' in resource.data) && request.resource.data.owners == [uid()]) ||
+        // "Not me": undoing a claim straight after, when this is the only device on it.
+        (resource.data.get('owners', []) == [uid()] && !('owners' in request.resource.data) &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['owners', 'updatedAt'])) ||
+        // Adding this device with a one-time code made on a device that already owns the character.
+        ('link' in request.resource.data && request.resource.data.link is string &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['owners', 'link']) &&
+          exists(/databases/$(database)/documents/links/$(request.resource.data.link)) &&
+          get(/databases/$(database)/documents/links/$(request.resource.data.link)).data.member == memberId &&
+          request.resource.data.owners.hasAll(resource.data.get('owners', [])) &&
+          request.resource.data.owners.hasAny([uid()]) &&
+          request.resource.data.owners.size() == resource.data.get('owners', []).size() + 1));
+      allow delete: if signedIn() && (resource.data.get('owners', []).hasAny([uid()]) || isOfficer());
+    }
+
+    // One-time codes for /link in Discord. Made on the site by whoever can edit the character; only the server reads them.
+    match /dlinks/{code} {
+      allow get, list: if false;
+      allow create: if ownsMember(request.resource.data.member) && request.resource.data.keys().hasOnly(['member', 'at']);
+    }
+
+    // One-time device codes. Anyone who knows a code can read it; nobody can list them.
+    match /links/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if ownsMember(request.resource.data.member) &&
+        request.resource.data.keys().hasOnly(['member', 'at']);
+      allow delete: if signedIn();
+    }
+
+    // Alts point at their main in 'owner'. Whoever can edit the main can edit its alts.
+    match /alts/{altId} {
+      allow read: if signedIn();
+      allow create: if validChar(request.resource.data) &&
+        (ownsMember(request.resource.data.owner) || isOfficer());
+      allow update: if validChar(request.resource.data) &&
+        request.resource.data.owner == resource.data.owner &&
+        (ownsMember(resource.data.owner) || isOfficer());
+      allow delete: if signedIn() && (ownsMember(resource.data.owner) || isOfficer());
+    }
+
+    // Looking for Group: one doc per character joining a goal.
+    // Group posts and joins were cut from the site; old join records stay, but nothing can read or change them.
+
+    // Trade orders were removed; old ones are no longer readable (no rule means no access).
+
+    // Events, RSVPs and the first version's raid nights were cut from the site. Their old documents stay in the
+    // database, but nothing can read or change them any more (anything not listed here is closed).
+
+    // Guild basics and the Discord invite: everyone reads, officers change them.
+    match /guild/{docId} {
+      allow read: if signedIn();
+      // officers, officerPicks, roster, armory, digest, firsts (the Hall of Firsts) and itemIds (Wowhead IDs for items)
+      // are written by the server only.
+      allow write: if !(docId in ['officers', 'officerPicks', 'roster', 'armory', 'digest', 'firsts', 'itemIds']) && isOfficer() &&
+        optStr(request.resource.data, 'discord', 200) && optStr(request.resource.data, 'gm', 60) &&
+        optStr(request.resource.data, 'officers', 500) && optStr(request.resource.data, 'loot', 500) &&
+        optStr(request.resource.data, 'events', 500);
+    }
+
+  }
+}

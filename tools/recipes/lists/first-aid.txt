@@ -1,0 +1,32 @@
+First Aid Kit|1*|T
+Linen Bandage|1|A
+Heavy Linen Bandage|35*|T
+Minor Healing Potion|40*|T
+Anti-Venom|65*|T
+Wool Bandage|65*|T
+Lesser Healing Potion|70*|T
+Simple Poultice|75*|T
+Heavy Wool Bandage|100*|T
+Woolen Tourniquet|105*|T
+Healing Potion|120*|T
+Strong Anti-Venom|130|R
+Silk Bandage|135*|T
+Clever Poultice|140|R
+Toxin Study|140|R
+Greater Healing Potion|155|R
+Heavy Silk Bandage|180|R
+Leather Tourniquet|200|R
+Mageweave Bandage|210|R
+Superior Poultice|210|R
+Potent Anti-Venom|215|R
+Superior Healing Potion|215|R
+Heavy Mageweave Bandage|225*|T
+Runecloth Bandage|245*|T
+Surgical Tourniquet|265|R
+Heavy Runecloth Bandage|275*|T
+Major Healing Potion|275|R
+Powerful Poultice|280|R
+Crystal Infused Bandage|285*|R
+Dense Runecloth Bandage|300|R
+Plague Doctor's Laboratory|300|R
+Powerful Anti-Venom|300|R

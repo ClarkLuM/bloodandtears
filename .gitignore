@@ -1,0 +1,21 @@
+# Installed packages (npm install recreates them)
+node_modules/
+
+# Firebase local cache, logs and emulator data
+.firebase/
+*.log
+firebase-debug.*.log
+.runtimeconfig.json
+functions/.env*
+
+# OpenDesigner's private journey log and generated previews
+opendesigner/journey/
+opendesigner/build/
+opendesigner/preview/
+opendesigner/preview.html
+opendesigner/overview.html
+
+# Leftover backups and OS files
+*.hand-edited
+.DS_Store
+Thumbs.db

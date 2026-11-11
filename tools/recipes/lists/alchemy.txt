@@ -1,0 +1,193 @@
+Elixir of Minor Defense|1|A
+Elixir of Minor Force|1|A
+Minor Arcane Elixir|1|A
+Mana Well|5*|T
+Elixir of Minor Spirit|15|R
+Minor Mageblood Elixir|25|R
+Minor Mender's Potion|30|R
+Cerulean Dye|35*|T
+Minor Spellblasting Potion|35|R
+Sulfuric Acid|35*|T
+Elixir of Minor Strength|40*|T
+Minor Frenzy Potion|40|R
+Minor Rejuvenation Potion|40|T
+Minor Cleric's Elixir|45|R
+Minor Troll's Blood Elixir|45*|T
+Elixir of Minor Agility|50|R
+Elixir of Minor Fortitude|50|R
+Minor Discolored Healing Potion|50|R
+Minor Mana Potion|50*|T
+Rage Potion|60|R
+Swiftness Potion|60|R
+Blackmouth Oil|65*|T
+Elixir of Lesser Spirit|65|R
+Lesser Discolored Healing Potion|70*|T
+Lesser Mageblood Elixir|75|R
+Lesser Mender's Potion|80|R
+Draught of Tongues|85*|R
+Lesser Spellblasting Potion|85|R
+Elixir of Coalesced Regret|90|R
+Elixir of Giant Growth|90|R
+Lesser Frenzy Potion|90|R
+Elixir of Lesser Intellect|95|R
+Lesser Cleric's Elixir|95|R
+Holy Protection Potion|100|R
+Draught of Water Breathing|105*|T
+Elixir of Wisdom|105*|T
+Minor Magic Resistance Potion|110|R
+Elixir of Spirit|115|R
+Magenta Dye|115*|T
+Swim Speed Potion|115*|T
+Discolored Healing Potion|120*|T
+Potion of Poison Cleansing|120|R
+Lesser Mana Potion|130*|T
+Mender's Potion|130|R
+Elixir of Intellect|135|R
+Fire Oil|135*|T
+Lesser Troll's Blood Elixir|135*|T
+Shadow Protection Potion|135|R
+Spellblasting Potion|135|R
+Elixir of Lesser Agility|140|R
+Elixir of Lesser Defense|140*|T
+Fermenter|140|R
+Frenzy Potion|140|R
+Cleric's Elixir|145|R
+Elixir of Fire Power|150*|T
+Elixir of Fortitude|150|R
+Elixir of Ogre Strength|150|R
+Elixir of Strength|150|R
+Free Action Potion|150|R
+Greater Discolored Healing Potion|160*|T
+Elixir of Greater Spirit|165|R
+Fire Protection Potion|165|R
+Mana Potion|165*|T
+Shadow Oil|165|R
+Lesser Invisibility Potion|170*|T
+Draught of Water Walking|175*|R
+Elixir of Lesser Fortitude|175|R
+Great Rage Potion|175|R
+Greater Mageblood Elixir|175|R
+Greater Mender's Potion|180|R
+Troll's Blood Elixir|180|R
+Greater Spellblasting Potion|185|R
+Elixir of Agility|190*|T
+Elixir of Frost Power|190|R
+Frost Protection Potion|190|R
+Greater Frenzy Potion|190|R
+Lesser Arcane Elixir|120|R
+Nature Protection Potion|190|R
+Revealing Draught|190*|R
+Draught of Detect Lesser Invisibility|195|R
+Greater Cleric's Elixir|195|R
+Potion of Predatory Senses|195|R
+Elixir of Defense|200*|T
+Elixir of Greater Fortitude|200|R
+Frost Oil|200|R
+Insulating Gniodine|200|R
+Catseye Draught|205*|T
+Greater Mana Potion|205*|T
+Oil of Immolation|205*|T
+Goblin Rocket Fuel|210|R
+Magic Resistance Potion|210|R
+Restorative Potion|210*|T
+Draught of Greater Water Breathing|215*|T
+Lesser Stoneshield Potion|215|R
+Superior Discolored Healing Potion|215*|T
+Viridian Dye|215*|T
+Mildly Irradiated Rejuvenation Potion|225|R
+Philosopher's Stone|225|R
+Gold Bar|225|R
+Truesilver Bar|225|R
+Wildvine Potion|225|R
+Draught of Detect Undead|230*|T
+Dreamless Sleep Potion|230*|T
+Superior Mender's Potion|230|R
+Arcane Elixir|235*|T
+Elixir of Greater Intellect|235*|T
+Flask of Everlasting Nightmares|235*|T
+Flask of Restless Dreams|235*|T
+Invisibility Potion|235|R
+Jar of Nightmarish Mojo|235*|T
+Stonescale Oil|235*|T
+Superior Spellblasting Potion|235|R
+Draught of Dream Vision|240|R
+Elixir of Greater Agility|240*|T
+Gift of Arthas|240|R
+Superior Frenzy Potion|240|R
+Dragonfire Potion|245|R
+Elixir of Greater Strength|245|R
+Ghost Dye|245|R
+Distilled Firewater|250|R
+Draught of Detect Demon|250*|T
+Elixir of Holy Power|250|R
+Elixir of Shadow Power|250|R
+Elixir of the Phalanx|250|R
+Limited Invulnerability Potion|250|R
+Major Discolored Healing Potion|250|R
+Potion of Demon Slaying|250|R
+Mighty Rage Potion|255|R
+Superior Mana Potion|260|R
+Caustic Smog Potion|265|R
+Elixir of Greater Defense|265|R
+Elixir of the Sages|270|R
+Alchemist's Stone|275|R
+Elixir of Brute Force|275|R
+Elixir of Cunning|275|R
+Elixir of Ferocity|275|R
+Elixir of Sages|275|R
+Elixir of the Whale|275|R
+Greater Dreamless Sleep Potion|275|R
+Mageblood Elixir|275|R
+Potion of Venomous Blood|275|R
+Essence of Fire|275|R
+Arcanite Bar|275|R
+Living Essence|275|R
+Essence of Water|275|R
+Essence of Earth|275|R
+Legionite Bar|275|R
+Essence of Air|275|R
+Essence of Undeath|275|R
+Elixir of the Mongoose|280|R
+Elixir of the Owl|280|R
+Greater Stoneshield Potion|280|R
+Major Mender's Potion|280|R
+Potion of Beast Slaying|280|R
+Potion of Elemental Purging|280|R
+Elixir of Nature Power|285|R
+Elixir of Wicked Regeneration|285|R
+Greater Arcane Elixir|285|R
+Living Action Potion|285|R
+Major Spellblasting Potion|285|R
+Purification Potion|285|R
+Greater Arcane Protection Potion|290|R
+Greater Fire Protection Potion|290|R
+Greater Frost Protection Potion|290|R
+Greater Holy Protection Potion|290|R
+Greater Nature Protection Potion|290|R
+Greater Shadow Protection Potion|290|R
+Major Frenzy Potion|290|R
+Major Troll's Blood Elixir|290|R
+Major Mana Potion|295|R
+Alchemy Laboratory|300|R
+Elixir of Alacrity|300*|R
+Elixir of the Grizzly|300|R
+Elixir of the Honey Badger|300*|R
+Elixir of the Ironside|300*|R
+Elixir of the Mage-Lord|300*|R
+Flask of Ancient Knowledge|300*|R
+Flask of Chromatic Resistance|300|R
+Flask of Distilled Wisdom|300|R
+Flask of Madness|300*|R
+Flask of Natural Accuracy|300|R
+Flask of Natural Aggression|300|R
+Flask of Natural Precision|300|R
+Flask of Natural Swiftness|300|R
+Flask of Petrification|300|R
+Flask of Supreme Power|300|R
+Flask of the Old Gods|300*|R
+Flask of the Titans|300|R
+Flask of Unyielding Sorrow|300*|R
+Gurubashi Mojo Madness|300*|T
+Major Rejuvenation Potion|300|R
+Refined Scale of Onyxia|300*|T
+Elemental Fire|300|R

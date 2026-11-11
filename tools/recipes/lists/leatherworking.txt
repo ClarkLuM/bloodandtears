@@ -1,0 +1,568 @@
+Camp Tent|1*|T
+Handstitched Leather Boots|1|A
+Handstitched Leather Bracers|1|A
+Handstitched Leather Cloak|1|A
+Handstitched Leather Vest|1|A
+Light Armor Kit|1|A
+Light Leather|1|A
+Handstitched Leather Pants|25*|T
+Cured Light Hide|30*|T
+Light Leather Reagent Bag|30|R
+Rugged Leather Pants|30|R
+Black Whelp Slippers|35|R
+Dark Leather Boots|35|R
+Handstitched Leather Belt|35*|T
+Kodo Hide Bag|35|R
+Light Leather Quiver|35*|T
+Moonglow Boots|35|R
+Murloc Scale Shoes|35|R
+Small Leather Ammo Pouch|35*|T
+White Leather Jerkin|40|R
+Embossed Leather Vest|45*|T
+Azure Gustwoven Belt|50|R
+Azure Gustwoven Bracers|50|R
+Azure Windraveled Armguards|50|R
+Azure Windraveled Strap|50|R
+Cloudy Gustwoven Belt|50|R
+Cloudy Gustwoven Bracers|50|R
+Cloudy Windraveled Armguards|50|R
+Cloudy Windraveled Strap|50|R
+Embossed Leather Cloak|50*|T
+Embossed Leather Gloves|50*|T
+Fine Leather Cloak|50*|T
+Fine Leather Gloves|50|R
+Azure Gustwoven Boots|55|R
+Azure Gustwoven Gloves|55|R
+Azure Windraveled Footwraps|55|R
+Azure Windraveled Mitts|55|R
+Cloudy Gustwoven Boots|55|R
+Cloudy Gustwoven Gloves|55|R
+Cloudy Windraveled Footwraps|55|R
+Cloudy Windraveled Mitts|55|R
+Light Leather Bracers|55*|T
+Medium Leather|55*|T
+Azure Gustwoven Harness|60|R
+Azure Gustwoven Trousers|60|R
+Azure Windraveled Jerkin|60|R
+Azure Windraveled Pants|60|R
+Brawler's Leather Belt|60|R
+Cloudy Gustwoven Harness|60|R
+Cloudy Gustwoven Trousers|60|R
+Cloudy Windraveled Jerkin|60|R
+Cloudy Windraveled Pants|60|R
+Defender's Leather Belt|60|R
+Embossed Leather Boots|60*|T
+Embossed Leather Pants|60*|T
+Stormrider's Leather Belt|60|R
+Totemic Leather Belt|60|R
+Trapper's Leather Belt|60|R
+Wisdom's Leather Belt|60|R
+Deviate Scale Cloak|65|R
+Fine Leather Belt|65*|T
+Fine Leather Boots|65|R
+Moonglow Vest|65|R
+Murloc Scale Belt|65|R
+Cured Medium Hide|70*|T
+Fine Leather Tunic|70*|T
+Medium Armor Kit|70*|T
+Murloc Scale Breastplate|70|R
+Black Whelp Cloak|75|R
+Black Whelp Tunic|75|R
+Brawler's Leather Armor|75|R
+Brawler's Leather Gloves|75|R
+Dark Leather Tunic|75|R
+Defender's Leather Armor|75|R
+Defender's Leather Gloves|75|R
+Hillman's Leather Vest|75|R
+Stormrider's Leather Armor|75|R
+Stormrider's Leather Gloves|75|R
+Totemic Leather Armor|75|R
+Totemic Leather Gloves|75|R
+Trapper's Leather Armor|75|R
+Trapper's Leather Gloves|75|R
+Wisdom's Leather Armor|75|R
+Wisdom's Leather Gloves|75|R
+Deviate Scale Gloves|80|R
+Fine Leather Pants|80|R
+Forceful Medium Armor Kit|80|R
+Gray Leather Boots|80*|T
+Light Leather Pants|80*|T
+Mystic Medium Armor Kit|80|R
+Brawler's Leather Boots|85|R
+Defender's Leather Boots|85|R
+Stormrider's Leather Boots|85|R
+Totemic Leather Boots|85|R
+Trapper's Leather Boots|85|R
+Wisdom's Leather Boots|85|R
+Dark Leather Cloak|90*|T
+Deviate Scale Belt|90|R
+Dark Leather Gloves|95|R
+Dark Leather Pants|95*|T
+Hillman's Belt|95|R
+Red Whelp Gloves|95|R
+Brawler's Leather Hood|100|R
+Brawler's Leather Pants|100|R
+Defender's Leather Hood|100|R
+Defender's Leather Pants|100|R
+Nimble Leather Gloves|100*|T
+Stormrider's Leather Hood|100|R
+Stormrider's Leather Pants|100|R
+Totemic Leather Hood|100|R
+Totemic Leather Pants|100|R
+Toughened Leather Armor|100*|T
+Trapper's Leather Hood|100|R
+Trapper's Leather Pants|100|R
+Wisdom's Leather Hood|100|R
+Wisdom's Leather Pants|100|R
+Dark Leather Belt|105*|T
+Fletcher's Gloves|105*|T
+Heavy Leather|105*|T
+Brawler's Leather Tunic|110|R
+Defender's Leather Tunic|110|R
+Earthen Leather Shoulders|110|R
+Herbalist's Gloves|110|R
+Hillman's Leather Boots|110|R
+Hillman's Shoulders|110*|T
+Stormrider's Leather Tunic|110|R
+Totemic Leather Tunic|110|R
+Trapper's Leather Tunic|110|R
+Wisdom's Leather Tunic|110|R
+Cured Heavy Hide|115*|T
+Dark Leather Shoulders|115|R
+Pilferer's Gloves|115|R
+Toughened Leather Gloves|115*|T
+Heavy Earthen Gloves|120|R
+Barbaric Gloves|125|R
+Brawler's Leather Helm|125|R
+Brawler's Leather Legguards|125|R
+Defender's Leather Helm|125|R
+Defender's Leather Kilt|125|R
+Heavy Armor Kit|125*|T
+Heavy Leather Ammo Pouch|125*|T
+Heavy Leather Ball|125|R
+Heavy Quiver|125*|T
+Hillman's Cloak|125*|T
+Hillman's Leather Gloves|125*|T
+Stormrider's Leather Helm|125|R
+Stormrider's Leather Kilt|125|R
+Totemic Leather Helm|125|R
+Totemic Leather Leggings|125|R
+Trapper's Leather Helm|125|R
+Trapper's Leather Legguards|125|R
+Wisdom's Leather Helm|125|R
+Wisdom's Leather Leggings|125|R
+Barbaric Bracers|130|R
+Green Leather Armor|130|R
+Forceful Heavy Armor Kit|135|R
+Green Leather Belt|135*|T
+Guardian Pants|135*|T
+Mystic Heavy Armor Kit|135|R
+Dusky Leather Leggings|140|R
+Raptor Hide Belt|140|R
+Raptor Hide Harness|140|R
+Tanning Rack|140|R
+Void-Touched Leather Gauntlets|140*|T
+Void-Touched Leather Gloves|140*|T
+Barbaric Leggings|145|R
+Guardian Belt|145|R
+Thick Murloc Armor|145|R
+Barbaric Shoulders|150*|T
+Dusky Leather Armor|150*|T
+Green Whelp Armor|150|R
+Guardian Armor|150|R
+Mender's Leather Belt|150|R
+Prowler's Leather Belt|150|R
+Skirmisher's Leather Belt|150|R
+Skulker's Leather Belt|150|R
+Skycaller's Leather Belt|150|R
+Stalker's Leather Belt|150|R
+Warden's Leather Belt|150|R
+Cured Thick Hide|155*|T
+Frost Leather Cloak|155*|T
+Green Leather Bracers|155*|T
+Thick Leather|155*|T
+Dusky Bracers|160*|T
+Gem-studded Leather Belt|160|R
+Guardian Cloak|160|R
+Barbaric Harness|165*|T
+Gloves of the Greatfather|165|R
+Green Whelp Bracers|165|R
+Guardian Gloves|165*|T
+Murloc Scale Bracers|165|T
+Dusky Belt|170*|T
+Guardian Leather Bracers|170|R
+Azure Gustwoven Hood|175|R
+Azure Gustwoven Spaulders|175|R
+Azure Windraveled Cover|175|R
+Azure Windraveled Drapes|175|R
+Barbaric Belt|175|R
+Cloudy Gustwoven Hood|175|R
+Cloudy Gustwoven Spaulders|175|R
+Cloudy Windraveled Cover|175|R
+Cloudy Windraveled Drapes|175|R
+Comfortable Leather Hat|175|R
+Dusky Boots|175|R
+Mender's Leather Gloves|175|R
+Prowler's Leather Gloves|175|R
+Shadowskin Gloves|175|R
+Skirmisher's Leather Gloves|175|R
+Skulker's Leather Gloves|175|R
+Skycaller's Leather Gloves|175|R
+Stalker's Leather Gloves|175|R
+Swift Boots|175|R
+Thick Armor Kit|175*|T
+Warden's Leather Gloves|175|R
+Nightscape Headband|180*|T
+Nightscape Tunic|180*|T
+Turtle Scale Gloves|180|R
+Forceful Thick Armor Kit|185|R
+Mystic Thick Armor Kit|185|R
+Nightscape Shoulders|185|R
+Turtle Scale Bracers|185*|T
+Turtle Scale Breastplate|185*|T
+Big Voodoo Robe|190|R
+Big Voodoo Mask|195|R
+Tough Scorpid Bracers|195|R
+Tough Scorpid Breastplate|195|R
+Wild Leather Shoulders|195|R
+Dragonscale Gauntlets|200*|T
+Faintly Glowing Leather|200|R
+Mender's Leather Shoes|200|R
+Mender's Mail Boots|200|R
+Prowler's Leather Shoes|200|R
+Quickdraw Quiver|200*|T
+Skirmisher's Mail Boots|200|R
+Skulker's Leather Shoes|200|R
+Skycaller's Leather Shoes|200|R
+Skycaller's Mail Boots|200|R
+Stalker's Mail Boots|200|R
+Thick Leather Ammo Pouch|200*|T
+Tough Scorpid Gloves|200|R
+Warden's Leather Shoes|200|R
+Wild Leather Helmet|200|R
+Wild Leather Vest|200|R
+Wolfshead Helm|200*|T
+Cured Rugged Hide|205*|T
+Gauntlets of the Sea|205*|T
+Nightscape Cloak|205|R
+Nightscape Pants|205*|T
+Rugged Armor Kit|205*|T
+Rugged Leather|205*|T
+Turtle Scale Helm|205*|T
+Mender's Leather Shoulders|210|R
+Mender's Mail Shoulders|210|R
+Nightscape Boots|210*|T
+Prowler's Leather Shoulders|210|R
+Skirmisher's Mail Shoulders|210|R
+Skulker's Leather Shoulder|210|R
+Skycaller's Leather Shoulders|210|R
+Skycaller's Mail Shoulders|210|R
+Tough Scorpid Boots|210|R
+Turtle Scale Leggings|210*|T
+Warden's Leather Shoulders|210|R
+Big Voodoo Cloak|215|R
+Big Voodoo Pants|215|R
+Tough Scorpid Shoulders|215|R
+Tough Scorpid Leggings|220|R
+Wild Leather Boots|220|R
+Feathered Breastplate|225*|T
+Glowing Gneuro-Linked Cowl|225|R
+Glowing Hyperconductive Scale Coif|225|R
+Gneuro-Conductive Channeler's Hood|225|R
+Helm of Fire|225*|T
+Mender's Leather Bracers|225|R
+Mender's Mail Bracers|225|R
+Prowler's Leather Bracers|225|R
+Rad-Resistant Scale Hood|225|R
+Skirmisher's Mail Bracers|225|R
+Skulker's Leather Bracers|225|R
+Skycaller's Leather Bracers|225|R
+Skycaller's Mail Bracers|225|R
+Stalker's Mail Bracers|225|R
+Tough Scorpid Helm|225|R
+Warden's Leather Bracers|225|R
+Wild Leather Cloak|225|R
+Wild Leather Leggings|225|R
+Cacophonous Chain Shoulderguards|230*|T
+Charged Scorpid Belt|230|R
+Dragonscale Breastplate|230*|T
+Membrane of Dark Neurosis|230*|T
+Paranoia Mantle|230*|T
+Screaming Chain Pauldrons|230*|T
+Shoulderpads of Obsession|230*|T
+Shrieking Spaulders|230*|T
+Supple Scorpid Boots|230|R
+Wailing Chain Mantle|230*|T
+Blue Suede Shoes|235|R
+Forceful Rugged Armor Kit|235|R
+Green Dragonscale Breastplate|235|R
+Mender's Leather Boots|235|R
+Mender's Mail Sabatons|235|R
+Mystic Rugged Armor Kit|235|R
+Prowler's Leather Boots|235|R
+Skirmisher's Mail Sabatons|235|R
+Skulker's Leather Boots|235|R
+Skycaller's Leather Boots|235|R
+Skycaller's Mail Sabatons|235|R
+Stalker's Mail Sabatons|235|R
+Tooled Leather Belt|235|R
+Warden's Leather Boots|235|R
+Wicked Leather Gauntlets|235|R
+Blue Suede Gloves|240|R
+Charged Scorpid Helm|240|R
+Chimeric Gloves|240|R
+Heavy Scorpid Vest|240|R
+Supple Scorpid Leggings|240|R
+Tooled Leather Boots|240|R
+Wicked Leather Bracers|240|R
+Green Dragonscale Leggings|245|R
+Ironfeather Shoulders|245|R
+Living Shoulders|245|R
+Runic Leather Gauntlets|245|R
+Volcanic Leggings|245|R
+Wildthorn Mail|245|R
+Charged Scorpid Shoulders|250|R
+Chimeric Boots|250|R
+Frostsaber Boots|250|R
+Heavy Scorpid Gauntlet|250|R
+Mender's Leather Gauntlets|250|R
+Mender's Leather Waistguard|250|R
+Mender's Mail Belt|250|R
+Mender's Mail Gauntlets|250|R
+Prowler's Leather Gauntlets|250|R
+Prowler's Leather Waistguard|250|R
+Runic Leather Bracers|250|R
+Scarlet Huntsman's Clasp|250|R
+Scarlet Huntsman's Wristguards|250|R
+Scarlet Infiltrator's Belt|250|R
+Scarlet Infiltrator's Bracers|250|R
+Skirmisher's Mail Belt|250|R
+Skirmisher's Mail Gauntlets|250|R
+Skulker's Leather Gauntlets|250|R
+Skulker's Leather Waistguard|250|R
+Skycaller's Leather Gauntlets|250|R
+Skycaller's Leather Waistguard|250|R
+Skycaller's Mail Belt|250|R
+Skycaller's Mail Gauntlets|250|R
+Stalker's Mail Belt|250|R
+Stalker's Mail Gauntlets|250|R
+Stormshroud Pants|250|R
+Supple Scorpid Bracers|250|R
+Warbear Harness|250|R
+Warden's Leather Gauntlets|250|R
+Warden's Leather Waistguard|250|R
+Blue Suede Pants|255|R
+Charged Scorpid Bracers|255|R
+Charged Scorpid Gauntlets|255|R
+Chimeric Leggings|255|R
+Green Dragonscale Gauntlets|255*|T
+Heavy Scorpid Belt|255|T
+Heavy Scorpid Boots|255|R
+Heavy Scorpid Bracers|255|R
+Runic Leather Belt|255|R
+Supple Scorpid Belt|255|R
+Supple Scorpid Shoulders|255|R
+Tooled Leather Armor|255|R
+Wicked Leather Headband|255|R
+Blue Dragonscale Breastplate|260|R
+Blue Suede Shoulders|260|R
+Charged Scorpid Vest|260|R
+Frostsaber Leggings|260|R
+Heavy Scorpid Leggings|260|R
+Living Green Dragonscale Breastplate|260|R
+Living Leggings|260|R
+Scarlet Huntsman's Boots|260|R
+Scarlet Huntsman's Handguards|260|R
+Scarlet Infiltrator's Gloves|260|R
+Scarlet Infiltrator's Shoes|260|R
+Stormshroud Armor|260|R
+Supple Scorpid Helm|260|R
+Tooled Leather Gauntlets|260|R
+Volcanic Breastplate|260|R
+Warbear Woolies|260|R
+Wicked Leather Boots|260|R
+Black Dragonscale Breastplate|265|R
+Blue Suede Armor|265|R
+Chimeric Vest|265|R
+Dawn Treaders|265|R
+Devilsaur Gauntlets|265|R
+Gordok Ogre Suit|265*|T
+Heavy Timbermaw Belt|265|R
+Ironfeather Breastplate|265|R
+Might of the Timbermaw|265|R
+Runic Leather Headband|265|R
+Synthetic Gordok Ogre Suit|265*|R
+Tooled Leather Crown|265|R
+Wicked Leather Pants|265|R
+Black Dragonscale Shoulders|270|R
+Blue Dragonscale Shoulders|270|R
+Blue Suede Belt|270|R
+Charged Scorpid Leggings|270|R
+Frostsaber Gloves|270|R
+Heavy Scorpid Helm|270|R
+Living Green Dragonscale Gauntlets|270|R
+Living Green Dragonscale Leggings|270|R
+Masterwork Volcanic Leggings|270|R
+Scarlet Huntsman's Legguards|270|R
+Scarlet Infiltrator's Trousers|270|R
+Storm Gauntlets|270|R
+Stormshroud Shoulders|270|R
+Supple Scorpid Vest|270|R
+Tooled Leather Bracers|270|R
+Wicked Leather Shoulders|270|R
+Blue Suede Bracers|275|R
+Runic Leather Pants|275|R
+Scarlet Ammo Pouch|275|R
+Scarlet Quiver|275|R
+Tooled Leather Epaulets|275|R
+Wicked Leather Belt|275|R
+Blue Suede Hat|280|R
+Charged Scorpid Boots|280|R
+Heavy Scorpid Shoulders|280|R
+Scarlet Huntsman's Chain|280|R
+Scarlet Huntsman's Coif|280|R
+Scarlet Huntsman's Pauldrons|280|R
+Scarlet Infiltrator's Bandana|280|R
+Scarlet Infiltrator's Shoulderpads|280|R
+Scarlet Infiltrator's Vest|280|R
+Supple Scorpid Sabatons|280|R
+Tooled Leather Pants|280|R
+Volcanic Shoulders|280|R
+Wicked Leather Armor|280|R
+Bileblister Claws|285|R
+Broodwatcher's Clenchers|285|R
+Hivethrasher's Claws|285|R
+Honed Blue Dragonscale Breastplate|285|R
+Masterwork Volcanic Breastplate|285|R
+Runic Leather Armor|285|R
+Runic Leather Shoulders|285|R
+Scalegut Clenchers|285|R
+Spitfire Gauntlets|285*|R
+Winter Boots|285|R
+Bileblister Girdle|290|R
+Black Dragonscale Leggings|290|R
+Blue Dragonscale Leggings|290*|T
+Broodwatcher's Belt|290|R
+Devilcore Gauntlets|290|R
+Devilsaur Leggings|290|R
+Frostsaber Tunic|290|R
+Girdle of Insight|290|R
+Hardened Black Dragonscale Breastplate|290|R
+Helm of the Great Chief|290|R
+Hivethrasher's Girdle|290|R
+Living Breastplate|290|R
+Mongoose Boots|290|R
+Red Dragonscale Breastplate|290|R
+Sandstalker Bracers|290*|R
+Sandstalker Breastplate|290*|R
+Sandstalker Gauntlets|290*|R
+Scalegut Belt|290|R
+Spitfire Bracers|290*|R
+Spitfire Breastplate|290*|R
+Stormshroud Gloves|290|R
+Swift Flight Bracers|290|R
+Bileblister Boots|295|R
+Broodwatcher's Treaders|295|R
+Corehound Boots|295|R
+Heavy Timbermaw Boots|295|R
+Hivethrasher's Boots|295|R
+Honed Blue Dragonscale Shoulders|295|R
+Invulnerable Mail|295|R
+Scalegut Treaders|295|R
+Timbermaw Brawlers|295|R
+Black Dragonscale Boots|300|R
+Black Dragonscale Helm|300|R
+Blood Tiger Breastplate|300|R
+Blood Tiger Shoulders|300|R
+Blue Dragonscale Helm|300|R
+Bramblewood Belt|300*|R
+Bramblewood Boots|300*|R
+Bramblewood Helm|300*|R
+Brilliant Chromatic Cloak|300|R
+Chromatic Cloak|300|R
+Chromatic Gauntlets|300|R
+Core Armor Kit|300|R
+Corehound Belt|300|R
+Dawn Armor|300|R
+Devilcore Leggings|300|R
+Dreamscale Breastplate|300*|R
+Dreamscale Kilt|300*|R
+Elderwild Pants|300|R
+Elderwild Waistcord|300|R
+Eternity Pauldrons|300|R
+Girdle of Arcane Insight|300|R
+Glowing Chitin Armor Kit|300*|R
+Golden Mantle of the Dawn|300|R
+Grimstitch Boots|300|R
+Grimstitch Gloves|300|R
+Grimstitch Pants|300|R
+Grimstitch Spaulders|300|R
+Grovekeeper Boots|300|R
+Grovekeeper Gauntlets|300|R
+Grovekeeper Grips|300|R
+Grovekeeper Handguards|300|R
+Grovekeeper Kilt|300|R
+Grovekeeper Leggings|300|R
+Grovekeeper Legguards|300|R
+Grovekeeper Mantle|300|R
+Grovekeeper Mitts|300|R
+Grovekeeper Pauldrons|300|R
+Grovekeeper Sandals|300|R
+Grovekeeper Shoulderpads|300|R
+Grovekeeper Spaulders|300|R
+Grovekeeper Stompers|300|R
+Grovekeeper Treads|300|R
+Grovekeeper Trousers|300|R
+Hardened Black Dragonscale Leggings|300|R
+Hardened Black Dragonscale Shoulders|300|R
+Hide of the Wild|300|R
+Honed Blue Dragonscale Leggings|300*|T
+Icy Scale Bracers|300*|T
+Icy Scale Breastplate|300*|T
+Icy Scale Gauntlets|300*|T
+Ironfeather Leggings|300|R
+Lava Belt|300|R
+Living Crown|300|R
+Mastercrafted Shifting Cloak|300|R
+Masterwork Volcanic Shoulders|300|R
+Molten Belt|300|R
+Molten Helm|300|R
+Mourning Handguards|300|R
+Onyxia Scale Breastplate|300*|R
+Onyxia Scale Cloak|300*|R
+Outlaw's Collar|300|R
+Polar Bracers|300*|T
+Polar Gloves|300*|T
+Polar Tunic|300*|T
+Primal Batskin Bracers|300|R
+Primal Batskin Gloves|300|R
+Primal Batskin Jerkin|300|R
+Pristine Scorpid Leggings|300|R
+Razorbramble Cowl|300*|R
+Razorbramble Leathers|300*|R
+Razorbramble Shoulderpads|300*|R
+Red Dragonscale Leggings|300|R
+Sewing Machine|300|R
+Sharpened Chitin Armor Kit|300*|R
+Shifting Cloak|300|R
+Spiritcaller Boots|300|R
+Spiritcaller Epaulets|300|R
+Spiritcaller Gauntlets|300|R
+Spiritcaller Gloves|300|R
+Spiritcaller Greaves|300|R
+Spiritcaller Grips|300|R
+Spiritcaller Kilt|300|R
+Spiritcaller Leggings|300|R
+Spiritcaller Mantle|300|R
+Spiritcaller Pants|300|R
+Spiritcaller Spaulders|300|R
+Spiritcaller Treads|300|R
+Swift Flight Vambraces|300|R
+Timbermaw Tunic|300|R
+Tranquil Wristguards|300|R
+Warbear Helm|300|R
+Wild Leather Armor Kit|300|R
+Wildstalker's Gauntlets|300|R
+Wildstalker's Greaves|300|R
+Wildstalker's Legguards|300|R
+Wildstalker's Spaulders|300|R

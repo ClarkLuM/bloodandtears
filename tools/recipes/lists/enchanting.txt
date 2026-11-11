@@ -1,0 +1,260 @@
+Mote of Magic|1|A
+Enchant Bracer - Inferior Stamina|1|A
+Enchant Bracer - Minor Deflect|1|A
+Enchanted Lute|1*|T
+Novice's Practice Wand|1|A
+Runed Copper Rod|1|A
+Minor Wizard Oil|5|R
+Enchant Chest - Minor Intellect|20|R
+Enchant Chest - Inferior Stamina|50*|T
+Lesser Magic Wand|55*|T
+Enchant Bracer - Minor Spirit|60|R
+Enchant Bracer - Minor Intellect|70|R
+Enchant Chest - Minor Absorption|70*|T
+Enchant Cloak - Minor Resistance|75*|T
+Blackfathom Mana Oil|80*|R
+Enchant Bracer - Minor Stamina|80*|T
+Enchant Bracer - Minor Strength|80|R
+Enchant Chest - Lesser Intellect|80|R
+Enchant Chest - Lesser Stamina|85*|T
+Enchant Bracer - Minor Healing Power|90|R
+Enchant Cloak - Minor Protection|90|R
+Enchant Weapon - Minor Beastslayer|90|R
+Greater Magic Wand|90*|T
+Enchant Bracer - Minor Agility|95*|T
+Enchant 2H Weapon - Lesser Intellect|100|R
+Enchant Weapon - Minor Striking|100*|T
+Enchant 2H Weapon - Lesser Spirit|110|R
+Enchant 2H Weapon - Minor Impact|110*|T
+Enchant Cloak - Minor Agility|110|R
+Enchant Shield - Minor Stamina|110*|T
+Runed Silver Rod|110*|T
+Enchant Shield - Lesser Protection|115|R
+Enchant Bracer - Lesser Spirit|120|R
+Enchant Cloak - Lesser Protection|120*|T
+Scroll of Spatial Mending|120|R
+Enchant Boots - Minor Agility|125|R
+Enchant Boots - Minor Stamina|125|R
+Enchant Chest - Stamina|125*|T
+Enchant Cloak - Lesser Fire Resistance|130*|T
+Mystic Mushroom|130|R
+Polished Driftwood Icon|130|R
+Tenets of the Silver Hand|130|R
+Enchant Bracer - Lesser Stamina|135*|T
+Enchant Cloak - Lesser Shadow Resistance|135|R
+Enchant Shield - Lesser Spirit|135*|T
+Arcane Salvager|140|R
+Enchant Bracer - Lesser Agility|140|R
+Enchant Bracer - Lesser Strength|140|R
+Enchant Weapon - Insight|140|R
+Enchant Weapon - Recovery|140|R
+Enchant Weapon - Revelation|140|R
+Glimmering Staff|140|R
+Orb of Mystic Insight|140|R
+Orb of Souls|140|R
+Soulstaff|140|R
+Enchant Chest - Lesser Absorption|145*|T
+Enchant Gloves - Fishing|145|R
+Enchant Gloves - Herbalism|145|R
+Enchant Gloves - Mining|145|R
+Enchant Weapon - Lesser Striking|145*|T
+Enchant 2H Weapon - Lesser Impact|150*|T
+Enchant Chest - Intellect|150*|T
+Minor Mana Oil|150|R
+Enchant Bracer - Lesser Intellect|155*|T
+Enchant Chest - Minor Stats|155*|T
+Enchant Cloak - Defense|155*|T
+Enchant Shield - Lesser Stamina|155*|T
+Lesser Mystic Wand|155*|T
+Runed Golden Rod|155*|T
+Enchant Boots - Lesser Agility|160*|T
+Enchant Chest - Greater Stamina|160*|T
+Enchant Bracer - Spirit|165*|T
+Enchant Boots - Lesser Stamina|170*|T
+Enchant Bracer - Lesser Deflection|170|R
+Enchant Bracer - Stamina|170*|T
+Enchant Cloak - Fire Resistance|175*|T
+Enchant Weapon - Lesser Beastslayer|175|R
+Enchant Weapon - Lesser Elemental Slayer|175|R
+Greater Mystic Wand|175*|T
+Enchant Bracer - Strength|180*|T
+Enchant Shield - Spirit|180*|T
+Enchant Chest - Greater Intellect|185*|T
+Twisted Nether Wand|185|R
+Enchant Boots - Lesser Spirit|190|R
+Enchant Bracer - Agility|190|R
+Enchant Weapon - Winter's Might|190|R
+Enchant Shield - Lesser Block|195|R
+Enchant Weapon - Striking|195*|T
+Enchant 2H Weapon - Impact|200*|T
+Enchant Chest - Lesser Stats|200*|T
+Enchant Gloves - Skinning|200|R
+Lesser Wizard Oil|200|R
+Runed Truesilver Rod|200*|T
+Enchant Bracer - Lesser Healing Power|205|R
+Enchant Cloak - Greater Defense|205*|T
+Enchant Cloak - Resistance|205*|T
+Enchant 2H Weapon - Lesser Agility|210|R
+Enchant Bracer - Intellect|210*|T
+Enchant Gloves - Agility|210*|T
+Enchant Necklace - Agility|210|R
+Enchant Necklace - Deflection|210|R
+Enchant Necklace - Healing Power|210|R
+Enchant Necklace - Spell Power|210|R
+Enchant Necklace - Strength|210|R
+Enchant Shield - Stamina|210|R
+Libram of Invocation|210|R
+Talons of Wrath|210|R
+Totem of Ancestral Protection|210|R
+Dreambough Wand|215|R
+Enchant Boots - Stamina|215*|T
+Enchant Gloves - Advanced Mining|215|R
+Dreamstaff|220|R
+Enchant 2H Weapon - Lesser Strength|220|R
+Enchant Bracer - Greater Spirit|220|R
+Enchant Chest - Absorption|220|R
+Enchant Chest - Superior Stamina|220*|T
+Radiant Staff|220|R
+Truesilver Conduit|220|R
+Twisting Essence Jar|220|R
+Enchant Boots - Minor Speed|225*|T
+Enchant Chest - Retricutioner|225|R
+Enchant Cloak - Lesser Agility|225|R
+Enchant Gloves - Advanced Herbalism|225|R
+Enchant Gloves - Strength|225*|T
+Enchant Weapon - Dismantle|225|R
+Enchanted Sigil: Innovation|225|R
+Enchant Chest - Superior Intellect|230*|T
+Enchant Shield - Greater Spirit|230*|T
+Enchant Weapon - Demonslaying|230|R
+Enchanted Leather|230*|T
+Enchanted Thorium Bar|230*|T
+Sigil of Living Dreams|230*|T
+Enchant Boots - Agility|235*|T
+Enchant Bracer - Deflection|235|R
+Enchant Shield - Frost Resistance|235|R
+Enchant 2H Weapon - Greater Impact|240*|T
+Enchant Bracer - Greater Agility|240|R
+Enchant Bracer - Greater Strength|240*|T
+Enchant Bracer - Greater Stamina|245|R
+Enchant Chest - Stats|245*|T
+Enchant Weapon - Greater Striking|245*|T
+Lesser Eternal Wand|245|R
+Enchant Gloves - Advanced Skinning|250|R
+Enchant Gloves - Minor Haste|250*|T
+Enchant Gloves - Riding Skill|250|R
+Lesser Mana Oil|250|R
+Enchant Bracer - Greater Intellect|255|R
+Enchant Boots - Greater Stamina|260|R
+Dormant Heart of the Mountain|265|R
+Enchant Cloak - Greater Resistance|265|R
+Enchant Shield - Greater Stamina|265|R
+Enchant Weapon - Fiery Weapon|265|R
+Frozen Heart of the Mountain|265|R
+Molten Heart of the Mountain|265|R
+Smoking Heart of the Mountain|265|R
+Enchant Bracer - Superior Spirit|270|R
+Enchant Gloves - Greater Agility|270|R
+Brilliant Wand|275|R
+Conductive Shield Coating|275|R
+Enchant Boots - Spirit|275|R
+Enchant Chest - Major Stamina|275|R
+Greater Eternal Wand|275|R
+Wizard Oil|275|R
+Enchant 2H Weapon - Grand Arcanist|280|R
+Enchant 2H Weapon - Grand Inquisitor|280|R
+Enchant Boots - Speed|280|R
+Enchant Shield - Superior Spirit|280|R
+Enchant Weapon - Grand Crusader|280|R
+Enchant Weapon - Grand Sorcerer|280|R
+Enchant Cloak - Superior Defense|285|R
+Enchant Weapon - Icy Chill|285|R
+Enchant 2H Weapon - Agility|290|R
+Enchant 2H Weapon - Strength|290|R
+Enchant Bracer - Mana Regeneration|290|R
+Enchant Chest - Major Intellect|290|R
+Enchant Weapon - Agility|290|R
+Enchant Weapon - Strength|290|R
+Runed Arcanite Rod|290|R
+Enchanted Sigil: Flowing Waters|290|R
+Enchant 2H Weapon - Superior Impact|295|R
+Enchant Boots - Greater Agility|295|R
+Enchant Bracer - Superior Agility|295|R
+Enchant Bracer - Superior Strength|295|R
+Enchant Gloves - Greater Strength|295|R
+Enchant Gloves - Lotus Claw|295|R
+Enchant Weapon - Unholy Weapon|295|R
+Arcane Forge|300|R
+Brilliant Mana Oil|300|R
+Brilliant Wizard Oil|300|R
+Enchant 2H Weapon - Major Intellect|300|R
+Enchant 2H Weapon - Major Spirit|300|R
+Enchant 2H Weapon - Mighty Healing Power|300|R
+Enchant 2H Weapon - Mighty Spell Power|300|R
+Enchant 2H Weapon - Spellblasting|300|R
+Enchant Bracer - Greater Spellpower|300|R
+Enchant Bracer - Healing Power|300|R
+Enchant Bracer - Spell Power|300*|R
+Enchant Bracer - Superior Deflection|300|R
+Enchant Bracer - Superior Intellect|300|R
+Enchant Bracer - Superior Stamina|300|R
+Enchant Chest - Greater Stats|300|R
+Enchant Chest - Living Stats|300*|R
+Enchant Cloak - Agility|300|R
+Enchant Cloak - Dodge|300|R
+Enchant Cloak - Greater Fire Resistance|300|R
+Enchant Cloak - Greater Nature Resistance|300|R
+Enchant Cloak - Stealth|300|R
+Enchant Cloak - Subtlety|300|R
+Enchant Gloves - Arcane Power|300|R
+Enchant Gloves - Fire Power|300|R
+Enchant Gloves - Frost Power|300|R
+Enchant Gloves - Healing Power|300|R
+Enchant Gloves - Holy Power|300|R
+Enchant Gloves - Natural Power|300|R
+Enchant Gloves - Shadow Power|300|R
+Enchant Gloves - Superior Agility|300|R
+Enchant Gloves - Superior Strength|300|R
+Enchant Gloves - Threat|300|R
+Enchant Off-Hand - Excellent Spirit|300|R
+Enchant Off-Hand - Superior Intellect|300|R
+Enchant Off-Hand - Wisdom|300|R
+Enchant Shield - Critical Strike|300|R
+Enchant Shield - Excellent Stamina|300|R
+Enchant Shield - Law of Nature|300|R
+Enchant Weapon - Crusader|300|R
+Enchant Weapon - Healing Power|300|R
+Enchant Weapon - Lifestealing|300|R
+Enchant Weapon - Mighty Intellect|300|R
+Enchant Weapon - Mighty Spirit|300|R
+Enchant Weapon - Spell Power|300|R
+Enchant Weapon - Superior Striking|300|R
+Enchanted Mushroom|300*|R
+Enchanted Prayer Tome|300*|R
+Enchanted Repellent|300*|R
+Enchanted Stopwatch|300*|R
+Enchanted Totem|300*|R
+Idol of Feline Ferocity|300*|R
+Idol of Sidereal Wrath|300*|R
+Idol of Swiftness|300|R
+Idol of the Dream|300|R
+Idol of the Ursine Twins|300|R
+Idol of Ursin Power|300*|R
+Libram of Holy Alacrity|300|R
+Libram of Infusion|300|R
+Libram of Righteousness|300*|R
+Libram of Sanctity|300*|R
+Libram of the Exorcist|300*|R
+Lodestone of Retaliation|300*|R
+Magnificent Trollshine|300|R
+Ruby-Encrusted Broach|300*|R
+Scroll: Wrath of the Swarm|300*|R
+Speedstone|300*|R
+Steadfast Libram|300|R
+Tear of the Dreamer|300*|R
+Torch of Light|300|R
+Totem of Flowing Magma|300*|R
+Totem of Pyroclastic Thunder|300*|R
+Totem of Thunder|300|R
+Totem of Thunderous Strikes|300*|R
+Totem of Urgency|300|R

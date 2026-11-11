@@ -1,0 +1,18 @@
+Lodestone|1*|T
+Copper Bar|1|A
+Tin Bar|50*|T
+Bronze Bar|65*|T
+Silver Bar|100*|T
+Iron Bar|130*|T
+Rock Garden|140|R
+Steel Bar|165*|T
+Gold Bar|170*|T
+Mithril Bar|175*|T
+Dark Iron Bar|230*|T
+Truesilver Bar|230*|T
+Thorium Bar|250*|T
+Azerothium Bar|275*|T
+Molten Foundry|300|R
+Heavy Thorium Bar|300*|T
+Elementium Bar|310*|T
+Obsidian-Infused Thorium Bar|315*|R

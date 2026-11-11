@@ -1,0 +1,132 @@
+Basic Campfire Kit|1|A
+Basic Campfire|1*|A
+Brilliant Smallfish|1|R
+Charred Wolf Meat|1|A
+Crispy Bat Wing|1|R
+Gingerbread Cookie|1|R
+Roasted Boar Meat|1|A
+Slitherskin Mackerel|1|R
+Herb Baked Egg|5*|R
+Kaldorei Spider Kabob|10|R
+Spiced Wolf Meat|10*|T
+Scorpid Surprise|20|R
+Beer Basted Boar Ribs|25|R
+Peace Tea|25|R
+Skywall Souffle|25|R
+Tasty Raptor Bites|25|R
+Venomous Smoothie|25|R
+Egg Nog|35|R
+Pincer Bites|35|R
+Roasted Kodo Meat|35|R
+Critter Cookie|40*|R
+Smoked Bear Meat|40|R
+Boiled Clams|50*|T
+Coyote Steak|50*|T
+Fillet of Frenzy|50|R
+Goretusk Liver Pie|50|R
+Loch Frenzy Delight|50|R
+Longjaw Mud Snapper|50|R
+Rainbow Fin Albacore|50|R
+Strider Stew|50|R
+Blood Sausage|60|R
+Thistle Tea|60|R
+Breakfast Omelette|75|R
+Crab Cake|75*|T
+Twice-Spiced Raptor Slice|75|R
+Westfall Stew|75|R
+Crocolisk Steak|80|R
+Dry Pork Ribs|80*|T
+Smoked Sagefish|80|R
+Cooked Crab Claw|85|R
+Savory Deviate Delight|85|R
+Savory Whimsyfin Delight|85|R
+Clam Chowder|90|R
+Dig Rat Stew|90|R
+Journeyman Campfire Kit|90|R
+Murloc Fin Soup|90|R
+Bristle Whisker Catfish|100|R
+Crispy Lizard Tail|100|R
+Redridge Goulash|100|R
+Royal Tea|100|R
+Seasoned Wolf Kabob|100|R
+Slimy Smoothie|100|R
+Big Bear Steak|110|R
+Gooey Spider Cake|110|R
+Lean Venison|110|R
+Succulent Pork Ribs|110|R
+Crocolisk Gumbo|120|R
+Goblin Deviled Clams|125*|T
+Hot Lion Chops|125|R
+Lean Wolf Steak|125|R
+Mrrggl Smrrthle|125|R
+Root Tea|125|R
+Curiously Tasty Omelet|130|R
+Cookie's Feast|140|R
+Heavy Crocolisk Stew|150|R
+Tasty Lion Steak|150|R
+Spinefin Halibut|170*|T
+Barbecued Buzzard Wing|175|R
+Bear Brisket|175|R
+Carrion Surprise|175|R
+Giant Clam Scorcho|175|R
+Giant Scrambled Eggs|175|R
+Goldthorn Tea|175*|T
+Hot Wolf Ribs|175|R
+Jungle Stew|175|R
+Mithril Head Trout|175|R
+Mystery Stew|175|R
+Roast Raptor|175|R
+Rockscale Cod|175|R
+Sagefish Delight|175|R
+Soothing Turtle Bisque|175|R
+Calcified Smoothie|180|R
+Raging Raptor Ribs|180|R
+Triage Tea|180|R
+Plain Ol' Paletusk|185|R
+Briny Seafood Stew|200|R
+Dragonbreath Chili|200|R
+Expert Campfire Kit|200|R
+Heavy Kodo Stew|200|R
+Spicy Smoothie|200|R
+Spider Sausage|200*|T
+Sunny Tea|200|R
+Cooked Glossy Mightfish|225|R
+Filet of Redgill|225|R
+Monster Omelet|225|R
+Plated Armorfish|225|R
+Raptor Rouladen|225|R
+Savory Stag Sliders|225|R
+Spiced Chili Crab|225|R
+Spotted Yellowtail|225|R
+Tender Wolf Steak|225|R
+Undermine Clam Chowder|225|R
+Grilled Squid|240|R
+Hot Smoked Bass|240|R
+Filet o' Flank|250|R
+Nightfin Soup|250|R
+Poached Sunscale Salmon|250|R
+Prowler Steak|250|R
+Sage's Tea|250|R
+Sunrise Omelette|250|R
+Wicked Smoothie|250|R
+Baked Salmon|275|R
+Bat Hachee|275|R
+Bear Bruscitti|275|R
+Clam Linguine|275|R
+Flank au Poivre|275|R
+Lobster Stew|275|R
+Mightfish Steak|275|R
+Prehistoric Pulled Raptor|275|R
+Runn Tum Tuber Surprise|275|R
+Savory Turtle Stew|275|R
+Soaring Pamplona|275|R
+Steaming Stag Steak|275|R
+Sweetpaw Jam|275|R
+Swiftstrike Steak|275|R
+Grand Lobster Banquet|280|R
+Specklefin Feast|280|R
+Smoked Desert Dumplings|285*|T
+Darkclaw Bisque|300|R
+Dirge's Kickin' Chimaerok Chops|300|R
+Iron Oven|300|R
+Smoked Redgill|300|R

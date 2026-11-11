@@ -1,0 +1,271 @@
+Crafted Light Shot|1|A
+Reagent Bot|1*|T
+Rough Blasting Powder|1|A
+Rough Dynamite|1|A
+SAF-T Dynamite|25|R
+SAF-T Tabs|25|R
+Handful of Copper Bolts|40*|T
+Rough Copper Bomb|55*|T
+SAF-T Copper Bomb|55|R
+Arclight Spanner|65*|T
+Harvester Override Signalcaster|65|R
+Copper Tube|75*|T
+Mechanical Squirrel Box|75|R
+Rough Boomstick|75*|T
+Coarse Blasting Powder|80*|T
+Crafted Heavy Shot|80*|T
+Coarse Dynamite|85*|T
+Crude Scope|85*|T
+Satchel of Copper Bombs|85|R
+Copper Modulator|90*|T
+Bronze Tube|100*|T
+EZ-Thro Dynamite|100|R
+EZ-Thro Wrap|100|R
+Large Copper Bomb|100*|T
+Small Seaforium Charge|100|R
+Silver Contact|105*|T
+Practice Lock|110*|T
+Target Dummy|110*|T
+Small Bronze Bomb|115*|T
+9-60 Battery Pack|120*|R
+Crafted Solid Shot|120*|T
+Heavy Blasting Powder|120*|T
+Heavy Dynamite|120*|T
+Lovingly Crafted Boomstick|120|R
+Shadow Goggles|120|R
+Whirring Bronze Gizmo|120*|T
+Deadly Blunderbuss|125*|T
+Flame Deflector|125|R
+Flying Tiger Goggles|125*|T
+Gnomish Universal Remote|125|R
+Sandpaper|125*|T
+Small Blue Rocket|125|R
+Small Green Rocket|125|R
+Small Purple Rocket|125|R
+Small Red Rocket|125|R
+Small White Rocket|125|R
+Small Yellow Rocket|125|R
+EZ-Thro Copper Bomb XL|130|R
+Goblin Rocket Boots|130|R
+Standard Scope|130*|T
+Big Bronze Bomb|135*|T
+Shredder Autosalvage Unit|135|R
+Bronze Framework|140*|T
+Hoof-Shaped Foot Pedal|140|R
+Minor Recombobulator|140|R
+Repair Bot|140|R
+Aquadynamic Fish Attractor|145*|T
+Gold Power Core|145*|T
+Moonsight Rifle|145|R
+No Slip SAF-T Padding|145|R
+SAF-T Bronze Bomb|145|R
+Blue Firework|150|R
+Green Firework|150|R
+Red Firework|150|R
+SAF-T Jumbo Dynamite|150|R
+Silver-plated Shotgun|150*|T
+Ice Deflector|155|R
+Iron Strut|155*|T
+Ornate Spyglass|155*|T
+Discombobulator Ray|160|R
+Goblin Jumper Cables|165|R
+Gyrochronatom|165*|T
+Portable Bronze Mortar|165|R
+Satchel of Bronze Bombs|165|R
+Compact Harvest Reaper Kit|170*|T
+Explosive Sheep|170*|T
+Green Tinted Goggles|170*|T
+Gyromatic Micro-Adjustor|170*|T
+Iron Grenade|170*|T
+Solid Blasting Powder|170*|T
+Solid Dynamite|170*|T
+Bright-Eye Goggles|175|R
+Clanking Cord|175|R
+Gizmo Girdle|175|R
+Large Blue Rocket|175|R
+Large Green Rocket|175|R
+Large Purple Rocket|175|R
+Large Red Rocket|175|R
+Large White Rocket|175|R
+Large Yellow Rocket|175|R
+SAF-T Bell|175|R
+Serrated Strap|175|R
+Shafety Sheep|175|R
+Whimsical Waistwrap|175|R
+Accurate Scope|180|R
+Advanced Target Dummy|180*|T
+Big Iron Bomb|185*|T
+Craftsman's Monocle|185|R
+Flash Bomb|185|R
+Centaur Banner Deployment Device|190|R
+EZ-Thro Bronze Mortar|190|R
+EZ-Thro Fireproof Fuse|190|R
+Mithril Tube|190*|T
+Snowmaster 9000|190|R
+Goblin Land Mine|195|R
+Mechanical Repair Kit|195*|T
+Unstable Trigger|195*|T
+Bent Goggles|200|R
+Dented Goggles|200|R
+EZ-Thro Dynamite II|200|R
+EZ-Thro Grenade|200|R
+Floppy Goggles|200|R
+Gnomish Cloaking Device|200|R
+Goblin Sapper Charge|200*|R
+Large Seaforium Charge|200|R
+Mechanical Dragonling|200|R
+Mobile Alarm|200*|T
+Polished Truesilver Gears|200|R
+Stuckbutton Goggles|200|R
+Explosive Arrow|205*|T
+Goblin Mining Helmet|205|R
+Hi-Impact Mithril Slugs|205*|T
+Lil' Smoky|205|R
+Pet Bombling|205|R
+Soul Vessel|205|R
+Deadly Scope|210|R
+Mithril Casing|210*|T
+Mithril Frag Bomb|210*|T
+SAF-T Bomb|215|R
+SAF-T Casing|215|R
+Catseye Ultra Goggles|220|R
+Fire Goggles|220*|T
+Gnomish Shrink Ray|220*|T
+Goblin Construction Helmet|220*|T
+Goblin Mortar|220*|T
+Mithril Blunderbuss|220*|T
+Mithril Heavy-bore Rifle|220|R
+Blue Rocket Cluster|225|R
+Compact Critter Carrier|225|R
+Emergency Field Cloak|225|R
+EZ-Thro Radiation Bomb|225|R
+Firework Launcher|225|R
+Gnomish Goggles|225*|T
+Gnomish Net-o-Matic Projector|225*|T
+Goblin Bomb Dispenser|225*|T
+Green Rocket Cluster|225|R
+High-Yield Radiation Bomb|225|R
+Hyperconductive Goldwap|225|R
+Parachute Cloak|225|R
+Purple Rocket Cluster|225|R
+Red Rocket Cluster|225|R
+Spellpower Goggles Xtreme|225|R
+Whirling Truesilver Gearwall|225|R
+White Rocket Cluster|225|R
+Yellow Rocket Cluster|225|R
+Deepdive Helmet|230|R
+Gnomish Harm Prevention Belt|230*|T
+Goblin "Boom" Box|230*|T
+Hi-Explosive Bomb|230*|T
+Satchel of Iron Bombs|230|R
+The Big One|230*|R
+Gnomish Ham Radio|235*|T
+Goblin Radio|235*|T
+EZ-Thro Tru-Trigger|240|R
+Gnomish Rocket Boots|240*|R
+Mithril Gyro-Shot|240*|T
+Sniper Scope|240|R
+Tru-Trigger Frag Bomb|240|R
+Dense Blasting Powder|245*|T
+Dense Dynamite|245*|T
+Gnomish Battle Chicken|245*|T
+Rose Colored Goggles|245*|T
+Void-Powered Invoker's Vambraces|245*|T
+Void-Powered Protector's Vambraces|245*|T
+Void-Powered Slayer's Vambraces|245*|T
+Creepy Censor Sensors|250|R
+Gnomish Army Knife|250|R
+Gnomish Mind Control Cap|250*|T
+Mithril Mechanical Dragonling|250|R
+Pop-Up Shrub|250|R
+SAF-T Disposable Parachute|250|R
+Snake Burst Firework|250|R
+Gnomish Death Ray|255*|T
+Goblin Dragon Gun|255*|T
+Tinkerbox|255*|T
+Goblin Rocket Helmet|260*|T
+Green Lens|260*|T
+Gyrofreeze Ice Reflector|260|R
+Thorium Grenade|260|R
+Thorium Rifle|260|R
+Thorium Widget|260|R
+Truesilver Transformer|260|R
+Unsanctified Grenade|260|R
+World Enlarger|260|R
+Gnomish Alarm-O-Bot|265|R
+Goblin Jumper Cables XL|265|R
+Lifelike Mechanical Toad|265|R
+Salt Shaker|265*|T
+Tinkerbox: Magnetic Displacement|265*|R
+Tinkerbox: Nitro Boosts|265*|R
+Tinkerbox: Teleport|265*|R
+Spellpower Goggles Xtreme Plus|270|R
+Dark Iron Rifle|275|R
+Cluster Launcher|275|R
+Large Blue Rocket Cluster|275|R
+Large Green Rocket Cluster|275|R
+Large Purple Rocket Cluster|275|R
+Large Red Rocket Cluster|275|R
+Large White Rocket Cluster|275|R
+Large Yellow Rocket Cluster|275|R
+Loot-A-Rang|275|R
+Major Recombobulator|275|R
+Masterwork Target Dummy|275|R
+Powerful Seaforium Charge|275|R
+SAF-T Clever Dynamite|275|R
+SAF-T Tube|275|R
+Steam Tonk Controller|275|R
+Thorium Tube|275|R
+Tinker: Magnetic Displacement|275*|R
+Tinker: Nitro Boosts|275*|R
+Tinker: Teleport|275*|R
+Dimensional Ripper - Everlook|280*|T
+Ultrasafe Transporter: Gadgetzan|280*|T
+Dark Iron Bomb|285|R
+Delicate Arcanite Converter|285|R
+EZ-Thro Shell|285|R
+EZ-Thro Thorium Grenade|285|R
+Satchel of Dark Iron Bombs|285|R
+Thorium Shells|285|R
+Hyper-Radiant Flame Reflector|290|R
+Master Engineer's Goggles|290|R
+Voice Amplification Modulator|290|R
+Anarchist's Workbench|300|R
+Arcane Bomb|300|R
+Arcanite Dragonling|300|R
+Biznicks 247x128 Accurascope|300|R
+Bloodvine Goggles|300|R
+Bloodvine Lens|300|R
+Core Marksman Rifle|300|R
+Dimensional Transporter - Mt. Hyjal|300|R
+EZ and SAF Field Transporter: Mt. Hyjal|300|R
+EZ-Thro Dark Bomb|300|R
+EZ-Thro Field Transporter: Gadgetzan|300|R
+EZ-Thro Magnetic Displacer|300|R
+EZ-Thro Mana Bomb|300|R
+Field Repair Bot 74A|300|R
+Flawless Arcanite Rifle|300|R
+Force Reactive Disk|300|R
+Gnomish Poultryizer|300|R
+Hyper Deluxe Sniper Rifle Mk XVII|300|R
+SAF-T Emergency Ripper: Everlook|300|R
+SAF-T Nitro Boosts|300|R
+SAF-T Teleport|300|R
+SAF-T Ultra Precision Scope|300|R
+Semisafe Transporter: New Avalon|300|R
+Stealthman 52|300|R
+Swiftfeather Arrow|300|R
+Swiftstrike Shot|300|R
+Ultra-Flash Shadow Reflector|300|R
+Ultralight Goblin Glider|300|R
+Ultrasafe Rechargeable Battery|300|R
+Arcane Megabomb|310*|T
+G00 DV-1B3 Generator|310*|R
+Obsidian Blasting Powder|310*|R
+Obsidian Bomb|310*|R
+The Fumigator|310*|R
+Tuned Force Reactive Disk|310*|R
+Fiery Core Sharpshooter Rifle|315*|R
+Obsidian Scope|315*|R
+Obsidian Shotgun|315*|R
+Tranquil Mechanical Yeti|315*|T

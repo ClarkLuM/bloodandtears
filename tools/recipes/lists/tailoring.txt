@@ -1,0 +1,452 @@
+Bolt of Linen Cloth|1|A
+Brown Linen Shirt|1|A
+Faction Banner|1*|T
+Linen Bag|1|A
+Linen Cloak|1|A
+Simple Linen Pants|1|A
+Linen Reagent Bag|5|R
+White Linen Shirt|20*|T
+Red Linen Robe|25|R
+Brown Linen Vest|30*|T
+Blue Linen Shirt|35*|T
+Blue Linen Vest|35|R
+Brown Linen Pants|35*|T
+Brown Linen Robe|35*|T
+Heavy Linen Gloves|35*|T
+Linen Belt|35*|T
+Red Linen Shirt|35*|T
+Red Linen Vest|35|R
+Simple Dress|35*|T
+Simple Linen Boots|35*|T
+White Linen Robe|35*|T
+Blue Linen Robe|45|R
+Green Linen Bracers|45*|T
+Reinforced Linen Cape|45*|T
+Azure Stormsewn Cord|50|R
+Azure Stormsewn Cuffs|50|R
+Barbaric Linen Vest|50*|T
+Cloudy Stormsewn Cord|50|R
+Cloudy Stormsewn Cuffs|50|R
+Green Linen Shirt|50*|T
+Linen Boots|50*|T
+Novice Arcanist's Sash|50|R
+Novice Ardent's Sash|50|R
+Red Linen Bag|50|R
+Azure Stormsewn Handwraps|55|R
+Azure Stormsewn Shoes|55|R
+Bolt of Woolen Cloth|55*|T
+Cloudy Stormsewn Handwraps|55|R
+Cloudy Stormsewn Shoes|55|R
+Handstitched Linen Britches|55*|T
+Azure Stormsewn Leggings|60|R
+Azure Stormsewn Vest|60|R
+Cloudy Stormsewn Leggings|60|R
+Cloudy Stormsewn Vest|60|R
+Flame Boots|60|R
+Pearly Boots|60|R
+Pristine Boots|60|R
+Shadow Boots|60|R
+Shining Boots|60|R
+Silky Boots|60|R
+Simple Kilt|60*|T
+Woolen Bag|60*|T
+Soft-soled Linen Boots|65*|T
+Woolen Cape|65*|T
+Colorful Kilt|70|R
+Green Woolen Vest|70*|T
+Heavy Woolen Gloves|70*|T
+Woolen Reagent Bag|70|R
+Blue Overalls|75|R
+Filigreed Flame Gown|75|R
+Filigreed Pearly Gown|75|R
+Filigreed Pristine Gown|75|R
+Filigreed Shadow Gown|75|R
+Filigreed Shining Gown|75|R
+Filigreed Silky Gown|75|R
+Flame Gloves|75|R
+Gray Woolen Shirt|75*|T
+Green Woolen Bag|75|R
+Green Woolen Robe|75*|T
+Pearly Gloves|75|R
+Pristine Gloves|75|R
+Red Woolen Boots|75|R
+Shadow Gloves|75|R
+Shining Gloves|75|R
+Silky Gloves|75|R
+Gray Woolen Robe|80|R
+Heavy Woolen Cloak|80|R
+Pearl-clasped Cloak|80*|T
+Woolen Boots|80*|T
+Flame Sash|85|R
+Pearly Sash|85|R
+Pristine Sash|85|R
+Shadow Sash|85|R
+Shining Sash|85|R
+Silky Sash|85|R
+Greater Adept's Robe|90|R
+Red Woolen Bag|90|R
+Bolt of Silk Cloth|95*|T
+Double-Stitched Woolen Shoulders|95*|T
+Heavy Woolen Pants|95*|T
+Reinforced Woolen Shoulders|95|R
+Stylish Blue Shirt|95|R
+Stylish Green Shirt|95|R
+Stylish Red Shirt|95*|T
+White Woolen Dress|95*|T
+Filigreed Flame Leggings|100|R
+Filigreed Pearly Leggings|100|R
+Filigreed Pristine Leggings|100|R
+Filigreed Shadow Leggings|100|R
+Filigreed Shining Leggings|100|R
+Filigreed Silky Leggings|100|R
+Flame Circlet|100|R
+Pearly Circlet|100|R
+Phoenix Gloves|100|R
+Phoenix Pants|100|R
+Pristine Circlet|100|R
+Shadow Circlet|100|R
+Shining Circlet|100|R
+Silky Circlet|100|R
+Bright Yellow Shirt|110|R
+Flame Gown|110|R
+Gloves of Meditation|110*|T
+Pearly Gown|110|R
+Pristine Gown|110|R
+Shadow Gown|110|R
+Shining Gown|110|R
+Silky Gown|110|R
+Spidersilk Boots|110*|T
+Azure Silk Hood|115*|T
+Lesser Wizard's Robe|115*|T
+Spider Silk Slippers|115|R
+Azure Silk Gloves|120|R
+Azure Silk Pants|120*|T
+Boots of Darkness|120*|T
+Dark Silk Shirt|120|R
+Hands of Darkness|120|R
+Silk Headband|120*|T
+White Swashbuckler's Shirt|120*|T
+Filigreed Flame Circlet|125|R
+Filigreed Pearly Circlet|125|R
+Filigreed Pristine Circlet|125|R
+Filigreed Shadow Circlet|125|R
+Filigreed Shining Circlet|125|R
+Filigreed Silky Circlet|125|R
+Flame Leggings|125|R
+Pearly Leggings|125|R
+Phoenix Bindings|125|R
+Pristine Leggings|125|R
+Robes of Arcana|125|R
+Shadow Leggings|125|R
+Shining Leggings|125|R
+Silk Reagent Bag|125|R
+Silky Leggings|125|R
+Truefaith Gloves|125|R
+Azure Silk Vest|130*|T
+Bolt of Mageweave|130*|T
+Enchanter's Cowl|130|R
+Formal White Shirt|130*|T
+Green Silk Armor|130|R
+Small Silk Pack|130*|T
+Extraplanar Spidersilk Boots|135*|T
+Red Swashbuckler's Shirt|135*|T
+Shadow Hood|135|R
+Azure Silk Cloak|140|R
+Black Slippers|140|R
+Boots of the Enchanter|140|R
+Earthen Leggings|140|R
+Earthen Vest|140*|T
+Fiery Slippers|140|R
+Frothing Slippers|140|R
+Gilded Slippers|140|R
+Golden Slippers|140|R
+Green Silk Pack|140|R
+Radiant Slippers|140|R
+Spinning Wheel|140|R
+Tuxedo Jacket|140|R
+Tuxedo Pants|140|R
+White Wedding Dress|140|R
+Azure Silk Belt|145*|T
+Crimson Silk Belt|145*|T
+Crimson Silk Cloak|145|R
+Earthen Silk Slippers|145|R
+Spider Belt|145|R
+Black Silk Pack|150|R
+Earthen Silk Hood|150|R
+Green Silken Shoulders|150*|T
+Invoker's Cord|150|R
+Invoker's Mantle|150|R
+Rich Purple Silk Shirt|150|R
+Azure Shoulders|155|R
+Crimson Silk Shoulders|155|R
+Crimson Silk Vest|155*|T
+Green Holiday Shirt|155|R
+Long Silken Cloak|155*|T
+Earthen Silk Belt|160|R
+Earthen Silk Gloves|160|R
+Robe of Power|160*|T
+Black Handwraps|165|R
+Black Swashbuckler's Shirt|165|R
+Crimson Silk Pantaloons|165*|T
+Earthen Silk Cuffs|165|R
+Fiery Handwraps|165|R
+Frothing Handwraps|165|R
+Gilded Handwraps|165|R
+Golden Handwraps|165|R
+Icy Cloak|165|R
+Radiant Handwraps|165|R
+Star Belt|165|R
+Black Mageweave Leggings|170*|T
+Black Mageweave Vest|170*|T
+Crimson Silk Robe|170|R
+Earthen Silk Shoulders|170|R
+Orange Mageweave Shirt|170*|T
+Azure Stormsewn Cowl|175|R
+Azure Stormsewn Epaulets|175|R
+Black Mageweave Robe|175*|T
+Cloudy Stormsewn Cowl|175|R
+Cloudy Stormsewn Epaulets|175|R
+Crimson Silk Gloves|175*|T
+Shadoweave Pants|175*|T
+Black Mageweave Gloves|180*|T
+Red Mageweave Pants|180|R
+Red Mageweave Vest|180|R
+Shadoweave Robe|180*|T
+White Bandit Mask|180|R
+Orange Martial Shirt|185|R
+Simple Black Dress|185*|T
+Stormcloth Gloves|185|R
+Stormcloth Pants|185|R
+Black Cord|190|R
+Black Mageweave Boots|190*|T
+Black Mageweave Headband|190*|T
+Black Mageweave Shoulders|190*|T
+Cindercloth Robe|190*|T
+Dreamweave Gloves|190*|T
+Dreamweave Vest|190*|T
+Enchanted Mageweave Pouch|190|R
+Fiery Cord|190|R
+Frothing Cord|190|R
+Gilded Cord|190|R
+Golden Cord|190|R
+Lavender Mageweave Shirt|190|R
+Mageweave Bag|190*|T
+Mageweave Reagent Bag|190|R
+Radiant Cord|190|R
+Red Mageweave Gloves|190|R
+Shadoweave Gloves|190*|T
+Stormcloth Vest|190|R
+Bolt of Runecloth|195*|T
+Netherflame Shoulders|195|R
+Netherfroth Shoulders|195|R
+Nethergeld Shoulders|195|R
+Netherlight Shoulders|195|R
+Netherpearl Shoulders|195|R
+Nethershine Shoulders|195|R
+Pink Mageweave Shirt|195|R
+Red Mageweave Bag|195*|T
+Red Mageweave Shoulders|195|R
+Shadoweave Shoulders|195*|T
+Admiral's Hat|200|R
+Cindercloth Boots|200*|T
+Hyperconductive Arcano-Filament|200|R
+Red Mageweave Headband|200|R
+Shadoweave Boots|200*|T
+Shadoweave Mask|200|R
+Stormcloth Headband|200|R
+Stormcloth Shoulders|200|R
+Tuxedo Shirt|200|R
+Dreamweave Circlet|205*|T
+Festival Dress|205|R
+Festival Suit|205|R
+Netherflame Cuffs|205|R
+Netherfroth Cuffs|205|R
+Nethergeld Cuffs|205|R
+Netherlight Cuffs|205|R
+Netherpearl Cuffs|205|R
+Nethershine Cuffs|205|R
+Stormcloth Boots|205|R
+Frostweave Robe|210|R
+Frostweave Tunic|210|R
+Runecloth Belt|210*|T
+Black Waistcord|215|R
+Cindercloth Vest|215|R
+Earthenweave Cord|215|R
+Earthenweave Gloves|215|R
+Fiery Waistcord|215|R
+Frostweave Gloves|215|R
+Frothing Waistcord|215|R
+Ghostweave Cord|215|R
+Gilded Waistcord|215|R
+Golden Waistcord|215|R
+Radiant Waistcord|215|R
+Runecloth Bag|215|R
+Runecloth Reagent Bag|215|R
+Runecloth Robe|215|R
+Runecloth Tunic|215|R
+Soul Pouch|215|R
+Ghostweave Belt|220|R
+Runecloth Cloak|220|R
+Brightcloth Gloves|225|R
+Brightcloth Robe|225|R
+Cindercloth Gloves|225|R
+Earthenweave Boots|225|R
+Ghostweave Gloves|225|R
+Ghostweave Vest|225|R
+Gneuro-Linked Arcano-Filament Monocle|225|R
+Brightcloth Cloak|230|R
+Cenarion Herb Bag|230|R
+Cindercloth Cloak|230|R
+Enchanted Runecloth Bag|230|R
+Felcloth Pants|230|R
+Mooncloth|230|R
+Runecloth Gloves|230|R
+Wizardweave Leggings|230|R
+Black Gloves|235|R
+Black Sandals|235|R
+Cindercloth Pants|235|R
+Cloak of Fire|235|R
+Fiery Gloves|235|R
+Fiery Sandals|235|R
+Fractured Mind Pauldrons|235*|T
+Frostweave Pants|235|R
+Frothing Gloves|235|R
+Frothing Sandals|235|R
+Gilded Gloves|235|R
+Gilded Sandals|235|R
+Golden Gloves|235|R
+Golden Sandals|235|R
+Mantle of Insanity|235*|T
+Radiant Gloves|235|R
+Radiant Sandals|235|R
+Runecloth Boots|235|R
+Shoulderpads of the Deranged|235*|T
+Earthenweave Mantle|240|R
+Felcloth Boots|240|R
+Runecloth Pants|240|R
+Brightcloth Pants|245|R
+Earthenweave Leggings|245|R
+Felcloth Bag|245*|R
+Felcloth Hood|245|R
+Ghostweave Pants|245|R
+Mooncloth Leggings|245|R
+Robe of Winter Night|245|R
+Crusader's Knapsack|250|R
+Earthenweave Vest|250|R
+Ghostweave Mantle|250|R
+Green Winter Clothes|250|R
+Red Winter Clothes|250|R
+Runecloth Cuffs|250|R
+Runecloth Headband|250|R
+Scarlet Augur's Cuffs|250|R
+Scarlet Augur's Strap|250|R
+Big Bag of Enchantment|255|R
+Earthenweave Cuffs|255|R
+Ghostweave Boots|255|R
+Mooncloth Bag|255|R
+Mooncloth Reagent Bag|255|R
+Satchel of Cenarius|255|R
+Wisdom of the Timbermaw|255|R
+Wizardweave Robe|255|R
+Earthenweave Crown|260|R
+Felcloth Robe|260|R
+Ghostweave Hood|260|R
+Runecloth Shoulders|260|R
+Scarlet Augur's Mitts|260|R
+Scarlet Augur's Soles|260|R
+Wizardweave Turban|260|R
+Felcloth Shoulders|265|R
+Gordok Ogre Suit|270*|T
+Mooncloth Boots|270*|T
+Mooncloth Vest|270|R
+Scarlet Augur's Leggings|270|R
+Synthetic Gordok Ogre Suit|270*|R
+Mooncloth Robe|275|R
+Mooncloth Shoulders|275|R
+Cloak of Warding|280|R
+Felcloth Gloves|280|R
+Inferno Gloves|280|R
+Mooncloth Circlet|280|R
+Mooncloth Gloves|280|R
+Scarlet Augur's Hood|280|R
+Scarlet Augur's Mantle|280|R
+Scarlet Augur's Vestments|280|R
+Runed Stygian Belt|285|R
+Runed Stygian Boots|285|R
+Runed Stygian Leggings|285|R
+Swarmtender's Gloves|285|R
+Venomspew Gloves|285|R
+Argent Boots|290|R
+Crimson Dawnwoven Bag|290|R
+Incandescent Mooncloth Leggings|290|R
+Mantle of the Timbermaw|290|R
+Swarmtender's Cord|290|R
+Venomspew Cord|290|R
+Belt of the Archmage|295|R
+Gloves of Spell Mastery|295|R
+Robe of the Archmage|295|R
+Robe of the Void|295|R
+Swarmtender's Footpads|295|R
+Truefaith Vestments|295|R
+Venomspew Footpads|295|R
+Argent Shoulders|300|R
+Bloodvine Boots|300|R
+Bloodvine Leggings|300|R
+Bloodvine Vest|300|R
+Bolt of Qiraji Silk|300*|R
+Boots of Conviction|300|R
+Bottomless Bag|300|R
+Bottomless Reagent Bag|300|R
+Cloak of Earth and Sky|300|R
+Core Felcloth Bag|300|R
+Demonheart Boots|300|R
+Demonheart Gloves|300|R
+Demonheart Leggings|300|R
+Demonheart Spaulders|300|R
+Embroidered Belt of the Archmage|300|R
+Fel Cape|300|R
+Felblood Soul Bag|300|R
+Flarecore Gloves|300|R
+Flarecore Leggings|300|R
+Flarecore Mantle|300|R
+Flarecore Robe|300|R
+Flarecore Wraps|300|R
+Frosty Gloves|300*|T
+Frosty Vest|300*|T
+Frosty Wrists|300*|T
+Gaea's Embrace|300|R
+Glacial Cloak|300*|T
+Glacial Gloves|300*|T
+Glacial Vest|300*|T
+Glacial Wrists|300*|T
+Gloves of Conviction|300|R
+Handguards of Conviction|300|R
+Incandescent Mooncloth Circlet|300|R
+Incandescent Mooncloth Robe|300|R
+Incandescent Mooncloth Vest|300|R
+Leather-Reinforced Runecloth Bag|300|R
+Leggings of Conviction|300|R
+Loom|300|R
+Mana-infused Cord|300|R
+Manaflare Boots|300|R
+Manaflare Gloves|300|R
+Manaflare Mantle|300|R
+Manaflare Pants|300|R
+Mantle of Conviction|300|R
+Pants of Conviction|300|R
+Pauldrons of Conviction|300|R
+Rime-encrusted Boots|300|R
+Robes of Fiery Devastation|300|R
+Sylvan Crown|300|R
+Sylvan Shoulders|300|R
+Sylvan Vest|300|R
+Treads of Conviction|300|R
+Vampiric Cowl|300*|R
+Vampiric Robe|300*|R
+Vampiric Shawl|300*|R
+Dreamscale Bracers|305*|R
+Dreamscale Mitts|305*|R
+Qiraji Silk Cape|305*|R
+Qiraji Silk Cloak|305*|R
+Qiraji Silk Drape|305*|R
+Qiraji Silk Scarf|305*|R

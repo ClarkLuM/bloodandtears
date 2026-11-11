@@ -1,0 +1,486 @@
+Copper Bracers|1|A
+Copper Rod|1|A
+Rough Copper Vest|1|A
+Rough Sharpening Stone|1|A
+Rough Weightstone|1|A
+Sharpening Wheel|1*|T
+Coarse Weightstone|20*|T
+Rough Grinding Stone|25*|T
+Coarse Grinding Stone|30*|T
+Copper Chain Vest|30|R
+Copper Mace|35*|T
+Gemmed Copper Boots|35|R
+Gemmed Copper Gauntlets|35|R
+Glowing Copper Boots|35|R
+Strange Copper Boots|35|R
+Copper Axe|40*|T
+Copper Chain Boots|40*|T
+Copper Chain Pants|40|T
+Copper Shortsword|40|T
+Acolyte's Chain Belt|45|R
+Copper Claymore|45*|T
+Copper Dagger|45*|T
+Crusader's Chain Belt|45|R
+Guard's Chain Belt|45|R
+Protector's Chain Belt|45|R
+Veteran's Chain Belt|45|R
+Azure Skyforged Chain|50|R
+Azure Skyforged Wristguards|50|R
+Cloudy Skyforged Chain|50|R
+Cloudy Skyforged Wristguards|50|R
+Copper Battle Axe|50*|T
+Copper Chain Belt|50*|T
+Rough Copper Chain Boots|50|R
+Azure Skyforged Gauntlets|55|R
+Azure Skyforged Greaves|55|R
+Cloudy Skyforged Gauntlets|55|R
+Cloudy Skyforged Greaves|55|R
+Runed Copper Breastplate|55|R
+Runed Copper Gauntlets|55*|T
+Runed Copper Pants|55*|T
+Silver Skeleton Key|55*|T
+Azure Skyforged Chainmail|60|R
+Azure Skyforged Legguards|60|R
+Cloudy Skyforged Chainmail|60|R
+Cloudy Skyforged Legguards|60|R
+Heavy Copper Maul|60*|T
+Ironforge Chain|60*|R
+Silver Rod|60*|T
+Thick War Axe|65*|T
+Runed Copper Bracers|70*|T
+Bronze Mace|75|T
+Coarse Sharpening Stone|75|T
+Acolyte's Chain Shirt|80|R
+Acolyte's Gloves|80|R
+Blackfathom Sharpening Stone|80*|R
+Brass Knuckles|80|R
+Crusader's Chain Shirt|80|R
+Crusader's Gloves|80|R
+Guard's Chain Shirt|80|R
+Guard's Gloves|80|R
+Heavy Grinding Stone|80*|T
+Heavy Weightstone|80*|T
+Protector's Chain Shirt|80|R
+Protector's Gloves|80|R
+Rough Bronze Boots|80*|T
+Runed Copper Belt|80|T
+Veteran's Chain Shirt|80|R
+Veteran's Gloves|80|R
+Acolyte's Boots|85|R
+Bronze Axe|85|T
+Crusader's Boots|85|R
+Guard's Boots|85|R
+Protector's Boots|85|R
+Veteran's Boots|85|R
+Big Bronze Knife|90*|T
+Heavy Copper Broadsword|90*|T
+Acolyte's Chain Leggings|95|R
+Acolyte's Silvered Chain Helm|95|R
+Bronze Dory|95|R
+Bronze Shortsword|95|T
+Crusader's Chain Leggings|95|R
+Crusader's Silvered Chain Helm|95|R
+Guard's Chain Leggings|95|R
+Guard's Silvered Chain Helm|95|R
+Pearl-handled Dagger|95*|T
+Protector's Chain Leggings|95|R
+Protector's Silvered Chain Helm|95|R
+Rough Bronze Bracers|95*|R
+Rough Bronze Leggings|95|T
+Rough Bronze Shoulders|95*|T
+Veteran's Chain Leggings|95|R
+Veteran's Silvered Chain Helm|95|R
+Deadly Bronze Poniard|100|R
+Ironforge Breastplate|100|R
+Silvered Bronze Shoulders|100|R
+Sterling Silver Boots|100|R
+Golden Skeleton Key|105*|T
+Iron Buckle|105*|T
+Rough Bronze Cuirass|105|T
+Silvered Bronze Breastplate|105|R
+Sterling Silver Gauntlet|105|R
+Sterling Silver Leggings|105|R
+Acolyte's Silvered Chain Shirt|110|R
+Cracked Blacksmith Hammer|110|R
+Crusader's Silvered Chain Shirt|110|R
+Golden Rod|110*|T
+Guard's Silvered Chain Shirt|110|R
+Protector's Silvered Chain Shirt|110|R
+Sterling Silver Shoulders|110|R
+Veteran's Silvered Chain Shirt|110|R
+Bronze Greatsword|115*|T
+Heavy Bronze Mace|115*|T
+Iridescent Hammer|115|R
+Silvered Bronze Boots|115*|T
+Bronze Battle Axe|120*|T
+Green Iron Boots|120|R
+Ironforge Gauntlets|120*|R
+Mighty Iron Hammer|120|R
+Patterned Bronze Bracers|120|T
+Silvered Bronze Gauntlets|120*|T
+Acolyte's Chain Helm|125|R
+Acolyte's Silvered Chain Leggings|125|R
+Crusader's Chain Helm|125|R
+Crusader's Silvered Chain Leggings|125|R
+Green Iron Gauntlets|125|R
+Guard's Chain Helm|125|R
+Guard's Silvered Chain Leggings|125|R
+Heavy Sharpening Stone|125|T
+Iron Shield Spike|125|R
+Protector's Chain Helm|125|R
+Protector's Silvered Chain Leggings|125|R
+Sterling Silver Breastplate|125|R
+Veteran's Chain Helm|125|R
+Veteran's Silvered Chain Leggings|125|R
+Iron Fists|130|R
+Silvered Bronze Leggings|130|R
+Solid Iron Maul|130|R
+Barbaric Iron Breastplate|135|R
+Barbaric Iron Shoulders|135|R
+Bronze Warhammer|135*|T
+Green Iron Leggings|135*|T
+Green Iron Shoulders|135|R
+Hardened Iron Shortsword|135|R
+Shining Silver Breastplate|135|T
+Anvil|140|R
+Iron Counterweight|140|R
+Golden Iron Destroyer|145|R
+Golden Scale Leggings|145|R
+Green Iron Bracers|145*|T
+Hard Gold Cuirass|145|R
+Barbaric Iron Helm|150|R
+Golden Scale Shoulders|150|R
+Green Iron Helm|150*|T
+Hard Gold Boots|150|R
+Jade Serpentblade|150|R
+Justicar's Belt|150|R
+Mantle of the Second War|150|R
+Officer's Belt|150|R
+Prefect's Belt|150|R
+Sentinel's Belt|150|R
+Warder's Belt|150|R
+Barbaric Iron Boots|155|R
+Moonsteel Broadsword|155|R
+Shifting Silver Breastplate|155*|T
+Solid Grinding Stone|155*|T
+Solid Sharpening Stone|155*|T
+Solid Weightstone|155*|T
+Truesilver Skeleton Key|155*|T
+Barbaric Iron Gloves|160|R
+Glinting Steel Dagger|160*|T
+Green Iron Hauberk|160*|T
+Hard Gold Bracers|160|R
+Massive Iron Axe|160|R
+Polished Steel Boots|160|R
+Steel Spear|160|R
+Truesilver Rod|160*|T
+Edge of Winter|165|R
+Golden Scale Bracers|165*|T
+Golden Scale Coif|165|R
+Hard Gold Leggings|165|R
+Iron Morningstar|165|R
+Searing Golden Blade|165|R
+Steel Weapon Chain|165|R
+Golden Scale Cuirass|170|R
+Hard Gold Coif|170|R
+Azure Skyforged Helm|175|R
+Azure Skyforged Pauldrons|175|R
+Cloudy Skyforged Helm|175|R
+Cloudy Skyforged Pauldrons|175|R
+Frost Tiger Blade|175|R
+Golden Scale Boots|175|R
+Hard Gold Gauntlet|175|R
+Hard Gold Pauldrons|175|R
+Justicar's Gauntlet|175|R
+Officer's Gauntlet|175|R
+Prefect's Gauntlet|175|R
+Sentinel's Gauntlet|175|R
+Shadow Crescent Axe|175|R
+Warder's Gauntlet|175|R
+Golden Scale Gauntlets|180|R
+Heavy Mithril Gauntlet|180*|T
+Heavy Mithril Shoulder|180*|T
+Mithril Shortsword|180|R
+Steel Breastplate|180*|T
+Heavy Mithril Pants|185|R
+Mithril Plate Pants|185*|T
+Heavy Mithril Axe|190*|T
+Mithril Plate Bracers|190|R
+Mithril Shield Spike|190|R
+Mithril Warhammer|190|R
+Steel Plate Helm|190*|T
+Blue Glittering Axe|195|R
+Mithril Blacksmith Hammer|195|R
+Mithril Claws|195|R
+Mithril Claymore|195|R
+Mithril Plate Gloves|195*|R
+Ornate Mithril Gloves|195|R
+Ornate Mithril Pants|195|R
+Shining Mithril Breastplate|195|R
+Shining Mithril Pauldrons|195|R
+Inlaid Mithril Cylinder|200|R
+Justicar's Boots|200|R
+Low-Background Truesilver Plates|200|R
+Officer's Boots|200|R
+Ornate Mithril Shoulders|200|R
+Prefect's Boots|200|R
+Sentinel's Boots|200|R
+Shining Mithril Boots|200|R
+Truesilver Gauntlets|200*|T
+Warder's Boots|200|R
+Wicked Mithril Blade|200|R
+Heavy Mithril Breastplate|205*|T
+Mithril Coif|205*|T
+Orcish War Leggings|205*|T
+Big Black Mace|210*|T
+Dense Grinding Stone|210*|T
+Dense Sharpening Stone|210*|T
+Dense Weightstone|210*|T
+Heavy Mithril Boots|210*|T
+Justicar's Pauldrons|210|R
+Mithril Plate Shoulders|210|R
+Mithril Spurs|210|R
+Mithril Stiletto|210|R
+Officer's Pauldrons|210|R
+Prefect's Pauldrons|210|R
+Sentinel's Pauldrons|210|R
+Warder's Pauldrons|210|R
+Charged Mithril Battleaxe|215|R
+Dazzling Mithril Rapier|215|R
+Ornate Mithril Breastplate|215*|R
+Shining Mithril Helm|215|R
+The Shatterer|215*|T
+Heavy Mithril Helm|220|R
+Ornate Mithril Boots|220*|R
+Ornate Mithril Helm|220*|R
+Runed Mithril Hammer|220|R
+Shining Mithril Gauntlet|220|R
+Shining Mithril Pants|220|R
+Truesilver Breastplate|220*|T
+Justicar's Wristguards|225|R
+Officer's Wristguards|225|R
+Phantom Blade|225*|T
+Prefect's Wristguards|225|R
+Reflective Truesilver Braincage|225|R
+Sentinel's Wristguards|225|R
+Tempered Interference-Negating Helmet|225|R
+Thorium Armor|225|R
+Thorium Belt|225|R
+Warder's Wristguards|225|R
+Arcanite Rod|230*|T
+Arcanite Skeleton Key|230*|T
+Baleful Pauldrons|230*|T
+Blight|230*|T
+Ebon Shiv|230|R
+Fearmonger's Shoulderguards|230*|T
+Shoulderplates of Dread|230*|T
+Thorium Bracers|230|R
+Radiant Belt|235|R
+Blessed Plate Boots|240|R
+Blessed Plate Pauldrons|240|R
+Dark Iron Pulverizer|240|R
+Imperial Plate Belt|240|R
+Imperial Plate Shoulders|240|R
+Justicar's Sabatons|240|R
+Officer's Sabatons|240|R
+Prefect's Sabatons|240|R
+Sentinel's Sabatons|240|R
+Thorium Greatsword|240*|T
+Truesilver Champion|240*|T
+Warder's Sabatons|240|R
+Blessed Plate Gauntlet|245|R
+Dark Iron Mail|245|R
+Imperial Plate Bracers|245|R
+Radiant Breastplate|245|R
+Bleakwood Hew|250*|T
+Dark Iron Sunderer|250|R
+Dawn's Edge|250|R
+Inlaid Thorium Hammer|250*|T
+Justicar's Gloves|250|R
+Justicar's Waistguard|250|R
+Officer's Gloves|250|R
+Officer's Waistguard|250|R
+Ornate Thorium Handaxe|250|R
+Prefect's Gloves|250|R
+Prefect's Waistguard|250|R
+Scarlet Soldier's Protectors|250|R
+Scarlet Soldier's Waistguard|250|R
+Sentinel's Gloves|250|R
+Sentinel's Waistguard|250|R
+Thorium Cestus|250|R
+Thorium Greatmace|250|R
+Thorium Shield Spike|250|R
+Warder's Gloves|250|R
+Warder's Waistguard|250|R
+Blazing Rapier|255|R
+Blessed Plate Bracers|255|R
+Dark Iron Shoulders|255|R
+Enchanted Battlehammer|255|R
+Huge Thorium Battleaxe|255|R
+Imperial Plate Gauntlets|255|R
+Thorium Boots|255|R
+Thorium Helm|255|R
+Dark Iron Plate|260|R
+Demon Forged Breastplate|260|R
+Radiant Gloves|260|R
+Scarlet Soldier's Grips|260|R
+Scarlet Soldier's Stompers|260|R
+Serenity|260|R
+Thorium Poleaxe|260|R
+Corruption|265|R
+Dawnbringer Shoulders|265|R
+Fiery Plate Gauntlets|265|R
+Girdle of the Dawn|265|R
+Radiant Boots|265|R
+Rune Edge|265*|R
+Volcanic Hammer|265|R
+Arcanite Blacksmith Hammer|270|R
+Blessed Plate Belt|270|R
+Blessed Plate Leggings|270|R
+Bold Dirk|270|R
+Dark Iron Bracers|270|R
+Fiery Chain Girdle|270|R
+Imperial Plate Boots|270|R
+Imperial Plate Helm|270|R
+Radiant Circlet|270|R
+Scarlet Soldier's Legplates|270|R
+Blessed Plate Helm|275|R
+Imperial Plate Chest|275|R
+Runic Plate Boots|275|R
+Runic Plate Shoulders|275|R
+Thorium Leggings|275|R
+Blessed Plate Chest|280|R
+Finely-Enchanted Battlehammer|280|R
+Imperial Plate Leggings|280|R
+Radiant Leggings|280|R
+Runic Plate Helm|280|R
+Scarlet Soldier's Chestplate|280|R
+Scarlet Soldier's Helmet|280|R
+Scarlet Soldier's Spaulders|280|R
+Clutchlord's Grips|285|R
+Goregasher Grips|285|R
+Runic Breastplate|285|R
+Runic Plate Leggings|285|R
+Tempered Dark Iron Plate|285|R
+Clutchlord's Support|290|R
+Fiery Plate Gauntlets of the Hidden Technique|290|R
+Goregasher Support|290|R
+Tranquility|290*|T
+Whitesoul Helm|290|R
+Clutchlord's Stompers|295|R
+Desecration|295*|T
+Goregasher Stompers|295|R
+Obsidian Grinding Stone|295*|R
+Tempest Gauntlets|295|R
+Annihilator|300|R
+Arcanite Champion|300|R
+Arcanite Reaper|300|R
+Azerothium Legplates|300|R
+Bagh Nakh|300|R
+Black Amnesty|300|R
+Black Grasp of the Destroyer|300|R
+Blackfury|300|R
+Blackguard|300|R
+Bloodsoul Breastplate|300|R
+Bloodsoul Gauntlets|300|R
+Bloodsoul Shoulders|300|R
+Breastplate of Salvation|300|R
+Champion's Legplates|300|R
+Dark Iron Boots|300|R
+Dark Iron Destroyer|300|R
+Dark Iron Gauntlets|300|R
+Dark Iron Helm|300|R
+Dark Iron Leggings|300|R
+Dark Iron Reaver|300|R
+Darkrune Breastplate|300|R
+Darkrune Gauntlets|300|R
+Darkrune Helm|300|R
+Darksoul Breastplate|300|R
+Darksoul Leggings|300|R
+Darksoul Shoulders|300|R
+Deadly Heartseeker|300*|R
+Depleted Thorium Sabatons|300|R
+Dreamscale Visor|300*|R
+Ebon Hand|300|R
+Elemental Sharpening Stone|300|R
+Enchanted Thorium Breastplate|300|R
+Enchanted Thorium Helm|300|R
+Enchanted Thorium Leggings|300|R
+Enriched Thorium Breastplate|300|R
+Enriched Thorium Helm|300|R
+Enriched Thorium Leggings|300|R
+Evergreen Shield|300|R
+Fiery Chain Shoulders|300|R
+Forest Defender's Axe|300|R
+Frostguard|300|R
+Gauntlets of Glory|300|R
+Gloves of the Dawn|300|R
+Greaves of Glory|300|R
+Greenhammer|300|R
+Hammer of the Titans|300|R
+Handguards of Glory|300|R
+Hardened Frostguard|300|R
+Heartseeker|300|R
+Heavy Obsidian Belt|300*|R
+Heavy Thorium Gauntlets|300|R
+Icebane Bracers|300*|T
+Icebane Breastplate|300*|T
+Icebane Gauntlets|300*|T
+Invincible Mail|300|R
+Ironvine Belt|300*|R
+Ironvine Breastplate|300*|R
+Ironvine Gloves|300*|R
+Ironwood Blade|300|R
+Jagged Obsidian Shield|300|R
+Justice Epaulets|300|R
+Justice Gauntlets|300|R
+Justice Gloves|300|R
+Justice Greaves|300|R
+Justice Handguards|300|R
+Justice Leggings|300|R
+Justice Legguards|300|R
+Justice Legplates|300|R
+Justice Pauldrons|300|R
+Justice Sabatons|300|R
+Justice Spaulders|300|R
+Justice Treads|300|R
+Legguards of Glory|300|R
+Legionite Glaive|300|R
+Legplates of Glory|300|R
+Light Obsidian Belt|300*|R
+Lionheart Helm|300|R
+Martyr's Legplates|300|R
+Master Forge|300|R
+Masterwork Stormhammer|300|R
+Nightfall|300|R
+Obsidian Champion|300*|R
+Obsidian Defender|300*|R
+Obsidian Destroyer|300*|R
+Obsidian Heartseeker|300*|R
+Obsidian Mail Tunic|300|R
+Obsidian Reaver|300*|R
+Obsidian Sageblade|300*|R
+Obsidian Stormhammer|300*|R
+Pauldrons of Glory|300|R
+Persuader|300|R
+Razorspike Battleplate|300*|R
+Razorspike Headcage|300*|R
+Razorspike Shoulderplate|300*|R
+Refined Arcanite Champion|300|R
+Refined Arcanite Reaper|300|R
+Refined Hammer of the Titans|300*|R
+Sabatons of Glory|300|R
+Sageblade|300|R
+Sageblade of the Archmagus|300|R
+Shoulders of Glory|300|R
+Skyrider's Masterwork Stormhammer|300|R
+Stalwart Helm|300|R
+Stormcarver|300|R
+Stronger-hold Gauntlets|300|R
+Stronghold Gauntlets|300|R
+Sulfuron Hammer|300|R
+Thick Obsidian Breastplate|300|R
+Titanic Leggings|300|R
+Warcrest of the Great Chief|300|R
+Blood Talon|305*|T
+Darkspear|305*|T
