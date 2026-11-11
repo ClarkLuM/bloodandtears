@@ -366,11 +366,11 @@
         "$value": {
           "colorSpace": "srgb",
           "components": [
-            0.9176,
+            0.9294,
             0.9098,
-            0.9098
+            0.9137
           ],
-          "hex": "#eae8e8",
+          "hex": "#ede8e9",
           "alpha": 0.12
         },
         "$description": "1px ring for ring-and-shadow depth and dark overlays (#BDBDBD at 12% pattern, DC-L04-12)."

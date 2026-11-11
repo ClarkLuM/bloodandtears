@@ -744,3 +744,13 @@ Append-only, ADR-style (spec 7.9): one entry per decision, newest last. A later 
 - set_by: chosen · locked: no · date: 2026-11-07 · supersedes: D-0077 · source_ref: none
 - reason: group posting was cut; the menu is Roster, Dungeons, Cards and Professions
 - previous value: "a roster, groups, professions and trading-card site for Blood and Tears, a Horde guild on WoW Forever"
+
+## D-0090 · raw.brandColor = "#a3213f"
+- set_by: chosen · locked: no · date: 2026-11-12 · supersedes: D-0066 · source_ref: none
+- reason: New guild tabard (Nov 2026): wine banner, gingerbread man, green trim. Owner picked the Tabard direction: wine buttons, gingerbread links and title, green trim line under the header.
+- previous value: "#b8282a"
+
+## D-0091 · raw.neutralBase = "#161012"
+- set_by: chosen · locked: no · date: 2026-11-12 · supersedes: D-0067 · source_ref: none
+- reason: Neutrals lean wine-brown to sit with the tabard.
+- previous value: "#171515"

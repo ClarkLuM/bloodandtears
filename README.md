@@ -112,6 +112,10 @@ A **Records** tab ranks everyone on what the armory already says: honourable kil
 - **Dungeons:** the dropdown is gone. **Dungeons by Level** splits them into four bands (13–24, 25–39, 40–51, 52–60, by each dungeon's starting level, plus All) and opens on the band for your level; the old "Suits my level" box is gone. Each band lists its dungeons in level order with how many current characters are the right level ("in range") and how many have been. Dungeons at your level are tagged. Click one to open it in place: who's in range by role, Suggest a group, Who's Been, and What Drops (now folded shut until you open it). Suits my level still filters the list.
 - **Professions:** the secondary professions are cards like the primary ones (the long table is gone). Who Has What is one even 3-column grid (gathering first, then crafting, each card labelled), one line per character with the skill number on the right and the bar underneath, so long names no longer push things onto a second line. The rank (Expert and so on) is in the tooltip. Each card shows the top 5 with an "N more" button.
 
+## Tabard colours and icon (12 Nov)
+
+The site's colours follow the new guild tabard: wine buttons, gingerbread links and title, a green trim line under the header, and wine-brown neutrals (a cream base in light mode). The site icon (`public/icon.svg`, `icon-192.png`, `icon-512.png`), the link preview (`public/og.png`) and the weekly recap picture use the same colours, with a grumpy gingerbread man. Phones and Discord may keep showing the old icon and preview for a while (they cache them).
+
 ## This week, titles, rivals, milestones and sync status (12 Nov)
 
 - **This Week** (top of Records): once a day the hourly sync saves everyone's level, honourable kills, loot points and profession skills to `guild/records` (the last 10 days, server-only in the rules). Records compares today with about a week ago and lists new number ones ("took the top spot in Alchemy from …"), climbs of two places or more into the top 5, and the week's biggest kill and level gains. Dungeons aren't in the snapshot. It starts filling in the day after this is deployed.

@@ -85,10 +85,10 @@
     "minimal"
   ],
   "raw": {
-    "brandColor": "#b8282a",
+    "brandColor": "#a3213f",
     "primaryActionColor": null,
     "focusColor": null,
-    "neutralBase": "#171515",
+    "neutralBase": "#161012",
     "contrastTarget": "AA",
     "textFace": "Figtree",
     "displayFace": "Alegreya Sans SC",
@@ -592,7 +592,7 @@
   },
   "research": {},
   "hashes": {
-    "DESIGN.md": "85c4c1d74e2b83b4",
+    "DESIGN.md": "3ebcb47e050d8c13",
     "PRODUCT.md": "63b5836c6b379c84"
   },
   "exports": {
