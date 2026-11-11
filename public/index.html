@@ -490,6 +490,7 @@ nav.bottom{display:none}
 .r-top{display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:center}
 /* Dungeons: who's been, what drops */
 .dg-list{margin-top:1rem;padding:0;gap:0}.dg-list-head{padding:1.25rem 1.25rem .75rem}
+.dg-bands{margin-top:.75rem;overflow-x:auto;max-width:100%}.dg-bands .seg span{color:var(--ter);font-variant-numeric:tabular-nums}
 .dg-cols,.dg-sum{display:grid;grid-template-columns:minmax(0,1fr) 7rem 5rem;gap:1rem;align-items:center;padding:0 1.25rem}
 .dg-cols{padding-bottom:.375rem;border-bottom:1px solid var(--sep)}.dg-cols span+span,.dg-n{text-align:right}
 .dg-item+.dg-item{border-top:1px solid var(--sep)}
@@ -1732,7 +1733,7 @@ async function loadWidget(){
 function viewLfg(){
   const my=me();
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Dungeons"),h("p",{class:"sub"},"Who's the right level for each dungeon, who's been, what drops, and when raids open.")),
-      my?h("label",{class:"check"},h("input",{type:"checkbox",checked:S.ui.suits,onchange:()=>setUi({suits:!S.ui.suits},true)}),`Suits my level (${my.level||1})`):null),
+      null),
     rangeBoard(),raidsCard()]}
 // Who's the right level for a dungeon. Pick one from the list; people are sorted into tank, healer and DPS.
 function rangeBoard(){
@@ -1741,15 +1742,20 @@ function rangeBoard(){
   const all=DUNGEONS.map(([name,range])=>{const r=rangeOf(range);if(!r)return null;
     const ppl=chars.filter(m=>{const lv=+m.level||1;return lv>=r[0]&&lv<=r[1]}).sort(sortPpl);
     return{name,range,ppl,active:ppl.filter(p=>!isAway(p))}}).filter(Boolean);
-  const opts=S.ui.suits&&my?all.filter(x=>x.ppl.some(isMine)):all;
-  const head=h("div",{},h("h2",{id:"range-h"},"Every Dungeon"),
-    h("p",{class:"sub"},"Every dungeon, with how many of the guild are the right level and how many have been. Open one to see who, and what drops."));
+  // Level bands keep the list short. It starts on the band for your level; "All" shows every dungeon.
+  const bandOf=x=>DG_BANDS.filter(b=>rangeOf(x.range)[0]>=b[1]).pop()[0];
+  const myBand=my?DG_BANDS.filter(b=>(+my.level||1)>=b[1]).pop()[0]:DG_BANDS[0][0];
+  const band=S.ui.dgBand&&(S.ui.dgBand==="All"||DG_BANDS.some(b=>b[0]===S.ui.dgBand))?S.ui.dgBand:myBand;
+  const opts=band==="All"?all:all.filter(x=>bandOf(x)===band);
+  const head=h("div",{},h("h2",{id:"range-h"},"Dungeons by Level"),
+    h("p",{class:"sub"},"How many of the guild are the right level and how many have been. Open one to see who, and what drops."));
   if(!opts.length)return h("section",{class:"card","aria-labelledby":"range-h",style:"gap:.75rem;margin-top:1rem"},head,h("p",{class:"empty"},"Nobody else is in range of a dungeon at your level yet."));
   // Start on the saved pick, else the busiest dungeon at your level, else the busiest one overall.
   const busiest=list=>list.slice().sort((a,b)=>b.active.length-a.active.length)[0];
   // "-" means they closed every dungeon on purpose.
   const x=S.ui.rangeD==="-"?null:opts.find(o=>o.name===S.ui.rangeD)||(my&&busiest(opts.filter(o=>o.ppl.some(isMine))))||busiest(opts);
-  return h("section",{class:"card dg-list","aria-labelledby":"range-h"},h("div",{class:"dg-list-head"},head),
+  const bandSeg=seg("Levels",[...DG_BANDS.map(([k])=>[k,k,all.filter(x=>bandOf(x)===k).length]),["All","All"]],band,k=>setUi({dgBand:k},true));
+  return h("section",{class:"card dg-list","aria-labelledby":"range-h"},h("div",{class:"dg-list-head"},head,h("div",{class:"dg-bands"},bandSeg)),
     h("div",{class:"dg-cols small ter","aria-hidden":"true"},h("span",{},"Dungeon"),h("span",{},"In range"),h("span",{},"Been")),
     opts.map(o=>{const open=x&&o.name===x.name,been=beenCount(o.name),mine=o.ppl.some(isMine);
       return h("div",{class:"dg-item"+(open?" open":"")},
@@ -1760,6 +1766,7 @@ function rangeBoard(){
           h("span",{class:"dg-n"+(been?"":" zero")},h("b",{},String(been)),h("span",{class:"dg-n-l"}," been"))),
         open?rangeDetail(o):null)}))}
 // How many current characters have a dungeon stamped (by hand or from loot).
+const DG_BANDS=[["13–24",0],["25–39",25],["40–51",40],["52–60",52]];
 const beenCount=name=>[...S.members,...S.alts].filter(m=>(isMine(m)||memberState(m)==="current")&&passportOf(m).some(p=>p.name===name)).length;
 // The open dungeon: who's in range by role, a suggested group, who's been, what drops.
 function rangeDetail(x){
@@ -1953,7 +1960,7 @@ function viewProfessions(){
     h("span",{class:"track","aria-hidden":"true"},h("i",{class:sk>=300?"max":"",style:`width:${(sk/300*100).toFixed(1)}%`})));
   // Top 5, then "N more" opens the rest, so the cards stay close in height.
   const profCard=p=>{const l=by[p]||[],more=(S.ui.pfMore||{})[p],shown=more?l:l.slice(0,5);
-    return h("section",{class:"card pf-card"},h("div",{class:"pf-top"},h("span",{class:"pf-kind"},GATHERING.includes(p)?"Gathering":"Crafting"),h("h3",{},p),h("span",{class:"small ter"},l.length?l.length+(l.length===1?" person":" people"):"")),
+    return h("section",{class:"card pf-card"},h("div",{class:"pf-top"},SECONDARY.includes(p)?null:h("span",{class:"pf-kind"},GATHERING.includes(p)?"Gathering":"Crafting"),h("h3",{},p),h("span",{class:"small ter"},l.length?l.length+(l.length===1?" person":" people"):"")),
       l.length?h("ol",{class:"pf-list"},shown.map(x=>who(x,p))):h("p",{class:"empty"},"Nobody yet."),
       l.length>5?h("button",{type:"button",class:"btn ghost sm pf-more","aria-expanded":String(!!more),onclick:()=>setUi({pfMore:{...(S.ui.pfMore||{}),[p]:!more}},true)},more?"Show top 5":(l.length-5)+" more"):null)};
   const missing=PRIMARY.filter(p=>!by[p]);
@@ -1964,11 +1971,7 @@ function viewProfessions(){
     out.push(h("div",{class:"spread",style:"align-items:baseline"},h("h3",{class:"prof-h"},"Primary"),missing.length?h("span",{class:"small ter"},"Nobody has "+missing.join(", ")+" yet"):null),
       h("div",{class:"pf-grid"},[...GATHERING,...PRIMARY.filter(p=>!GATHERING.includes(p))].map(profCard)))}
   if(t==="All"||t==="Secondary"){
-    const sec=chars.filter(m=>SECONDARY.some(p=>m.profs&&p in m.profs)).sort((a,b)=>nameOf(a).localeCompare(nameOf(b)));
-    const cell=(m,p)=>{const sk=m.profs&&m.profs[p];return h("td",{"data-label":p},sk?h("span",{style:+sk>=300?"color:var(--accent-text);font-weight:600":""},String(sk)):h("span",{class:"ter"},"—"))};
-    out.push(h("h3",{class:"prof-h"},"Secondary"),sec.length?h("div",{class:"tablebox"},h("table",{},h("thead",{},h("tr",{},h("th",{scope:"col"},"Character"),SECONDARY.map(p=>h("th",{scope:"col"},p)))),
-      h("tbody",{},sec.map(m=>h("tr",{},h("td",{"data-label":"Character"},charLink(m)),SECONDARY.map(p=>cell(m,p)))))))
-      :h("p",{class:"empty"},"No secondary professions logged yet."))}
+    out.push(h("h3",{class:"prof-h"},"Secondary"),h("div",{class:"pf-grid"},SECONDARY.map(profCard)))}
   return out}
 
 /* ---------- Raids ---------- */

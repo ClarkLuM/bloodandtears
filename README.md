@@ -108,8 +108,8 @@ A **Records** tab ranks everyone on what the armory already says: honourable kil
 
 ## Dungeons and Professions tidy-up (11 Nov)
 
-- **Dungeons:** the dropdown is gone. **Every Dungeon** lists all of them in level order with how many current characters are the right level ("in range") and how many have been. Dungeons at your level are tagged. Click one to open it in place: who's in range by role, Suggest a group, Who's Been, and What Drops (now folded shut until you open it). Suits my level still filters the list.
-- **Professions:** Who Has What is one even 3-column grid (gathering first, then crafting, each card labelled), one line per character with the skill number on the right and the bar underneath, so long names no longer push things onto a second line. The rank (Expert and so on) is in the tooltip. Each card shows the top 5 with an "N more" button.
+- **Dungeons:** the dropdown is gone. **Dungeons by Level** splits them into four bands (13–24, 25–39, 40–51, 52–60, by each dungeon's starting level, plus All) and opens on the band for your level; the old "Suits my level" box is gone. Each band lists its dungeons in level order with how many current characters are the right level ("in range") and how many have been. Dungeons at your level are tagged. Click one to open it in place: who's in range by role, Suggest a group, Who's Been, and What Drops (now folded shut until you open it). Suits my level still filters the list.
+- **Professions:** the secondary professions are cards like the primary ones (the long table is gone). Who Has What is one even 3-column grid (gathering first, then crafting, each card labelled), one line per character with the skill number on the right and the bar underneath, so long names no longer push things onto a second line. The rank (Expert and so on) is in the tooltip. Each card shows the top 5 with an "N more" button.
 
 ## Text size
 
