@@ -532,8 +532,27 @@ nav.bottom{display:none}
 .rec-row.me{background:color-mix(in srgb,var(--accent) 12%,transparent)}
 .rec-who{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem .5rem;flex:1;min-width:0}.rec-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rec-v{font-variant-numeric:tabular-nums;color:var(--sec);white-space:nowrap;font-size:.875rem}
-.rec-gap{color:var(--ter);padding-left:.875rem;line-height:1rem}
-.rec-main{grid-template-columns:repeat(auto-fill,minmax(min(100%,24rem),1fr))}.spoon-tag{white-space:nowrap}
+.rec-gap{color:var(--ter);padding-left:.875rem;line-height:1rem;font-size:.75rem}
+.spoon-tag{white-space:nowrap}
+.rec-main{grid-template-columns:repeat(2,minmax(0,1fr))}@media (max-width:760px){.rec-main{grid-template-columns:1fr}}.rec-main>.rec-card{align-self:stretch}
+.rec-more{align-self:flex-start;margin:.25rem 0 0 -.75rem}
+.rp{padding:.5rem 0;gap:0}
+.rp-head,.rp-sum{display:grid;grid-template-columns:minmax(9rem,1.1fr) repeat(4,minmax(0,1fr));gap:.75rem;align-items:center;padding:.5rem 1rem}
+.rp-head{padding-top:.25rem;padding-bottom:.25rem;border-bottom:1px solid var(--sep)}
+.rp-row+.rp-row{border-top:1px solid var(--sep)}
+.rp-sum{cursor:pointer;min-height:3.25rem}
+.rp-sum:hover{background:var(--subtle)}.rp-row.open .rp-sum{background:var(--subtle)}
+.rp-p{display:flex;flex-direction:column;line-height:1.25rem;font:inherit;color:inherit;text-align:left;background:none;border:0;padding:0;cursor:pointer;align-items:flex-start}.rp-p:focus-visible{outline:2px solid var(--accent-text);outline-offset:4px;border-radius:4px}
+.rp-c{display:flex;align-items:center;gap:.5rem;min-width:0}.rp-c.empty{color:var(--ter)}
+.rp-who{display:flex;flex-direction:column;min-width:0;line-height:1.125rem}.rp-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-v{font-size:.8125rem;color:var(--sec);font-variant-numeric:tabular-nums}
+.rp-c.spoon .rp-who a{color:var(--sec)}
+.rp-spoon{display:none}
+.rp-all{padding:.25rem 1rem .75rem}
+@media (max-width:760px){.rp-head{display:none}.rp-sum{grid-template-columns:1fr;row-gap:.375rem;padding:.75rem 1rem}.rp-p{flex-direction:row;align-items:baseline;gap:.5rem}
+  .rp-who{flex-direction:row;align-items:baseline;gap:.5rem}.rp-c.empty{display:none}
+  .rp-c.spoon{margin-top:.125rem}.rp-c.spoon .rp-spoon{display:inline;font-size:.75rem;color:var(--ter);white-space:nowrap}
+  .rp-c .medal{width:1.25rem;height:1.25rem;font-size:.6875rem}}
 .rank-l{display:inline-flex;align-items:center;gap:.375rem;margin-top:.25rem;font-size:.8125rem;color:var(--sec);text-decoration:none}
 .rank-l .medal{width:1.125rem;height:1.125rem;font-size:.625rem}
 .rank-l:hover span{text-decoration:underline}.rank-l.spoon{color:var(--ter)}
@@ -1843,24 +1862,44 @@ function ranked(get){const rows=recPool().map(m=>[m,get(m)]).filter(x=>x[1]!=nul
 function rankOfIn(get,m){const rows=ranked(get),r=rows.find(x=>x[0].id===m.id);if(!r)return null;
   return{place:r[2],of:rows.length,tied:rows.filter(x=>x[2]===r[2]).length>1,last:rows.length>=3&&r[2]===rows[rows.length-1][2]&&r[2]!==1}}
 const medal=n=>h("span",{class:"medal m"+(n<=3?n:0),"aria-label":ordinal(n)+" place"},String(n));
-function boardCard([k,title,get,fmt],opt={}){
+// One ranked row: place, character, number. "me" and "spoon" rows get a wash or a tag.
+const recLine=([m,v,pl],fmt,cls="")=>h("li",{class:"rec-row "+cls},medal(pl),h("span",{class:"rec-who"},classIcon(m.cls),charLink(m),isMine(m)?h("span",{class:"tag gold"},"You"):null,cls.includes("spoon")?h("span",{class:"visually-hidden"},"(wooden spoon)"):null),h("span",{class:"rec-v"},fmt(v)));
+const recOpen=k=>!!(S.ui.recOpen||{})[k];
+const recToggle=k=>setUi({recOpen:{...(S.ui.recOpen||{}),[k]:!recOpen(k)}},true);
+// Top 3, then your character and the wooden spoon after a gap. "See all" lists everyone.
+function recList(k,rows,fmt,n=3){const open=recOpen(k),top=open?rows:rows.slice(0,n);
+  const mine=open?[]:rows.filter(r=>isMine(r[0])&&!top.includes(r)),last=!open&&rows.length>n?rows[rows.length-1]:null;
+  const gap=sp=>h("li",{class:"rec-gap","aria-hidden":"true"},sp?"··· Wooden spoon":"···");
+  return[h("ol",{class:"rec-list"},top.map((r,i)=>[open&&i===rows.length-1&&rows.length>n?gap(1):null,recLine(r,fmt,open&&i===rows.length-1&&rows.length>n?"spoon":"")]),
+      mine.map(r=>[gap(r===last),recLine(r,fmt,r===last?"spoon me":"me")]),last&&!mine.includes(last)?[gap(1),recLine(last,fmt,"spoon")]:null),
+    rows.length>n+1?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(open),onclick:()=>recToggle(k)},open?"Show top 3":"See all "+rows.length):null]}
+function boardCard([k,title,get,fmt]){
   const rows=ranked(get);if(!rows.length)return null;
-  const top=rows.slice(0,opt.n||5),mine=rows.filter(r=>isMine(r[0])&&!top.includes(r)),lastRow=rows.length>(opt.n||5)?rows[rows.length-1]:null;
-  const line=([m,v,pl],cls="")=>h("li",{class:"rec-row "+cls},medal(pl),h("span",{class:"rec-who"},classIcon(m.cls),charLink(m),isMine(m)?h("span",{class:"tag gold"},"You"):null,cls==="spoon"?h("span",{class:"tag spoon-tag"},"Wooden spoon"):null),h("span",{class:"rec-v"},fmt(v)));
   return h("section",{class:"card rec-card","aria-label":title},
     h("div",{class:"spread"},h("h3",{},title),h("span",{class:"small ter"},rows.length+(rows.length===1?" character":" characters"))),
-    h("ol",{class:"rec-list"},top.map(r=>line(r)),
-      mine.map(r=>[h("li",{class:"rec-gap","aria-hidden":"true"},"···"),line(r,"me")]),
-      lastRow&&!mine.includes(lastRow)?[h("li",{class:"rec-gap","aria-hidden":"true"},"···"),line(lastRow,"spoon")]:null),
-    null)}
+    recList(k,rows,fmt))}
+// Professions as one tidy table: a row each, the top three across, the wooden spoon at the end.
+function profTable(list){
+  const cell=(r,fmt,spoon)=>r?h("span",{class:"rp-c"+(spoon?" spoon":"")},spoon?h("span",{class:"rp-spoon"},"Wooden spoon"):medal(r[2]),h("span",{class:"rp-who"},charLink(r[0]),h("span",{class:"rp-v"},String(r[1])))):h("span",{class:"rp-c empty","aria-hidden":"true"},"—");
+  const rows=list.map(([p,,get,fmt])=>[p,ranked(get),fmt]).filter(x=>x[1].length);
+  if(!rows.length)return h("p",{class:"small ter"},"No one has these professions yet.");
+  return h("section",{class:"card rp"},
+    h("div",{class:"rp-head small ter","aria-hidden":"true"},h("span",{},"Profession"),h("span",{},"1st"),h("span",{},"2nd"),h("span",{},"3rd"),h("span",{},"Last")),
+    rows.map(([p,r,fmt])=>{const k="p:"+p,open=recOpen(k);
+      return h("div",{class:"rp-row"+(open?" open":"")},
+        // The whole row opens it with a mouse or tap; the profession name is the real button for keyboards and screen readers.
+        h("div",{class:"rp-sum",onclick:e=>{if(e.target.closest("a,button"))return;recToggle(k)}},
+          h("button",{type:"button",class:"rp-p","aria-expanded":String(open),onclick:()=>recToggle(k)},h("b",{},p),h("span",{class:"small ter"},r.length+(r.length===1?" character":" characters"))),
+          cell(r[0]),cell(r[1]),cell(r[2]),cell(r.length>3?r[r.length-1]:null,null,true)),
+        open?h("ol",{class:"rec-list rp-all"},r.map((x,i)=>i===r.length-1&&r.length>3?[h("li",{class:"rec-gap","aria-hidden":"true"},"Wooden spoon"),recLine(x,v=>v+" / 300","spoon")]:recLine(x,v=>v+" / 300"))):null)}))}
 function viewRecords(){
   const u=S.ui,kind=u.recKind||"All";
   const profs=[...PRIMARY,...SECONDARY].filter(p=>kind==="All"||(kind==="Primary"?PRIMARY:SECONDARY).includes(p)).map(profBoard);
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs."))),
     h("div",{class:"rec-grid rec-main"},REC_BOARDS.map(b=>boardCard(b))),
     h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"prof-h"},"Professions"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],kind,k=>setUi({recKind:k},true))),
-    h("div",{class:"rec-grid"},profs.map(b=>boardCard(b,{n:3}))),
-    h("p",{class:"small ter"},"Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
+    profTable(profs),
+    h("p",{class:"small ter"},"Tap a profession to see everyone. Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
 // "2nd of 6 in the guild": a line under each profession and the honourable kills on a character's page.
 function rankLine(get,m,noun){const r=rankOfIn(get,m);if(!r||r.of<2)return null;
   const t=r.place===1&&!r.tied?"Best "+noun+" in the guild":(r.tied?"Joint ":"")+ordinal(r.place)+" of "+r.of+" in the guild";
