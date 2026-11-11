@@ -754,3 +754,13 @@ Append-only, ADR-style (spec 7.9): one entry per decision, newest last. A later 
 - set_by: chosen · locked: no · date: 2026-11-12 · supersedes: D-0067 · source_ref: none
 - reason: Neutrals lean wine-brown to sit with the tabard.
 - previous value: "#171515"
+
+## D-0092 · raw.brandColor = "#a50d2c"
+- set_by: chosen · locked: no · date: 2026-11-12 · supersedes: D-0090 · source_ref: none
+- reason: Final tabard and in-game logo (owner's screenshots, 12 Nov): crimson field, gingerbread man, bright green trim, bronze rim.
+- previous value: "#a3213f"
+
+## D-0093 · raw.neutralBase = "#161010"
+- set_by: chosen · locked: no · date: 2026-11-12 · supersedes: D-0091 · source_ref: none
+- reason: Neutrals lean red-brown to sit with the crimson tabard.
+- previous value: "#161012"

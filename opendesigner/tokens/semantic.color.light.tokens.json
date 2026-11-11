@@ -327,9 +327,9 @@
           "components": [
             0.1529,
             0.1373,
-            0.1412
+            0.1373
           ],
-          "hex": "#272324",
+          "hex": "#272323",
           "alpha": 0.45
         },
         "$description": "Modal backdrop (DC-L04-18; Q-depth-06)."
@@ -342,9 +342,9 @@
           "components": [
             0.1529,
             0.1373,
-            0.1412
+            0.1373
           ],
-          "hex": "#272324",
+          "hex": "#272323",
           "alpha": 0.107
         },
         "$description": "Key shadow color; alpha doubles in dark (DC-L04-12)."
@@ -355,9 +355,9 @@
           "components": [
             0.1529,
             0.1373,
-            0.1412
+            0.1373
           ],
-          "hex": "#272324",
+          "hex": "#272323",
           "alpha": 0.091
         },
         "$description": "Ambient shadow color."
@@ -368,9 +368,9 @@
           "components": [
             0.1529,
             0.1373,
-            0.1412
+            0.1373
           ],
-          "hex": "#272324",
+          "hex": "#272323",
           "alpha": 0.1
         },
         "$description": "1px ring for ring-and-shadow depth and dark overlays (#BDBDBD at 12% pattern, DC-L04-12)."

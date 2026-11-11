@@ -3,10 +3,10 @@ version: alpha
 name: "Blood and Tears"
 description: "a roster, dungeons, professions and trading-card site for Blood and Tears, a Horde guild on WoW Forever"
 colors:
-  primary: "#a3213f"
+  primary: "#a50d2c"
   on-primary: "#ffffff"
-  surface: "#fefcfd"
-  on-surface: "#272324"
+  surface: "#fefcfc"
+  on-surface: "#272323"
   error: "#d93834"
 typography:
   body-md: { fontFamily: "Figtree", fontSize: 14px, lineHeight: 20px }
@@ -25,7 +25,7 @@ spacing:
 - **Screens:** guild app (screens where people get work done)
 - **Runs on:** web
 - **Feel:** calm, minimal (deferential, minimal)
-- **Brand color:** Your brand color (#A3213F) is on the buttons exactly, with white text that reads clearly on it. In dark mode, buttons use a lighter shade of it (#DE546B), so their dark text reads clearly.
+- **Brand color:** Your brand color (#A50D2C) is on the buttons exactly, with white text that reads clearly on it. In dark mode, buttons use a lighter shade of it (#E84E5A), so their dark text reads clearly.
 - **Decided:** 13 answers you gave, 2 picked for you; everything else uses sourced defaults
 - **Standards:** 289 house standards followed (locked, house standards v3), 8 of your own; see the Standards section
 - **Next:** zoom into Colors, Layout, Elevation & Depth, or stop here: each level works
@@ -67,7 +67,7 @@ No principles recorded yet (Q-brand-07). Until they are, the dials act as the ti
 - **Energy 35/100** (calm to energetic: leaning calm): standard easing [0.77, 0, 0.175, 1], duration multiplier 0.94, spring damping 1.0, heading weight 650, navigation: neutral.
 - **Roundness 45/100** (sharp to soft: balanced): control radius 6, icon corners default, caps round.
 - **Depth 30/100** (flat to deep: flat): depth model: ring+faint-shadow.
-- **Colorfulness 45/100** (monochrome to vivid: balanced): scheme tonalSpot, accent chroma 68.8 (HCT), 1 accent(s), surfaces: neutral+one-accent.
+- **Colorfulness 45/100** (monochrome to vivid: balanced): scheme tonalSpot, accent chroma 78.1 (HCT), 1 accent(s), surfaces: neutral+one-accent.
 - **Warmth 50/100** (cool/formal to warm/friendly: balanced): neutral tint chroma 0.0 at hue 264, borders: default, title-case, contractions allowed.
 
 **Zoom by area** (sketch, broad, defined, detailed). You can stop at any level; each one works.
@@ -99,7 +99,7 @@ Designers: style brief, mood in words · Code: `taste.brief, taste.never`
 | Line | What it says | From |
 |---|---|---|
 | In your words | "dark, like night mode, with a touch of Horde; we are Loot Goblins after all" | your words |
-| Color | One accent color: your brand color `#a3213f` (exactly) marks buttons, links and focus. Everything else stays neutral. Keep the accent to small areas, about 15% of a screen at most (a rule of thumb, DC-L15-03). | brand color; colorfulness 45/100 |
+| Color | One accent color: your brand color `#a50d2c` (exactly) marks buttons, links and focus. Everything else stays neutral. Keep the accent to small areas, about 15% of a screen at most (a rule of thumb, DC-L15-03). | brand color; colorfulness 45/100 |
 | Shape | Buttons and fields have 6px corners; cards have 8px corners. Cards get a faint outline and a very soft shadow. | roundness 45/100, depth 30/100 |
 | Motion | Leaning calm. Most movements take 200ms. They turn into fades when a person asks for less motion. | energy 35/100 |
 | Never | Nothing yet. Say what it should never look like, or rate real screens in the taste poll. | not asked yet |
@@ -109,7 +109,7 @@ Designers: style brief, mood in words · Code: `taste.brief, taste.never`
 > Zoom: sketch (0 of 3), 5 decisions in this area. To zoom in, answer Q-color-02.
 <!-- od:zoom area=color level=0 -->
 
-**One accent color: your brand color `#a3213f` (exactly) marks buttons, links and focus.** Everything else stays neutral.
+**One accent color: your brand color `#a50d2c` (exactly) marks buttons, links and focus.** Everything else stays neutral.
 Designers: primary or brand accent · Code: `color.bg.accent`
 
 <details><summary>More</summary>
@@ -118,16 +118,16 @@ Designers: primary or brand accent · Code: `color.bg.accent`
 - How colorful should the palette be, from all gray to vivid? **Tonal, low to medium color** (chosen; tokens; Q-color-03)
 - Your text, backgrounds and lines use grays. **Slight tint toward the accent hue (OKLCH chroma about 0.01-0.03 at mid steps)** (chosen; tokens; Q-color-09)
 
-**Intent.** Brand color `#a3213f` drives the accent ramp's hue; the Colorfulness dial (45) sets its chroma (scheme tonalSpot, peak HCT chroma 68.85). The brand's role is **reserved-accent** and it sits closest to accent step 9. Your brand color #A3213F is on the buttons exactly (white text on it reads at 7.38:1). In dark mode, buttons use #DE546B, a lighter shade of it, because the dark text on dark-mode buttons would read at only 2.47:1 on the exact color.
+**Intent.** Brand color `#a50d2c` drives the accent ramp's hue; the Colorfulness dial (45) sets its chroma (scheme tonalSpot, peak HCT chroma 78.07). The brand's role is **reserved-accent** and it sits closest to accent step 9. Your brand color #A50D2C is on the buttons exactly (white text on it reads at 7.80:1). In dark mode, buttons use #E84E5A, a lighter shade of it, because the dark text on dark-mode buttons would read at only 2.34:1 on the exact color.
 
 **How ramps are built.** Each hue gets twelve steps in OKLCH, placed by contrast. Step 8 reaches at least 3:1 (edges and focus). Steps 10 and 11 reach the text minimum on backgrounds 1-4. Step 12 reaches at least 7:1. Steps 2-6 are spaced evenly in lightness between step 1 and step 7. Light and dark ramps are solved separately. Dark solids are lighter and carry dark text (dark mode is a separate mapping, never an inversion). Text minimum: 4.5:1 (WCAG 2.2 AA).
 
 | Ramp | Light steps 1-12 | Solid carries |
 |---|---|---|
-| `accent` | `#fffcfc` `#fef1f2` `#ffe6e7` `#ffdadc` `#ffcfd2` `#ffc3c7` `#ffb7bc` `#cc6773` `#a3213f` `#951035` `#871631` `#57232a` | light |
+| `accent` | `#fffcfc` `#fff1f1` `#ffe6e5` `#ffdbda` `#ffcfce` `#ffc3c2` `#ffb7b7` `#d46367` `#a50d2c` `#930024` `#880020` `#5b2124` | light |
 | `danger` | `#fffcfc` `#fff1ef` `#ffe6e3` `#ffdbd6` `#ffcfc9` `#ffc4bc` `#ffb8af` `#d76258` `#d93834` `#c72f2c` `#a82321` `#5c201c` | light |
-| `info` | `#fbfdff` `#eaf6ff` `#d9efff` `#c7e7ff` `#b5e0ff` `#a3d8ff` `#8fd1ff` `#008ed0` `#007cb7` `#0070a6` `#005c8a` `#003755` | light |
-| `neutral` | `#fefcfd` `#f6f3f4` `#eeeaec` `#e6e2e3` `#ded9db` `#d7d0d2` `#cfc8ca` `#8c8486` `#7b7376` `#6a6265` `#5c5558` `#272324` | light |
+| `info` | `#fbfdff` `#eaf6ff` `#d9efff` `#c7e7ff` `#b5e0ff` `#a3d8ff` `#8fd1ff` `#008ed1` `#007cb7` `#0070a6` `#005c8a` `#003755` | light |
+| `neutral` | `#fefcfc` `#f6f3f3` `#eeebea` `#e6e2e2` `#dfd9d9` `#d7d0d0` `#cfc8c8` `#8c8585` `#7c7373` `#6a6262` `#5c5555` `#272323` | light |
 | `success` | `#f9fef9` `#ebf7ed` `#d9f1dd` `#c6eccc` `#b2e7bc` `#9de2ab` `#87dc9a` `#089a47` `#00883d` `#007b36` `#00652c` `#003d17` | light |
 | `warning` | `#fffcf8` `#f8f4ec` `#f5ead9` `#f1e1c6` `#eed8b3` `#ebce9f` `#e7c58b` `#aa7f2c` `#efb239` `#dda331` `#845d00` `#463001` | dark |
 
@@ -135,47 +135,47 @@ Designers: primary or brand accent · Code: `color.bg.accent`
 
 | Foreground | on 1 | on 2 | on 3 | on 4 | on 5 |
 |---|---|---|---|---|---|
-| neutral 8 | 3.57 | 3.31 | 3.06 | 2.84 | 2.61 |
-| neutral 9 | 4.51 | 4.18 | 3.87 | 3.59 | 3.30 |
-| neutral 10 | 5.79 | 5.37 | 4.97 | 4.61 | 4.24 |
-| neutral 11 | 7.10 | 6.58 | 6.08 | 5.65 | 5.20 |
-| neutral 12 | 15.20 | 14.09 | 13.03 | 12.09 | 11.13 |
+| neutral 8 | 3.54 | 3.28 | 3.05 | 2.81 | 2.59 |
+| neutral 9 | 4.51 | 4.18 | 3.89 | 3.59 | 3.31 |
+| neutral 10 | 5.81 | 5.38 | 5.01 | 4.62 | 4.26 |
+| neutral 11 | 7.12 | 6.60 | 6.14 | 5.66 | 5.22 |
+| neutral 12 | 15.21 | 14.09 | 13.11 | 12.10 | 11.15 |
 
 **States.** Hover is at least 1.15:1 from its fill and pressed at least 1.3:1, as shade steps (DC-L01-17). Where a color is unknown at design time, use the state opacities in `opacity.state.*`.
 
 | Fill | Base | Hover | Pressed |
 |---|---|---|---|
-| `color.bg.action.primary` | `#a3213f` | `#951035` (1.18:1) | `#8a002d` (1.34:1) |
-| `color.bg.accent.bold` | `#a3213f` | `#951035` (1.18:1) | `#8a002d` (1.34:1) |
+| `color.bg.action.primary` | `#a50d2c` | `#930024` (1.19:1) | `#85001f` (1.34:1) |
+| `color.bg.accent.bold` | `#a50d2c` | `#930024` (1.19:1) | `#85001f` (1.34:1) |
 
 **Semantic roles** (use these, never the ramps):
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `color.bg.accent.bold` | `#a3213f` | `#de546b` | Solid accent fill. |
-| `color.bg.accent.bold-hover` | `#951035` | `#ed6277` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
-| `color.bg.accent.bold-pressed` | `#8a002d` | `#f96c80` | Pressed: at least 1.3:1 from the solid. |
-| `color.bg.accent.subtle` | `#ffe6e7` | `#3a2123` | Selected rows, accent badges. |
-| `color.bg.accent.subtle-hover` | `#ffdadc` | `#4a2529` | Hover on accent subtle fills. |
-| `color.bg.accent.subtle-pressed` | `#ffcfd2` | `#5a282e` | Pressed accent subtle fills. |
-| `color.bg.action.primary` | `#a3213f` | `#de546b` | Primary action. One per view (DC-L15-03, L15 P08). |
-| `color.bg.action.primary-hover` | `#951035` | `#ed6277` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
-| `color.bg.action.primary-pressed` | `#8a002d` | `#f96c80` | Pressed: at least 1.3:1 from the solid. |
-| `color.bg.brand` | `#a3213f` | `#de546b` | Brand fill for signature surfaces; carries text.on-brand (brandAnchor rule, DC-L01-09). |
+| `color.bg.accent.bold` | `#a50d2c` | `#e84e5a` | Solid accent fill. |
+| `color.bg.accent.bold-hover` | `#930024` | `#f85c67` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
+| `color.bg.accent.bold-pressed` | `#85001f` | `#ff6b73` | Pressed: at least 1.3:1 from the solid. |
+| `color.bg.accent.subtle` | `#ffe6e5` | `#3c2020` | Selected rows, accent badges. |
+| `color.bg.accent.subtle-hover` | `#ffdbda` | `#4d2324` | Hover on accent subtle fills. |
+| `color.bg.accent.subtle-pressed` | `#ffcfce` | `#5e2629` | Pressed accent subtle fills. |
+| `color.bg.action.primary` | `#a50d2c` | `#e84e5a` | Primary action. One per view (DC-L15-03, L15 P08). |
+| `color.bg.action.primary-hover` | `#930024` | `#f85c67` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
+| `color.bg.action.primary-pressed` | `#85001f` | `#ff6b73` | Pressed: at least 1.3:1 from the solid. |
+| `color.bg.brand` | `#a50d2c` | `#e84e5a` | Brand fill for signature surfaces; carries text.on-brand (brandAnchor rule, DC-L01-09). |
 | `color.bg.danger.bold` | `#d93834` | `#db5c52` | Danger solid fill. |
 | `color.bg.danger.bold-hover` | `#c72f2c` | `#ea6a5f` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
 | `color.bg.danger.bold-pressed` | `#bc2323` | `#f57468` | Pressed: at least 1.3:1 from the solid. |
 | `color.bg.danger.subtle` | `#ffe6e3` | `#39221f` | Danger banner and badge background. |
-| `color.bg.disabled` | `#eeeaec` | `#302d2e` | Disabled control fill. |
-| `color.bg.field` | `#ffffff` | `#272425` | Text field fill: outlined fields sit on the raised surface (Q-form-01). |
+| `color.bg.disabled` | `#eeebea` | `#302d2d` | Disabled control fill. |
+| `color.bg.field` | `#ffffff` | `#272424` | Text field fill: outlined fields sit on the raised surface (Q-form-01). |
 | `color.bg.info.bold` | `#007cb7` | `#008bcd` | Info solid fill. |
 | `color.bg.info.bold-hover` | `#0070a6` | `#0099e0` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
 | `color.bg.info.bold-pressed` | `#006799` | `#00a3ee` | Pressed: at least 1.3:1 from the solid. |
 | `color.bg.info.subtle` | `#d9efff` | `#062a40` | Info banner and badge background. |
-| `color.bg.inverse` | `#272324` | `#ede8e9` | Tooltips and toasts: the inverted surface. |
-| `color.bg.neutral.subtle` | `#eeeaec` | `#393536` | Secondary buttons, chips, hovered rows. |
-| `color.bg.neutral.subtle-hover` | `#e6e2e3` | `#433e3f` | Hover: +1 step (DC-L01-17). |
-| `color.bg.neutral.subtle-pressed` | `#ded9db` | `#4d4749` | Pressed or selected: +2 steps (DC-L01-17). |
+| `color.bg.inverse` | `#272323` | `#ede8e8` | Tooltips and toasts: the inverted surface. |
+| `color.bg.neutral.subtle` | `#eeebea` | `#3a3535` | Secondary buttons, chips, hovered rows. |
+| `color.bg.neutral.subtle-hover` | `#e6e2e2` | `#433e3e` | Hover: +1 step (DC-L01-17). |
+| `color.bg.neutral.subtle-pressed` | `#dfd9d9` | `#4d4747` | Pressed or selected: +2 steps (DC-L01-17). |
 | `color.bg.success.bold` | `#00883d` | `#009845` | Success solid fill. |
 | `color.bg.success.bold-hover` | `#007b36` | `#00a74c` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
 | `color.bg.success.bold-pressed` | `#007132` | `#19b155` | Pressed: at least 1.3:1 from the solid. |
@@ -184,44 +184,44 @@ Designers: primary or brand accent · Code: `color.bg.accent`
 | `color.bg.warning.bold-hover` | `#dda331` | `#f7c56e` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
 | `color.bg.warning.bold-pressed` | `#d29921` | `#ffd388` | Pressed: at least 1.3:1 from the solid. |
 | `color.bg.warning.subtle` | `#f5ead9` | `#2f2618` | Warning banner and badge background. |
-| `color.border.accent` | `#cc6773` | `#d15b6c` | Selected card or accent outline. |
+| `color.border.accent` | `#d46367` | `#da565e` | Selected card or accent outline. |
 | `color.border.danger` | `#d76258` | `#ce6157` | Danger boundary, for example an invalid field (3:1). |
-| `color.border.default` | `#cfc8ca` | `#4d4749` | Outline buttons and table grids (decorative; the label carries meaning). |
-| `color.border.focus` | `#a3213f` | `#ff8997` | Focus ring (3:1 against every surface, DC-L04-09). |
-| `color.border.info` | `#008ed0` | `#0089c9` | Info boundary, for example an invalid field (3:1). |
-| `color.border.input` | `#8c8486` | `#867e80` | Text field and select borders (3:1, DC-L01-16). |
-| `color.border.separator` | `#e6e2e3` | `#393536` | Hairlines between table rows and list items, lighter than border.subtle; decorative, so never the only cue (DC-L23-05). |
-| `color.border.strong` | `#8c8486` | `#867e80` | Boundaries that are the only cue: inputs, checkboxes, switches (3:1, WCAG 1.4.11). |
-| `color.border.subtle` | `#d7d0d2` | `#433e3f` | Dividers and card edges (decorative). |
+| `color.border.default` | `#cfc8c8` | `#4d4747` | Outline buttons and table grids (decorative; the label carries meaning). |
+| `color.border.focus` | `#a50d2c` | `#ff8a8c` | Focus ring (3:1 against every surface, DC-L04-09). |
+| `color.border.info` | `#008ed1` | `#0089c9` | Info boundary, for example an invalid field (3:1). |
+| `color.border.input` | `#8c8585` | `#867e7e` | Text field and select borders (3:1, DC-L01-16). |
+| `color.border.separator` | `#e6e2e2` | `#3a3535` | Hairlines between table rows and list items, lighter than border.subtle; decorative, so never the only cue (DC-L23-05). |
+| `color.border.strong` | `#8c8585` | `#867e7e` | Boundaries that are the only cue: inputs, checkboxes, switches (3:1, WCAG 1.4.11). |
+| `color.border.subtle` | `#d7d0d0` | `#433e3e` | Dividers and card edges (decorative). |
 | `color.border.success` | `#089a47` | `#199547` | Success boundary, for example an invalid field (3:1). |
 | `color.border.warning` | `#aa7f2c` | `#a47b2f` | Warning boundary, for example an invalid field (3:1). |
-| `color.icon.accent` | `#871631` | `#ff8997` | Selected and interactive icons. |
-| `color.icon.default` | `#5c5558` | `#b1a9ac` | Icons beside text; same color as secondary text (DC-L05-08). |
+| `color.icon.accent` | `#880020` | `#ff8a8c` | Selected and interactive icons. |
+| `color.icon.default` | `#5c5555` | `#b1aaa9` | Icons beside text; same color as secondary text (DC-L05-08). |
 | `color.icon.on-accent` | `#ffffff` | `#161515` | Icons on solid accent fills. |
-| `color.icon.subtle` | `#6a6265` | `#9c9496` | Decorative icons. |
-| `color.overlay.scrim` | `#272324 @0.45` | `#000000` | Modal backdrop (DC-L04-18; Q-depth-06). |
-| `color.surface.base` | `#fefcfd` | `#1e1c1d` | The page background. |
-| `color.surface.nav` | `#fefcfd` | `#1e1c1d` | Navigation on the page background. |
-| `color.surface.overlay` | `#ffffff` | `#302d2e` | Menus, popovers, dialogs; always with elevation.floating or elevation.overlay. |
-| `color.surface.raised` | `#ffffff` | `#272425` | Cards and panels on the page. |
-| `color.surface.sunken` | `#f6f3f4` | `#161515` | Wells, code blocks, page gutters. |
-| `color.text.accent` | `#871631` | `#ff8997` | Accent text and selected labels. |
+| `color.icon.subtle` | `#6a6262` | `#9c9494` | Decorative icons. |
+| `color.overlay.scrim` | `#272323 @0.45` | `#000000` | Modal backdrop (DC-L04-18; Q-depth-06). |
+| `color.surface.base` | `#fefcfc` | `#1e1c1c` | The page background. |
+| `color.surface.nav` | `#fefcfc` | `#1e1c1c` | Navigation on the page background. |
+| `color.surface.overlay` | `#ffffff` | `#302d2d` | Menus, popovers, dialogs; always with elevation.floating or elevation.overlay. |
+| `color.surface.raised` | `#ffffff` | `#272424` | Cards and panels on the page. |
+| `color.surface.sunken` | `#f6f3f3` | `#161515` | Wells, code blocks, page gutters. |
+| `color.text.accent` | `#880020` | `#ff8a8c` | Accent text and selected labels. |
 | `color.text.danger` | `#a82321` | `#ff8c80` | Danger text and icons; pair with an icon or label (DC-L01-15). |
-| `color.text.disabled` | `#8c8486` | `#867e80` | Disabled labels; exempt from contrast minimums (WCAG 1.4.3 exception). |
+| `color.text.disabled` | `#8c8585` | `#867e7e` | Disabled labels; exempt from contrast minimums (WCAG 1.4.3 exception). |
 | `color.text.info` | `#005c8a` | `#3ab6ff` | Info text and icons; pair with an icon or label (DC-L01-15). |
 | `color.text.inverse` | `#ffffff` | `#161515` | Text on color.bg.inverse (tooltips, toasts). |
-| `color.text.link` | `#871631` | `#ff8997` | Links. Underline them in running text so color is not the only cue. |
+| `color.text.link` | `#880020` | `#ff8a8c` | Links. Underline them in running text so color is not the only cue. |
 | `color.text.on-accent` | `#ffffff` | `#161515` | Text and icons on color.bg.accent.bold* (auto-picked light or dark, S-L06-094). |
 | `color.text.on-action` | `#ffffff` | `#161515` | Text on the primary action fill. |
 | `color.text.on-brand` | `#ffffff` | `#161515` | Text on color.bg.brand. |
 | `color.text.on-danger` | `#ffffff` | `#161515` | Text on bg.danger.bold. |
 | `color.text.on-info` | `#ffffff` | `#161515` | Text on bg.info.bold. |
 | `color.text.on-success` | `#ffffff` | `#161515` | Text on bg.success.bold. |
-| `color.text.on-warning` | `#272324` | `#161515` | Text on bg.warning.bold. |
-| `color.text.primary` | `#272324` | `#ede8e9` | Body copy, headings, labels (guaranteed >= 7:1 on steps 1-5). |
-| `color.text.secondary` | `#5c5558` | `#b1a9ac` | Supporting text (guaranteed >= the text minimum on surfaces and neutral fills 1-4). |
+| `color.text.on-warning` | `#272323` | `#161515` | Text on bg.warning.bold. |
+| `color.text.primary` | `#272323` | `#ede8e8` | Body copy, headings, labels (guaranteed >= 7:1 on steps 1-5). |
+| `color.text.secondary` | `#5c5555` | `#b1aaa9` | Supporting text (guaranteed >= the text minimum on surfaces and neutral fills 1-4). |
 | `color.text.success` | `#00652c` | `#47c26c` | Success text and icons; pair with an icon or label (DC-L01-15). |
-| `color.text.tertiary` | `#6a6265` | `#9c9496` | Captions and placeholders (still meets the text minimum on surfaces 1-4). |
+| `color.text.tertiary` | `#6a6262` | `#9c9494` | Captions and placeholders (still meets the text minimum on surfaces 1-4). |
 | `color.text.warning` | `#845d00` | `#fecf7f` | Warning text and icons; pair with an icon or label (DC-L01-15). |
 
 **Use / avoid.**
@@ -232,7 +232,7 @@ Designers: primary or brand accent · Code: `color.bg.accent`
 
 **Tailwind classes:** `bg-action-primary`, `hover:bg-action-primary-hover`, `active:bg-action-primary-pressed`, `text-on-action`, `bg-surface-base`, `bg-surface-raised`, `text-fg-primary`, `text-fg-secondary`, `text-fg-link`, `border-line-subtle`, `border-line-input`, `outline-line-focus`, `bg-danger-bold`.
 
-Decisions: D-0016 (answers.Q-theme-01), D-0036 (answers.Q-color-09), D-0037 (answers.Q-color-03), D-0090 (raw.brandColor), D-0091 (raw.neutralBase).
+Decisions: D-0016 (answers.Q-theme-01), D-0036 (answers.Q-color-09), D-0037 (answers.Q-color-03), D-0092 (raw.brandColor), D-0093 (raw.neutralBase).
 
 </details>
 
@@ -465,7 +465,7 @@ These are the parts the site is built from today. New work should reuse them bef
 - **Titles:** gold pill tags (12% gold wash, 35% gold border, a small crown cut with clip-path), three max then "+N more"; they link to Records.
 - **Rival:** a card with the score as a centred pill ("You lead 4–2", green when you lead, red when behind), the two names left and right, then rows of value · label · value with the winner in bold primary ink.
 - **Sync status:** one wrapping row of small tertiary text separated by "·" (stacked on phones), plus the sync chip, armory link and Sync now button.
-- **Tabard colours (Nov 2026):** from the new guild tabard. Wine `#a3213f` (light `#8f1a37`) for filled buttons and the current menu item; gingerbread `#e2ad72` (light `#7a4a1c`) for links, the site title and other accent text; green trim `#5f8a2e` (light `#4f7a22`) as a 3px line under the header and on the recap picture. Neutrals lean wine-brown (`#0f0a0b` to `#4a3a3f` dark; a cream "dough" `#fbf7f2` base in light). Always-dark panels (cards, stats, paper doll) use the same wine-brown greys. The icon is a plain, flat gingerbread man like the tabard's (angry brows, frown, wine bow tie and three buttons) on a flat wine square with a green border.
+- **Tabard colours (Nov 2026):** matched to the final in-game tabard and logo. Crimson `#a50d2c` (light `#9a0a26`) for filled buttons and the current menu item; gingerbread `#e0a862` (light `#7a4a1c`) for links, the site title and other accent text; bright green trim `#2f9a46` (light `#23803a`) as a 3px line under the header and on the recap picture. Neutrals lean red-brown (`#0f0a09` to `#4a3a39` dark; a cream `#fbf7f2` base in light). Always-dark panels use the same red-brown greys. The icon copies the in-game guild logo: a chunky, frowning gingerbread man (`#d69d56`, crimson face, bow tie and three buttons) on a crimson disc with a bronze rim.
 - **App icon:** a red blood drop on near-black (`public/icon.svg`, plus 192 and 512 px PNGs for phones).
 <!-- /od:keep -->
 
@@ -724,7 +724,7 @@ Decisions: D-0003 (answers.Q-plat-01).
 
 ## Decisions
 
-**91 decisions so far.** Each one says who set it and why.
+**93 decisions so far.** Each one says who set it and why.
 Designers: decision history with reasons · Code: `opendesigner/decisions.md`
 
 <details><summary>More</summary>
@@ -759,8 +759,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 | D-0078 | `context.later` | ["Raid sign-ups and calendar, once people near 60 (raids open 9 December)", "Discord posts and slash commands (built, switched off until there are permissions)", "Glow-up pictures of a character at each 10 levels (needs saved armory pictures)", "Winter Veil look in December", "Feed reactions (maybe)", "Dungeon passport (being mocked up)"] | chosen | updated with the person, 7 Nov |
 | D-0079 | `context.market.analogous` | "Strava clubs and Raider.IO guild pages (a group of members, a weekly leaderboard and an activity feed), plus trading-card games for the cards" | chosen | references used in the second design pass |
 | D-0089 | `context.product` | "a roster, dungeons, professions and trading-card site for Blood and Tears, a Horde guild on WoW Forever" | chosen | group posting was cut; the menu is Roster, Dungeons, Cards and Professions |
-| D-0090 | `raw.brandColor` | "#a3213f" | chosen | New guild tabard (Nov 2026): wine banner, gingerbread man, green trim. Owner picked the Tabard direction: wine buttons, gingerbread links and title, green... |
-| D-0091 | `raw.neutralBase` | "#161012" | chosen | Neutrals lean wine-brown to sit with the tabard. |
+| D-0092 | `raw.brandColor` | "#a50d2c" | chosen | Final tabard and in-game logo (owner's screenshots, 12 Nov): crimson field, gingerbread man, bright green trim, bronze rim. |
+| D-0093 | `raw.neutralBase` | "#161010" | chosen | Neutrals lean red-brown to sit with the crimson tabard. |
 | D-0054 | standards | remove PRJ-03 (project standard) | chosen | replaced: Looking for Group now has a site-level Join (notice board), the person's choice |
 | D-0055 | standards | remove PRJ-07 (project standard) | chosen | superseded by PRJ-09 (wording without 'in game') |
 | D-0056 | standards | remove PRJ-12 (project standard) | chosen | superseded by PRJ-13 (viewer's own time, no switch) |

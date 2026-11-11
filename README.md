@@ -114,7 +114,7 @@ A **Records** tab ranks everyone on what the armory already says: honourable kil
 
 ## Tabard colours and icon (12 Nov)
 
-The site's colours follow the new guild tabard: wine buttons, gingerbread links and title, a green trim line under the header, and wine-brown neutrals (a cream base in light mode). The site icon (`public/icon.svg`, `icon-192.png`, `icon-512.png`), the link preview (`public/og.png`) and the weekly recap picture use the same colours, with a grumpy gingerbread man. Phones and Discord may keep showing the old icon and preview for a while (they cache them).
+The site's colours follow the final guild tabard and in-game logo: crimson buttons, gingerbread links and title, a bright green trim line under the header, and red-brown neutrals (a cream base in light mode). The site icon (`public/icon.svg`, `icon-192.png`, `icon-512.png`), the link preview (`public/og.png`) and the weekly recap picture use the same colours, with the gingerbread man from the in-game guild logo on a crimson disc with a bronze rim. Phones and Discord may keep showing the old icon and preview for a while (they cache them).
 
 ## This week, titles, rivals, milestones and sync status (12 Nov)
 
