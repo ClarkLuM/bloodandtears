@@ -2,7 +2,7 @@
 screenshot (tools/icon/ingame-logo.png): the gingerbread man's outline is traced from its pixels, smoothed and made
 symmetric; the face, bow tie, buttons and marks are drawn as clean lines in the same places.
 Run from the project folder:  python3 tools/icon/make_icon.py
-Then remake the PNGs (icon-192.png, icon-512.png) and og.png from icon.svg (any browser screenshot at that size works).
+Then remake the PNGs (icon-192.png, icon-512.png) from icon.svg, and the link preview with  node tools/icon/make_og.js
 Needs numpy, scipy, scikit-image and Pillow."""
 import os
 HERE=os.path.dirname(os.path.abspath(__file__));ROOT=os.path.dirname(os.path.dirname(HERE))
