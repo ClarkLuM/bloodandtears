@@ -78,6 +78,7 @@ To try it on your own computer first: `firebase serve` or `firebase emulators:st
 - **Characters**: no mains and no alts. Every character is its own entry and its own row, card and duel fighter, whether it's claimed or not. One person can claim or add as many as they like (**Add another character**); the sorting and filters do the rest. Old `main` and `altOf` fields on existing records are left alone but no longer used. Adding a name that's already on the roster (say, from the guild list) uses that one, claiming it if nobody has. If two entries end up with the same name, **Merge them** (officers, or whoever owns both) keeps the armory-synced one and folds the other's journey, passport stamps, devices and flavour text into it. Old alts are moved over automatically by the next sync.
 - **Roles**: a main role plus an optional **Can also play** role (a prot warrior who also DPSes). Role filters and group gaps count both. The sync sets Tank or Healer from a protection, holy, discipline or restoration spec, and from the guild roster's roles, until someone picks their role by hand.
 - **Character pages**: two columns that stack on their own, so nothing leaves a gap: Gear (the character pane with its stats beside it when there's room), the Dungeon Passport and Professions on the left; the card, talents and journey on the right. The passport shows cleared dungeons plus the ones right for the character's level (or the next few), with **Show all 35** for the rest. On phones the Overview, Gear and Professions tabs show one kind at a time, as before. The Journey folds by day like Guild History: today (or the latest day) is open, earlier days roll up.
+  - **Can make** (under the Professions bars): one fold per crafting profession, e.g. "Blacksmithing: 54 known or at the trainer · 107 more with a recipe". Opening it lists the recipes their armory skill covers that are learned automatically or taught by the trainer, hardest first, as item links (12 shown, then **See all in Who Can Make It?**). Recipes from drops, vendors or quests are only counted, since the site can't see which of those they've found. Folds you open stay open.
 
 Character names only: the site never shows or saves anyone's Google name. Old entries that had one are cleaned up automatically.
 
@@ -99,7 +100,11 @@ Hovering a gear slot or an item link shows its Wowhead tooltip (the site draws i
 
 ## Polish pass (11 Nov)
 
-Every page was checked on a phone and a desktop, in dark and light mode, for sideways scrolling, cut-off text, small tap targets, colour contrast (axe) and errors. Fixed: faint gold duel notes in light mode, faint "not seen lately" names on Dungeons, small chips and fold headers on phones, the squashed Sort box on the phone roster, and the Professions switch sitting above the search it doesn't control. Still open: the stylesheet sets spacing in pixels, so it doesn't grow with a bigger browser text size (a bigger job, not started).
+Every page was checked on a phone and a desktop, in dark and light mode, for sideways scrolling, cut-off text, small tap targets, colour contrast (axe) and errors. Fixed: faint gold duel notes in light mode, faint "not seen lately" names on Dungeons, small chips and fold headers on phones, the squashed Sort box on the phone roster, and the Professions switch sitting above the search it doesn't control.
+
+## Text size
+
+Text, spacing and sizes are in rem, so the whole site grows with the browser's text-size setting (someone who sets their browser to bigger text gets bigger text and roomier spacing to match). At the normal setting it looks exactly as it did in pixels. Borders, rounded corners, shadows and the screen-width breakpoints stay in px on purpose. If you add styles in px, run `python3 tools/scale/to_rem.py` to convert them. Checked at 125% on phone and desktop: nothing scrolls sideways or gets cut off; long names and labels wrap instead.
 
 ## Item links and tooltips
 
