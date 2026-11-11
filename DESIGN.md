@@ -458,6 +458,7 @@ These are the parts the site is built from today. New work should reuse them bef
 - **Neck and neck:** lines at the top of the Guild Feed while two players share a level they both just reached, with "now" in gold where the time goes.
 - **Guild Makeup:** a role bar split by count (tanks `#3d6fd6`, healers `#2e9e3f`, DPS `#b8282a`) with a legend, a one-line note on tanks and healers, then class icons with counts in two columns.
 - **Exported pictures** (card, weekly recap, link preview): same Obsidian palette, drawn on a canvas; Discord-friendly sizes (card 520 × 760, recap 1080 wide, preview 1200 × 630).
+- **Records:** boards are plain cards with an ordered list; medals are 1.5 rem circles (gold `#e2b552`, silver `#c3c9d0`, bronze `#c4834f`, dark number text) and places 4+ use a sunken circle, so the place is always readable as a number. Your row gets a 12% accent wash; the last row gets a grey "Wooden spoon" tag that wraps under the name on phones. Rank lines on character pages are 13 px secondary text with a small medal for the top 3.
 - **App icon:** a red blood drop on near-black (`public/icon.svg`, plus 192 and 512 px PNGs for phones).
 <!-- /od:keep -->
 

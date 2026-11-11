@@ -102,6 +102,10 @@ Hovering a gear slot or an item link shows its Wowhead tooltip (the site draws i
 
 Every page was checked on a phone and a desktop, in dark and light mode, for sideways scrolling, cut-off text, small tap targets, colour contrast (axe) and errors. Fixed: faint gold duel notes in light mode, faint "not seen lately" names on Dungeons, small chips and fold headers on phones, the squashed Sort box on the phone roster, and the Professions switch sitting above the search it doesn't control.
 
+## Records (11 Nov)
+
+A **Records** tab ranks everyone on what the armory already says: honourable kills, highest level, dungeons stamped, best geared (loot points: 1 per green, 2 per blue, 3 per purple, the same as card duels) and every profession. Each board shows the top 5 (top 3 for professions) with gold, silver and bronze medals that also carry the number; your own character shows under a "···" gap if it isn't near the top, and whoever is last gets a **Wooden spoon**. Ties share a place. Characters who've left the guild aren't counted. On a character's page each profession, and the honourable kills in PvP stats, get a line like "Best miner in the guild" or "6th of 6 in the guild · wooden spoon" that links to Records. The roster's Leaderboards card links there too. Nothing new is stored: it's all worked out in the browser, so the sync, database and rules are unchanged.
+
 ## Text size
 
 Text, spacing and sizes are in rem, so the whole site grows with the browser's text-size setting (someone who sets their browser to bigger text gets bigger text and roomier spacing to match). At the normal setting it looks exactly as it did in pixels. Borders, rounded corners, shadows and the screen-width breakpoints stay in px on purpose. If you add styles in px, run `python3 tools/scale/to_rem.py` to convert them. Checked at 125% on phone and desktop: nothing scrolls sideways or gets cut off; long names and labels wrap instead.

@@ -450,7 +450,7 @@ nav.bottom{display:none}
 .claim-banner{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 1.25rem;border-color:var(--accent-b)}
 @media (max-width:700px){
   nav.main{display:none!important}
-  nav.bottom{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:18;background:var(--sunken);border-top:1px solid var(--sep);padding:0 max(.25rem,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(.25rem,env(safe-area-inset-left,0px))}
+  nav.bottom{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:18;background:var(--sunken);border-top:1px solid var(--sep);padding:0 max(.25rem,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(.25rem,env(safe-area-inset-left,0px))}
   nav.bottom a{display:flex;align-items:center;justify-content:center;min-height:3.5rem;font-size:.75rem;line-height:.9375rem;font-weight:600;color:var(--sec);text-decoration:none;text-align:center;padding:.25rem 2px;border-top:3px solid transparent}
   nav.bottom a[aria-current="page"]{color:var(--accent-text);border-top-color:var(--accent)}
   body{padding-bottom:calc(4rem + env(safe-area-inset-bottom,0px))}
@@ -523,6 +523,21 @@ nav.bottom{display:none}
 .cm-sk{margin-left:auto}
 .cm-p>a{display:inline-block;margin:0 0 .5rem 1.0625rem}
 @media (prefers-reduced-motion:reduce){.cm-p>summary::before{transition:none}}
+.medal{display:inline-grid;place-items:center;flex:none;width:1.5rem;height:1.5rem;border-radius:50%;font-size:.75rem;font-weight:700;color:var(--sec);background:var(--sunken);border:1px solid var(--b-sub)}
+.medal.m1{background:#e2b552;color:#2b1d02;border-color:#f3d48a}.medal.m2{background:#c3c9d0;color:#1d2228;border-color:#e3e7eb}.medal.m3{background:#c4834f;color:#2a1405;border-color:#dfa678}
+.rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,18rem),1fr));gap:.75rem;align-items:start}
+.rec-card{gap:.5rem}.rec-card h3{margin:0}
+.rec-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.rec-row{display:flex;align-items:center;gap:.625rem;min-height:2.5rem;padding:.25rem .375rem;border-radius:6px}
+.rec-row.me{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.rec-who{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem .5rem;flex:1;min-width:0}.rec-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec-v{font-variant-numeric:tabular-nums;color:var(--sec);white-space:nowrap;font-size:.875rem}
+.rec-gap{color:var(--ter);padding-left:.875rem;line-height:1rem}
+.rec-main{grid-template-columns:repeat(auto-fill,minmax(min(100%,24rem),1fr))}.spoon-tag{white-space:nowrap}
+.rank-l{display:inline-flex;align-items:center;gap:.375rem;margin-top:.25rem;font-size:.8125rem;color:var(--sec);text-decoration:none}
+.rank-l .medal{width:1.125rem;height:1.125rem;font-size:.625rem}
+.rank-l:hover span{text-decoration:underline}.rank-l.spoon{color:var(--ter)}
+.stats .rank-l{grid-column:auto}
 /* Who can make it */
 .rc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .rc{display:flex;flex-direction:column;gap:.375rem;padding:.625rem 0;border-top:1px solid var(--sep)}
@@ -654,7 +669,7 @@ const DUNGEON_LOOT={"abomination bones":["Ruins of Lordaeron","The Baron","Abomi
 /* DUNGEON_LOOT:end */
 const RAIDS=[["Barrow Deeps","10 players"],["Onyxia's Lair","40 players"],["Molten Core","40 players"]];
 const DISCORD_RE=/^https:\/\/(discord\.gg|(www\.)?discord\.com\/invite)\/[A-Za-z0-9-]+\/?$/;
-const PAGES=[["roster","Roster"],["lfg","Dungeons"],["cards","Cards"],["professions","Professions"]];
+const PAGES=[["roster","Roster"],["lfg","Dungeons"],["cards","Cards"],["professions","Professions"],["records","Records"]];
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const el=document.createElement(tag);for(const[k,v]of Object.entries(attrs||{})){if(v==null||v===false)continue;if(k==="class")el.className=v;else if(k==="style")el.style.cssText=v;else if(k.startsWith("on"))el.addEventListener(k.slice(2),v);else if(k==="value"&&(tag==="input"||tag==="textarea"||tag==="select"))el.value=v;else el.setAttribute(k,v===true?"":v)}for(const k of kids.flat(Infinity)){if(k==null||k===false)continue;el.append(k.nodeType?k:document.createTextNode(String(k)))}return el}
@@ -1632,7 +1647,8 @@ function leaderboards(){
         h("span",{class:"small",title:tab==="hk"?pvpRank(+m.armory.rank||0):null,style:"white-space:nowrap;color:"+(i===0?"var(--accent-text)":"var(--sec)")},label(m,v))),
       h("span",{class:"track","aria-hidden":"true"},h("i",{class:i===0?"max":"",style:`width:${Math.max(4,v/top*100).toFixed(0)}%`}))))
     :h("p",{class:"empty"},tab==="week"?"Nobody's levelled this week yet.":"Nobody has an honourable kill yet. Go gank something."),
-    tab==="hk"?h("p",{class:"small ter",style:"margin:0"},"From the armory, so it's only as up to date as the last logout."):null)}
+    tab==="hk"?h("p",{class:"small ter",style:"margin:0"},"From the armory, so it's only as up to date as the last logout."):null,
+    h("a",{class:"small",href:"#records"},"See all the guild records"))}
 /* ---------- Discord online box ---------- */
 // Uses Discord's public server widget (Server Settings > Widget > Enable Server Widget). No bot or login needed.
 // It shows Discord names, not character names, and leaves out anyone set to invisible.
@@ -1809,6 +1825,47 @@ function canMake(m){
         x.learn.length?h("ul",{class:"cm-list"},x.learn.slice(0,N).map(r=>h("li",{},itemRef(r[0],r[4]?{id:r[4],q:r[5]}:null),
           h("span",{class:"rc-src "+r[2]},R_LABEL[r[2]]),h("span",{class:"small ter cm-sk"},(r[3]?"about ":"")+r[1])))):null,
         x.learn.length>N?h("a",{class:"small",href:"#professions",onclick:()=>setUi({pProf:x.p,pq:"",pKind:"learn",pMore:false})},"See all "+x.learn.length+" in Who Can Make It?"):null)}))}
+
+/* ---------- Records ---------- */
+// Everyone in the guild ranked on what the armory already tells us. Nothing here is typed in; ties share a place.
+const ordinal=n=>n+(n%100>=11&&n%100<=13?"th":({1:"st",2:"nd",3:"rd"}[n%10]||"th"));
+const recPool=()=>S.members.filter(m=>memberState(m)!=="former"||isMine(m));
+const lootPts=m=>Object.values(m.gear||{}).reduce((t,g)=>t+(g&&g.id?Math.max(0,+g.q-1):0),0);
+const REC_BOARDS=[
+  ["hk","Honourable kills",m=>m.armory&&m.armory.hk!=null?+m.armory.hk||0:null,v=>v.toLocaleString("en-AU")+(v===1?" kill":" kills")],
+  ["level","Highest level",m=>+m.level||1,v=>"Level "+v],
+  ["dungeons","Dungeons stamped",m=>passportOf(m).length,v=>v+" of "+DUNGEONS.length],
+  ["gear","Best geared",m=>lootPts(m),v=>v+(v===1?" loot point":" loot points")]];
+const profBoard=p=>[p,p,m=>m.profs&&+m.profs[p]>0?+m.profs[p]:null,v=>v+" / 300"];
+// [[member,value,place]] best first; anyone with no number for it is left off.
+function ranked(get){const rows=recPool().map(m=>[m,get(m)]).filter(x=>x[1]!=null&&x[1]>0).sort((a,b)=>b[1]-a[1]||nameOf(a[0]).localeCompare(nameOf(b[0])));
+  return rows.map(([m,v])=>[m,v,1+rows.filter(x=>x[1]>v).length])}
+function rankOfIn(get,m){const rows=ranked(get),r=rows.find(x=>x[0].id===m.id);if(!r)return null;
+  return{place:r[2],of:rows.length,tied:rows.filter(x=>x[2]===r[2]).length>1,last:rows.length>=3&&r[2]===rows[rows.length-1][2]&&r[2]!==1}}
+const medal=n=>h("span",{class:"medal m"+(n<=3?n:0),"aria-label":ordinal(n)+" place"},String(n));
+function boardCard([k,title,get,fmt],opt={}){
+  const rows=ranked(get);if(!rows.length)return null;
+  const top=rows.slice(0,opt.n||5),mine=rows.filter(r=>isMine(r[0])&&!top.includes(r)),lastRow=rows.length>(opt.n||5)?rows[rows.length-1]:null;
+  const line=([m,v,pl],cls="")=>h("li",{class:"rec-row "+cls},medal(pl),h("span",{class:"rec-who"},classIcon(m.cls),charLink(m),isMine(m)?h("span",{class:"tag gold"},"You"):null,cls==="spoon"?h("span",{class:"tag spoon-tag"},"Wooden spoon"):null),h("span",{class:"rec-v"},fmt(v)));
+  return h("section",{class:"card rec-card","aria-label":title},
+    h("div",{class:"spread"},h("h3",{},title),h("span",{class:"small ter"},rows.length+(rows.length===1?" character":" characters"))),
+    h("ol",{class:"rec-list"},top.map(r=>line(r)),
+      mine.map(r=>[h("li",{class:"rec-gap","aria-hidden":"true"},"···"),line(r,"me")]),
+      lastRow&&!mine.includes(lastRow)?[h("li",{class:"rec-gap","aria-hidden":"true"},"···"),line(lastRow,"spoon")]:null),
+    null)}
+function viewRecords(){
+  const u=S.ui,kind=u.recKind||"All";
+  const profs=[...PRIMARY,...SECONDARY].filter(p=>kind==="All"||(kind==="Primary"?PRIMARY:SECONDARY).includes(p)).map(profBoard);
+  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs."))),
+    h("div",{class:"rec-grid rec-main"},REC_BOARDS.map(b=>boardCard(b))),
+    h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"prof-h"},"Professions"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],kind,k=>setUi({recKind:k},true))),
+    h("div",{class:"rec-grid"},profs.map(b=>boardCard(b,{n:3}))),
+    h("p",{class:"small ter"},"Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
+// "2nd of 6 in the guild": a line under each profession and the honourable kills on a character's page.
+function rankLine(get,m,noun){const r=rankOfIn(get,m);if(!r||r.of<2)return null;
+  const t=r.place===1&&!r.tied?"Best "+noun+" in the guild":(r.tied?"Joint ":"")+ordinal(r.place)+" of "+r.of+" in the guild";
+  return h("a",{class:"rank-l"+(r.last?" spoon":""),href:"#records"},r.place<=3?medal(r.place):null,h("span",{},t+(r.last?" · wooden spoon":"")))}
+const PROF_NOUN={Alchemy:"alchemist",Blacksmithing:"blacksmith",Enchanting:"enchanter",Engineering:"engineer",Herbalism:"herbalist",Leatherworking:"leatherworker",Mining:"miner",Skinning:"skinner",Tailoring:"tailor",Cooking:"cook","First Aid":"medic",Fishing:"angler"};
 function viewProfessions(){
   const chars=[...S.members,...S.alts];
   const by={};for(const m of chars)for(const[p,sk]of Object.entries(m.profs||{}))(by[p]=by[p]||[]).push({m,sk:+sk||0});
@@ -1877,7 +1934,7 @@ function viewChar(coll,id){
         h("div",{class:"journey"},list.map(journeyRow)))}):h("p",{class:"empty"},"Nothing yet. Levels, loot and professions show up here."));
   const groups=[["Primary",PRIMARY],["Secondary",SECONDARY]].map(([t,l])=>[t,l.filter(p=>m.profs&&p in m.profs)]).filter(x=>x[1].length);
   const profCard=h("section",{class:"card",style:"gap:.75rem"},h("h2",{},"Professions"),
-    groups.length?groups.map(([t,l])=>h("div",{style:"display:flex;flex-direction:column;gap:.625rem"},h("span",{class:"small ter",style:"font-weight:600"},t),l.map(p=>profBar(p,m.profs[p])))):h("p",{class:"empty"},"No professions logged yet."),
+    groups.length?groups.map(([t,l])=>h("div",{style:"display:flex;flex-direction:column;gap:.625rem"},h("span",{class:"small ter",style:"font-weight:600"},t),l.map(p=>h("div",{class:"pbar-wrap"},profBar(p,m.profs[p]),rankLine(profBoard(p)[2],m,PROF_NOUN[p]||p.toLowerCase()))))):h("p",{class:"empty"},"No professions logged yet."),
     canMake(m));
   const out=[h("div",{},h("div",{class:"page-head"},h("div",{style:"display:flex;flex-direction:column;gap:.25rem"},h("a",{href:"#roster",class:"small"},"← Roster"),h("h1",{},nameOf(m)),
       h("p",{class:"sub"},[classLine(m),roleText(m),m.level||1].filter(Boolean).join(" · ")),
@@ -1962,7 +2019,7 @@ function statsBox(m){
     .filter(([t,l])=>l.length);
   if(a.hk!==undefined)groups.push(["PvP",[["hk","Honourable kills"],["rank","Rank"]]]);
   return h("div",{class:"stats",role:"group","aria-label":"Stats"},groups.map(([t,l])=>h("div",{},h("h3",{},t),
-      l.map(([k,label])=>h("div",{class:"sr"},h("span",{},label),h("b",{},t==="PvP"?(k==="hk"?(+a.hk||0).toLocaleString("en-AU"):pvpRank(+a.rank||0)):statVal(k,st[k])))))),
+      l.map(([k,label])=>h("div",{class:"sr"},h("span",{},label),h("b",{},t==="PvP"?(k==="hk"?(+a.hk||0).toLocaleString("en-AU"):pvpRank(+a.rank||0)):statVal(k,st[k])))),t==="PvP"?rankLine(REC_BOARDS[0][2],m,"ganker"):null)),
     h("p",{class:"small",style:"grid-column:1/-1;margin:0;color:#a29595"},"From the armory"+(a.updated?", as of "+ago(a.updated):"")))}
 function talentsCard(m){
   const trees=(m.armory&&Array.isArray(m.armory.talents)?m.armory.talents:[]).filter(t=>t&&+t.points>0);
@@ -2296,7 +2353,7 @@ function render(){
   if(S.authError){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("div",{class:"note warn"},S.authError)));return}
   if(!S.user){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("p",{class:"ter"},"Loading…")));return}
   const r=route();
-  const views={roster:viewRoster,lfg:viewLfg,cards:viewCards,professions:viewProfessions};
+  const views={roster:viewRoster,lfg:viewLfg,cards:viewCards,professions:viewProfessions,records:viewRecords};
   const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="duel"?viewDuel(r.ids):r.page==="history"?viewHistory():views[r.page]();
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
