@@ -787,6 +787,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 - 12 Nov: roster and card refresh. Roster rows are face, class-coloured name plus top title, level bar, profession pills, loot, last seen (6 columns; desktop column rules live in `@container (min-width:640.02px)`, phone grid is name/level, professions/seen, loot). Quick chips (`.q-chip`) drive `role`, `rLv`, `rSeen`, `rMine`. Totals are a slim strip; the spotlight moved to the side column. Card art is full-width (12rem) with `.lg-hd` over its foot, stamps top left, `.lg-lv` badge top right; `cardPng` mirrors it.
 
+- 13 Nov: calmer tops. The roster and character sync lines are a dot, "Up to date" and a Details button (`.sync-more`); the roster's duplicate character count is gone; Guild Makeup folds its class list behind "By class". The card back has taller tabs (1.625rem) and the front's round level badge. Duels fold stats nobody has a number for into one "No contest" line and use the small "Open page" link under each card. The README now describes the site as it is; the dated build notes moved to `docs/HISTORY.md`.
+
 ## Open Items
 
 **These parts are still defaults, guesses, or waiting for a person.**

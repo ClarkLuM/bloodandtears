@@ -814,6 +814,14 @@ a.r-name:hover{color:var(--accent-text)}
 .rd-way{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr));gap:.75rem 1.5rem}
 .rd-way li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.25rem .75rem;align-items:baseline}
 .rd-way .track{grid-column:1/-1}
+/* Calmer sync lines, card back and duel touches */
+.sync-all{display:flex;flex-direction:column;gap:.375rem;margin-top:.375rem}
+.sync-more{font-weight:500;color:var(--ter);text-decoration:underline;text-underline-offset:2px;min-height:1.75rem;padding:0 .25rem}
+.sync-more:hover{color:var(--text)}
+.mk-more summary{cursor:pointer;color:var(--sec);font-weight:600}
+.lg-tab{line-height:1.625rem;font-size:.6875rem}
+.lg-lv.lg-lv-b{position:static;flex:none;width:1.875rem;height:1.875rem;font-size:.8125rem;align-self:center}
+.duel-blank{margin:0}
 </style>
 </head>
 <body>
@@ -1149,7 +1157,7 @@ function rosterDetail(m){
       h("a",{class:"btn sm ghost",href:`#duel/${m.id}`},"Duel this card")))}
 function viewRoster(){
   const my=me(),u=S.ui;
-  const head=h("div",{class:"page-head"},h("div",{},h("h1",{},"Roster"),h("p",{class:"sub"},(()=>{const c=S.members.length;return `${c} character${c===1?"":"s"}`})()),armoryAllLine()),
+  const head=h("div",{class:"page-head"},h("div",{},h("h1",{},"Roster"),armoryAllLine()),
     h("div",{class:"row"},
       isOfficer()?h("button",{class:"btn ghost",onclick:()=>openEdit(null,{})},"Add someone else"):null,
       // Characters come from the guild list; only officers add one by hand (so nobody can pad the roster).
@@ -1315,7 +1323,7 @@ function viewDuel(ids){
   const go=list=>{history.replaceState(null,"","#duel/"+list.map(m=>m.id).join(","));render()};
   const toggle=m=>go(picked.some(x=>x.id===m.id)?picked.filter(x=>x.id!==m.id):[...picked,m]);
   const random=()=>{const pool=all.slice();for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}go(pool.slice(0,2))};
-  const head=h("div",{class:"page-head"},h("div",{},h("h1",{},"Card Duels"),h("a",{href:"#cards",class:"small"},"← Cards"),h("p",{class:"sub"},"Pick two to six characters. Their cards go head to head, one stat at a time.")),
+  const head=h("div",{class:"page-head"},h("div",{},h("a",{href:"#cards",class:"small"},"← Cards"),h("h1",{},"Card Duels"),h("p",{class:"sub"},"Pick two to six characters. Their cards go head to head, one stat at a time.")),
     h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:random},"Random duel"),picked.length?h("button",{class:"btn ghost",type:"button",onclick:()=>go([])},"Clear"):null));
   const pick=h("section",{class:"card","aria-labelledby":"duel-pick-h",style:"gap:.625rem"},
     h("div",{class:"spread"},h("h2",{id:"duel-pick-h"},"Fighters"),h("span",{class:"small ter"},picked.length+" of 6 picked")),
@@ -1344,8 +1352,10 @@ function viewDuel(ids){
   const result=h("div",{class:"duel-result",role:"status"},h("b",{},champs.length>1?"It's a draw":nameOf(champs[0])+" wins"),
     h("span",{class:"ter"},(champs.length>1?champs.map(nameOf).join(" and ")+" tie on "+best+(best===1?" point":" points")+". ":"")+order.map(m=>pts.get(m.id)).join(" – ")));
   const arena=h("div",{class:"duel-arena"},order.map(m=>{const pl=placeOf(m);
-    return h("div",{class:"duel-f"},h("span",{class:"duel-place"+(pl===1?" win":"")},ord(pl)+" · "+pts.get(m.id)+(pts.get(m.id)===1?" point":" points")),flipCard(m),charLink(m))}));
-  const roundsEl=h("div",{class:"duel-rounds"+(anim?" duel-anim":"")},rounds.map((r,i)=>h("div",{class:"duel-r",style:anim?`animation-delay:${i*70}ms`:""},
+    return h("div",{class:"duel-f"},h("span",{class:"duel-place"+(pl===1?" win":"")},ord(pl)+" · "+pts.get(m.id)+(pts.get(m.id)===1?" point":" points")),flipCard(m),h("a",{class:"binder-link",href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,"aria-label":"Open "+nameOf(m)+"'s page"},"Open page"))}));
+  // Stats nobody has a number for (not on the armory yet) are named in one line instead of a box of dashes each.
+  const blank=rounds.filter(r=>!r.winners.length&&!r.top),fought=rounds.filter(r=>!blank.includes(r));
+  const roundsEl=h("div",{class:"duel-rounds"+(anim?" duel-anim":"")},fought.map((r,i)=>h("div",{class:"duel-r",style:anim?`animation-delay:${i*70}ms`:""},
     h("h3",{},r.name,h("span",{},!r.winners.length?"No contest":r.winners.length>1?"Tie":nameOf(r.winners[0]))),
     r.vals.map(([m,v])=>{const win=r.winners.includes(m);
       return h("div",{class:"duel-l"+(win?" win":"")},h("span",{class:"nm",title:nameOf(m)},classIcon(m.cls),h("span",{},nameOf(m))),
@@ -1354,6 +1364,7 @@ function viewDuel(ids){
   return[head,pick,h("section",{class:"card","aria-labelledby":"duel-h",style:"gap:1rem"},
     h("div",{class:"spread"},h("h2",{id:"duel-h"},"The Duel"),h("button",{class:"btn sm",type:"button",onclick:share},"Copy link")),
     result,arena,roundsEl,
+    blank.length?h("p",{class:"small ter duel-blank"},"No contest (nobody has a number yet): "+blank.map(r=>r.name).join(", ")+"."):null,
     h("p",{class:"small ter",style:"margin:0"},"Stats come from the armory, so they're as fresh as each player's last logout. Loot quality counts green as 1, blue 2, epic 3. Class matchup gives +1 for each opponent your class counters, and some specs get a small bonus: healers +15% health, tanks +15% armour, burst specs +10% attack or spell power.")) ]}
 
 /* ---------- Site use (officers only) ---------- */
@@ -1464,9 +1475,9 @@ function guildMakeup(){
     h("div",{class:"mk-bar",role:"img","aria-label":ROLES.map(r=>role[r]+" "+(r==="DPS"?"DPS":plural[r])).join(", ")},ROLES.filter(r=>role[r]).map(r=>h("i",{style:`flex:${role[r]};background:${ROLE_COL[r]}`}))),
     h("div",{class:"mk-legend"},ROLES.map(r=>h("span",{},h("i",{style:`background:${ROLE_COL[r]}`}),r==="DPS"?"DPS":plural[r][0].toUpperCase()+plural[r].slice(1),h("b",{},String(role[r]))))),
     h("p",{class:"small",style:"margin:0;color:"+(short.length?"var(--accent-text)":"var(--sec)")},hint),
-    h("div",{class:"mk-cls"},list.map(([c,k])=>h("span",{},classIcon(c),h("span",{},c),h("b",{},String(k))))),
-    missing.length&&missing.length<Object.keys(CLASSES).length?h("p",{class:"small ter",style:"margin:0"},"Nobody's playing "+(missing.length===1?"a "+missing[0]:missing.slice(0,-1).join(", ")+" or "+missing[missing.length-1])+" yet."):null,
-    h("p",{class:"small ter",style:"margin:0"},"Counts every character in the guild."))}
+    h("details",{class:"mk-more",open:!!S.ui.mkOpen||null,ontoggle:e=>{if(e.target.open!==!!S.ui.mkOpen)S.ui.mkOpen=e.target.open}},h("summary",{class:"small"},"By class"),
+      h("div",{class:"mk-cls",style:"padding-top:.5rem"},list.map(([c,k])=>h("span",{},classIcon(c),h("span",{},c),h("b",{},String(k))))),
+      missing.length&&missing.length<Object.keys(CLASSES).length?h("p",{class:"small ter",style:"margin:.5rem 0 0"},"Nobody's playing "+(missing.length===1?"a "+missing[0]:missing.slice(0,-1).join(", ")+" or "+missing[missing.length-1])+" yet."):null))}
 
 /* ---------- Since you were last here ---------- */
 // This device remembers when the site was last open on it (lg-last, in this browser only). If that was over an hour
@@ -1667,7 +1678,7 @@ function cardBack(m){
     backTab.set(m.id,k);statsPane.hidden=k==="pass";passPane.hidden=k!=="pass";for(const b of e.currentTarget.parentElement.children)b.setAttribute("aria-selected",String(b===e.currentTarget))}},label);
   return h("div",{class:"lg-card lg-back"+(shine?" foil":""),style:`background:linear-gradient(135deg,${f[0]},${f[1]} 35%,${f[2]} 55%,${f[3]})`+(shine?`;--shine:${shine}`:"")},
     h("div",{class:"lg-card-in"},
-      h("div",{class:"lg-hd"},h("b",{},d.name),h("span",{class:"lg-hp"},h("small",{},"LV"),String(d.lv))),
+      h("div",{class:"lg-hd"},h("b",{},d.name),h("span",{class:"lg-lv lg-lv-b",style:`border-color:${edge};color:${edge}`,title:"Level "+d.lv},String(d.lv))),
       h("div",{class:"lg-tabs",role:"tablist","aria-label":"Card back"},tab("stats","Stats"),tab("pass","Passport "+pass.length+"/"+DUNGEONS.length)),
       statsPane,passPane,
       h("div",{class:"lg-ft"},h("span",{},"Tap to flip"),h("span",{style:`color:${edge}`},d.rarity+" "+d.num))))}
@@ -2605,15 +2616,22 @@ function armoryAllLine(){
       toast(r.skipped?(r.moved?`Moved ${r.moved} alt${r.moved===1?"":"s"} over to their own characters. `:"")+"Everyone was checked on the armory "+ago(r.at)+". Try again in a few minutes.":`Checked ${r.checked} character${r.checked===1?"":"s"}, ${r.changed} updated`)}
     catch(e){toast("The armory didn't answer. Try again later.")}
     S.ui.armAll=false;render()};
-  return h("p",{class:"small ter row",style:"gap:.625rem;align-items:center;margin-top:.375rem"},
-    h("span",{},a.at?"Armory checked "+ago(a.at)+(a.checked?" · "+(a.changed||0)+" of "+a.checked+" updated":"")+" · every hour":"Armory checks every hour"),
-    // A button rather than a hover, so it works on phones too.
-    a.missingN?h("button",{type:"button",class:"tag miss-btn","aria-expanded":String(!!S.ui.missOpen),onclick:()=>setUi({missOpen:!S.ui.missOpen})},a.missingN+(a.missingN===1?" character":" characters")+" not found"):null,
-    isOfficer()&&S.optout&&Object.keys(S.optout).length?h("button",{type:"button",class:"tag miss-btn",onclick:openOptOutList},Object.keys(S.optout).length+" opted out"):null,
+  // One calm line: a dot and "Up to date". Anything that needs attention stays in view; the rest is behind Details.
+  const fresh=a.at&&Date.now()-Date.parse(a.at)<3*36e5,open=!!S.ui.syncOpen,err=a.roster&&a.roster.error;
+  return h("div",{class:"small ter sync-all"},
+    h("div",{class:"row",style:"gap:.375rem .75rem;align-items:center"},
+      h("span",{class:"sync "+(fresh?"fresh":a.at?"stale":"wait")},h("i",{"aria-hidden":"true"}),fresh?"Up to date":a.at?"Last checked "+ago(a.at):"Waiting for the first armory check"),
+      fresh?h("span",{},"Checked "+ago(a.at)):null,
+      // A button rather than a hover, so it works on phones too.
+      a.missingN?h("button",{type:"button",class:"tag miss-btn","aria-expanded":String(!!S.ui.missOpen),onclick:()=>setUi({missOpen:!S.ui.missOpen})},a.missingN+(a.missingN===1?" character":" characters")+" not found"):null,
+      isOfficer()&&S.optout&&Object.keys(S.optout).length?h("button",{type:"button",class:"tag miss-btn",onclick:openOptOutList},Object.keys(S.optout).length+" opted out"):null,
+      err?h("span",{class:"tag",style:"color:var(--danger)",title:"Blizzard may have changed their guild page. The rest of the sync still works."},"Couldn't read the guild list "+ago(a.roster.error)):null,
+      h("button",{type:"button",class:"linkish small sync-more","aria-expanded":String(open),onclick:()=>setUi({syncOpen:!open})},open?"Hide details":"Details")),
     a.missingN&&S.ui.missOpen?h("span",{class:"miss-list"},"No armory page for "+(a.missing||[]).join(", ")+(a.missingN>(a.missing||[]).length?" and more":"")+". New characters show up after they log out past level 10; a renamed one needs its name fixed on the site."):null,
-    a.roster&&a.roster.error?h("span",{class:"tag",style:"color:var(--danger)",title:"Blizzard may have changed their guild page. The rest of the sync still works."},"Couldn't read the guild list "+ago(a.roster.error))
-      :a.roster&&a.roster.at?h("span",{},"Guild list read "+ago(a.roster.at)):null,
-    S.user?h("button",{class:"btn sm",disabled:!!busy,onclick:go},busy?"Syncing everyone…":"⟳ Sync everyone"):null)}
+    open?h("div",{class:"row sync-det",style:"gap:.375rem .75rem;align-items:center"},
+      h("span",{},a.at?"Armory checked "+ago(a.at)+(a.checked?" · "+(a.changed||0)+" of "+a.checked+" updated":"")+" · every hour":"Armory checks every hour"),
+      !err&&a.roster&&a.roster.at?h("span",{},"Guild list read "+ago(a.roster.at)):null,
+      S.user?h("button",{class:"btn sm",disabled:!!busy,onclick:go},busy?"Syncing everyone…":"⟳ Sync everyone"):null):null)}
 function armoryLine(m,can){
   const a=m.armory,busy=S.ui.armBusy===m.id;
   const sync=async()=>{if(!fns){toast("Sync isn't switched on yet.");return}S.ui.armBusy=m.id;render();
@@ -2628,9 +2646,13 @@ function armoryLine(m,can){
       a.updated?h("span",{title:"The armory updates when a character logs out."},"Game data from "+ago(a.updated)):null,
       ch&&ch.at?h("span",{},"Last change "+ago(ch.at)+": "+(ch.what||[]).join(", ")):h("span",{},"No changes seen yet")]
     :[h("span",{},"Not synced with the armory yet")];
-  return h("div",{class:"arm-line small ter"},syncChip(m),h("span",{class:"arm-bits"},bits),
+  const open=!!S.ui.armOpen;
+  return h("div",{class:"arm-line small ter"},syncChip(m),
+    a&&a.at?h("span",{},"Checked "+ago(a.at)):null,
     a&&a.url?h("a",{href:a.url,target:"_blank",rel:"noopener"},"View on armory"):null,
-    can?h("button",{class:"btn sm",disabled:busy,onclick:sync},busy?"Syncing…":"⟳ Sync now"):null)}
+    can?h("button",{class:"btn sm",disabled:busy,onclick:sync},busy?"Syncing…":"⟳ Sync now"):null,
+    h("button",{type:"button",class:"linkish small sync-more","aria-expanded":String(open),onclick:()=>setUi({armOpen:!open})},open?"Hide details":"Details"),
+    open?h("span",{class:"arm-bits",style:"flex-basis:100%"},a&&a.at?bits.slice(1):bits,h("span",{},syncState(m).d)):null)}
 /* ---------- Edit character dialog ---------- */
 // Most of a character fills itself in from the armory (level, class, race, spec, professions and gear), so the form is
 // short: the name the armory knows them by, their role, and when they joined. Race, class and level are only asked
