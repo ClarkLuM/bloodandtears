@@ -656,6 +656,8 @@ nav.bottom{display:none}
 @media (max-width:700px){.hot-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.hot-n{grid-column:1/-1}.hot-n:empty{display:none}}
 .flav-edit{width:100%;max-width:22.5rem}.flav-edit>summary{cursor:pointer;color:var(--sec);font-size:.875rem;min-height:2.75rem;display:flex;align-items:center;justify-content:center}
 .stamp-key{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem .875rem;font-size:.75rem;color:var(--ter);max-width:22.5rem}.stamp-key li{display:inline-flex;align-items:center;gap:.375rem}.stamp-key b{font-weight:700;background:#1a0b08;border-radius:999px;padding:0 .375rem;line-height:1.125rem}
+.oo-list{margin:.25rem 0 0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.375rem;color:var(--sec)}
+.oo-off{list-style:none;margin:0;padding:0}.oo-off li{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.5rem 0;border-top:1px solid var(--sep)}
 .rank-l{display:inline-flex;align-items:center;gap:.375rem;margin-top:.25rem;font-size:.8125rem;color:var(--sec);text-decoration:none}
 .rank-l .medal{width:1.125rem;height:1.125rem;font-size:.625rem}
 .rank-l:hover span{text-decoration:underline}.rank-l.spoon{color:var(--ter)}
@@ -2345,6 +2347,7 @@ function viewChar(coll,id){
     can||isOfficer()?h("div",{class:"row"},moreMenu([
         ["",null,"This character"],
         !m.isAlt&&owns(m)?["Use on another device",()=>makeCode(m)]:null,
+        !m.isAlt&&(can||isOfficer())?["Take off the site (opt out)",()=>openOptOut(m)]:null,
         isOfficer()&&!m.isAlt?["",null,"Officers"]:null,
         isOfficer()&&!m.isAlt&&Array.isArray(m.owners)&&!owns(m)?[isOfficerChar(m)?"Remove officer":"Make officer",()=>setOfficer(m,!isOfficerChar(m))]:null,
         isOfficer()&&!m.isAlt&&Array.isArray(m.owners)&&m.owners.length?["Free up for claiming",()=>freeUp(m)]:null]),
@@ -2452,6 +2455,7 @@ function armoryAllLine(){
     h("span",{},a.at?"Armory checked "+ago(a.at)+(a.checked?" · "+(a.changed||0)+" of "+a.checked+" updated":"")+" · every hour":"Armory checks every hour"),
     // A button rather than a hover, so it works on phones too.
     a.missingN?h("button",{type:"button",class:"tag miss-btn","aria-expanded":String(!!S.ui.missOpen),onclick:()=>setUi({missOpen:!S.ui.missOpen})},a.missingN+(a.missingN===1?" character":" characters")+" not found"):null,
+    isOfficer()&&S.optout&&Object.keys(S.optout).length?h("button",{type:"button",class:"tag miss-btn",onclick:openOptOutList},Object.keys(S.optout).length+" opted out"):null,
     a.missingN&&S.ui.missOpen?h("span",{class:"miss-list"},"No armory page for "+(a.missing||[]).join(", ")+(a.missingN>(a.missing||[]).length?" and more":"")+". New characters show up after they log out past level 10; a renamed one needs its name fixed on the site."):null,
     a.roster&&a.roster.error?h("span",{class:"tag",style:"color:var(--danger)",title:"Blizzard may have changed their guild page. The rest of the sync still works."},"Couldn't read the guild list "+ago(a.roster.error))
       :a.roster&&a.roster.at?h("span",{},"Guild list read "+ago(a.roster.at)):null,
@@ -2567,6 +2571,34 @@ async function setOfficer(m,on){
   toast(on?"Making "+nameOf(m)+" an officer…":"Removing "+nameOf(m)+" as an officer…");
   try{await httpsCallable(fns,"setOfficer")({id:m.id,on});toast(on?nameOf(m)+" is an officer now. It works on every device they've linked.":nameOf(m)+" isn't an officer any more.")}
   catch(x){toast(x&&x.message&&!/internal/i.test(x.message)?x.message:"Couldn't change that. Try again in a bit.")}}
+/* ---------- Opting out ---------- */
+// For a player who doesn't want to be on the site. Their character, or an officer, can take it off for good.
+function openOptOut(m){
+  const dlg=$("#dlg"),f=$("#dlgForm"),nm=nameOf(m);
+  f.replaceChildren(h("h1",{style:"font-size:1.8125rem;line-height:2.25rem"},"Take "+nm+" off the site?"),
+    h("ul",{class:"oo-list"},
+      h("li",{},"Their page, card, records and titles are deleted."),
+      h("li",{},"Their name comes off the Hall of Firsts, This Week and past weekly recaps."),
+      h("li",{},"The site won't add them back from the guild list, and the armory sync stops looking them up."),
+      h("li",{},"Officers can undo this from the roster. "+nm+" would then come back fresh, without the old history."),
+      h("li",{},"Card pictures or recaps already shared in Discord stay there; the site can't recall them.")),
+    h("div",{class:"dlg-actions"},h("button",{class:"btn",type:"button",onclick:()=>dlg.close()},"Cancel"),
+      h("button",{class:"btn danger",type:"button",onclick:async e=>{const b=e.currentTarget;if(!fns){toast("That isn't switched on yet.");return}
+        b.disabled=true;b.textContent="Taking off…";
+        try{await httpsCallable(fns,"optOut")({id:m.id});dlg.close();toast(nm+" is off the site.");location.hash="#roster"}
+        catch(x){b.disabled=false;b.textContent="Take off the site";toast(x&&x.message&&!/internal/i.test(x.message)?x.message:"Couldn't do that. Try again in a bit.")}}},"Take off the site")));
+  f.onsubmit=e=>e.preventDefault();dlg.showModal()}
+// Officers: who's opted out, with a way to let them back in.
+function openOptOutList(){
+  const dlg=$("#dlg"),f=$("#dlgForm"),l=Object.entries(S.optout||{}).sort((a,b)=>String(a[1].name).localeCompare(String(b[1].name)));
+  const back=async(key,name,b)=>{if(!fns)return;b.disabled=true;try{await httpsCallable(fns,"optOut")({undo:key});toast(name+" can come back. They'll reappear after the next armory check.");dlg.close()}
+    catch(x){b.disabled=false;toast(x&&x.message&&!/internal/i.test(x.message)?x.message:"Couldn't do that. Try again in a bit.")}};
+  f.replaceChildren(h("h1",{style:"font-size:1.8125rem;line-height:2.25rem"},"Opted Out"),
+    h("p",{class:"sub"},"These characters are kept off the site. Only officers see this list."),
+    l.length?h("ul",{class:"oo-off"},l.map(([k,v])=>h("li",{},h("span",{},h("b",{},v.name||k),h("span",{class:"small ter"}," · since "+dayMonth(v.at))),
+      h("button",{class:"btn sm",type:"button",onclick:e=>back(k,v.name||k,e.currentTarget)},"Let back in")))):h("p",{class:"empty"},"Nobody has opted out."),
+    h("div",{class:"dlg-actions"},h("span",{}),h("button",{class:"btn",type:"button",onclick:()=>dlg.close()},"Close")));
+  f.onsubmit=e=>e.preventDefault();dlg.showModal()}
 /* ---------- duplicates ---------- */
 // Two entries with the same name (say, one from the guild list and one added by hand). Merging keeps the one synced
 // with the armory (or the older one) and folds everything from the other into it.
@@ -2773,6 +2805,8 @@ function subscribe(){
   S.unsub.push(onSnapshot(doc(db,"guild","roster"),snap=>{S.guildRoster=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","armory"),snap=>{S.armoryAll=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","info"),snap=>{S.guild=snap.exists()?snap.data():{};schedule()},()=>{}));
+  // Only officers can read the opt-out list; for everyone else this quietly fails.
+  S.unsub.push(onSnapshot(doc(db,"guild","optout"),snap=>{S.optout=snap.exists()?(snap.data().names||{}):{};schedule()},()=>{S.optout=null}));
   S.unsub.push(onSnapshot(doc(db,"guild","recaps"),snap=>{S.recapWeeks=snap.exists()?(snap.data().weeks||{}):{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","records"),snap=>{S.recDays=snap.exists()?(snap.data().days||{}):{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","firsts"),snap=>{const d=snap.exists()?snap.data():{};S.firsts=d.list||{};S.milestones=d.milestones||{};S.firstsReady=true;schedule()},()=>{S.firstsReady=true;schedule()}));

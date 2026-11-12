@@ -101,10 +101,11 @@ service cloud.firestore {
 
     // Guild basics and the Discord invite: everyone reads, officers change them.
     match /guild/{docId} {
-      allow read: if signedIn();
-      // officers, officerPicks, roster, armory, digest, firsts (the Hall of Firsts), itemIds (Wowhead IDs for items) records (daily snapshots for Records' This week) and recaps (each finished week's recap)
+      // optout (characters taken off the site) is only for officers to read.
+      allow read: if signedIn() && (docId != 'optout' || isOfficer());
+      // officers, officerPicks, roster, armory, digest, firsts (the Hall of Firsts), itemIds (Wowhead IDs for items) records (daily snapshots for Records' This week) recaps (each finished week's recap) and optout (characters whose players opted out)
       // are written by the server only.
-      allow write: if !(docId in ['officers', 'officerPicks', 'roster', 'armory', 'digest', 'firsts', 'itemIds', 'records', 'recaps']) && isOfficer() &&
+      allow write: if !(docId in ['officers', 'officerPicks', 'roster', 'armory', 'digest', 'firsts', 'itemIds', 'records', 'recaps', 'optout']) && isOfficer() &&
         optStr(request.resource.data, 'discord', 200) && optStr(request.resource.data, 'gm', 60) &&
         optStr(request.resource.data, 'officers', 500) && optStr(request.resource.data, 'loot', 500) &&
         optStr(request.resource.data, 'events', 500);

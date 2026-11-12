@@ -427,6 +427,51 @@ exports.itemLookup = onCall({ region: REGION, maxInstances: 2, timeoutSeconds: 1
   return { found };
 });
 
+// Opting out: a player (or an officer for them) takes a character off the site for good. Its page is deleted,
+// it's added to guild/optout (officers only can read it) so the roster sync never adds it back, and its name and
+// numbers come out of the Hall of Firsts, Records snapshots and saved weekly recaps. "Let back in" removes the name
+// from the list; the next sync then adds the character back fresh. Cards already posted in Discord can't be recalled.
+exports.optOut = onCall({ region: REGION, maxInstances: 2, timeoutSeconds: 60 }, async req => {
+  if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
+  const off = (await db().doc("guild/officers").get()).data() || {}, officer = (off.uids || []).includes(req.auth.uid);
+  const ref = db().doc("guild/optout"), list = ((await ref.get()).data() || {}).names || {}, now = new Date().toISOString();
+  if (req.data && req.data.undo) {
+    if (!officer) throw new HttpsError("permission-denied", "Only officers can do that.");
+    const key = keyOf(req.data.undo);
+    if (!list[key]) throw new HttpsError("not-found", "That name isn't on the opt-out list.");
+    delete list[key]; await ref.set({ names: list, at: now });
+    // Let the roster sync add them again.
+    const rref = db().doc("guild/roster"), r = (await rref.get()).data() || {};
+    if (Array.isArray(r.added)) await rref.set({ ...r, added: r.added.filter(k => k !== key) });
+    return { ok: true };
+  }
+  const id = String((req.data && req.data.id) || "").slice(0, 60), snap = await db().doc(`members/${id}`).get();
+  if (!snap.exists) throw new HttpsError("not-found", "Character not found.");
+  const c = snap.data(), owner = Array.isArray(c.owners) && c.owners.includes(req.auth.uid);
+  if (!officer && !owner) throw new HttpsError("permission-denied", "Only officers, or the player who claimed this character, can do that.");
+  const name = plainName(c), key = keyOf(name);
+  list[key] = { at: now, name: name.slice(0, 41) };
+  await ref.set({ names: list, at: now });
+  await db().doc(`members/${id}`).delete();
+  // Hall of Firsts: the moment stays, the name goes.
+  const fref = db().doc("guild/firsts"), f = (await fref.get()).data() || {}, fl = { ...(f.list || {}) };
+  for (const [k, v] of Object.entries(fl)) if (v && v.id === id) fl[k] = { at: v.at, name: "A former guildie", cls: "" };
+  if (f.list) await fref.set({ ...f, list: fl });
+  // Records snapshots and saved recaps.
+  const rref = db().doc("guild/records"), rec = (await rref.get()).data();
+  if (rec && rec.days) { for (const day of Object.values(rec.days)) if (day) delete day[id]; await rref.set(rec); }
+  const cref = db().doc("guild/recaps"), cap = (await cref.get()).data();
+  if (cap) {
+    if (cap.open && cap.open.rows) delete cap.open.rows[id];
+    for (const w of Object.values(cap.weeks || {})) for (const k of ["lev", "kw", "loot", "firsts"]) if (Array.isArray(w[k])) w[k] = w[k].filter(x => (k === "firsts" ? x[1] : x[0]) !== name);
+    await cref.set(cap);
+  }
+  // Off the saved guild list too.
+  const gref = db().doc("guild/roster"), g = (await gref.get()).data();
+  if (g && Array.isArray(g.members)) await gref.set({ ...g, members: g.members.filter(x => keyOf(x.name) !== key) });
+  logger.info("opted out", { by: officer ? "officer" : "owner" });
+  return { ok: true };
+});
 exports.setOfficer = onCall({ region: REGION, maxInstances: 2 }, async req => {
   if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
   const off = (await db().doc("guild/officers").get()).data() || {};
@@ -472,12 +517,15 @@ async function syncRoster() {
   if (!roster) return null;
   const ref = db().doc("guild/roster"), prev = (await ref.get()).data() || {};
   const firstImport = !prev.at, added = new Set(prev.added || []);
+  // Characters whose players opted out: never added, never updated, and left off the saved guild list.
+  const out = new Set(Object.keys(((await db().doc("guild/optout").get()).data() || {}).names || {}));
   const chars = [];
   for (const coll of ["members", "alts"]) for (const d of (await db().collection(coll).get()).docs) chars.push({ coll, id: d.id, data: d.data() });
   const byName = new Map(chars.map(c => [keyOf(c.data.first ? `${c.data.first} ${c.data.last || ""}` : c.data.char), c]));
   const now = new Date().toISOString(); let newOnes = 0, raised = 0;
   for (const g of roster) {
     const key = keyOf(`${g.first} ${g.last}`), have = byName.get(key);
+    if (out.has(key)) continue;
     if (have) {
       const d = have.data, old = +d.level || 1, patch = {};
       if (g.level > old) { patch.level = g.level; patch.journey = [{ t: "Reached level " + g.level, at: now, from: old }, ...(Array.isArray(d.journey) ? d.journey : [])].slice(0, 40); raised++; }
@@ -492,7 +540,7 @@ async function syncRoster() {
         role: g.role || (g.cls === "Priest" ? "Healer" : "DPS"), profs: {}, journey: [], fromGuild: true, ...(firstImport ? { quiet: true } : {}), createdAt: now, updatedAt: now });
     }
   }
-  const members = roster.map(g => ({ name: `${g.first} ${g.last}`.trim(), level: g.level, cls: g.cls, rank: g.rank }));
+  const members = roster.filter(g => !out.has(keyOf(`${g.first} ${g.last}`))).map(g => ({ name: `${g.first} ${g.last}`.trim(), level: g.level, cls: g.cls, rank: g.rank }));
   await ref.set({ at: now, members, added: [...added].slice(-500) });
   return { members: roster.length, added: newOnes, raised };
 }
