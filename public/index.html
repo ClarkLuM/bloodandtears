@@ -792,6 +792,20 @@ a.r-name:hover{color:var(--accent-text)}
 .lg-stamps{top:.5rem;bottom:auto}
 .lg-lv{position:absolute;top:.5rem;right:.5rem;z-index:1;width:2.25rem;height:2.25rem;box-sizing:border-box;border-radius:50%;border:2px solid;background:rgb(15 10 9 / .88);display:grid;place-items:center;font-weight:700;font-size:.9375rem;line-height:1}
 .lg-type{margin-top:.375rem}
+/* Cards page: sets, a quieter link under each card, and two cards across on phones */
+.binder-set{display:flex;flex-direction:column;gap:.875rem}
+.binder-h{display:flex;align-items:baseline;gap:.75rem;padding-bottom:.375rem;border-bottom:1px solid var(--sep)}
+.binder-h h2{margin:0;font-size:1.125rem;line-height:1.5rem}
+.binder{justify-content:start;grid-template-columns:repeat(auto-fill,16.25rem);gap:1.25rem 1.5rem}
+.binder-it{gap:.25rem}
+.binder-link{font-size:.8125rem;line-height:1.75rem;color:var(--ter);text-decoration:none;padding:0 .5rem}
+.binder-link:hover{color:var(--accent-text);text-decoration:underline}
+@media (max-width:600px){
+  .binder{grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem .625rem;justify-items:center}
+  .binder .lg-flip{zoom:.64}
+}
+@media (max-width:379px){.binder .lg-flip{zoom:.54}}
+@media (max-width:339px){.binder .lg-flip{zoom:.5}}
 </style>
 </head>
 <body>
@@ -1166,7 +1180,7 @@ function viewRoster(){
   }else body=list.flatMap(row);
   const empty=h("div",{class:"card"},h("h3",{},total?"Nobody matches":"No one's on the roster yet"),
     h("p",{class:"sub"},total?"Try fewer filters, or a different search.":"The guild list from the armory fills this in within the hour."),total?h("div",{},h("button",{class:"btn sm",type:"button",onclick:clear},"Clear filters")):null);
-  const results=!list.length?empty:view==="cards"?h("div",{class:"binder"},list.map(m=>h("div",{class:"binder-it"},flipCard(m),charLink(m))))
+  const results=!list.length?empty:view==="cards"?h("div",{class:"binder"},list.map(binderIt))
     :h("div",{class:"tablebox"},h("table",{class:"roster-t"},h("thead",{},h("tr",{},[...["Character","Level","Professions","Best loot","Last seen"].map(t=>h("th",{scope:"col"},t)),h("th",{scope:"col"},h("span",{class:"visually-hidden"},"Details"))])),h("tbody",{},body)));
   const tools=h("div",{class:"r-tools-wrap",style:"display:flex;flex-direction:column;gap:.75rem"},rosterFilters(),count);
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
@@ -1179,15 +1193,33 @@ const bestLoot=m=>Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=2).sort((x,
 
 /* ---------- Cards ---------- */
 // Everyone's trading card in one place, like flicking through a binder, with the duels at the top.
+const C_SORTS=[["level","Rarity and level"],["kills","Most kills"],["dungeons","Most dungeons"],["name","Name"]];
+const binderIt=m=>h("div",{class:"binder-it"},flipCard(m),h("a",{class:"binder-link",href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,"aria-label":"Open "+nameOf(m)+"'s page"},"Open page"));
 function viewCards(){
-  const roleOk=m=>S.ui.role==="All"||canRole(m,S.ui.role);
-  const list=S.members.filter(roleOk).sort((a,b)=>(+b.level||0)-(+a.level||0)||nameOf(a).localeCompare(nameOf(b)));
+  const u=S.ui,role=u.role||"All",sort=u.cSort||"level",q=String(u.cq||"").trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const hay=m=>[nameOf(m),m.cls,m.race,m.spec,roleText(m),...titlesOf(m).map(x=>x.t)].join(" ").toLowerCase();
+  const by={level:(a,b)=>(+b.level||0)-(+a.level||0),kills:(a,b)=>(+(b.armory||{}).hk||0)-(+(a.armory||{}).hk||0),dungeons:(a,b)=>passportOf(b).length-passportOf(a).length,name:()=>0}[sort];
+  const inRole=r=>S.members.filter(m=>r==="All"||canRole(m,r));
+  const list=inRole(role).filter(m=>q.every(w=>hay(m).includes(w))).sort((a,b)=>by(a,b)||nameOf(a).localeCompare(nameOf(b)));
   const random=()=>{const pool=S.members.slice();for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}location.hash="#duel/"+pool.slice(0,2).map(m=>m.id).join(",")};
+  const glass=h("span",{"aria-hidden":"true"});glass.innerHTML='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5" stroke-linecap="round"/></svg>';
+  const tools=h("div",{class:"r-top"},
+    h("div",{class:"r-search"},glass,h("input",{id:"c-q",type:"search",placeholder:"Search the cards","aria-label":"Search the cards by name, class, race, role or title",value:u.cq||"",autocomplete:"off",oninput:e=>{S.ui.cq=e.target.value;schedule()}})),
+    h("div",{class:"r-ctrls"},
+      h("label",{class:"r-sort"},h("span",{class:"ter"},"Sort"),h("select",{id:"c-sort",onchange:e=>setUi({cSort:e.target.value},true)},C_SORTS.map(([v,l])=>h("option",{value:v,selected:sort===v},l)))),
+      seg("Filter by role",[["All","All",S.members.length],...ROLES.map(r=>[r,r,inRole(r).length])],role,k=>setUi({role:k},true))));
+  // Sorted by level, the binder is split into its sets: gold foil at 60, silver from 40, bronze from 20.
+  const SETS=[["Gold foil","Level 60"],["Silver","Levels 40 to 59"],["Bronze","Levels 20 to 39"],["Plain","Under level 20"]];
+  const binder=ms=>h("div",{class:"binder"},ms.map(binderIt));
+  const body=!list.length?h("p",{class:"empty"},S.members.length?"No cards match. Try a different search or role.":"No cards yet. They appear as the guild list fills in.")
+    :sort!=="level"?binder(list)
+    :SETS.map(([t,range])=>{const ms=list.filter(m=>tierOf(+m.level||1)[1]===t);
+      return ms.length?h("section",{class:"binder-set","aria-label":t+" cards"},h("div",{class:"binder-h"},h("h2",{},t),h("span",{class:"small ter"},range+" · "+ms.length+(ms.length===1?" card":" cards"))),binder(ms)):null});
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Cards"),h("p",{class:"sub"},"Everyone's trading card. Tap one to flip it, or put a few head to head.")),
       h("div",{class:"row"},h("a",{class:"btn primary",href:"#duel"},"Card duels"),h("button",{class:"btn",type:"button",onclick:random},"Random duel"))),
-    cardOfWeek(),
-    h("div",{class:"spread",style:"gap:.5rem 1rem"},seg("Filter by role",[["All","All"],...ROLES.map(r=>[r,r])],S.ui.role,k=>setUi({role:k},true))),
-    list.length?h("div",{class:"binder"},list.map(m=>h("div",{class:"binder-it"},flipCard(m),charLink(m)))):h("p",{class:"empty"},S.members.length?"Nobody with that role yet.":"No cards yet. Add your character from the roster.")]}
+    cardOfWeek(),tools,
+    h("div",{class:"r-count",role:"status"},list.length===S.members.length?`${list.length} cards`:`Showing ${list.length} of ${S.members.length} cards`),
+    body]}
 
 /* ---------- Card of the week ---------- */
 // The week's biggest mover from Records (a new number one first), shown big with why, their numbers and professions.

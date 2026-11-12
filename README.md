@@ -252,3 +252,10 @@ Console jobs (not code): daily Firestore backups or point-in-time recovery, a bi
 - **Tidier rows.** Each row has a small portrait with a class-coloured ring, the name in class colour with the top title under it, a level number with a bar, professions with their skill, best loot and last seen. Characters not on the armory yet show a dash (the reason is in the row's details).
 - **Quick filters.** A row of one-tap chips: All, Tanks, Healers, DPS, Level 60, Seen this week and Mine. They set the same filters as the Filters panel, which is still there with search, sort and the List / By class / Cards switch.
 - **Cards with bigger art.** The picture fills the top half of the card with the name over its foot. Stamps sit top left and a level badge top right. Stats, title, kills, dungeons and gear are unchanged. The Discord picture matches.
+
+## Cards page tidy (12 Nov)
+
+- **Sets.** Sorted by rarity and level (the default), the binder is split into Gold foil (60), Silver (40 to 59), Bronze (20 to 39) and Plain, each with a heading and a count.
+- **Search and sort.** Search by name, class, race, role or title. Sort by rarity and level, kills, dungeons or name. The role filter shows how many cards each role has.
+- **Two cards across on phones**, so the page is about half as long.
+- The name under each card (already on the card) is now a small "Open page" link.
