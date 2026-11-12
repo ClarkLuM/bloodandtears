@@ -234,3 +234,14 @@ Pasting the site's link in Discord (or anywhere that reads Open Graph tags) show
 ## Phone layout
 
 On phones the roster shows each person in two or three lines with an arrow to open them, and the page runs: Since You Were Last Here (when there's news), totals, roster, In Game Today, Character of the Day, Guild Feed, Leaderboards, Guild Makeup, About. The menu has four tabs along the bottom (Roster, Dungeons, Cards, Professions), and the theme button is a sun or moon icon.
+
+## Privacy and security (12 Nov)
+
+- **Not in search engines.** `public/robots.txt`, a `noindex` meta tag and an `X-Robots-Tag` header ask search engines not to list the site, so a character's name won't lead to it.
+- **Security headers** (in `firebase.json`): no framing (`X-Frame-Options: DENY`), `nosniff`, a stricter referrer policy, and camera, mic, location and payment switched off.
+- **Privacy note.** A footer link, "Privacy and opting out", explains what the site keeps (armory data only, no real names or emails), who can see it, and how to opt out.
+- **Old-data clean-up (officers).** In the privacy note, "Check for old data" calls `privacyCleanup`. It lists fields from removed features (notes, wishlist, availability and so on), records in collections the site no longer uses, and device codes older than a day. "Remove it" deletes them.
+- **Only officers add characters.** Firestore rules and the page both stop other people adding characters by hand. New guildies still arrive from the guild list within the hour.
+- **App Check, ready to switch on.** Put a reCAPTCHA Enterprise site key in `APP_CHECK_SITE_KEY` in `public/firebase-config.js`. While it's empty, App Check stays off. Turn on enforcement in the Firebase console only after the key is live and requests show as verified.
+
+Console jobs (not code): daily Firestore backups or point-in-time recovery, a billing budget alert, and App Check registration and enforcement.

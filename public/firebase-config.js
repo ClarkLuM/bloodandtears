@@ -19,3 +19,7 @@ export const OFFICERS = [];
 // Discord server ID for the "On Discord" box. In Discord: Server Settings > Widget, turn on Enable Server Widget,
 // then copy the Server ID shown there and paste it between the quotes.
 export const DISCORD_SERVER_ID = "363258337736785921";
+
+// App Check (optional): blocks requests that don't come from this site. In Firebase console > App Check, register the
+// web app with reCAPTCHA Enterprise, then paste its site key between the quotes. Leave it empty to keep it off.
+export const APP_CHECK_SITE_KEY = "";

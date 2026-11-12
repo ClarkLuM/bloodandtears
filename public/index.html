@@ -6,6 +6,7 @@
 <title>Blood and Tears</title>
 <meta name="description" content="Blood and Tears guild roster for WoW Forever.">
 <meta name="theme-color" content="#0f0a09">
+<meta name="robots" content="noindex, nofollow">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Blood and Tears">
 <meta property="og:title" content="Blood and Tears">
@@ -658,6 +659,10 @@ nav.bottom{display:none}
 .stamp-key{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem .875rem;font-size:.75rem;color:var(--ter);max-width:22.5rem}.stamp-key li{display:inline-flex;align-items:center;gap:.375rem}.stamp-key b{font-weight:700;background:#1a0b08;border-radius:999px;padding:0 .375rem;line-height:1.125rem}
 .oo-list{margin:.25rem 0 0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.375rem;color:var(--sec)}
 .oo-off{list-style:none;margin:0;padding:0}.oo-off li{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.5rem 0;border-top:1px solid var(--sep)}
+.site-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;padding-top:1.5rem;padding-bottom:6rem;color:var(--ter);font-size:.8125rem;border-top:1px solid var(--sep);margin-top:2rem}
+.foot-link{font:inherit;color:var(--accent-text);background:none;border:0;padding:.5rem 0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.pv{display:flex;flex-direction:column;gap:.5rem;color:var(--sec)}.pv h2{font-size:1.0625rem;line-height:1.5rem;margin:.5rem 0 0;color:var(--text)}.pv p{margin:0}
+.pv-out ul{margin:.375rem 0;padding-left:1.25rem}.pv-out{display:flex;flex-direction:column;gap:.375rem;align-items:flex-start}
 .rank-l{display:inline-flex;align-items:center;gap:.375rem;margin-top:.25rem;font-size:.8125rem;color:var(--sec);text-decoration:none}
 .rank-l .medal{width:1.125rem;height:1.125rem;font-size:.625rem}
 .rank-l:hover span{text-decoration:underline}.rank-l.spoon{color:var(--ter)}
@@ -751,6 +756,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, onSnapshot, setDoc, updateDoc, deleteDoc, addDoc, deleteField, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 import * as cfg from "./firebase-config.js";
 const firebaseConfig=cfg.firebaseConfig;
 // Officers are listed by character ID (shown on your own character page). Keep in sync with firestore.rules.
@@ -854,7 +860,9 @@ const setUi=(patch,save)=>{Object.assign(S.ui,patch);if(save)saveUi();render()};
 /* ---------- Firebase ---------- */
 const configured=firebaseConfig&&firebaseConfig.apiKey&&!String(firebaseConfig.apiKey).startsWith("PASTE");
 let auth,db,fns;
-if(configured){const app=initializeApp(firebaseConfig);auth=getAuth(app);try{fns=getFunctions(app,"australia-southeast1")}catch(e){}
+if(configured){const app=initializeApp(firebaseConfig);
+  // App Check: proves requests come from this site, not a script. Only on once APP_CHECK_SITE_KEY is set in firebase-config.js.
+  if(cfg.APP_CHECK_SITE_KEY){try{initializeAppCheck(app,{provider:new ReCaptchaEnterpriseProvider(cfg.APP_CHECK_SITE_KEY),isTokenAutoRefreshEnabled:true})}catch(e){console.warn("App Check",e)}}auth=getAuth(app);try{fns=getFunctions(app,"australia-southeast1")}catch(e){}
   db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})})}
 // Writes only resolve once the server confirms, so say it's saved straight away and speak up only if it's refused.
 // Failed saves stay on screen (not a quick toast) so they can't be missed, with the reason for troubleshooting.
@@ -889,7 +897,7 @@ function claimBanner(){
   return h("section",{class:"card claim-banner","aria-labelledby":"claim-h"},
     h("div",{style:"display:flex;flex-direction:column;gap:2px;min-width:0"},h("h2",{id:"claim-h",style:"font-size:1.1875rem;line-height:1.625rem"},"Claim Your Character"),
       h("span",{class:"sub"},"Everyone in the guild is already on the roster. Claiming links your character to this device so you can pick your role and stamp your passport. It doesn't change who's listed.")),
-    h("div",{class:"row"},h("button",{class:"btn primary",onclick:()=>openLink()},"Claim my character"),h("button",{class:"btn",onclick:()=>openEdit(null,{self:true})},"Not listed? Add it")))}
+    h("div",{class:"row"},h("button",{class:"btn primary",onclick:()=>openLink()},"Claim my character"),isOfficer()?h("button",{class:"btn",onclick:()=>openEdit(null,{self:true})},"Not listed? Add it"):h("span",{class:"small ter",style:"align-self:center"},"Not listed? New guildies show up within the hour.")))}
 const charLink=m=>h("a",{class:"linkish",href:`#char/${m.isAlt?"alts":"members"}/${m.id}`},nameOf(m));
 // Class icons from Wowhead's icon set (where the gear icons come from), ringed in the class colour.
 // If an icon can't load, the old colour dot takes its place.
@@ -1062,8 +1070,9 @@ function viewRoster(){
   const head=h("div",{class:"page-head"},h("div",{},h("h1",{},"Roster"),h("p",{class:"sub"},(()=>{const c=S.members.length;return `${c} character${c===1?"":"s"}`})()),armoryAllLine()),
     h("div",{class:"row"},
       isOfficer()?h("button",{class:"btn ghost",onclick:()=>openEdit(null,{})},"Add someone else"):null,
-      my?[h("button",{class:"btn",onclick:()=>openEdit(null,{self:true})},"Add another character"),h("a",{class:"btn primary",href:`#char/members/${my.id}`},"My character")]
-        :[h("button",{class:"btn",onclick:()=>openEdit(null,{self:true})},"Add a character"),h("button",{class:"btn primary",onclick:()=>openLink()},"Claim my character")]));
+      // Characters come from the guild list; only officers add one by hand (so nobody can pad the roster).
+      my?[isOfficer()?h("button",{class:"btn",onclick:()=>openEdit(null,{self:true})},"Add another character"):null,h("a",{class:"btn primary",href:`#char/members/${my.id}`},"My character")]
+        :[isOfficer()?h("button",{class:"btn",onclick:()=>openEdit(null,{self:true})},"Add a character"):null,h("button",{class:"btn primary",onclick:()=>openLink()},"Claim my character")]));
   const {list}=rosterList(),total=S.members.length,view=u.rView||"list";
   const hidden=S.members.filter(m=>!isMine(m)&&memberState(m)==="former").length;
   const clear=()=>setUi({rq:"",role:"All",rCls:"All",rProf:"All",rLv:"all",rClaim:"all",rMem:"current",rOpen:null},true);
@@ -2571,6 +2580,31 @@ async function setOfficer(m,on){
   toast(on?"Making "+nameOf(m)+" an officer…":"Removing "+nameOf(m)+" as an officer…");
   try{await httpsCallable(fns,"setOfficer")({id:m.id,on});toast(on?nameOf(m)+" is an officer now. It works on every device they've linked.":nameOf(m)+" isn't an officer any more.")}
   catch(x){toast(x&&x.message&&!/internal/i.test(x.message)?x.message:"Couldn't change that. Try again in a bit.")}}
+/* ---------- Privacy ---------- */
+// What the site keeps, who can see it, and how to get off it. Officers also get the old-data clean-up here.
+function openPrivacy(){
+  const dlg=$("#dlg"),f=$("#dlgForm"),out=h("div",{class:"pv-out",role:"status"});
+  const run=async(go,b)=>{if(!fns){toast("That isn't switched on yet.");return}b.disabled=true;out.textContent=go?"Removing…":"Checking…";
+    try{const r=(await httpsCallable(fns,"privacyCleanup")({run:!!go})).data||{};
+      const lines=[...Object.entries(r.fields||{}).map(([k,n])=>n+(n===1?" character has":" characters have")+" an old \u201c"+k+"\u201d field"),
+        ...Object.entries(r.collections||{}).map(([k,n])=>n+" old record"+(n===1?"":"s")+" in \u201c"+k+"\u201d"),r.links?r.links+" expired device code"+(r.links===1?"":"s"):null].filter(Boolean);
+      out.replaceChildren(h("p",{style:"margin:0"},go?(lines.length?"Removed: ":"Nothing to remove."):(lines.length?"Found old data the site no longer uses:":"No old data found. All clean.")),
+        lines.length?h("ul",{},lines.map(l=>h("li",{},l))):null,
+        !go&&lines.length?h("button",{class:"btn danger sm",type:"button",onclick:e=>run(true,e.currentTarget)},"Remove it"):null)}
+    catch(x){out.textContent=x&&x.message&&!/internal/i.test(x.message)?x.message:"Couldn't check. Try again in a bit."}finally{b.disabled=false}};
+  f.replaceChildren(h("h1",{style:"font-size:1.8125rem;line-height:2.25rem"},"Privacy"),
+    h("div",{class:"pv"},
+      h("h2",{},"What the site keeps"),
+      h("p",{},"Character names, class, race, level, professions, gear, talents, honourable kills and when each character was last seen in game. All of it comes from Blizzard's public armory, the same pages anyone can look up. On top of that: dungeon stamps and flavour text people add themselves."),
+      h("p",{},"No real names, email addresses, passwords or payment details. There's no sign-up: each browser gets an anonymous ID, used only to remember which characters it can edit."),
+      h("h2",{},"Who can see it"),
+      h("p",{},"Anyone with the link. Treat it like a public notice board. The site asks search engines not to list it, so it won't turn up when someone searches a character's name."),
+      h("h2",{},"Opting out"),
+      h("p",{},"Don't want your character on here? Ask "+(officerNames()==="an officer"?"an officer":"an officer ("+officerNames()+")")+", or if you've claimed it, open your character page and choose More, then Take off the site. It's removed for good and won't come back from the guild list. Pictures already shared in Discord stay where they were posted."),
+      isOfficer()?[h("h2",{},"Old data (officers)"),h("p",{},"Features that were removed can leave old fields and records behind. Check for them, then remove them if you like."),
+        h("button",{class:"btn sm",type:"button",onclick:e=>run(false,e.currentTarget)},"Check for old data"),out]:null),
+    h("div",{class:"dlg-actions"},h("span",{}),h("button",{class:"btn",type:"button",onclick:()=>dlg.close()},"Close")));
+  f.onsubmit=e=>e.preventDefault();dlg.showModal()}
 /* ---------- Opting out ---------- */
 // For a player who doesn't want to be on the site. Their character, or an officer, can take it off for good.
 function openOptOut(m){
@@ -2781,7 +2815,8 @@ function render(){
     S.error?h("div",{class:"note warn"},S.error):null,
     S.saveErr?h("div",{class:"note warn spread",role:"alert"},h("span",{},S.saveErr),h("button",{class:"btn sm",onclick:()=>{S.saveErr="";render()}},"OK")):null,
     !S.loaded&&!S.error?h("div",{class:"note"},"Loading the roster…"):null,
-    body)].filter(Boolean));
+    body),
+    h("footer",{class:"site-foot wrap"},h("span",{},"Blood and Tears · a guild site, made by guildies"),h("button",{type:"button",class:"foot-link",onclick:openPrivacy},"Privacy and opting out"))].filter(Boolean));
   for(const[id,v]of Object.entries(typed)){const el=document.getElementById(id);if(!el||el.closest("dialog"))continue;el.value=v}
   if(keep){const el=document.getElementById(keep);if(el)el.focus()}
   checkDing();checkMilestones();markVisit()}

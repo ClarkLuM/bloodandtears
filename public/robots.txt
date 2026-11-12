@@ -1,0 +1,3 @@
+# Blood and Tears is a guild site, not for search engines.
+User-agent: *
+Disallow: /

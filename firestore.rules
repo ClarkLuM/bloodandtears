@@ -47,10 +47,10 @@ service cloud.firestore {
 
     match /members/{memberId} {
       allow read: if signedIn();
-      // New character: it's yours (a device can have several). Officers can add someone else (with no owners yet).
-      allow create: if validChar(request.resource.data) && (
-        request.resource.data.owners == [uid()] ||
-        (isOfficer() && !('owners' in request.resource.data)));
+      // New characters come from the guild list (the server). Only officers add one by hand: their own, or someone else's
+      // with no owners yet. Everyone else claims theirs with "This is me".
+      allow create: if validChar(request.resource.data) && isOfficer() && (
+        request.resource.data.owners == [uid()] || !('owners' in request.resource.data));
       allow update: if validChar(request.resource.data) && (
         // Editing your own character (you can't remove every device, including your own).
         (resource.data.get('owners', []).hasAny([uid()]) && request.resource.data.owners.hasAny([uid()])) ||

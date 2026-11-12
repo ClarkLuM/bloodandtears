@@ -472,6 +472,35 @@ exports.optOut = onCall({ region: REGION, maxInstances: 2, timeoutSeconds: 60 },
   logger.info("opted out", { by: officer ? "officer" : "owner" });
   return { ok: true };
 });
+// Privacy clean-up (officers): finds, and on request removes, data the site no longer uses: old fields on characters
+// from removed features (notes, availability, time zone, wishlist, Discord link and so on), records in collections the
+// site no longer reads (old groups, trades, events), and device codes more than a day old. Check first, then run.
+const OLD_FIELDS = ["notes", "tz", "avail", "wishlist", "crafts", "shots", "showoff", "pic", "discordId", "link"];
+const KEEP_COLLECTIONS = ["members", "alts", "links", "guild"];
+exports.privacyCleanup = onCall({ region: REGION, maxInstances: 1, timeoutSeconds: 300 }, async req => {
+  if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
+  const off = (await db().doc("guild/officers").get()).data() || {};
+  if (!(off.uids || []).includes(req.auth.uid)) throw new HttpsError("permission-denied", "Only officers can do that.");
+  const run = !!(req.data && req.data.run), { FieldValue } = require("firebase-admin/firestore");
+  const fields = {}, collections = {}; let links = 0;
+  for (const coll of ["members", "alts"]) for (const d of (await db().collection(coll).get()).docs) {
+    const data = d.data() || {}, old = OLD_FIELDS.filter(k => k in data);
+    for (const k of old) fields[k] = (fields[k] || 0) + 1;
+    if (run && old.length) await db().doc(`${coll}/${d.id}`).update(Object.fromEntries(old.map(k => [k, FieldValue.delete()])));
+  }
+  for (const c of await db().listCollections()) {
+    if (KEEP_COLLECTIONS.includes(c.id)) continue;
+    const docs = (await c.get()).docs; if (!docs.length) continue;
+    collections[c.id] = docs.length;
+    if (run) for (const d of docs) await d.ref.delete();
+  }
+  const dayAgo = new Date(Date.now() - 864e5).toISOString();
+  for (const d of (await db().collection("links").get()).docs) {
+    const at = (d.data() || {}).at; if (at && String(at) < dayAgo) { links++; if (run) await d.ref.delete(); }
+  }
+  logger.info("privacy clean-up", { run, fields, collections, links });
+  return { run, fields, collections, links };
+});
 exports.setOfficer = onCall({ region: REGION, maxInstances: 2 }, async req => {
   if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
   const off = (await db().doc("guild/officers").get()).data() || {};

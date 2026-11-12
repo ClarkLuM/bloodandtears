@@ -783,6 +783,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 </details>
 
+- 12 Nov: privacy pass. Kept out of search engines (robots.txt, noindex meta and header), security headers, a footer privacy note, an officer-only old-data clean-up (`privacyCleanup`), officer-only manual adding (rules and UI), and an App Check hook switched on by `APP_CHECK_SITE_KEY`. Footer link class is `.foot-link` (`.linkish` already means name links).
+
 ## Open Items
 
 **These parts are still defaults, guesses, or waiting for a person.**
