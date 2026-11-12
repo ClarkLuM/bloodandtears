@@ -806,6 +806,15 @@ a.r-name:hover{color:var(--accent-text)}
 }
 @media (max-width:379px){.binder .lg-flip{zoom:.54}}
 @media (max-width:339px){.binder .lg-flip{zoom:.5}}
+/* Character page: face beside the name, headline numbers in a strip, professions in two columns */
+.ch-hero{display:flex;align-items:center;gap:1rem;min-width:0}
+.ch-av{flex:none;width:4.5rem;height:4.5rem;box-sizing:border-box;border-radius:50%;border:3px solid var(--cc);background:var(--sunken);overflow:hidden;display:grid;place-items:center;font:700 1.5rem/1 var(--display);color:var(--sec)}
+.ch-av img{width:100%;height:100%;object-fit:cover;display:block}
+.ch-hero h1{margin:0}
+.prof-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem 2rem;align-items:start}
+.prof-cols>div:only-child{grid-column:1/-1}
+@media (max-width:860px){.prof-cols{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.ch-hero{gap:.75rem;align-items:flex-start}.ch-av{width:3.5rem;height:3.5rem;font-size:1.125rem}}
 </style>
 </head>
 <body>
@@ -2455,11 +2464,20 @@ function viewChar(coll,id){
         h("div",{class:"journey"},list.map(journeyRow)))}):h("p",{class:"empty"},"Nothing yet. Levels, loot and professions show up here."));
   const groups=[["Primary",PRIMARY],["Secondary",SECONDARY]].map(([t,l])=>[t,l.filter(p=>m.profs&&p in m.profs)]).filter(x=>x[1].length);
   const profCard=h("section",{class:"card",style:"gap:.75rem"},h("h2",{},"Professions"),
-    groups.length?groups.map(([t,l])=>h("div",{style:"display:flex;flex-direction:column;gap:.625rem"},h("span",{class:"small ter",style:"font-weight:600"},t),l.map(p=>h("div",{class:"pbar-wrap"},profBar(p,m.profs[p]),rankLine(profBoard(p)[2],m,PROF_NOUN[p]||p.toLowerCase()))))):h("p",{class:"empty"},"No professions logged yet."),
+    groups.length?h("div",{class:"prof-cols"},groups.map(([t,l])=>h("div",{style:"display:flex;flex-direction:column;gap:.625rem;min-width:0"},h("span",{class:"small ter",style:"font-weight:600"},t),l.map(p=>h("div",{class:"pbar-wrap"},profBar(p,m.profs[p]),rankLine(profBoard(p)[2],m,PROF_NOUN[p]||p.toLowerCase())))))):h("p",{class:"empty"},"No professions logged yet."),
     canMake(m));
-  const out=[h("div",{},h("div",{class:"page-head"},h("div",{style:"display:flex;flex-direction:column;gap:.25rem"},h("a",{href:"#roster",class:"small"},"← Roster"),h("h1",{},nameOf(m)),
-      h("p",{class:"sub"},[classLine(m),roleText(m),m.level||1].filter(Boolean).join(" · ")),titleTags(m),
-      h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—"))),
+  // The top of the page: their face in a class-coloured ring beside the name, then their headline numbers in one strip.
+  const cc=CLASSES[m.cls]||"#bfaea9",av=charPic(m,"avatar"),ini=nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(),ar=m.armory||{};
+  const filledN=GEAR_ALL.filter(n=>(m.gear||{})[n]&&m.gear[n].id).length;
+  const nums=[["Level",String(m.level||1)],ar.hk!==undefined?["Honourable kills",(+ar.hk||0).toLocaleString("en-AU")]:null,
+    m.isAlt?null:["Dungeons",passportOf(m).length+" of "+DUNGEONS.length],ar.ilvl?["Item level",String(ar.ilvl)]:filledN?["Gear",filledN+" of "+GEAR_ALL.length]:null,
+    m.isAlt?null:["Loot points",String(lootPts(m))]].filter(Boolean);
+  const out=[h("div",{},h("div",{class:"page-head"},h("div",{style:"display:flex;flex-direction:column;gap:.375rem;min-width:0"},h("a",{href:"#roster",class:"small"},"← Roster"),
+      h("div",{class:"ch-hero"},
+        h("span",{class:"ch-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?h("img",{src:av,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
+        h("div",{style:"display:flex;flex-direction:column;gap:.25rem;min-width:0"},h("h1",{},nameOf(m)),
+          h("p",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),titleTags(m),
+          h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—"))))),
     can||isOfficer()?h("div",{class:"row"},moreMenu([
         ["",null,"This character"],
         !m.isAlt&&owns(m)?["Use on another device",()=>makeCode(m)]:null,
@@ -2471,6 +2489,7 @@ function viewChar(coll,id){
       :(!m.isAlt&&!Array.isArray(m.owners))?h("button",{class:"btn primary",onclick:()=>claim(m)},"This is me")
       :!m.isAlt?h("p",{class:"small ter",style:"max-width:22.5rem;margin:0"},"Claimed on another device. If it's yours, open it there and tap Use on another device. No longer have that device? Ask "+officerNames()+" to free it up."):null)),
     dupeBanner(m)];
+  out.push(h("section",{class:"totals ch-nums","aria-label":"At a glance"},nums.map(([l,v])=>h("div",{class:"total"},h("b",{},v),h("span",{},l)))));
   out.push(armoryLine(m,can||!!S.user));
   // On phones the page is split into sections (one at a time); on wider screens everything shows.
   const sec=(el,t)=>{if(el)el.dataset.sec=t;return el};

@@ -259,3 +259,9 @@ Console jobs (not code): daily Firestore backups or point-in-time recovery, a bi
 - **Search and sort.** Search by name, class, race, role or title. Sort by rarity and level, kills, dungeons or name. The role filter shows how many cards each role has.
 - **Two cards across on phones**, so the page is about half as long.
 - The name under each card (already on the card) is now a small "Open page" link.
+
+## Character page tidy (12 Nov)
+
+- **Face beside the name.** The character's portrait sits in a class-coloured ring next to their name, class line and titles.
+- **Headline numbers in one strip.** Level, honourable kills, dungeons cleared, gear (or item level) and loot points, right under the name.
+- **Professions in two columns.** Primary and secondary sit side by side on wider screens, so the section is about half as tall.
