@@ -245,3 +245,10 @@ On phones the roster shows each person in two or three lines with an arrow to op
 - **App Check, ready to switch on.** Put a reCAPTCHA Enterprise site key in `APP_CHECK_SITE_KEY` in `public/firebase-config.js`. While it's empty, App Check stays off. Turn on enforcement in the Firebase console only after the key is live and requests show as verified.
 
 Console jobs (not code): daily Firestore backups or point-in-time recovery, a billing budget alert, and App Check registration and enforcement.
+
+## Roster and card refresh (12 Nov)
+
+- **The list comes first.** The guild totals are one slim strip and Character of the Day sits in the side column, so the roster starts near the top of the page.
+- **Tidier rows.** Each row has a small portrait with a class-coloured ring, the name in class colour with the top title under it, a level number with a bar, professions with their skill, best loot and last seen. Characters not on the armory yet show a dash (the reason is in the row's details).
+- **Quick filters.** A row of one-tap chips: All, Tanks, Healers, DPS, Level 60, Seen this week and Mine. They set the same filters as the Filters panel, which is still there with search, sort and the List / By class / Cards switch.
+- **Cards with bigger art.** The picture fills the top half of the card with the name over its foot. Stamps sit top left and a level badge top right. Stats, title, kills, dungeons and gear are unchanged. The Discord picture matches.

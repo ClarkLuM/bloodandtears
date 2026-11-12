@@ -159,22 +159,19 @@ td .l2{display:block;font-size:.75rem;line-height:1rem;color:var(--ter)}
   td>*{text-align:right}
   td:first-child>*{text-align:left}
   /* The roster: two or three tight lines per person instead of a label for every value */
-  .roster-t tbody tr{display:grid;grid-template-columns:minmax(0,1fr) fit-content(50%) 2rem;grid-template-areas:"name rl x" "cls seen x" "prof loot x";gap:2px .75rem;padding:.625rem .5rem .625rem .875rem}
-  .roster-t td:nth-child(7){grid-area:x;align-self:center}
+  .roster-t tbody tr{display:grid;grid-template-columns:minmax(0,1fr) fit-content(45%) 2rem;grid-template-areas:"name lv x" "prof seen x" "loot loot x";gap:.25rem .75rem;padding:.625rem .5rem .625rem .875rem;align-items:center}
+  .roster-t td:nth-child(6){grid-area:x;align-self:center}
   .roster-t tbody tr.r-more{display:block;padding:0}.roster-t tr.r-more>td{display:block;padding:.25rem .875rem 1rem}
   .roster-t tbody tr.r-group{display:block;padding:0}.roster-t tr.r-group>td{display:block;padding:.5rem .875rem}
   .roster-t td{display:block;padding:0;font-size:.8125rem;line-height:1.125rem}
   .roster-t td::before{content:none}
   .roster-t td>*{text-align:left}
   .roster-t td:nth-child(1){grid-area:name;font-size:.875rem;line-height:1.25rem}
-  .roster-t td:nth-child(2){grid-area:cls;color:var(--sec)}
-  .roster-t td:nth-child(2) .l2{display:inline;font-size:.8125rem;color:var(--ter)}
-  .roster-t td:nth-child(2) .l2::before{content:" · "}
-  .roster-t td:nth-child(3){grid-area:rl;text-align:right;font-weight:600}
-  .roster-t td:nth-child(4){grid-area:prof;color:var(--ter)}
-  .roster-t td:nth-child(5){grid-area:loot;text-align:right}
-  .roster-t td:nth-child(6){grid-area:seen;text-align:right;color:var(--ter);white-space:nowrap}
-  .roster-t td:nth-child(6) .ter{color:inherit}
+  .roster-t td:nth-child(2){grid-area:lv;justify-self:end}
+  .roster-t td:nth-child(3){grid-area:prof}
+  .roster-t td:nth-child(4){grid-area:loot}
+  .roster-t td:nth-child(5){grid-area:seen;justify-self:end;color:var(--ter);white-space:nowrap}
+  .roster-t td:nth-child(5) .ter{color:inherit}
   .roster-t .seen-l{display:none}
   .roster-t td.none{display:none}
   .roster-t tr.alt{padding-left:1.75rem}
@@ -744,6 +741,57 @@ nav.bottom{display:none}
 .toast-undo{font:inherit;font-weight:700;background:none;border:0;color:#a32420;margin-left:1rem;padding:.25rem 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 :root[data-theme="light"] .toast-undo{color:#f7a097}
 .toast{position:fixed;display:flex;align-items:center;left:50%;transform:translateX(-50%);bottom:calc(1rem + env(safe-area-inset-bottom,0px));background:var(--text);color:var(--base);padding:.5rem 1rem;border-radius:6px;z-index:20;max-width:calc(100vw - 2rem)}
+/* Roster rows: face, class-coloured name, level bar, profession pills */
+.r-who{display:flex;align-items:center;gap:.75rem;min-width:0}
+.r-av{flex:none;width:2.5rem;height:2.5rem;box-sizing:border-box;border-radius:50%;border:2px solid var(--cc);background:var(--sunken);overflow:hidden;display:grid;place-items:center;font:700 .8125rem/1 var(--display);color:var(--sec)}
+.r-av img{width:100%;height:100%;object-fit:cover;display:block}
+a.r-name{color:color-mix(in srgb,var(--cc) 80%,#fff)}
+:root[data-theme="light"] a.r-name{color:color-mix(in srgb,var(--cc) 38%,#1a1211)}
+a.r-name:hover{color:var(--accent-text)}
+.r-title{font-weight:600;color:var(--accent-text)}
+.r-lv{display:inline-flex;flex-direction:column;gap:.1875rem;min-width:2.5rem}
+.r-lv b{font-size:1.0625rem;line-height:1.25rem;font-variant-numeric:tabular-nums}
+.r-lv i{display:block;height:.1875rem;border-radius:2px;background:var(--sep);overflow:hidden}
+.r-lv s{display:block;height:100%;border-radius:2px;background:var(--accent-text)}
+.r-profs{display:flex;flex-wrap:wrap;gap:.25rem .375rem}
+.r-prof{display:inline-flex;gap:.3125rem;align-items:baseline;padding:.125rem .5rem;border-radius:6px;background:var(--subtle);font-size:.75rem;line-height:1.125rem;color:var(--sec);white-space:nowrap}
+.r-prof b{color:var(--text);font-variant-numeric:tabular-nums}
+@container (min-width:640.02px){
+.roster-t{table-layout:fixed}
+.roster-t th,.roster-t td{padding-left:.75rem;padding-right:.75rem}
+.roster-t th:first-child,.roster-t td:first-child{padding-left:1rem}
+.roster-t td{padding-top:.5rem;padding-bottom:.5rem}
+.roster-t th:nth-child(2){width:4rem}.roster-t th:nth-child(3){width:10.5rem}.roster-t th:nth-child(4){width:8rem}.roster-t th:nth-child(5){width:6.5rem}.roster-t th:nth-child(6){width:3rem}
+.roster-t .l2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-profs{flex-direction:column;align-items:flex-start}
+}
+.r-quick{display:flex;flex-wrap:wrap;gap:.375rem}
+.q-chip{height:2rem;padding:0 .75rem;border-radius:1rem;border:1px solid var(--sep);background:var(--raised);color:var(--sec);font:inherit;font-size:.8125rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.q-chip span{font-weight:400;color:var(--ter)}
+.q-chip:hover{color:var(--text);background:var(--subtle)}
+.q-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.q-chip[aria-pressed="true"] span{color:rgb(255 255 255 / .85)}
+.q-chip:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (max-width:640px){.r-quick{flex-wrap:nowrap;overflow-x:auto;margin:0 -1rem;padding:2px 1rem;scrollbar-width:none}.r-quick::-webkit-scrollbar{display:none}.q-chip{flex:none;height:2.25rem}}
+/* Guild totals as one slim strip, so the list starts higher */
+.totals{display:flex;flex-wrap:wrap;gap:1px}
+.total{flex:1 1 auto;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 .375rem;padding:.4375rem .75rem}
+.total b{font-size:1.0625rem;line-height:1.5rem}
+@media (max-width:640px){.total{padding:.375rem .625rem}.total b{font-size:1rem;line-height:1.375rem}.total:last-child{grid-column:auto}}
+/* Character of the day, sized for the side column */
+.spot{grid-template-columns:6.5rem minmax(0,1fr)}
+.spot-art{min-height:10.5rem}
+.spot-body{padding:.875rem 1rem;gap:.3125rem}
+.spot-name{font-size:1.25rem;line-height:1.5rem}
+/* Card: the picture fills the top, with the name over its foot, stamps top left and the level top right */
+.lg-art{height:12rem;margin:0;border-radius:0;border:0}
+.lg-art::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4.5rem;background:linear-gradient(rgb(15 10 9 / 0),#0f0a09);pointer-events:none}
+.lg-art .lg-hd{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:0 .75rem .25rem}
+.lg-art .lg-hd b{text-shadow:0 1px 4px rgb(0 0 0 / .85)}
+.lg-art .lg-hp{text-shadow:0 1px 4px rgb(0 0 0 / .85)}
+.lg-stamps{top:.5rem;bottom:auto}
+.lg-lv{position:absolute;top:.5rem;right:.5rem;z-index:1;width:2.25rem;height:2.25rem;box-sizing:border-box;border-radius:50%;border:2px solid;background:rgb(15 10 9 / .88);display:grid;place-items:center;font-weight:700;font-size:.9375rem;line-height:1}
+.lg-type{margin-top:.375rem}
 </style>
 </head>
 <body>
@@ -1014,6 +1062,8 @@ function rosterList(){
     // Claimed or not is for officers only; everyone else sees every character the same way.
     if(off&&u.rClaim==="claimed"&&!Array.isArray(m.owners))return false;
     if(off&&u.rClaim==="unclaimed"&&Array.isArray(m.owners))return false;
+    if(u.rSeen&&!(Date.now()-(Date.parse(seenOf(m))||0)<7*864e5))return false;
+    if(u.rMine&&!isMine(m))return false;
     const mem=u.rMem||"current";if(mem!=="all"&&!isMine(m)&&memberState(m)!==mem)return false;
     return q.every(w=>hay(m).includes(w))};
   const by={"level-desc":(a,b)=>(+b.level||0)-(+a.level||0),"level-asc":(a,b)=>(+a.level||0)-(+b.level||0),name:()=>0,
@@ -1027,8 +1077,8 @@ function rosterFilters(){
   const MEM=[["current","In the guild"],["former","Not in the guild"],["all","Everyone"]],CLAIM=[["all","Claimed or not"],["claimed","Claimed"],["unclaimed","Not claimed yet"]];
   const lbl=(list,v)=>(list.find(x=>x[0]===v)||[,v])[1];
   // What's on, as removable chips, so the panel can stay shut.
-  const chips=[u.role&&u.role!=="All"?[u.role,{role:"All"}]:null,u.rCls&&u.rCls!=="All"?[u.rCls,{rCls:"All"}]:null,
-    u.rProf&&u.rProf!=="All"?[u.rProf,{rProf:"All"}]:null,u.rLv&&u.rLv!=="all"?["Level "+lbl(LEVEL_BANDS,u.rLv),{rLv:"all"}]:null,
+  const chips=[u.role&&u.role!=="All"?[u.role,{role:"All"},1]:null,u.rCls&&u.rCls!=="All"?[u.rCls,{rCls:"All"}]:null,
+    u.rProf&&u.rProf!=="All"?[u.rProf,{rProf:"All"}]:null,u.rLv&&u.rLv!=="all"?["Level "+lbl(LEVEL_BANDS,u.rLv),{rLv:"all"},u.rLv==="60"?1:0]:null,
     off&&u.rClaim&&u.rClaim!=="all"?[lbl(CLAIM,u.rClaim),{rClaim:"all"}]:null,u.rMem&&u.rMem!=="current"?[lbl(MEM,u.rMem),{rMem:"current"}]:null].filter(Boolean);
   const icon=(svg,cls)=>{const e=h("span",{"aria-hidden":"true",class:cls||""});e.innerHTML=svg;return e};
   const glass=icon('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5" stroke-linecap="round"/></svg>');
@@ -1040,8 +1090,18 @@ function rosterFilters(){
     icon('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 4h12M4.5 8h7M7 12h2"/></svg>',"r-ficon"),"Filters",
     chips.length?h("span",{class:"r-badge","aria-label":chips.length+" on"},String(chips.length)):null);
   const sort=h("label",{class:"r-sort"},h("span",{class:"ter"},"Sort"),h("select",{id:"r-sort",onchange:e=>set({rSort:e.target.value})},R_SORTS.map(([v,l])=>h("option",{value:v,selected:(u.rSort||"level-desc")===v},l))));
+  // One-tap shortcuts for the common questions. They set the same filters as the panel, so the two stay in step.
+  const cur=S.members.filter(m=>isMine(m)||memberState(m)==="current"),noQuick=(!u.role||u.role==="All")&&u.rLv!=="60"&&!u.rSeen&&!u.rMine;
+  const qc=(label,n,on,patch)=>h("button",{class:"q-chip",type:"button","aria-pressed":String(!!on),onclick:()=>set({...patch,rOpen:null})},label,n!=null?h("span",{}," "+n):null);
+  const quick=h("div",{class:"r-quick",role:"group","aria-label":"Quick filters"},
+    qc("All",cur.length,noQuick,{role:"All",rLv:u.rLv==="60"?"all":u.rLv||"all",rSeen:false,rMine:false}),
+    ROLES.map(r=>qc(r==="DPS"?"DPS":r+"s",cur.filter(m=>canRole(m,r)).length,u.role===r,{role:u.role===r?"All":r})),
+    qc("Level 60",cur.filter(m=>(+m.level||1)>=60).length,u.rLv==="60",{rLv:u.rLv==="60"?"all":"60"}),
+    qc("Seen this week",null,u.rSeen,{rSeen:!u.rSeen}),
+    S.members.some(isMine)?qc("Mine",null,u.rMine,{rMine:!u.rMine}):null);
+  const shown=chips.filter(c=>!c[2]);
   return h("div",{class:"r-tools"},
-    h("div",{class:"r-top"},search,h("div",{class:"r-ctrls"},toggle,sort,view)),
+    h("div",{class:"r-top"},search,h("div",{class:"r-ctrls"},toggle,sort,view)),quick,
     h("div",{class:"r-filters",id:"r-filters","data-shut":u.rFiltersOpen?null:""},
       sel("r-role","Role",[["All","Any role"],...ROLES.map(r=>[r,r])],u.role||"All",v=>set({role:v})),
       sel("r-cls","Class",[["All","Any class"],...classes.map(c=>[c,c])],u.rCls||"All",v=>set({rCls:v})),
@@ -1049,7 +1109,7 @@ function rosterFilters(){
       sel("r-lv","Level",LEVEL_BANDS,u.rLv||"all",v=>set({rLv:v})),
       sel("r-mem","Members",MEM,u.rMem||"current",v=>set({rMem:v})),
       off?sel("r-claim","Claimed (officers)",CLAIM,u.rClaim||"all",v=>set({rClaim:v})):null),
-    chips.length&&!u.rFiltersOpen?h("div",{class:"r-chips"},chips.map(([t,reset])=>h("button",{class:"r-chip",type:"button","aria-label":"Remove filter: "+t,onclick:()=>set(reset)},t,h("span",{"aria-hidden":"true"},"✕")))):null)}
+    shown.length&&!u.rFiltersOpen?h("div",{class:"r-chips"},shown.map(([t,reset])=>h("button",{class:"r-chip",type:"button","aria-label":"Remove filter: "+t,onclick:()=>set(reset)},t,h("span",{"aria-hidden":"true"},"✕")))):null)}
 // The extra details a row opens to.
 function rosterDetail(m){
   const st=syncState(m),a=m.armory||{},trees=(a.talents||[]).filter(t=>t&&t.points),prof=Object.entries(m.profs||{}).filter(([p])=>!CLASS_SKILLS[p]).sort((x,y)=>+y[1]-+x[1]);
@@ -1075,36 +1135,44 @@ function viewRoster(){
         :[isOfficer()?h("button",{class:"btn",onclick:()=>openEdit(null,{self:true})},"Add a character"):null,h("button",{class:"btn primary",onclick:()=>openLink()},"Claim my character")]));
   const {list}=rosterList(),total=S.members.length,view=u.rView||"list";
   const hidden=S.members.filter(m=>!isMine(m)&&memberState(m)==="former").length;
-  const clear=()=>setUi({rq:"",role:"All",rCls:"All",rProf:"All",rLv:"all",rClaim:"all",rMem:"current",rOpen:null},true);
+  const clear=()=>setUi({rq:"",role:"All",rCls:"All",rProf:"All",rLv:"all",rClaim:"all",rMem:"current",rSeen:false,rMine:false,rOpen:null},true);
   const filtered=list.length!==total;
   const count=h("div",{class:"r-count",role:"status"},h("span",{},filtered?`Showing ${list.length} of ${total} characters`:`${total} characters`),
     h("span",{class:"row",style:"gap:.75rem"},(u.rMem||"current")==="current"&&hidden?h("button",{class:"linkish small",type:"button",onclick:()=>setUi({rMem:"all"},true)},`${hidden} not in the guild hidden · Show`):null,
       filtered?h("button",{class:"linkish small",type:"button",onclick:clear},"Clear filters"):null));
-  const row=m=>{const loot=bestLoot(m),open=u.rOpen===m.id,st=syncState(m);
+  // One tidy line each: face, name in class colour with their top title, level, professions with skill, best loot, last seen.
+  const row=m=>{const loot=bestLoot(m),open=u.rOpen===m.id,st=syncState(m),cc=CLASSES[m.cls]||"#bfaea9",lv=Math.max(1,Math.min(60,+m.level||1)),tt=titlesOf(m)[0];
     const toggle=()=>setUi({rOpen:open?null:m.id});
+    const av=charPic(m,"avatar"),ini=nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
+    const pr=Object.entries(m.profs||{}).filter(([p])=>PRIMARY.includes(p)).sort((x,y)=>+y[1]-+x[1]);
     const tr=h("tr",{class:"r-row"+(open?" open":""),onclick:e=>{if(e.target.closest("a,button,input"))return;toggle()}},
-      h("td",{"data-label":"Character"},h("div",{style:"min-width:0"},h("span",{class:"row",style:"gap:.375rem"},charLink(m),isMine(m)?h("span",{class:"tag gold"},"You"):null,guildTags(m)))),
-      h("td",{"data-label":"Class"},h("span",{class:"row",style:"gap:.5rem;flex-wrap:nowrap"},classIcon(m.cls),h("span",{},h("span",{},m.cls||"—"),m.race||m.spec?h("span",{class:"l2"},[m.race,m.spec].filter(Boolean).join(" · ")):null))),
-      h("td",{"data-label":"Role · Level"},h("span",{style:"white-space:nowrap"},roleText(m)+" · "+(m.level||1))),
-      (pr=>h("td",{"data-label":"Professions",class:pr?"":"none"},h("span",{class:"sub"},pr||"—")))(Object.keys(m.profs||{}).filter(p=>PRIMARY.includes(p)).join(", ")),
+      h("td",{"data-label":"Character"},h("div",{class:"r-who"},
+        h("span",{class:"r-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?h("img",{src:av,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
+        h("div",{style:"min-width:0"},
+          h("span",{class:"row",style:"gap:.375rem"},h("a",{class:"linkish r-name",style:`--cc:${cc}`,href:`#char/${m.isAlt?"alts":"members"}/${m.id}`},nameOf(m)),isMine(m)?h("span",{class:"tag gold"},"You"):null,guildTags(m)),
+          h("span",{class:"l2"},tt?[h("b",{class:"r-title"},tt.t)," · "]:null,[classLine(m)||"—",roleText(m)].filter(Boolean).join(" · "))))),
+      h("td",{"data-label":"Level"},h("span",{class:"r-lv"},h("b",{},String(m.level||1)),h("i",{"aria-hidden":"true"},h("s",{style:`width:${Math.round(lv/60*100)}%`})))),
+      h("td",{"data-label":"Professions",class:pr.length?"":"none"},pr.length?h("span",{class:"r-profs"},pr.map(([p,v])=>h("span",{class:"r-prof"},p,h("b",{},String(+v||0))))):h("span",{class:"ter"},"—")),
       h("td",{"data-label":"Best loot",class:loot?"":"none"},loot?qLink(loot):h("span",{class:"ter"},"—")),
-      h("td",{"data-label":"Last seen"},st.k==="fresh"||st.k==="quiet"?h("span",{class:"sync "+st.k,title:st.d},h("i",{"aria-hidden":"true"}),h("span",{class:"seen-l"},"In game "),ago(seenOf(m))):syncChip(m)),
+      // Not on the armory yet is a plain dash here; the reason is in the details and on their page.
+      h("td",{"data-label":"Last seen",class:st.k==="wait"||st.k==="none"?"none":""},st.k==="fresh"||st.k==="quiet"?h("span",{class:"sync "+st.k,title:st.d},h("i",{"aria-hidden":"true"}),h("span",{class:"seen-l"},"In game "),ago(seenOf(m)))
+        :st.k==="wait"||st.k==="none"?h("span",{class:"ter",title:st.t+". "+st.d},"—",h("span",{class:"visually-hidden"},st.t)):syncChip(m)),
       h("td",{},h("button",{class:"r-x",type:"button","aria-expanded":String(open),"aria-label":(open?"Hide details for ":"More about ")+nameOf(m),onclick:toggle})));
-    return open?[tr,h("tr",{class:"r-more"},h("td",{colspan:"7"},rosterDetail(m)))]:[tr]};
+    return open?[tr,h("tr",{class:"r-more"},h("td",{colspan:"6"},rosterDetail(m)))]:[tr]};
   let body;
   if(view==="class"){
     const groups=new Map();for(const m of list){const k=m.cls||"Unknown";(groups.get(k)||groups.set(k,[]).get(k)).push(m)}
-    body=[...groups].sort((a,b)=>a[0].localeCompare(b[0])).flatMap(([c,ms])=>[h("tr",{class:"r-group"},h("td",{colspan:"7"},h("span",{class:"r-group-in"},classIcon(c),c,h("span",{class:"small ter"},String(ms.length))))),...ms.flatMap(row)]);
+    body=[...groups].sort((a,b)=>a[0].localeCompare(b[0])).flatMap(([c,ms])=>[h("tr",{class:"r-group"},h("td",{colspan:"6"},h("span",{class:"r-group-in"},classIcon(c),c,h("span",{class:"small ter"},String(ms.length))))),...ms.flatMap(row)]);
   }else body=list.flatMap(row);
   const empty=h("div",{class:"card"},h("h3",{},total?"Nobody matches":"No one's on the roster yet"),
     h("p",{class:"sub"},total?"Try fewer filters, or a different search.":"The guild list from the armory fills this in within the hour."),total?h("div",{},h("button",{class:"btn sm",type:"button",onclick:clear},"Clear filters")):null);
   const results=!list.length?empty:view==="cards"?h("div",{class:"binder"},list.map(m=>h("div",{class:"binder-it"},flipCard(m),charLink(m))))
-    :h("div",{class:"tablebox"},h("table",{class:"roster-t"},h("thead",{},h("tr",{},[...["Character","Class","Role · Level","Professions","Best loot","Last seen"].map(t=>h("th",{scope:"col"},t)),h("th",{scope:"col"},h("span",{class:"visually-hidden"},"Details"))])),h("tbody",{},body)));
+    :h("div",{class:"tablebox"},h("table",{class:"roster-t"},h("thead",{},h("tr",{},[...["Character","Level","Professions","Best loot","Last seen"].map(t=>h("th",{scope:"col"},t)),h("th",{scope:"col"},h("span",{class:"visually-hidden"},"Details"))])),h("tbody",{},body)));
   const tools=h("div",{class:"r-tools-wrap",style:"display:flex;flex-direction:column;gap:.75rem"},rosterFilters(),count);
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
   const at=(el,n)=>{if(el&&el.style)el.style.setProperty("--o",n);return el};
-  return[head,h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(sinceCard(),0),at(claimBanner(),1),at(guildTotals(),2),at(spotlight(),7),at(tools,3),at(results,4),at(guildFeed(),8)),
-    h("div",{class:"rl-col"},at(inGameToday(),6),at(leaderboards(),9),at(guildMakeup(),10),at(aboutCard(),11),at(siteUse(),12),at(discordBox(),13)))]}
+  return[head,h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(sinceCard(),0),at(claimBanner(),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
+    h("div",{class:"rl-col"},at(spotlight(),7),at(inGameToday(),6),at(leaderboards(),9),at(guildMakeup(),10),at(aboutCard(),11),at(siteUse(),12),at(discordBox(),13)))]}
 
 // Their best equipped item: highest quality first (green and up).
 const bestLoot=m=>Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=2).sort((x,y)=>+y.q-+x.q)[0]||null;
@@ -1478,13 +1546,14 @@ function cardEl(m){
   const shine={"Gold foil":"rgb(255 240 190 / .55)","Silver":"rgb(255 255 255 / .38)","Bronze":"rgb(255 222 186 / .26)"}[tname];
   return h("div",{class:"lg-card"+(shine?" foil":""),style:`background:linear-gradient(135deg,${f[0]},${f[1]} 35%,${f[2]} 55%,${f[3]})`+(shine?`;--shine:${shine}`:""),role:"img","aria-label":`${d.name}, ${d.line}, ${tname} card. ${d.flav}`+(d.stamps.length?" Stamps: "+d.stamps.map(x=>x[1]).join(", ")+".":"")},
     h("div",{class:"lg-card-in"},
-      h("div",{class:"lg-hd"},h("b",{},d.name),d.hp?h("span",{class:"lg-hp"},h("small",{},"HP"),d.hp.toLocaleString("en-AU")):null),
       h("div",{class:"lg-art",style:artStyle},
         d.render?h("img",{class:"r",src:d.render,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(d.fg)})
           :h("span",{class:"lg-face",style:`border-color:${d.cc};color:${d.cc}`},d.avatar?h("img",{src:d.avatar,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(d.initials)}):d.initials),
         d.lv>=60?h("span",{class:"lg-holo","aria-hidden":"true"}):null,
-        d.stamps.length?h("span",{class:"lg-stamps"},d.stamps.map(([t,how,c])=>h("span",{class:"lg-stamp",style:`color:${c}`,title:how},t))):null),
-      h("div",{class:"lg-type",style:`background:${mix(d.cc,"#0f0a09",.72)};color:${mix(d.cc,"#ffffff",.25)}`},d.line),
+        d.stamps.length?h("span",{class:"lg-stamps"},d.stamps.map(([t,how,c])=>h("span",{class:"lg-stamp",style:`color:${c}`,title:how},t))):null,
+        h("span",{class:"lg-lv",style:`border-color:${edge};color:${edge}`,"aria-hidden":"true"},String(d.lv)),
+        h("div",{class:"lg-hd"},h("b",{},d.name),d.hp?h("span",{class:"lg-hp"},h("small",{},"HP"),d.hp.toLocaleString("en-AU")):null)),
+      h("div",{class:"lg-type",style:`background:${mix(d.cc,"#0f0a09",.72)};color:${mix(d.cc,"#ffffff",.25)}`},d.line.replace(/^Level \d+ · /,"")),
       h("div",{class:"lg-stats"},d.rows.map(x=>h("div",{class:"lg-st"},h("i",{style:`background:${x.col}`},x.icon),h("span",{},x.label),h("b",{},x.val),
         h("u",{},h("s",{style:`width:${x.pct.toFixed(0)}%;background:${edge}`}))))),
       titlesOf(m).length?h("p",{class:"lg-title",title:"Top of the guild: "+titlesOf(m).map(x=>x.t).join(", ")},titlesOf(m)[0].t+(titlesOf(m).length>1?" +"+(titlesOf(m).length-1):"")):h("p",{class:"lg-flav"},d.flav),
@@ -1584,24 +1653,30 @@ async function cardPng(m){
   // Frame and card
   let g=x.createLinearGradient(0,0,W,H);f.forEach((col,i)=>g.addColorStop([0,.35,.55,1][i],col));rr(0,0,W,H,16*K);x.fillStyle=g;x.fill();
   rr(6*K,6*K,W-12*K,H-12*K,11*K);x.save();x.clip();x.fillStyle="#0f0a09";x.fillRect(0,0,W,H);
-  // Header: name and HP
-  x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e2";x.font=disp.replace("SZ",19*K);x.fillText(d.name,18*K,30*K,(d.hp?150:220)*K);
-  if(d.hp){x.textAlign="right";x.fillStyle="#ff7a6b";x.font=body(700,15);x.fillText(d.hp.toLocaleString("en-AU"),W-18*K,30*K);const w=x.measureText(d.hp.toLocaleString("en-AU")).width;x.font=body(700,10);x.fillText("HP",W-18*K-w-3*K,30*K)}
-  // Arched picture
-  const ax=16*K,ay=38*K,aw=W-32*K,ah=150*K,arch=()=>{x.beginPath();x.moveTo(ax,ay+ah);x.lineTo(ax,ay+aw/2);x.arc(ax+aw/2,ay+aw/2,aw/2,Math.PI,0);x.lineTo(ax+aw,ay+ah-8*K);x.arcTo(ax+aw,ay+ah,ax+aw-8*K,ay+ah,8*K);x.lineTo(ax+8*K,ay+ah);x.arcTo(ax,ay+ah,ax,ay+ah-8*K,8*K);x.closePath()};
-  x.save();arch();x.clip();g=x.createLinearGradient(ax,ay,ax+aw,ay+ah);g.addColorStop(0,d.art[0]);g.addColorStop(.55,d.art[1]);g.addColorStop(1,d.art[2]);x.fillStyle=g;x.fillRect(ax,ay,aw,ah);
+  // Picture across the top
+  const ax=6*K,ay=6*K,aw=W-12*K,ah=192*K;
+  x.save();x.beginPath();x.rect(ax,ay,aw,ah);x.clip();g=x.createLinearGradient(ax,ay,ax+aw,ay+ah);g.addColorStop(0,d.art[0]);g.addColorStop(.55,d.art[1]);g.addColorStop(1,d.art[2]);x.fillStyle=g;x.fillRect(ax,ay,aw,ah);
   const bgIm=await loadImg(d.bg);if(bgIm){cover(bgIm,ax,ay,aw,ah);x.globalAlpha=.55;x.fillStyle=g;x.fillRect(ax,ay,aw,ah);x.globalAlpha=1}
   const ren=await loadImg(d.render)||await loadImg(d.fg);
   if(ren)cover(ren,ax,ay,aw,ah,1.35,.4);
   else{const fc=d.avatar?await loadImg(d.avatar):null;x.fillStyle="#0f0a09";x.strokeStyle=d.cc;x.lineWidth=3*K;x.beginPath();x.arc(ax+aw/2,ay+ah/2,38*K,0,7);x.fill();x.stroke();
     if(fc){x.save();x.beginPath();x.arc(ax+aw/2,ay+ah/2,36*K,0,7);x.clip();x.drawImage(fc,ax+aw/2-36*K,ay+ah/2-36*K,72*K,72*K);x.restore()}
     else{x.fillStyle=d.cc;x.font=disp.replace("SZ",28*K);x.textAlign="center";x.textBaseline="middle";x.fillText(d.initials,ax+aw/2,ay+ah/2+K)}}
-  x.restore();x.save();arch();x.strokeStyle="rgba(255,255,255,.14)";x.lineWidth=2*K;x.stroke();x.restore();
+  g=x.createLinearGradient(0,ay+ah-72*K,0,ay+ah);g.addColorStop(0,"rgba(15,10,9,0)");g.addColorStop(1,"#0f0a09");x.fillStyle=g;x.fillRect(ax,ay+ah-72*K,aw,72*K);
+  x.restore();
+  // Name and HP over the foot of the picture
+  x.save();x.shadowColor="rgba(0,0,0,.85)";x.shadowBlur=4*K;x.shadowOffsetY=K;
+  x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e2";x.font=disp.replace("SZ",19*K);x.fillText(d.name,18*K,ay+ah-9*K,(d.hp?150:220)*K);
+  if(d.hp){x.textAlign="right";x.fillStyle="#ff7a6b";x.font=body(700,15);x.fillText(d.hp.toLocaleString("en-AU"),W-18*K,ay+ah-9*K);const w=x.measureText(d.hp.toLocaleString("en-AU")).width;x.font=body(700,10);x.fillText("HP",W-18*K-w-3*K,ay+ah-9*K)}
+  x.restore();
+  // Level badge, top right
+  {const bx=ax+aw-26*K,by=ay+26*K;x.beginPath();x.arc(bx,by,17*K,0,7);x.fillStyle="rgba(15,10,9,.88)";x.fill();x.lineWidth=2*K;x.strokeStyle=edge;x.stroke();
+    x.fillStyle=edge;x.font=body(700,15);x.textAlign="center";x.textBaseline="middle";x.fillText(String(d.lv),bx,by+.5*K)}
   // Type line
-  d.stamps.forEach(([t,,c],i)=>{const cx=ax+19*K+i*30*K,cy=ay+ah-19*K;x.beginPath();x.arc(cx,cy,13*K,0,7);x.fillStyle="rgba(15,14,14,.85)";x.fill();x.lineWidth=1.5*K;x.strokeStyle=c;x.stroke();
+  d.stamps.forEach(([t,,c],i)=>{const cx=ax+21*K+i*30*K,cy=ay+21*K;x.beginPath();x.arc(cx,cy,13*K,0,7);x.fillStyle="rgba(15,14,14,.85)";x.fill();x.lineWidth=1.5*K;x.strokeStyle=c;x.stroke();
     x.fillStyle=c;x.font=body(700,8);x.textAlign="center";x.textBaseline="middle";x.fillText(t,cx,cy+.5*K)});
-  const ty=ay+ah+8*K;rr(16*K,ty,W-32*K,22*K,4*K);x.fillStyle=mix(d.cc,"#0f0a09",.72);x.fill();
-  x.fillStyle=mix(d.cc,"#ffffff",.25);x.font=body(700,11);x.textAlign="center";x.textBaseline="middle";x.fillText(d.line,W/2,ty+11*K,W-48*K);
+  const ty=ay+ah+6*K;rr(16*K,ty,W-32*K,22*K,4*K);x.fillStyle=mix(d.cc,"#0f0a09",.72);x.fill();
+  x.fillStyle=mix(d.cc,"#ffffff",.25);x.font=body(700,11);x.textAlign="center";x.textBaseline="middle";x.fillText(d.line.replace(/^Level \d+ · /,""),W/2,ty+11*K,W-48*K);
   // Stat lines with bars
   let y=ty+34*K;
   for(const r of d.rows){x.fillStyle=r.col;x.beginPath();x.arc(28*K,y+10*K,10*K,0,7);x.fill();x.fillStyle="#fff";x.font=body(700,9);x.textAlign="center";x.textBaseline="middle";x.fillText(r.icon,28*K,y+10*K);

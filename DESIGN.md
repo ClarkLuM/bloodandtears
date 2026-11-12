@@ -785,6 +785,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 - 12 Nov: privacy pass. Kept out of search engines (robots.txt, noindex meta and header), security headers, a footer privacy note, an officer-only old-data clean-up (`privacyCleanup`), officer-only manual adding (rules and UI), and an App Check hook switched on by `APP_CHECK_SITE_KEY`. Footer link class is `.foot-link` (`.linkish` already means name links).
 
+- 12 Nov: roster and card refresh. Roster rows are face, class-coloured name plus top title, level bar, profession pills, loot, last seen (6 columns; desktop column rules live in `@container (min-width:640.02px)`, phone grid is name/level, professions/seen, loot). Quick chips (`.q-chip`) drive `role`, `rLv`, `rSeen`, `rMine`. Totals are a slim strip; the spotlight moved to the side column. Card art is full-width (12rem) with `.lg-hd` over its foot, stamps top left, `.lg-lv` badge top right; `cardPng` mirrors it.
+
 ## Open Items
 
 **These parts are still defaults, guesses, or waiting for a person.**
