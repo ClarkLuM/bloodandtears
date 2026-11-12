@@ -265,3 +265,12 @@ Console jobs (not code): daily Firestore backups or point-in-time recovery, a bi
 - **Face beside the name.** The character's portrait sits in a class-coloured ring next to their name, class line and titles.
 - **Headline numbers in one strip.** Level, honourable kills, dungeons cleared, gear (or item level) and loot points, right under the name.
 - **Professions in two columns.** Primary and secondary sit side by side on wider screens, so the section is about half as tall.
+
+## Raids page, endgame and clean-out (12 Nov)
+
+- **Raids page** (`#raids`). Dungeons and Raids share one menu spot, with a switch at the top of each. The Raids page has the readiness card (level 60s by role against each raid's group), a table of every level 60 (role, gear, whether they're wearing the Onyxia amulet, last seen) and "On the Way" for levels 50 to 59. The armory only shows worn items, so the amulet reads "Not seen" when it's in someone's bags.
+- **Who still needs each dungeon.** The dungeon list has a "Need it" count: active characters high enough for the dungeon with no stamp yet, so level 60s count. An open dungeon lists the ones who have out-levelled it. Alliance-side dungeons are left out.
+- **Gear race.** Once half the guild is level 60, the "Level race" tab on the roster becomes "Gear race": loot points gained this week.
+- **Card picture matches the card.** "Copy for Discord" now draws the title ribbon when the character has a title, as the card on the site does.
+- **Rivals removed.** The Rival box on character pages is gone (it was only saved in each browser, so nothing is left behind).
+- The switched-off Discord posting code in `functions/index.js` was left alone on purpose: it's tied into the sync functions and does nothing while `DISCORD_ON` is false.
