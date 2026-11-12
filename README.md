@@ -112,6 +112,12 @@ A **Records** tab ranks everyone on what the armory already says: honourable kil
 - **Dungeons:** the dropdown is gone. **Dungeons by Level** splits them into four bands (13–24, 25–39, 40–51, 52–60, by each dungeon's starting level, plus All) and opens on the band for your level; the old "Suits my level" box is gone. Each band lists its dungeons in level order with how many current characters are the right level ("in range") and how many have been. Dungeons at your level are tagged. Click one to open it in place: who's in range by role, Suggest a group, Who's Been, and What Drops (now folded shut until you open it). Suits my level still filters the list.
 - **Professions:** the secondary professions are cards like the primary ones (the long table is gone). Who Has What is one even 3-column grid (gathering first, then crafting, each card labelled), one line per character with the skill number on the right and the bar underneath, so long names no longer push things onto a second line. The rank (Expert and so on) is in the tooltip. Each card shows the top 5 with an "N more" button.
 
+## Hall of Titles, more titles, shorter character pages (12 Nov)
+
+- **More titles:** Collector (most epics on), Speed Demon (most levels this week), Old Faithful (longest on the site) and a Top <class> title for the best-geared of each class with two or more characters, on top of the Records board and profession titles.
+- **Hall of Titles** (Records): every title grouped Guild / Professions / Classes, with its holder and number, or who's tied, or "Up for grabs", and who's next in line. Profession and class lists show the held ones until "Show every title".
+- **Character pages on phones:** the Dungeon Passport is three stamps across (smaller seals), the flavour text editor is folded under "Change the flavour text", and the card's stamps are explained in a short key instead of a long sentence.
+
 ## Raid readiness, Winter Veil, card of the week (12 Nov)
 
 - **Raid Readiness** (Dungeons page, replaces the old raid list): the raids opening on 9 December from Blizzard's overview, Barrow Deeps (10), Hyjal Summit (20) and Onyxia's Lair (40, with the Drakefire Amulet attunement note). For each: level 60s seen in the last two weeks by role against the group it wants (2/3/5, 3/5/12, 5/10/25), how many full groups that makes or what's missing; plus totals, who's at 55 to 59, and epics and blues on the 60s. Molten Core was dropped from the list (not part of the 9 December raids).

@@ -470,6 +470,7 @@ These are the parts the site is built from today. New work should reuse them bef
 - **Open dungeon:** names are plain inline links (class dot, name, 12px level), never boxed chips; two columns (In Range 3fr, Who's Been 2fr) that stack under 760px.
 - **Winter Veil strip:** crimson gradient with a dashed gingerbread bottom edge, centred text, 14 small CSS snowflakes (hidden under reduced motion), a 44px × button.
 - **Card of the Week:** card left, info right (kicker, name, why, title tags, a four-number strip between hairlines, profession bars in two columns); stacks under 760px. Title ribbon on cards: uppercase gingerbread text on a crimson gradient with a gingerbread border.
+- **Hall of Titles:** grouped lists under 11px uppercase kickers; each row is title (gold, with the crown mark, and what it's for underneath) · holder (class dot, name, number) · next in line (tertiary); your own title row gets the 12% accent wash. Two columns under 700px with "next" on its own line.
 - **App icon:** a red blood drop on near-black (`public/icon.svg`, plus 192 and 512 px PNGs for phones).
 <!-- /od:keep -->
 

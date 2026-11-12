@@ -393,7 +393,8 @@ button.pass-st{cursor:pointer}button.pass-st:hover .pass-seal{border-color:var(-
 .pass-seal{width:3.375rem;height:3.375rem;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:.8125rem;line-height:1;border:2px dashed var(--b-def);color:var(--ter);background:var(--sunken)}
 .pass-st.on .pass-seal{border:2px solid #e6bc77;color:#ffd77a;background:radial-gradient(circle at 40% 35%,#5a1f20,#2a1213 70%);box-shadow:0 0 0 3px rgb(230 188 119 / .12);transform:rotate(-8deg)}
 .pass-st b{font-weight:600;font-size:.75rem;line-height:1rem}.pass-st:not(.on) b{color:var(--sec);font-weight:400}
-.pass-st small{font-size:.6875rem;line-height:.875rem;color:var(--ter)}.pass-st.on small{color:var(--lvl)}
+.pass-st small{font-size:.6875rem;line-height:.875rem;color:var(--ter)}
+@media (max-width:600px){.pass-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:.625rem .25rem}.pass-seal{width:2.75rem;height:2.75rem;font-size:.6875rem}}.pass-st.on small{color:var(--lvl)}
 .lg-none{margin:0;font-size:.6875rem;line-height:.9375rem;color:#8b7b79}
 .lg-back .lg-ft{margin-top:auto}
 /* Ding: your own card turns to face you and the new level is pressed on as a seal. Stays until closed. */
@@ -643,6 +644,18 @@ nav.bottom{display:none}
 .cow-profs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem 1.25rem}
 @media (max-width:760px){.cow{grid-template-columns:minmax(0,1fr)}.cow-card{justify-self:center}.cow-nums,.cow-profs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .lg-title{margin:.25rem .625rem 0;padding:.1875rem .5rem;border-radius:4px;text-align:center;font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#f0c58c;background:linear-gradient(90deg,#4d0100,#a50d2c 50%,#4d0100);border:1px solid #d69d56}
+.hot{gap:.75rem}.hot-g{display:flex;flex-direction:column;gap:.25rem}.hot-g h3{margin:.25rem 0 0}
+.hot-list{list-style:none;margin:0;padding:0}
+.hot-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:.25rem 1rem;align-items:center;padding:.5rem .375rem;border-top:1px solid var(--sep);border-radius:6px}
+.hot-row.me{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.hot-t{display:flex;align-items:center;gap:.625rem;min-width:0;color:#f0c58c}:root[data-theme="light"] .hot-t{color:#7a5410}
+.hot-t>span:last-child{display:flex;flex-direction:column;min-width:0}.hot-t b{font-weight:700}.hot-t small{color:var(--ter);font-size:.75rem}
+.hot-h{display:flex;flex-direction:column;min-width:0}.hot-h small{color:var(--sec);font-size:.75rem;font-variant-numeric:tabular-nums}
+.hot-who{display:flex;align-items:center;gap:.5rem;min-width:0}.hot-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hot-n{min-width:0}
+@media (max-width:700px){.hot-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.hot-n{grid-column:1/-1}.hot-n:empty{display:none}}
+.flav-edit{width:100%;max-width:22.5rem}.flav-edit>summary{cursor:pointer;color:var(--sec);font-size:.875rem;min-height:2.75rem;display:flex;align-items:center;justify-content:center}
+.stamp-key{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem .875rem;font-size:.75rem;color:var(--ter);max-width:22.5rem}.stamp-key li{display:inline-flex;align-items:center;gap:.375rem}.stamp-key b{font-weight:700;background:#1a0b08;border-radius:999px;padding:0 .375rem;line-height:1.125rem}
 .rank-l{display:inline-flex;align-items:center;gap:.375rem;margin-top:.25rem;font-size:.8125rem;color:var(--sec);text-decoration:none}
 .rank-l .medal{width:1.125rem;height:1.125rem;font-size:.625rem}
 .rank-l:hover span{text-decoration:underline}.rank-l.spoon{color:var(--ter)}
@@ -1502,8 +1515,8 @@ function stampsOf(m){const out=[],a=m.armory||{};
   const sp=spoonsOf(m);if(sp.length)out.push(["Spoon","Wooden spoon in "+sp.join(", "),"#b98a5a"]);
   return out}
 // Boards where this character is last (three or more on the board).
-let _spoons=null,_spoonsAt=0;
-function spoonsOf(m){if(!_spoons||Date.now()-_spoonsAt>2000){_spoons=new Map();_spoonsAt=Date.now();
+let _spoons=null,_spoonsAt=0,_spoonsFor=null;
+function spoonsOf(m){if(!_spoons||_spoonsFor!==S.members||Date.now()-_spoonsAt>1000){_spoons=new Map();_spoonsAt=Date.now();_spoonsFor=S.members;
     for(const[k,title,get]of[...REC_BOARDS,...[...PRIMARY,...SECONDARY].map(profBoard)]){const r=ranked(get);if(r.length<3)continue;const last=r[r.length-1];
       if(last[2]===1||r.filter(x=>x[2]===last[2]).length>1)continue;(_spoons.get(last[0].id)||_spoons.set(last[0].id,[]).get(last[0].id)).push(title.toLowerCase())}}
   return _spoons.get(m.id)||[]}
@@ -1605,11 +1618,15 @@ function cardSection(m){
       write(updateDoc(charRef(m),{flavour:v||deleteField(),updatedAt:nowIso()}));
       toast(v?"Flavour text saved":"Back to the automatic line",()=>write(updateDoc(charRef(m),{flavour:before||deleteField(),updatedAt:nowIso()}),"Put back"))};
     inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();save()}});
-    flav=h("div",{style:"display:flex;flex-direction:column;gap:.375rem;width:100%;max-width:22.5rem"},
-      h("label",{class:"f tiny",for:"flav-in"},"Flavour text, up to 40 characters. Leave it empty for an automatic line."),
-      h("div",{class:"row",style:"flex-wrap:nowrap"},inp,h("button",{class:"btn sm",type:"button",onclick:save},"Save")))}
+    // Folded away until wanted, so the card isn't followed by a form every visit.
+    flav=h("details",{class:"flav-edit",open:!!S.ui.flavOpen,ontoggle:e=>{if(e.target.open!==!!S.ui.flavOpen)setUi({flavOpen:e.target.open})}},
+      h("summary",{},"Change the flavour text"),
+      h("div",{style:"display:flex;flex-direction:column;gap:.375rem;padding-top:.5rem"},
+        h("label",{class:"f tiny",for:"flav-in"},"Up to 40 characters. Leave it empty for an automatic line."),
+        h("div",{class:"row",style:"flex-wrap:nowrap"},inp,h("button",{class:"btn sm",type:"button",onclick:save},"Save"))))}
   return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%"},h("h2",{id:"card-h"},"Card"),h("span",{class:"small ter"},tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
-    flipCard(m),h("p",{class:"small ter",style:"margin:0;text-align:center"},"Tap the card to see the back."+(d.stamps.length?" Stamps: "+d.stamps.map(x=>x[0]+" ("+x[1]+")").join(", ")+".":"")),h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn",onclick:()=>copyCard(m)},"Copy for Discord"),h("a",{class:"btn ghost",href:"#duel/"+m.id},"Duel this card")),flav)}
+    flipCard(m),h("p",{class:"small ter",style:"margin:0;text-align:center"},"Tap the card to see the back."),
+    d.stamps.length?h("ul",{class:"stamp-key"},d.stamps.map(([t,how,c])=>h("li",{},h("b",{style:`color:${c}`},t),h("span",{},how)))):null,h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn",onclick:()=>copyCard(m)},"Copy for Discord"),h("a",{class:"btn ghost",href:"#duel/"+m.id},"Duel this card")),flav)}
 
 // Journey lines on a character page: "Equipped X" links the item to Wowhead in its quality colour (with the tooltip).
 // Older lines without the item saved are matched to current gear by name.
@@ -2093,12 +2110,31 @@ function profTable(list){
           h("button",{type:"button",class:"rp-p","aria-expanded":String(open),onclick:()=>recToggle(k)},h("b",{},p),h("span",{class:"small ter"},r.length+(r.length===1?" character":" characters"))),
           cell(r[0]),cell(r[1]),cell(r[2]),cell(r.length>3?r[r.length-1]:null,null,true)),
         open?h("ol",{class:"rec-list rp-all"},r.map((x,i)=>i===r.length-1&&r.length>3?[h("li",{class:"rec-gap","aria-hidden":"true"},"Wooden spoon"),recLine(x,v=>v+" / 300","spoon")]:recLine(x,v=>v+" / 300"))):null)}))}
+// Hall of Titles: every title, who holds it and who's next, grouped. "Up for grabs" until two people are on the board.
+function hallOfTitles(){
+  const l=titleList(),open=S.ui.hotAll,groups=["Guild","Professions","Classes"];
+  const row=x=>{const who=m=>h("span",{class:"hot-who"},classIcon(m.cls),charLink(m));
+    return h("li",{class:"hot-row"+(x.holder&&isMine(x.holder[0])?" me":"")},
+      h("span",{class:"hot-t"},h("span",{class:"title-ic","aria-hidden":"true"}),h("span",{},h("b",{},x.t),h("small",{},x.how))),
+      x.holder?h("span",{class:"hot-h"},who(x.holder[0]),h("small",{},x.fmt(x.holder[1]))):
+        x.tied?h("span",{class:"hot-h"},h("span",{class:"small ter"},"Tied: "),x.tied.slice(0,3).map((r,i)=>[i?", ":"",charLink(r[0])])):
+        h("span",{class:"hot-h small ter"},h("span",{},x.rows.length===1?["Only ",charLink(x.rows[0][0])," so far"]:"Up for grabs")),
+      h("span",{class:"hot-n small ter"},x.next?["Next: ",charLink(x.next[0])," · ",x.fmt(x.next[1])]:""))};
+  const lists=groups.map(g=>[g,l.filter(x=>x.group===g)]).filter(x=>x[1].length);
+  const held=l.filter(x=>x.holder).length;
+  return h("section",{class:"card hot","aria-labelledby":"hot-h"},
+    h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"hot-h"},"Hall of Titles"),h("span",{class:"small ter"},held+" of "+l.length+" held")),
+    h("p",{class:"small ter",style:"margin:0"},"Be alone at the top of a board to hold its title. It moves the moment someone overtakes you."),
+    lists.map(([g,xs])=>{const shown=open||g==="Guild"?xs:xs.filter(x=>x.holder).slice(0,6);
+      return h("div",{class:"hot-g"},h("h3",{class:"pf-kind"},g),h("ul",{class:"hot-list"},shown.map(row)))}),
+    h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(!!open),onclick:()=>setUi({hotAll:!open},true)},open?"Show fewer":"Show every title"))}
 function viewRecords(){
   const u=S.ui,kind=u.recKind||"All";
   const profs=[...PRIMARY,...SECONDARY].filter(p=>kind==="All"||(kind==="Primary"?PRIMARY:SECONDARY).includes(p)).map(profBoard);
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs."))),
     weekCard(),
     h("div",{class:"rec-grid rec-main"},REC_BOARDS.map(b=>boardCard(b))),
+    hallOfTitles(),
     h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"prof-h"},"Professions"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],kind,k=>setUi({recKind:k},true))),
     profTable(profs),
     h("p",{class:"small ter"},"Tap a profession to see everyone. Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
@@ -2152,12 +2188,33 @@ function weekCard(){
 const TITLES={hk:"Most Wanted",dungeons:"Dungeon Crawler",gear:"Best Dressed",Mining:"Master Miner",Herbalism:"Green Thumb",Skinning:"Master Skinner",
   Alchemy:"Master Alchemist",Blacksmithing:"Master Smith",Enchanting:"Master Enchanter",Engineering:"Chief Engineer",Leatherworking:"Master Leatherworker",
   Tailoring:"Master Tailor",Cooking:"Head Chef","First Aid":"Field Medic",Fishing:"Master Angler"};
-let _titles=null,_titlesAt=0;
-function titleMap(){if(_titles&&Date.now()-_titlesAt<2000)return _titles;const mp=new Map();
-  const boards=[...REC_BOARDS.filter(b=>TITLES[b[0]]),...[...PRIMARY,...SECONDARY].map(profBoard)];
-  for(const[k,title,get]of boards){const r=ranked(get);if(r.length<2||r[1][2]===1)continue;const t=TITLES[k];if(!t)continue;
-    (mp.get(r[0][0].id)||mp.set(r[0][0].id,[]).get(r[0][0].id)).push({t,board:title,v:r[0][1]})}
-  _titles=mp;_titlesAt=Date.now();return mp}
+// Every title: [key, title, what it's for, getter, how to show the number, group]. Board titles come from Records;
+// the rest are extra. Class titles exist only for classes with two or more characters.
+const epicsOf=m=>Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=4).length;
+const daysOn=m=>{const t=Date.parse(m.createdAt||"");return t?Math.max(1,Math.floor((Date.now()-t)/864e5)+1):null};
+function titleSpecs(){
+  const pl=(n,w)=>n.toLocaleString("en-AU")+" "+w+(n===1?"":"s");
+  const out=[["hk","Most Wanted","Most honourable kills",REC_BOARDS[0][2],v=>pl(v,"kill"),"Guild"],
+    ["dungeons","Dungeon Crawler","Most dungeons stamped",REC_BOARDS[2][2],v=>v+" of "+DUNGEONS.length,"Guild"],
+    ["gear","Best Dressed","Most loot points",REC_BOARDS[3][2],v=>pl(v,"loot point"),"Guild"],
+    ["epics","Collector","Most epics on",m=>epicsOf(m)||null,v=>pl(v,"epic"),"Guild"],
+    ["speed","Speed Demon","Most levels gained this week",m=>weekGained(m)||null,v=>"+"+pl(v,"level"),"Guild"],
+    ["oldest","Old Faithful","Longest on the site",daysOn,v=>pl(v,"day"),"Guild"],
+    ...[...PRIMARY,...SECONDARY].map(p=>[p,TITLES[p],"Highest "+p,profBoard(p)[2],v=>v+" / 300","Professions"])];
+  for(const c of Object.keys(CLASSES).filter(c=>recPool().filter(m=>m.cls===c).length>=2).sort())
+    out.push(["cls:"+c,"Top "+c,"Best-geared "+c,m=>m.cls===c?lootPts(m)||null:null,v=>pl(v,"loot point"),"Classes"]);
+  return out}
+// Each title with its holder (alone at the top, two or more on the board), or who's tied, and who's next.
+// Worked out once per redraw: kept while the member list is the same object and for a second at most.
+let _tl=null,_tlAt=0,_tlFor=null;
+function titleList(){if(_tl&&_tlFor===S.members&&Date.now()-_tlAt<1000)return _tl;_tlFor=S.members;
+  _tl=titleSpecs().map(([k,t,how,get,fmt,group])=>{const rows=ranked(get),tied=rows.length>1&&rows[1][2]===1;
+    const holder=rows.length>=2&&!tied?rows[0]:null,next=holder?rows.find(r=>r[2]>1):null;
+    return{k,t,how,fmt,group,rows,holder,tied:tied?rows.filter(r=>r[2]===1):null,next}});
+  _tlAt=Date.now();return _tl}
+function titleMap(){const mp=new Map();
+  for(const x of titleList())if(x.holder)(mp.get(x.holder[0].id)||mp.set(x.holder[0].id,[]).get(x.holder[0].id)).push({t:x.t,board:x.how.replace(/^Most |^Highest |^Longest /,""),v:x.holder[1]});
+  return mp}
 const titlesOf=m=>titleMap().get(m.id)||[];
 // Up to three titles by name; the rest fold into "+N", which lists them on hover.
 const titleTags=m=>{const l=titlesOf(m);if(!l.length)return null;const tag=x=>h("a",{class:"title-tag",href:"#records",title:"Top of the guild in "+x.board.toLowerCase()},h("span",{class:"title-ic","aria-hidden":"true"}),x.t);
