@@ -881,20 +881,21 @@ a.r-name:hover{color:var(--accent-text)}
 .gg-form{display:flex;flex-direction:column;gap:.375rem}
 .gg-end{display:flex;flex-direction:column;align-items:center;gap:1rem}
 /* An opened roster row: the card beside the details */
-.r-open{display:flex;gap:1.5rem;align-items:flex-start}
-.r-open .r-detail{flex:1;min-width:0;grid-template-columns:repeat(2,minmax(0,1fr))}
+.r-open{display:flex;gap:2rem;align-items:center;padding:.5rem 0}
+.r-open .r-detail{flex:1;min-width:0;grid-template-columns:repeat(2,minmax(0,1fr));align-self:flex-start}
 .r-card{flex:none;order:2}
-.r-card .lg-flip{zoom:.72}
-@media (max-width:760px){.r-open{flex-direction:column;align-items:stretch;gap:1rem}.r-card{align-self:center}.r-open .r-detail{grid-template-columns:minmax(0,1fr)}}
+.r-card .lg-flip{zoom:.9}
+@media (max-width:760px){.r-open{flex-direction:column;align-items:stretch;gap:1rem}.r-card{align-self:center}.r-card .lg-flip{zoom:1}.r-open .r-detail{grid-template-columns:minmax(0,1fr);align-self:stretch}}
 .gg{max-width:none}
 .gg-bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
-.gg-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:.75rem .5rem;justify-items:center}
-.gg-card{padding:0;border:0;background:none;border-radius:10px;cursor:pointer;line-height:0}
-.gg-card .lg-card{zoom:.5;pointer-events:none}
-.gg-card:hover .lg-card{box-shadow:0 0 0 4px var(--sep)}
-.gg-card[aria-pressed="true"] .lg-card{box-shadow:0 0 0 6px var(--accent-text)}
+.gg-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(9rem,1fr));gap:.625rem}
+.gg-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.375rem;width:100%;min-height:5.5rem;padding:.625rem .5rem;border-radius:10px;border:0;cursor:pointer;font:inherit;font-weight:600;font-size:.8125rem;line-height:1.125rem;text-align:center;color:#f3e3c8;background:linear-gradient(135deg,#a50d2c,#4d0100 60%,#2a0606);box-shadow:inset 0 0 0 2px #e0a862,inset 0 0 0 4px #2f9a46}
+.gg-card img{width:1.75rem;height:1.75rem}
+.gg-card span{overflow-wrap:anywhere}
+.gg-card:hover{filter:brightness(1.15)}
+.gg-card[aria-pressed="true"]{box-shadow:inset 0 0 0 2px #e0a862,inset 0 0 0 4px #2f9a46,0 0 0 3px var(--accent-text);transform:translateY(-2px)}
 .gg-card:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
-@media (max-width:420px){.gg-pick{grid-template-columns:repeat(3,minmax(0,1fr))}.gg-card .lg-card{zoom:.4}}
+@media (max-width:420px){.gg-pick{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -1581,10 +1582,11 @@ function ggState(){const day=perthDay();
   return GG}
 const ggSave=()=>{try{localStorage.setItem("lg-guess",JSON.stringify(GG))}catch(e){}};
 function ggClues(t){const lv=+t.level||1,pr=Object.entries(t.profs||{}).filter(([p])=>PRIMARY.includes(p)).map(([p])=>p),hk=+(t.armory||{}).hk||0,dn=passportOf(t).length,nm=nameOf(t);
-  return[["Role and level",(t.role||"DPS")+", "+(lv>=60?"level 60":"level "+Math.floor(lv/10)*10+" to "+(Math.floor(lv/10)*10+9))],
-    ["Race",t.race||"Not known yet"],
+  // Vaguest first: what they've done, then what they do, and only late on what they are.
+  return[["Deeds",hk.toLocaleString("en-AU")+(hk===1?" honourable kill":" honourable kills")+", "+dn+(dn===1?" dungeon stamp":" dungeon stamps")],
     ["Professions",pr.length?pr.join(" and "):"None yet"],
-    ["Deeds",hk.toLocaleString("en-AU")+(hk===1?" honourable kill":" honourable kills")+", "+dn+(dn===1?" dungeon stamp":" dungeon stamps")],
+    ["Role and level",(t.role||"DPS")+", "+(lv>=60?"level 60":"level "+Math.floor(lv/10)*10+" to "+(Math.floor(lv/10)*10+9))],
+    ["Race",t.race||"Not known yet"],
     ["Class",t.cls+(t.spec?" ("+t.spec+")":"")],
     ["Name","Starts with "+nm[0].toUpperCase()+", "+nm.replace(/\s+/g,"").length+" letters"]]}
 function ggGuess(id){const st=ggState();if(st.done||!id||st.guesses.includes(id))return;st.guesses.push(id);
@@ -1612,15 +1614,16 @@ function viewGuess(){
   const play=st.done?h("div",{class:"gg-end",role:"status"},
       h("div",{class:"duel-result"},h("b",{},st.won?"Got it in "+st.guesses.length+(st.guesses.length===1?" guess":" guesses"):"Not this time"),h("span",{class:"ter"},"It was "+nameOf(t)+". A new guildie at midnight, Perth time.")),
       flipCard(t),h("div",{class:"row",style:"justify-content:center"},h("a",{class:"btn",href:`#char/${t.isAlt?"alts":"members"}/${t.id}`},"Open their page"),h("button",{class:"btn primary",type:"button",onclick:copy},"Copy result")))
-    :(()=>{const q=String(S.ui.ggq||"").trim().toLowerCase().split(/\s+/).filter(Boolean),hay=m=>[nameOf(m),m.cls,m.race,m.spec,roleText(m)].join(" ").toLowerCase();
+    :(()=>{const q=String(S.ui.ggq||"").trim().toLowerCase().split(/\s+/).filter(Boolean),hay=m=>nameOf(m).toLowerCase();
       const list=opts.filter(m=>q.every(w=>hay(m).includes(w))),sel=ggSel&&opts.find(m=>m.id===ggSel);
       // Tap a card to choose it, then confirm, so a slip of the finger doesn't cost a guess.
       return h("div",{class:"gg-form"},
-        h("div",{class:"gg-bar"},h("div",{class:"r-search",style:"flex:1 1 12rem"},h("input",{id:"gg-q",type:"search",placeholder:"Search the cards","aria-label":"Search the cards by name, class, race or role",value:S.ui.ggq||"",autocomplete:"off",oninput:e=>{S.ui.ggq=e.target.value;schedule()}})),
+        h("div",{class:"gg-bar"},h("div",{class:"r-search",style:"flex:1 1 12rem"},h("input",{id:"gg-q",type:"search",placeholder:"Search by name","aria-label":"Search the cards by name",value:S.ui.ggq||"",autocomplete:"off",oninput:e=>{S.ui.ggq=e.target.value;schedule()}})),
           h("button",{class:"btn primary",type:"button",id:"gg-go",disabled:!sel,onclick:()=>{const id=ggSel;ggSel=null;ggGuess(id)}},sel?"Guess "+nameOf(sel):"Pick a card")),
-        h("p",{class:"small ter",style:"margin:0"},"Who is it? Tap their card. "+left+(left===1?" guess":" guesses")+" left."),
-        list.length?h("div",{class:"gg-pick",role:"group","aria-label":"Cards to choose from"},list.map(m=>{const c=cardEl(m);c.removeAttribute("role");c.removeAttribute("aria-label");c.setAttribute("aria-hidden","true");
-          return h("button",{class:"gg-card",type:"button","aria-pressed":String(ggSel===m.id),"aria-label":nameOf(m)+", level "+(m.level||1)+" "+(m.cls||""),onclick:()=>{ggSel=ggSel===m.id?null:m.id;render()}},c)}))
+        h("p",{class:"small ter",style:"margin:0"},"Who is it? The cards are face down, so go by the clues. Tap one, then guess. "+left+(left===1?" guess":" guesses")+" left."),
+        list.length?h("div",{class:"gg-pick",role:"group","aria-label":"Cards to choose from"},list.map(m=>
+          // Face-down cards with only a name on them: the card itself would give away class, race and level.
+          h("button",{class:"gg-card",type:"button","aria-pressed":String(ggSel===m.id),onclick:()=>{ggSel=ggSel===m.id?null:m.id;render()}},h("img",{src:"logo.svg",alt:"",width:"28",height:"28"}),h("span",{},nameOf(m)))))
           :h("p",{class:"empty"},"No cards match that search."))})();
   return[head,h("section",{class:"card gg","aria-labelledby":"gg-h"},h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"gg-h"},"Today's Guildie"),h("span",{class:"small ter"},dayLabel)),
     clueList,rows.length?h("ol",{class:"gg-rows","aria-label":"Your guesses"},rows):null,play,stats)]}
