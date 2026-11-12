@@ -822,6 +822,44 @@ a.r-name:hover{color:var(--accent-text)}
 .lg-tab{line-height:1.625rem;font-size:.6875rem}
 .lg-lv.lg-lv-b{position:static;flex:none;width:1.875rem;height:1.875rem;font-size:.8125rem;align-self:center}
 .duel-blank{margin:0}
+/* Signature move on the card, crits, duel buttons and Top Trumps */
+.lg-art.has-move .lg-hd{bottom:.8125rem}
+.lg-move{position:absolute;left:.75rem;right:.75rem;bottom:.25rem;z-index:1;font-size:.625rem;line-height:.875rem;font-weight:600;color:#e9b877;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgb(0 0 0 / .9)}
+.duel-why.crit{font-weight:700}
+.tt{gap:1.25rem;align-items:center}
+.tt-score{display:flex;align-items:center;justify-content:center;gap:1.5rem;width:100%}
+.tt-side{display:flex;flex-direction:column;align-items:center;min-width:4rem}
+.tt-side small{font-size:.75rem;color:var(--ter);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.tt-side b{font-size:2rem;line-height:2.25rem;font-variant-numeric:tabular-nums}
+.tt-round{display:flex;flex-direction:column;align-items:center;gap:.375rem;font-size:.875rem;color:var(--sec);font-weight:600}
+.tt-pips{display:flex;gap:.375rem}
+.tt-pips i{width:.5rem;height:.5rem;border-radius:50%;background:var(--sep)}
+.tt-pips i.on{background:var(--accent-text)}.tt-pips i.now{background:var(--accent)}
+.tt-arena{display:flex;align-items:center;justify-content:center;gap:1.25rem;flex-wrap:nowrap}
+.tt-slot{display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.tt-slot.won .lg-card{box-shadow:0 0 0 3px var(--accent-text),0 8px 24px rgb(0 0 0 / .4)}
+.tt-vs{font:700 1.125rem/1 var(--display);color:var(--ter);text-transform:uppercase;letter-spacing:.1em}
+.tt-down{background:linear-gradient(135deg,#a50d2c,#4d0100 60%,#2a0606);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;box-shadow:inset 0 0 0 6px #e0a862,inset 0 0 0 8px #2f9a46}
+.tt-down img{width:6rem;height:6rem;opacity:.95}
+.tt-down span{font:700 2.5rem/1 var(--display);color:#e0a862}
+.tt-panel{display:flex;flex-direction:column;align-items:center;gap:.875rem;width:100%;max-width:40rem}
+.tt-call{margin:0;text-align:center;color:var(--sec)}
+.tt-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,11.5rem),1fr));gap:.5rem;width:100%}
+.tt-stat{display:flex;align-items:center;justify-content:space-between;gap:.75rem;min-height:3rem;padding:.375rem .875rem;border-radius:8px;border:1px solid var(--sep);background:var(--raised);color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.tt-stat span{display:flex;flex-direction:column;font-weight:600;font-size:.875rem;line-height:1.125rem;min-width:0}
+.tt-stat small{font-weight:600;font-size:.6875rem;color:var(--accent-text)}
+.tt-stat b{font-variant-numeric:tabular-nums;font-size:1rem;white-space:nowrap}
+.tt-stat:hover:not(:disabled){border-color:var(--accent);background:var(--subtle)}
+.tt-stat:disabled{opacity:.45;cursor:not-allowed}
+.tt-stat:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.tt-vals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;width:100%;max-width:26rem}
+.tt-val{display:flex;flex-direction:column;align-items:center;gap:.125rem;padding:.625rem;border-radius:8px;border:1px solid var(--sep);background:var(--raised);text-align:center}
+.tt-val small{font-size:.75rem;color:var(--ter);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.tt-val b{font-size:1.5rem;line-height:1.75rem;font-variant-numeric:tabular-nums;color:var(--sec)}
+.tt-val.win{border-color:var(--accent-text)}.tt-val.win b{color:var(--text)}
+.tt-val .duel-why{font-size:.75rem;line-height:1rem;color:var(--gold)}
+@media (max-width:640px){.tt-arena{gap:.5rem}.tt-arena .lg-card{zoom:.62}.tt-vs{font-size:.875rem}}
+@media (max-width:359px){.tt-arena .lg-card{zoom:.52}}
 </style>
 </head>
 <body>
@@ -1232,7 +1270,7 @@ function viewCards(){
     :SETS.map(([t,range])=>{const ms=list.filter(m=>tierOf(+m.level||1)[1]===t);
       return ms.length?h("section",{class:"binder-set","aria-label":t+" cards"},h("div",{class:"binder-h"},h("h2",{},t),h("span",{class:"small ter"},range+" · "+ms.length+(ms.length===1?" card":" cards"))),binder(ms)):null});
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Cards"),h("p",{class:"sub"},"Everyone's trading card. Tap one to flip it, or put a few head to head.")),
-      h("div",{class:"row"},h("a",{class:"btn primary",href:"#duel"},"Card duels"),h("button",{class:"btn",type:"button",onclick:random},"Random duel"))),
+      h("div",{class:"row"},h("a",{class:"btn primary",href:"#trumps"},"Play Top Trumps"),h("a",{class:"btn",href:"#duel"},"Card duels"),h("button",{class:"btn",type:"button",onclick:random},"Random duel"))),
     cardOfWeek(),tools,
     h("div",{class:"r-count",role:"status"},list.length===S.members.length?`${list.length} cards`:`Showing ${list.length} of ${S.members.length} cards`),
     body]}
@@ -1314,7 +1352,28 @@ const DUEL_ROUNDS=[
 // Who counters whom in a duel (Horde classes). Each win is worth +1 in the Class matchup round.
 const COUNTERS={Rogue:{Mage:"ambush",Priest:"ambush"},Mage:{Warrior:"kite"},Warrior:{Rogue:"outlast"},Warlock:{Rogue:"fear",Warrior:"fear"},
   Hunter:{Warrior:"kite",Druid:"kite"},Priest:{Warlock:"dispel"},Shaman:{Hunter:"purge"},Druid:{Shaman:"outlast"}};
-const HEAL_SPECS=/^(Holy|Discipline|Restoration)$/,TANK_SPECS=/^(Protection|Feral Combat)$/,BURST_SPECS=/^(Arms|Combat|Fire|Destruction|Subtlety|Marksmanship)$/;
+// Signature moves: every spec has one, and it lifts one duel stat. Shown on the card, used in duels and Top Trumps.
+const AP="Attack or spell power";
+const MOVES={"Warrior|Arms":["Mortal Strike",AP,1.1],"Warrior|Fury":["Bloodthirst","Crit",1.15],"Warrior|Protection":["Shield Wall","Armour",1.15],
+  "Rogue|Assassination":["Cold Blood","Crit",1.15],"Rogue|Combat":["Blade Flurry",AP,1.1],"Rogue|Subtlety":["Vanish","Dodge",1.15],
+  "Hunter|Beast Mastery":["Bestial Wrath",AP,1.1],"Hunter|Marksmanship":["Aimed Shot","Crit",1.15],"Hunter|Survival":["Deterrence","Dodge",1.15],
+  "Mage|Arcane":["Arcane Power",AP,1.1],"Mage|Fire":["Combustion","Crit",1.15],"Mage|Frost":["Ice Barrier","Health",1.15],
+  "Warlock|Affliction":["Siphon Life","Health",1.15],"Warlock|Demonology":["Soul Link","Armour",1.15],"Warlock|Destruction":["Conflagrate",AP,1.1],
+  "Priest|Discipline":["Power Infusion",AP,1.1],"Priest|Holy":["Spirit of Redemption","Health",1.15],"Priest|Shadow":["Shadowform","Armour",1.15],
+  "Shaman|Elemental":["Elemental Mastery","Crit",1.15],"Shaman|Enhancement":["Stormstrike",AP,1.1],"Shaman|Restoration":["Nature's Swiftness","Health",1.15],
+  "Druid|Balance":["Moonfury",AP,1.1],"Druid|Feral Combat":["Dire Bear Form","Armour",1.15],"Druid|Restoration":["Swiftmend","Health",1.15]};
+const MOVE_WORD={[AP]:"attack",Crit:"crit",Armour:"armour",Dodge:"dodge",Health:"health"};
+const moveOf=m=>{const v=MOVES[(m.cls||"")+"|"+(m.spec||"")];if(!v)return null;const up="+"+Math.round((v[2]-1)*100)+"%";return{name:v[0],round:v[1],k:v[2],up,text:v[0]+" · "+MOVE_WORD[v[1]]+" "+up}};
+// Critical hits: luck in the fighting stats. The better a card's crit, the likelier (8% to 25%), and a crit is worth +25%.
+const CRIT_ROUNDS=new Set(["Health","Armour",AP,"Crit","Dodge"]);
+const critChance=m=>Math.min(.25,.08+Math.max(statOf(m,"critical-strike"),statOf(m,"spell-crit"))/200);
+const seedRoll=str=>{let a=2166136261;for(let i=0;i<str.length;i++){a^=str.charCodeAt(i);a=Math.imul(a,16777619)}a+=0x6D2B79F5;let t=Math.imul(a^a>>>15,1|a);t^=t+Math.imul(t^t>>>7,61|t);return((t^t>>>14)>>>0)/4294967296};
+// One card's number in one round, with its signature move and a crit roll (0 to 1) applied.
+function duelVal(m,name,get,roll){const mv=moveOf(m),base=get(m)||0,why=[];let k=1,crit=false;
+  if(base&&mv&&mv.round===name){k*=mv.k;why.push(mv.name+" "+mv.up)}
+  if(base&&CRIT_ROUNDS.has(name)&&roll<critChance(m)){k*=1.25;crit=true;why.push("Critical hit! +25%")}
+  return{v:Math.round(base*k*100)/100,why:why.join(" · "),crit}}
+const perthDay=()=>new Date(Date.now()+8*36e5).toISOString().slice(0,10);
 const clsPlural=c=>c?c+"s":"";
 let duelSeen="";
 function viewDuel(ids){
@@ -1332,19 +1391,17 @@ function viewDuel(ids){
   if(picked.length<2)return[head,pick,h("p",{class:"empty"},picked.length?"Pick at least one more.":"Pick two or more, or try a random duel.")];
   // Score every round
   const pts=new Map(picked.map(m=>[m.id,0]));
-  // Class matchup: +1 for each opponent your class counters. Spec bonuses nudge the stat rounds a little.
-  const twist=(name,m)=>{const sp=m.spec||"";
-    if(name==="Health"&&HEAL_SPECS.test(sp))return[1.15,"Healer: staying power +15%"];
-    if(name==="Armour"&&TANK_SPECS.test(sp))return[1.15,"Tank: +15%"];
-    if(name==="Attack or spell power"&&BURST_SPECS.test(sp))return[1.1,sp+": burst +10%"];return[1,""]};
+  // Class matchup: +1 for each opponent your class counters. Signature moves and critical hits nudge the stat rounds.
+  // The dice are set by the day and the fighters, so a shared link shows everyone the same duel, and tomorrow it can go differently.
+  const dkey=perthDay()+"|"+picked.map(m=>m.id).sort().join(",");
   const mu=picked.map(m=>{const beats=picked.filter(o=>o!==m&&(COUNTERS[m.cls]||{})[o.cls]);
     return[m,beats.length,beats.map(o=>clsPlural(m.cls)+" "+COUNTERS[m.cls][o.cls]+" "+clsPlural(o.cls)).filter((x,i,a)=>a.indexOf(x)===i).join(" · ")]});
   const muRound=(()=>{const top=Math.max(...mu.map(v=>v[1])),winners=top>0?mu.filter(v=>v[1]===top).map(v=>v[0]):[];
     return{name:"Class matchup",vals:mu.map(v=>[v[0],v[1]]),notes:new Map(mu.map(v=>[v[0].id,v[2]])),top,winners,fmt:v=>v?"+"+v:"—"}})();
   for(const w of muRound.winners)pts.set(w.id,pts.get(w.id)+1);
-  const rounds=[muRound,...DUEL_ROUNDS.map(([name,get,fmt])=>{const notes=new Map(),vals=picked.map(m=>{const[k,why]=twist(name,m),v=get(m)||0;if(why&&v)notes.set(m.id,why);return[m,Math.round(v*k*100)/100]}),top=Math.max(...vals.map(v=>v[1]));
+  const rounds=[muRound,...DUEL_ROUNDS.map(([name,get,fmt])=>{const notes=new Map(),crits=new Set(),vals=picked.map(m=>{const r=duelVal(m,name,get,seedRoll(dkey+"|"+name+"|"+m.id));if(r.why)notes.set(m.id,r.why);if(r.crit)crits.add(m.id);return[m,r.v]}),top=Math.max(...vals.map(v=>v[1]));
     const winners=top>0?vals.filter(v=>v[1]===top).map(v=>v[0]):[];for(const w of winners)pts.set(w.id,pts.get(w.id)+1);
-    return{name,vals,top,winners,fmt,notes}})];
+    return{name,vals,top,winners,fmt,notes,crits}})];
   const order=picked.slice().sort((a,b)=>pts.get(b.id)-pts.get(a.id)||(+b.level||0)-(+a.level||0));
   const best=pts.get(order[0].id),champs=order.filter(m=>pts.get(m.id)===best);
   const placeOf=m=>1+order.filter(x=>pts.get(x.id)>pts.get(m.id)).length,ord=n=>n+(n===1?"st":n===2?"nd":n===3?"rd":"th");
@@ -1359,13 +1416,103 @@ function viewDuel(ids){
     h("h3",{},r.name,h("span",{},!r.winners.length?"No contest":r.winners.length>1?"Tie":nameOf(r.winners[0]))),
     r.vals.map(([m,v])=>{const win=r.winners.includes(m);
       return h("div",{class:"duel-l"+(win?" win":"")},h("span",{class:"nm",title:nameOf(m)},classIcon(m.cls),h("span",{},nameOf(m))),
-        h("span",{class:"track","aria-hidden":"true"},h("i",{style:`width:${r.top&&v?Math.max(3,v/r.top*100).toFixed(0):0}%`})),h("span",{class:"v"},r.fmt(v)),r.notes&&r.notes.get(m.id)?h("span",{class:"duel-why"},r.notes.get(m.id)):null)}))));
+        h("span",{class:"track","aria-hidden":"true"},h("i",{style:`width:${r.top&&v?Math.max(3,v/r.top*100).toFixed(0):0}%`})),h("span",{class:"v"},r.fmt(v)),r.notes&&r.notes.get(m.id)?h("span",{class:"duel-why"+(r.crits&&r.crits.has(m.id)?" crit":"")},r.notes.get(m.id)):null)}))));
   const share=async()=>{try{await navigator.clipboard.writeText(location.href);toast("Link copied. Paste it in Discord.")}catch(e){toast("Couldn't copy. Copy the address bar instead.")}};
+  const headline=champs.length>1?"It's a draw":nameOf(champs[0])+" wins";
+  const picture=async e=>{const b=e.currentTarget;b.disabled=true;try{await pngOut(await duelPng(order,pts,fought,headline),"card-duel.png","Duel")}finally{b.disabled=false}};
   return[head,pick,h("section",{class:"card","aria-labelledby":"duel-h",style:"gap:1rem"},
-    h("div",{class:"spread"},h("h2",{id:"duel-h"},"The Duel"),h("button",{class:"btn sm",type:"button",onclick:share},"Copy link")),
+    h("div",{class:"spread"},h("h2",{id:"duel-h"},"The Duel"),h("div",{class:"row"},h("button",{class:"btn sm primary",type:"button",onclick:picture},"Copy for Discord"),h("button",{class:"btn sm",type:"button",onclick:share},"Copy link"))),
     result,arena,roundsEl,
     blank.length?h("p",{class:"small ter duel-blank"},"No contest (nobody has a number yet): "+blank.map(r=>r.name).join(", ")+"."):null,
-    h("p",{class:"small ter",style:"margin:0"},"Stats come from the armory, so they're as fresh as each player's last logout. Loot quality counts green as 1, blue 2, epic 3. Class matchup gives +1 for each opponent your class counters, and some specs get a small bonus: healers +15% health, tanks +15% armour, burst specs +10% attack or spell power.")) ]}
+    h("p",{class:"small ter",style:"margin:0"},"Stats come from the armory, so they're as fresh as each player's last logout. Loot quality counts green as 1, blue 2, epic 3. Class matchup gives +1 for each opponent your class counters. Every spec has a signature move that lifts one stat (it's on the card). Critical hits add 25% in the fighting stats: the better a card's crit, the likelier, and the dice are re-rolled every day.")) ]}
+
+// Put a picture on the clipboard for Discord, or save it when the browser can't copy pictures.
+async function pngOut(blob,file,what){
+  if(!blob){toast("Couldn't make the picture.");return}
+  try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);toast(what+" copied. Paste it in Discord with Ctrl+V.")}
+  catch(e){const a=h("a",{href:URL.createObjectURL(blob),download:file});document.body.append(a);a.click();a.remove();toast(what+" saved as a picture. Drag it into Discord.")}}
+// The duel as a picture: the result, everyone's card in finishing order, then each round with the winner in gold.
+async function duelPng(order,pts,rounds,headline){
+  try{await document.fonts.ready}catch(e){}
+  const n=order.length,W=1200,PAD=56,GAP=24,cw=Math.min(260,(W-PAD*2-(n-1)*GAP)/n),ch=cw*380/260,ROW=42,LBL=250;
+  const imgs=await Promise.all(order.map(async m=>{try{const b=await cardPng(m);return b?await createImageBitmap(b):null}catch(e){return null}}));
+  const top=PAD+132,cardsY=top+34,tableY=cardsY+ch+44,H=tableY+38+rounds.length*ROW+84;
+  const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+  const disp=sz=>`700 ${sz}px "Alegreya Sans SC", Georgia, serif`,body=(w,sz)=>`${w} ${sz}px Figtree, sans-serif`;
+  let g=x.createRadialGradient(W/2,0,0,W/2,0,W*.7);g.addColorStop(0,"rgba(165,13,44,.34)");g.addColorStop(1,"rgba(165,13,44,0)");
+  x.fillStyle="#0f0a09";x.fillRect(0,0,W,H);x.fillStyle=g;x.fillRect(0,0,W,H);
+  g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,"#4d0100");g.addColorStop(.5,"#a50d2c");g.addColorStop(1,"#4d0100");x.fillStyle=g;x.fillRect(0,H-10,W,10);x.fillStyle="#2f9a46";x.fillRect(0,H-13,W,3);
+  x.textAlign="center";x.textBaseline="alphabetic";
+  x.fillStyle="#e0a862";x.font=disp(26);try{x.letterSpacing="3px"}catch(e){}x.fillText("BLOOD AND TEARS · CARD DUEL",W/2,PAD+22);try{x.letterSpacing="0px"}catch(e){}
+  x.fillStyle="#f3ecea";x.font=body(700,56);x.fillText(headline,W/2,PAD+86,W-PAD*2);
+  x.fillStyle="#b3a9a9";x.font=body(500,24);x.fillText(order.map(m=>pts.get(m.id)).join(" – "),W/2,PAD+122);
+  const total=n*cw+(n-1)*GAP,x0=(W-total)/2,best=pts.get(order[0].id),ord=k=>k+(k===1?"st":k===2?"nd":k===3?"rd":"th");
+  order.forEach((m,i)=>{const cx=x0+i*(cw+GAP),pl=1+order.filter(o=>pts.get(o.id)>pts.get(m.id)).length,p=pts.get(m.id);
+    x.fillStyle=p===best?"#e0a862":"#b3a9a9";x.font=body(700,n>4?15:18);x.fillText(ord(pl)+" · "+p+(p===1?" point":" points"),cx+cw/2,cardsY-12,cw);
+    if(imgs[i])x.drawImage(imgs[i],cx,cardsY,cw,ch);else{x.fillStyle="#241a19";x.fillRect(cx,cardsY,cw,ch);x.fillStyle="#f3ecea";x.font=body(700,18);x.fillText(nameOf(m),cx+cw/2,cardsY+ch/2,cw-16)}});
+  // Rounds: one row each, a column per fighter
+  const colW=(W-PAD*2-LBL)/n,colX=i=>PAD+LBL+colW*i+colW/2,short=m=>nameOf(m).split(/\s+/)[0];
+  x.font=body(700,16);x.fillStyle="#9a8f8e";x.textAlign="left";x.fillText("ROUND",PAD,tableY+14);x.textAlign="center";
+  order.forEach((m,i)=>{x.fillStyle=CLASSES[m.cls]?mix(CLASSES[m.cls],"#ffffff",.2):"#d9cfcd";x.fillText(short(m).toUpperCase(),colX(i),tableY+14,colW-12)});
+  rounds.forEach((r,j)=>{const y=tableY+38+j*ROW;x.fillStyle=j%2?"rgba(255,255,255,0)":"rgba(255,255,255,.04)";x.fillRect(PAD-12,y,W-PAD*2+24,ROW);
+    x.textAlign="left";x.fillStyle="#d9cfcd";x.font=body(600,19);x.fillText(r.name,PAD,y+27,LBL-12);x.textAlign="center";
+    order.forEach((m,i)=>{const v=(r.vals.find(a=>a[0]===m)||[0,0])[1],win=r.winners.includes(m),crit=r.crits&&r.crits.has(m.id);
+      x.fillStyle=win?"#e0a862":"#9a8f8e";x.font=body(win?700:500,19);x.fillText(r.fmt(v)+(crit?"  CRIT":""),colX(i),y+27,colW-12)})});
+  x.textAlign="center";x.fillStyle="#9a8f8e";x.font=body(500,16);x.fillText("bloodandtears.web.app · gold wins the round · crits are re-rolled daily",W/2,H-34,W-PAD*2);
+  return new Promise(res=>c.toBlob(res,"image/png"))}
+
+/* ---------- Top Trumps ---------- */
+// A quick game against the dealer: five guild cards each. Whoever picks names a stat; the higher number takes the round.
+// Win a round and you pick again; lose and the dealer picks its card's strongest stat. Nothing is saved but your record on this device.
+const TT_STATS=DUEL_ROUNDS.filter(r=>r[0]!=="Hall of Firsts");
+let TT=null;
+const ttRec=()=>{try{return{w:0,l:0,d:0,streak:0,best:0,...JSON.parse(localStorage.getItem("lg-tt")||"{}")}}catch(e){return{w:0,l:0,d:0,streak:0,best:0}}};
+function ttDeal(){const pool=S.members.filter(m=>isMine(m)||memberState(m)==="current");for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  const n=Math.min(5,Math.floor(pool.length/2));TT=n?{n,you:pool.slice(0,n).map(m=>m.id),dealer:pool.slice(n,2*n).map(m=>m.id),i:0,score:[0,0],turn:"you",res:null,done:false}:null}
+// The dealer's pick: the stat where its card stands highest against the whole guild.
+function ttDealerPick(m){let best=null,bp=-1;for(const[name,get]of TT_STATS){const v=get(m)||0;if(!v)continue;const below=S.members.filter(o=>(get(o)||0)<v).length/Math.max(1,S.members.length);if(below>bp){bp=below;best=name}}return best||"Level"}
+function ttPlay(name){const a=memberById(TT.you[TT.i]),b=memberById(TT.dealer[TT.i]),rd=TT_STATS.find(r=>r[0]===name);if(!a||!b||!rd||TT.res)return;
+  const A=duelVal(a,name,rd[1],Math.random()),B=duelVal(b,name,rd[1],Math.random()),win=A.v>B.v?"you":B.v>A.v?"dealer":"draw";
+  if(win==="you")TT.score[0]++;else if(win==="dealer")TT.score[1]++;
+  TT.res={name,A,B,win,fmt:rd[2],by:TT.turn};render()}
+function ttNext(){const w=TT.res.win;if(w!=="draw")TT.turn=w;TT.res=null;TT.i++;
+  if(TT.i>=TT.n){TT.done=true;const r=ttRec(),[y,d]=TT.score;if(y>d){r.w++;r.streak++;r.best=Math.max(r.best,r.streak)}else if(d>y){r.l++;r.streak=0}else r.d++;try{localStorage.setItem("lg-tt",JSON.stringify(r))}catch(e){}}
+  render()}
+function viewTrumps(){
+  if(!TT||!TT.you.every(memberById)||!TT.dealer.every(memberById))ttDeal();
+  const head=h("div",{class:"page-head"},h("div",{},h("a",{href:"#cards",class:"small"},"← Cards"),h("h1",{},"Top Trumps"),
+      h("p",{class:"sub"},"Five guild cards each. Name the stat you think your card wins on. Win the round and you pick again; lose and the dealer picks.")),
+    h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>{ttDeal();render()}},"New game")));
+  if(!TT)return[head,h("p",{class:"empty"},"There need to be at least two characters in the guild to deal a game.")];
+  const t=TT,[ys,ds]=t.score,rec=ttRec();
+  const recLine=h("p",{class:"small ter",style:"margin:0"},"Your record on this device: "+rec.w+(rec.w===1?" win":" wins")+", "+rec.l+(rec.l===1?" loss":" losses")+(rec.d?", "+rec.d+(rec.d===1?" draw":" draws"):"")+(rec.best>1?" · best streak "+rec.best:""));
+  const score=h("div",{class:"tt-score",role:"status"},h("span",{class:"tt-side"},h("small",{},"You"),h("b",{},String(ys))),
+    h("span",{class:"tt-round"},t.done?"Full time":"Round "+(t.i+1)+" of "+t.n,h("span",{class:"tt-pips","aria-hidden":"true"},Array.from({length:t.n},(_,k)=>h("i",{class:k<t.i||t.done?"on":k===t.i?"now":""})))),
+    h("span",{class:"tt-side"},h("small",{},"Dealer"),h("b",{},String(ds))));
+  if(t.done){const won=ys>ds,draw=ys===ds,line=draw?"It's a draw, "+ys+"–"+ds:won?"You win "+ys+"–"+ds:"The dealer wins "+ds+"–"+ys;
+    const copy=async()=>{const txt=(draw?"I drew "+ys+"–"+ds+" with":won?"I beat the dealer "+ys+"–"+ds+" at":"The dealer beat me "+ds+"–"+ys+" at")+" Blood and Tears Top Trumps: "+location.origin+location.pathname+"#trumps";
+      try{await navigator.clipboard.writeText(txt);toast("Result copied. Paste it in Discord.")}catch(e){toast("Couldn't copy.")}};
+    return[head,h("section",{class:"card tt","aria-labelledby":"tt-h"},h("h2",{id:"tt-h",class:"visually-hidden"},"Result"),score,
+      h("div",{class:"duel-result"},h("b",{},line),h("span",{class:"ter"},won?"Nicely played.":draw?"Honours even.":"The house always has a chance.")),
+      h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn primary",type:"button",onclick:()=>{ttDeal();render()}},"Play again"),h("button",{class:"btn",type:"button",onclick:copy},"Copy result")),recLine)]}
+  const a=memberById(t.you[t.i]),b=memberById(t.dealer[t.i]),res=t.res,mv=moveOf(a);
+  const down=h("div",{class:"lg-card tt-down",role:"img","aria-label":"The dealer's card, face down"},h("img",{src:"logo.svg",alt:"",width:"96",height:"96"}),h("span",{},"?"));
+  const slot=(label,card,cls)=>h("div",{class:"tt-slot"+(cls?" "+cls:"")},h("span",{class:"duel-place"+(cls==="won"?" win":"")},label),card);
+  const arena=h("div",{class:"tt-arena"},slot("Your card",cardEl(a),res&&res.win==="you"?"won":""),h("span",{class:"tt-vs","aria-hidden":"true"},"vs"),
+    slot("Dealer's card",res?cardEl(b):down,res&&res.win==="dealer"?"won":""));
+  let panel;
+  if(res){const side=(who,r)=>h("div",{class:"tt-val"+(res.win===who?" win":"")},h("small",{},who==="you"?"You":"Dealer"),h("b",{},res.fmt(r.v)),r.why?h("span",{class:"duel-why"+(r.crit?" crit":"")},r.why):null);
+    panel=h("div",{class:"tt-panel",role:"status"},h("p",{class:"tt-call"},(res.by==="dealer"?"The dealer chose ":"You chose ")+res.name+". ",h("b",{},res.win==="you"?"You take the round.":res.win==="dealer"?"The dealer takes it.":"Dead level: no point.")),
+      h("div",{class:"tt-vals"},side("you",res.A),side("dealer",res.B)),
+      h("button",{class:"btn primary",type:"button",id:"tt-next",onclick:ttNext},t.i+1>=t.n?"See the result":"Next round"))}
+  else if(t.turn==="dealer"){const pick=ttDealerPick(b);
+    panel=h("div",{class:"tt-panel"},h("p",{class:"tt-call"},"The dealer won the last round, so it picks. Have a look at your card, then see what it chose."),
+      h("button",{class:"btn primary",type:"button",id:"tt-reveal",onclick:()=>ttPlay(pick)},"Reveal the dealer's pick"))}
+  else panel=h("div",{class:"tt-panel"},h("p",{class:"tt-call"},"Your pick. Which stat does ",h("b",{},nameOf(a))," win on?"),
+      h("div",{class:"tt-stats"},TT_STATS.map(([name,get,fmt])=>{const base=get(a)||0,boosted=mv&&mv.round===name&&base;
+        return h("button",{class:"tt-stat",type:"button",disabled:!base,onclick:()=>ttPlay(name)},h("span",{},name,boosted?h("small",{},mv.name+" "+mv.up):null),h("b",{},fmt(boosted?Math.round(base*mv.k*100)/100:base)))})),
+      h("p",{class:"small ter",style:"margin:0"},"Fighting stats can land a critical hit for +25%. The better a card's crit, the likelier."));
+  return[head,h("section",{class:"card tt","aria-labelledby":"tt-h"},h("h2",{id:"tt-h",class:"visually-hidden"},"The game"),score,arena,panel,recLine)]}
 
 /* ---------- Site use (officers only) ---------- */
 // Each device marks its own characters as visited (at most every 12 hours), so officers can see whether the site is used.
@@ -1542,6 +1689,17 @@ const lvlOf=t=>+String(t||"").replace(/\D/g,"");
 // Frame by level: plain, bronze 20+, silver 40+, gold foil at 60. Picture is the armory render on the race background.
 const TIERS=[[60,"Gold foil",["#f6d77a","#b8862e","#fff1b8","#a8741f"],"#f3cf6e"],[40,"Silver",["#e6e6e6","#8d8d8d","#f5f5f5","#7a7a7a"],"#d8d8d8"],[20,"Bronze",["#d39a62","#7a4a22","#e0b07e","#6b3f1c"],"#d9a36b"],[0,"Plain",["#4a3a39","#312625","#4a3a39","#312625"],"#bfaea9"]];
 const tierOf=lv=>TIERS.find(x=>lv>=x[0]);
+// Title holders get their own card frame, by the kind of title. The level still shows in the round badge.
+const FRAMES={pvp:["Warlord frame",["#e36a78","#5c0a18","#f39aa3","#3d0610"]],crawler:["Delver frame",["#63c7c0","#16504d","#9be3dd","#0d3836"]],
+  dressed:["Royal frame",["#c79bf2","#4b2a7a","#e3c9ff","#331a57"]],collector:["Amethyst frame",["#f08fd8","#6e1f5c","#ffc4f0","#4a123d"]],
+  speed:["Lightning frame",["#7fc4ff","#1d4f8a","#bfe2ff","#123560"]],faithful:["Oak frame",["#b9a06a","#4f3f1f","#d9c594","#362a12"]],
+  gatherer:["Wild frame",["#9bd66f","#35601c","#c6efa5","#234312"]],crafter:["Forge frame",["#ff9d4d","#7a3306","#ffc08a","#532103"]],
+  hearth:["Hearth frame",["#f4b8a0","#7d3b28","#ffd9c9","#56261a"]]};
+const FRAME_OF={hk:"pvp",dungeons:"crawler",gear:"dressed",epics:"collector",speed:"speed",oldest:"faithful"};
+function frameOf(m){const t=titlesOf(m)[0];if(!t)return null;const k=String(t.k||"");
+  if(k.startsWith("cls:")){const cc=CLASSES[k.slice(4)]||"#bfaea9";return{name:"Champion frame",title:t.t,f:[mix(cc,"#ffffff",.3),mix(cc,"#000000",.55),mix(cc,"#ffffff",.55),mix(cc,"#000000",.7)]}}
+  const kind=FRAME_OF[k]||(GATHERING.includes(k)?"gatherer":PRIMARY.includes(k)?"crafter":SECONDARY.includes(k)?"hearth":null);
+  return kind?{name:FRAMES[kind][0],title:t.t,f:FRAMES[kind][1]}:null}
 const mix=(hex,to,r)=>{const a=hex.match(/\w\w/g).map(x=>parseInt(x,16)),b=to.match(/\w\w/g).map(x=>parseInt(x,16));return"#"+a.map((v,i)=>Math.round(v+(b[i]-v)*r).toString(16).padStart(2,"0")).join("")};
 // Three stats per card, picked by class and role (see the design canvas). Missing ones are filled from a backup list.
 const STAT_META={strength:["Strength","St","#c0392f"],agility:["Agility","Ag","#23802f"],stamina:["Stamina","Sta","#9c5220"],intellect:["Intellect","In","#3d6fd6"],
@@ -1574,7 +1732,7 @@ function autoFlavour(m){
   return CLASS_FLAVOUR[m.cls]||"Adventurer. Probably lost."}
 const flavourOf=m=>String(m.flavour||"").trim().slice(0,40)||autoFlavour(m);
 function cardData(m){
-  const lv=+m.level||1,tier=tierOf(lv),cc=CLASSES[m.cls]||"#bfaea9",st=m.armory&&m.armory.stats||{};
+  const lv=+m.level||1,lvTier=tierOf(lv),frame=frameOf(m),tier=frame?[lvTier[0],lvTier[1],frame.f,lvTier[3]]:lvTier,cc=CLASSES[m.cls]||"#bfaea9",st=m.armory&&m.armory.stats||{};
   const profs=Object.entries(m.profs||{}).filter(([p])=>!CLASS_SKILLS[p]).sort((a,b)=>(PRIMARY.includes(b[0])-PRIMARY.includes(a[0]))||b[1]-a[1]);
   // Stat lines: class stats from the armory, or professions (out of 300) for characters not on the armory yet.
   const picks=statPicks(m);
@@ -1590,20 +1748,21 @@ function cardData(m){
     art:[mix(cc,"#000000",.55),mix(cc,"#000000",.25),"#0f0a09"],rows,hp:typeof st.health==="number"?Math.round(st.health):0,
     name:nameOf(m),line:["Level "+lv,classLine(m),roleText(m)].filter(Boolean).join(" · "),
     initials:nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(),
-    mini,num,rarity,flav:flavourOf(m),stamps:stampsOf(m)}}
+    mini,num,rarity,flav:flavourOf(m),stamps:stampsOf(m),frame,move:moveOf(m)}}
 function cardEl(m){
   const d=cardData(m),[,tname,f,edge]=d.tier;
   const artStyle=d.bg?`background-image:linear-gradient(180deg,${d.art[0]}55,${d.art[2]}cc),url(${d.bg})`:`background:linear-gradient(160deg,${d.art[0]},${d.art[1]} 55%,${d.art[2]})`;
-  const shine={"Gold foil":"rgb(255 240 190 / .55)","Silver":"rgb(255 255 255 / .38)","Bronze":"rgb(255 222 186 / .26)"}[tname];
-  return h("div",{class:"lg-card"+(shine?" foil":""),style:`background:linear-gradient(135deg,${f[0]},${f[1]} 35%,${f[2]} 55%,${f[3]})`+(shine?`;--shine:${shine}`:""),role:"img","aria-label":`${d.name}, ${d.line}, ${tname} card. ${d.flav}`+(d.stamps.length?" Stamps: "+d.stamps.map(x=>x[1]).join(", ")+".":"")},
+  const shine={"Gold foil":"rgb(255 240 190 / .55)","Silver":"rgb(255 255 255 / .38)","Bronze":"rgb(255 222 186 / .26)"}[tname]||(d.frame?"rgb(255 255 255 / .32)":undefined);
+  return h("div",{class:"lg-card"+(shine?" foil":""),style:`background:linear-gradient(135deg,${f[0]},${f[1]} 35%,${f[2]} 55%,${f[3]})`+(shine?`;--shine:${shine}`:""),role:"img","aria-label":`${d.name}, ${d.line}, ${tname} card${d.frame?", "+d.frame.name:""}. ${d.move?"Signature move: "+d.move.text+". ":""}${d.flav}`+(d.stamps.length?" Stamps: "+d.stamps.map(x=>x[1]).join(", ")+".":"")},
     h("div",{class:"lg-card-in"},
-      h("div",{class:"lg-art",style:artStyle},
+      h("div",{class:"lg-art"+(d.move?" has-move":""),style:artStyle},
         d.render?h("img",{class:"r",src:d.render,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(d.fg)})
           :h("span",{class:"lg-face",style:`border-color:${d.cc};color:${d.cc}`},d.avatar?h("img",{src:d.avatar,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(d.initials)}):d.initials),
         d.lv>=60?h("span",{class:"lg-holo","aria-hidden":"true"}):null,
         d.stamps.length?h("span",{class:"lg-stamps"},d.stamps.map(([t,how,c])=>h("span",{class:"lg-stamp",style:`color:${c}`,title:how},t))):null,
         h("span",{class:"lg-lv",style:`border-color:${edge};color:${edge}`,"aria-hidden":"true"},String(d.lv)),
-        h("div",{class:"lg-hd"},h("b",{},d.name),d.hp?h("span",{class:"lg-hp"},h("small",{},"HP"),d.hp.toLocaleString("en-AU")):null)),
+        h("div",{class:"lg-hd"},h("b",{},d.name),d.hp?h("span",{class:"lg-hp"},h("small",{},"HP"),d.hp.toLocaleString("en-AU")):null),
+        d.move?h("span",{class:"lg-move"},d.move.text):null),
       h("div",{class:"lg-type",style:`background:${mix(d.cc,"#0f0a09",.72)};color:${mix(d.cc,"#ffffff",.25)}`},d.line.replace(/^Level \d+ · /,"")),
       h("div",{class:"lg-stats"},d.rows.map(x=>h("div",{class:"lg-st"},h("i",{style:`background:${x.col}`},x.icon),h("span",{},x.label),h("b",{},x.val),
         h("u",{},h("s",{style:`width:${x.pct.toFixed(0)}%;background:${edge}`}))))),
@@ -1717,8 +1876,9 @@ async function cardPng(m){
   x.restore();
   // Name and HP over the foot of the picture
   x.save();x.shadowColor="rgba(0,0,0,.85)";x.shadowBlur=4*K;x.shadowOffsetY=K;
-  x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e2";x.font=disp.replace("SZ",19*K);x.fillText(d.name,18*K,ay+ah-9*K,(d.hp?150:220)*K);
-  if(d.hp){x.textAlign="right";x.fillStyle="#ff7a6b";x.font=body(700,15);x.fillText(d.hp.toLocaleString("en-AU"),W-18*K,ay+ah-9*K);const w=x.measureText(d.hp.toLocaleString("en-AU")).width;x.font=body(700,10);x.fillText("HP",W-18*K-w-3*K,ay+ah-9*K)}
+  x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e2";x.font=disp.replace("SZ",19*K);const ny=ay+ah-(d.move?21:9)*K;x.fillText(d.name,18*K,ny,(d.hp?150:220)*K);
+  if(d.hp){x.textAlign="right";x.fillStyle="#ff7a6b";x.font=body(700,15);x.fillText(d.hp.toLocaleString("en-AU"),W-18*K,ny);const w=x.measureText(d.hp.toLocaleString("en-AU")).width;x.font=body(700,10);x.fillText("HP",W-18*K-w-3*K,ny)}
+  if(d.move){x.textAlign="left";x.fillStyle="#e9b877";x.font=body(600,10);x.fillText(d.move.text,18*K,ay+ah-6*K,W-36*K)}
   x.restore();
   // Level badge, top right
   {const bx=ax+aw-26*K,by=ay+26*K;x.beginPath();x.arc(bx,by,17*K,0,7);x.fillStyle="rgba(15,10,9,.88)";x.fill();x.lineWidth=2*K;x.strokeStyle=edge;x.stroke();
@@ -1766,7 +1926,7 @@ function cardSection(m){
       h("div",{style:"display:flex;flex-direction:column;gap:.375rem;padding-top:.5rem"},
         h("label",{class:"f tiny",for:"flav-in"},"Up to 40 characters. Leave it empty for an automatic line."),
         h("div",{class:"row",style:"flex-wrap:nowrap"},inp,h("button",{class:"btn sm",type:"button",onclick:save},"Save"))))}
-  return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%"},h("h2",{id:"card-h"},"Card"),h("span",{class:"small ter"},tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
+  return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%"},h("h2",{id:"card-h"},"Card"),h("span",{class:"small ter"},d.frame?d.frame.name+" · for "+d.frame.title:tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
     flipCard(m),h("p",{class:"small ter",style:"margin:0;text-align:center"},"Tap the card to see the back."),
     d.stamps.length?h("ul",{class:"stamp-key"},d.stamps.map(([t,how,c])=>h("li",{},h("b",{style:`color:${c}`},t),h("span",{},how)))):null,h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn",onclick:()=>copyCard(m)},"Copy for Discord"),h("a",{class:"btn ghost",href:"#duel/"+m.id},"Duel this card")),flav)}
 
@@ -2364,14 +2524,13 @@ function titleList(){if(_tl&&_tlFor===S.members&&Date.now()-_tlAt<1000)return _t
     return{k,t,how,fmt,group,rows,holder,tied:tied?rows.filter(r=>r[2]===1):null,next}});
   _tlAt=Date.now();return _tl}
 function titleMap(){const mp=new Map();
-  for(const x of titleList())if(x.holder)(mp.get(x.holder[0].id)||mp.set(x.holder[0].id,[]).get(x.holder[0].id)).push({t:x.t,board:x.how.replace(/^Most |^Highest |^Longest /,""),v:x.holder[1]});
+  for(const x of titleList())if(x.holder)(mp.get(x.holder[0].id)||mp.set(x.holder[0].id,[]).get(x.holder[0].id)).push({k:x.k,t:x.t,board:x.how.replace(/^Most |^Highest |^Longest /,""),v:x.holder[1]});
   return mp}
 const titlesOf=m=>titleMap().get(m.id)||[];
 // Up to three titles by name; the rest fold into "+N", which lists them on hover.
 const titleTags=m=>{const l=titlesOf(m);if(!l.length)return null;const tag=x=>h("a",{class:"title-tag",href:"#records",title:"Top of the guild in "+x.board.toLowerCase()},h("span",{class:"title-ic","aria-hidden":"true"}),x.t);
   return h("div",{class:"titles"},l.slice(0,3).map(tag),l.length>3?h("a",{class:"title-tag more",href:"#records",title:l.slice(3).map(x=>x.t).join(", ")},"+"+(l.length-3)+" more"):null)};
 
-/* ---------- Rivals ---------- */
 function viewProfessions(){
   const chars=[...S.members,...S.alts];
   const by={};for(const m of chars)for(const[p,sk]of Object.entries(m.profs||{}))(by[p]=by[p]||[]).push({m,sk:+sk||0});
@@ -2962,7 +3121,7 @@ function milestoneToast({badge,title,sub},after){
   document.addEventListener("visibilitychange",vis);document.body.append(el);vis();run()}
 
 /* ---------- render ---------- */
-function route(){const p=(location.hash||"#roster").slice(1).split("/");if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(p[0]==="duel")return{page:"duel",ids:decodeURIComponent(p[1]||"").split(",").filter(Boolean)};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
+function route(){const p=(location.hash||"#roster").slice(1).split("/");if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(p[0]==="duel")return{page:"duel",ids:decodeURIComponent(p[1]||"").split(",").filter(Boolean)};if(p[0]==="trumps")return{page:"trumps"};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
 function render(){
   const app=$("#app");
   const keep=document.activeElement&&document.activeElement.id,typed={};
@@ -2973,10 +3132,10 @@ function render(){
   if(!S.user){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("p",{class:"ter"},"Loading…")));return}
   const r=route();
   const views={roster:viewRoster,lfg:viewLfg,raids:viewRaids,cards:viewCards,professions:viewProfessions,records:viewRecords};
-  const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="duel"?viewDuel(r.ids):r.page==="history"?viewHistory():views[r.page]();
+  const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="duel"?viewDuel(r.ids):r.page==="trumps"?viewTrumps():r.page==="history"?viewHistory():views[r.page]();
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
-  app.replaceChildren(...[header(r.page==="char"?"":r.page==="duel"?"cards":r.page==="history"?"roster":r.page==="raids"?"lfg":r.page),
+  app.replaceChildren(...[header(r.page==="char"?"":r.page==="duel"||r.page==="trumps"?"cards":r.page==="history"?"roster":r.page==="raids"?"lfg":r.page),
     net?h("div",{class:"netbar",role:"status"},net):null,winterVeil(),
     h("main",{class:"wrap"},
     S.error?h("div",{class:"note warn"},S.error):null,

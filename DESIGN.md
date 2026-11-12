@@ -789,6 +789,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 - 13 Nov: calmer tops. The roster and character sync lines are a dot, "Up to date" and a Details button (`.sync-more`); the roster's duplicate character count is gone; Guild Makeup folds its class list behind "By class". The card back has taller tabs (1.625rem) and the front's round level badge. Duels fold stats nobody has a number for into one "No contest" line and use the small "Open page" link under each card. The README now describes the site as it is; the dated build notes moved to `docs/HISTORY.md`.
 
+- 13 Nov: card game pass. Title frames (`FRAMES`, picked by `frameOf` from the first title; the level tier still colours the round badge), a signature move line over the foot of the card art (`.lg-move`), critical hits in duels (`duelVal`, seeded by day), a duel picture (`duelPng`, 1200 wide, same header and footer treatment as the weekly recap) and Top Trumps (`#trumps`, `.tt-*`: scoreboard with pips, your card beside a face-down crimson dealer card, stat buttons at least 3rem tall).
+
 ## Open Items
 
 **These parts are still defaults, guesses, or waiting for a person.**
