@@ -826,40 +826,75 @@ a.r-name:hover{color:var(--accent-text)}
 .lg-art.has-move .lg-hd{bottom:.8125rem}
 .lg-move{position:absolute;left:.75rem;right:.75rem;bottom:.25rem;z-index:1;font-size:.625rem;line-height:.875rem;font-weight:600;color:#e9b877;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgb(0 0 0 / .9)}
 .duel-why.crit{font-weight:700}
-.tt{gap:1.25rem;align-items:center}
-.tt-score{display:flex;align-items:center;justify-content:center;gap:1.5rem;width:100%}
-.tt-side{display:flex;flex-direction:column;align-items:center;min-width:4rem}
-.tt-side small{font-size:.75rem;color:var(--ter);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
-.tt-side b{font-size:2rem;line-height:2.25rem;font-variant-numeric:tabular-nums}
-.tt-round{display:flex;flex-direction:column;align-items:center;gap:.375rem;font-size:.875rem;color:var(--sec);font-weight:600}
-.tt-pips{display:flex;gap:.375rem}
-.tt-pips i{width:.5rem;height:.5rem;border-radius:50%;background:var(--sep)}
-.tt-pips i.on{background:var(--accent-text)}.tt-pips i.now{background:var(--accent)}
-.tt-arena{display:flex;align-items:center;justify-content:center;gap:1.25rem;flex-wrap:nowrap}
-.tt-slot{display:flex;flex-direction:column;align-items:center;gap:.5rem}
-.tt-slot.won .lg-card{box-shadow:0 0 0 3px var(--accent-text),0 8px 24px rgb(0 0 0 / .4)}
-.tt-vs{font:700 1.125rem/1 var(--display);color:var(--ter);text-transform:uppercase;letter-spacing:.1em}
-.tt-down{background:linear-gradient(135deg,#a50d2c,#4d0100 60%,#2a0606);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;box-shadow:inset 0 0 0 6px #e0a862,inset 0 0 0 8px #2f9a46}
-.tt-down img{width:6rem;height:6rem;opacity:.95}
-.tt-down span{font:700 2.5rem/1 var(--display);color:#e0a862}
-.tt-panel{display:flex;flex-direction:column;align-items:center;gap:.875rem;width:100%;max-width:40rem}
-.tt-call{margin:0;text-align:center;color:var(--sec)}
-.tt-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,11.5rem),1fr));gap:.5rem;width:100%}
-.tt-stat{display:flex;align-items:center;justify-content:space-between;gap:.75rem;min-height:3rem;padding:.375rem .875rem;border-radius:8px;border:1px solid var(--sep);background:var(--raised);color:var(--text);font:inherit;text-align:left;cursor:pointer}
-.tt-stat span{display:flex;flex-direction:column;font-weight:600;font-size:.875rem;line-height:1.125rem;min-width:0}
-.tt-stat small{font-weight:600;font-size:.6875rem;color:var(--accent-text)}
-.tt-stat b{font-variant-numeric:tabular-nums;font-size:1rem;white-space:nowrap}
-.tt-stat:hover:not(:disabled){border-color:var(--accent);background:var(--subtle)}
-.tt-stat:disabled{opacity:.45;cursor:not-allowed}
-.tt-stat:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.tt-vals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;width:100%;max-width:26rem}
-.tt-val{display:flex;flex-direction:column;align-items:center;gap:.125rem;padding:.625rem;border-radius:8px;border:1px solid var(--sep);background:var(--raised);text-align:center}
-.tt-val small{font-size:.75rem;color:var(--ter);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
-.tt-val b{font-size:1.5rem;line-height:1.75rem;font-variant-numeric:tabular-nums;color:var(--sec)}
-.tt-val.win{border-color:var(--accent-text)}.tt-val.win b{color:var(--text)}
-.tt-val .duel-why{font-size:.75rem;line-height:1rem;color:var(--gold)}
-@media (max-width:640px){.tt-arena{gap:.5rem}.tt-arena .lg-card{zoom:.62}.tt-vs{font-size:.875rem}}
-@media (max-width:359px){.tt-arena .lg-card{zoom:.52}}
+/* Games: the strip on Cards, Draft Duel and Guess the Guildie */
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.75rem}
+.game{display:flex;flex-direction:column;gap:.125rem;padding:.75rem 1rem;border-radius:10px;border:1px solid var(--sep);background:var(--raised);color:var(--text);text-decoration:none;text-align:left;font:inherit;cursor:pointer}
+.game b{font-size:1rem;line-height:1.5rem;color:var(--accent-text)}
+.game span{font-size:.8125rem;line-height:1.125rem;color:var(--sec)}
+.game:hover{border-color:var(--accent);background:var(--subtle)}
+.game:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.dd{gap:1.25rem}
+.dd-steps{list-style:none;margin:0;padding:0;display:flex;justify-content:center;gap:1.5rem;font-size:.875rem;font-weight:600;color:var(--ter)}
+.dd-steps li{display:flex;align-items:center;gap:.5rem}
+.dd-steps b{display:grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:50%;border:1px solid var(--sep);font-size:.75rem}
+.dd-steps li.now{color:var(--text)}.dd-steps li.now b{background:var(--accent);border-color:var(--accent);color:#fff}
+.dd-steps li.done b{background:var(--subtle);color:var(--text)}
+.dd-call{display:flex;flex-direction:column;align-items:center;gap:.25rem;text-align:center}
+.dd-call h2{margin:0}
+.dd-table{justify-content:center}
+.dd-table .binder-it{gap:.5rem}
+.dd-table .binder-it.taken .lg-flip{opacity:.4}
+.dd-table .binder-it.taken.you .lg-flip{opacity:1;box-shadow:0 0 0 3px var(--accent-text);border-radius:16px}
+.dd-pairs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,21rem),1fr));gap:1.25rem 1rem}
+.dd-pair{display:flex;flex-direction:column;align-items:center;gap:.625rem;padding:.875rem .5rem;border:1px solid var(--sep);border-radius:12px;background:var(--raised);min-width:0}
+.dd-cards{display:flex;align-items:center;justify-content:center;gap:.5rem}
+.dd-cards .lg-card{zoom:.58}
+.dd-side{display:flex;flex-direction:column;align-items:center;gap:.375rem}
+.dd-side.won .lg-card{box-shadow:0 0 0 5px var(--accent-text)}
+.dd-vs{font:700 .875rem/1 var(--display);color:var(--ter);text-transform:uppercase;letter-spacing:.1em}
+.dd-sel{display:flex;flex-direction:column;align-items:center;gap:.25rem;width:100%;max-width:16rem}
+.dd-sel select{width:100%}
+.dd-out{margin:0;text-align:center}
+.dd-rounds{width:100%;max-width:20rem}
+.dd-rounds summary{cursor:pointer;color:var(--sec);font-weight:600;text-align:center}
+.dd-rounds table{width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.8125rem}
+.dd-rounds th,.dd-rounds td{padding:.25rem .375rem;text-align:right;font-weight:500;color:var(--sec);border-top:1px solid var(--sep);font-variant-numeric:tabular-nums}
+.dd-rounds th:first-child{text-align:left}
+.dd-rounds thead th{border-top:0;font-size:.6875rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ter)}
+.dd-rounds td.win{color:var(--text);font-weight:700}
+.dd-rounds .duel-why{display:block;font-size:.6875rem;line-height:.9375rem;color:var(--gold);font-weight:500}
+@media (max-width:379px){.dd-cards .lg-card{zoom:.5}}
+.gg{gap:1.125rem;max-width:44rem;margin-inline:auto;width:100%;box-sizing:border-box}
+.gg-clues{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.5rem}
+.gg-clues li{display:flex;gap:.625rem;align-items:center;padding:.5rem .75rem;border:1px solid var(--sep);border-radius:8px;background:var(--raised);min-width:0}
+.gg-clues li.hid{background:transparent;border-style:dashed}
+.gg-n{flex:none;display:grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--subtle);font-size:.75rem;font-weight:700;color:var(--sec)}
+.gg-clues small{display:block;font-size:.6875rem;line-height:1rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ter);font-weight:600}
+.gg-clues b{font-size:.9375rem;line-height:1.25rem}
+.gg-rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem}
+.gg-rows li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.375rem .75rem;padding:.5rem .75rem;border:1px solid var(--sep);border-radius:8px}
+.gg-rows li.right{border-color:var(--trim)}
+.gg-cmp{display:flex;flex-wrap:wrap;gap:.375rem}
+.gg-chip{display:inline-flex;gap:.375rem;align-items:baseline;padding:.125rem .5rem;border-radius:6px;background:var(--subtle);font-size:.75rem;line-height:1.25rem;color:var(--sec)}
+.gg-chip small{font-size:.6875rem;color:var(--ter);font-weight:600}
+.gg-chip.hit{background:color-mix(in srgb,var(--trim) 22%,transparent);color:var(--text);font-weight:600}
+.gg-form{display:flex;flex-direction:column;gap:.375rem}
+.gg-end{display:flex;flex-direction:column;align-items:center;gap:1rem}
+/* An opened roster row: the card beside the details */
+.r-open{display:flex;gap:1.5rem;align-items:flex-start}
+.r-open .r-detail{flex:1;min-width:0;grid-template-columns:repeat(2,minmax(0,1fr))}
+.r-card{flex:none;order:2}
+.r-card .lg-flip{zoom:.72}
+@media (max-width:760px){.r-open{flex-direction:column;align-items:stretch;gap:1rem}.r-card{align-self:center}.r-open .r-detail{grid-template-columns:minmax(0,1fr)}}
+.gg{max-width:none}
+.gg-bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.gg-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:.75rem .5rem;justify-items:center}
+.gg-card{padding:0;border:0;background:none;border-radius:10px;cursor:pointer;line-height:0}
+.gg-card .lg-card{zoom:.5;pointer-events:none}
+.gg-card:hover .lg-card{box-shadow:0 0 0 4px var(--sep)}
+.gg-card[aria-pressed="true"] .lg-card{box-shadow:0 0 0 6px var(--accent-text)}
+.gg-card:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+@media (max-width:420px){.gg-pick{grid-template-columns:repeat(3,minmax(0,1fr))}.gg-card .lg-card{zoom:.4}}
 </style>
 </head>
 <body>
@@ -1183,7 +1218,8 @@ function rosterDetail(m){
   const st=syncState(m),a=m.armory||{},trees=(a.talents||[]).filter(t=>t&&t.points),prof=Object.entries(m.profs||{}).filter(([p])=>!CLASS_SKILLS[p]).sort((x,y)=>+y[1]-+x[1]);
   const items=Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=3).sort((x,y)=>+y.q-+x.q).slice(0,4);
   const free=!Array.isArray(m.owners);
-  return h("div",{class:"r-detail"},
+  // Their trading card sits beside the details, so the roster and the cards feel like one thing.
+  return h("div",{class:"r-open"},h("div",{class:"r-card"},flipCard(m)),h("div",{class:"r-detail"},
     h("div",{},h("h4",{},"Professions"),prof.length?prof.map(([p,v])=>profBar(p,v)):h("p",{class:"small ter"},st.k==="none"||st.k==="wait"?"Shows up once the armory has them.":"None trained.")),
     h("div",{},h("h4",{},"Build"),
       h("p",{class:"small"},trees.length?trees.map(t=>t.name+" "+t.points).join(" · "):h("span",{class:"ter"},"No talents from the armory yet.")),
@@ -1192,7 +1228,7 @@ function rosterDetail(m){
       a.hk!=null?h("p",{class:"small",style:"margin-top:.5rem"},(+a.hk||0).toLocaleString("en-AU")+" honourable kills · "+pvpRank(+a.rank||0)):null),
     h("div",{class:"r-acts"},h("a",{class:"btn sm",href:`#char/members/${m.id}`},"Open their page"),
       free&&!isMine(m)?h("button",{class:"btn sm primary",type:"button",onclick:e=>{e.stopPropagation();claim(m);location.hash="#char/members/"+m.id}},"This is me"):null,
-      h("a",{class:"btn sm ghost",href:`#duel/${m.id}`},"Duel this card")))}
+      h("a",{class:"btn sm ghost",href:`#duel/${m.id}`},"Duel this card"))))}
 function viewRoster(){
   const my=me(),u=S.ui;
   const head=h("div",{class:"page-head"},h("div",{},h("h1",{},"Roster"),armoryAllLine()),
@@ -1270,7 +1306,11 @@ function viewCards(){
     :SETS.map(([t,range])=>{const ms=list.filter(m=>tierOf(+m.level||1)[1]===t);
       return ms.length?h("section",{class:"binder-set","aria-label":t+" cards"},h("div",{class:"binder-h"},h("h2",{},t),h("span",{class:"small ter"},range+" · "+ms.length+(ms.length===1?" card":" cards"))),binder(ms)):null});
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Cards"),h("p",{class:"sub"},"Everyone's trading card. Tap one to flip it, or put a few head to head.")),
-      h("div",{class:"row"},h("a",{class:"btn primary",href:"#trumps"},"Play Top Trumps"),h("a",{class:"btn",href:"#duel"},"Card duels"),h("button",{class:"btn",type:"button",onclick:random},"Random duel"))),
+      null),
+    h("nav",{class:"games","aria-label":"Card games"},
+      [["#draft","Draft Duel","Draft three cards and beat the dealer's three."],["#guess","Guess the Guildie","One guildie a day. Fewer clues, better score."],["#duel","Card Duels","Put any two to six cards head to head."]]
+        .map(([href,t,d])=>h("a",{class:"game",href},h("b",{},t),h("span",{},d))),
+      h("button",{class:"game",type:"button",onclick:random},h("b",{},"Random duel"),h("span",{},"Two cards picked for you."))),
     cardOfWeek(),tools,
     h("div",{class:"r-count",role:"status"},list.length===S.members.length?`${list.length} cards`:`Showing ${list.length} of ${S.members.length} cards`),
     body]}
@@ -1461,58 +1501,129 @@ async function duelPng(order,pts,rounds,headline){
   x.textAlign="center";x.fillStyle="#9a8f8e";x.font=body(500,16);x.fillText("bloodandtears.web.app · gold wins the round · crits are re-rolled daily",W/2,H-34,W-PAD*2);
   return new Promise(res=>c.toBlob(res,"image/png"))}
 
-/* ---------- Top Trumps ---------- */
-// A quick game against the dealer: five guild cards each. Whoever picks names a stat; the higher number takes the round.
-// Win a round and you pick again; lose and the dealer picks its card's strongest stat. Nothing is saved but your record on this device.
-const TT_STATS=DUEL_ROUNDS.filter(r=>r[0]!=="Hall of Firsts");
-let TT=null;
-const ttRec=()=>{try{return{w:0,l:0,d:0,streak:0,best:0,...JSON.parse(localStorage.getItem("lg-tt")||"{}")}}catch(e){return{w:0,l:0,d:0,streak:0,best:0}}};
-function ttDeal(){const pool=S.members.filter(m=>isMine(m)||memberState(m)==="current");for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
-  const n=Math.min(5,Math.floor(pool.length/2));TT=n?{n,you:pool.slice(0,n).map(m=>m.id),dealer:pool.slice(n,2*n).map(m=>m.id),i:0,score:[0,0],turn:"you",res:null,done:false}:null}
-// The dealer's pick: the stat where its card stands highest against the whole guild.
-function ttDealerPick(m){let best=null,bp=-1;for(const[name,get]of TT_STATS){const v=get(m)||0;if(!v)continue;const below=S.members.filter(o=>(get(o)||0)<v).length/Math.max(1,S.members.length);if(below>bp){bp=below;best=name}}return best||"Level"}
-function ttPlay(name){const a=memberById(TT.you[TT.i]),b=memberById(TT.dealer[TT.i]),rd=TT_STATS.find(r=>r[0]===name);if(!a||!b||!rd||TT.res)return;
-  const A=duelVal(a,name,rd[1],Math.random()),B=duelVal(b,name,rd[1],Math.random()),win=A.v>B.v?"you":B.v>A.v?"dealer":"draw";
-  if(win==="you")TT.score[0]++;else if(win==="dealer")TT.score[1]++;
-  TT.res={name,A,B,win,fmt:rd[2],by:TT.turn};render()}
-function ttNext(){const w=TT.res.win;if(w!=="draw")TT.turn=w;TT.res=null;TT.i++;
-  if(TT.i>=TT.n){TT.done=true;const r=ttRec(),[y,d]=TT.score;if(y>d){r.w++;r.streak++;r.best=Math.max(r.best,r.streak)}else if(d>y){r.l++;r.streak=0}else r.d++;try{localStorage.setItem("lg-tt",JSON.stringify(r))}catch(e){}}
+/* ---------- Draft Duel ---------- */
+// A one-minute game against the dealer. Six guild cards of a similar level go on the table. You take one, the dealer two,
+// you two, the dealer the last. Then you choose which of your three faces which of theirs, and each pair fights a short duel
+// (class matchup, signature moves and crits all count). Win two of the three. Only your record is kept, in this browser.
+const DD_SEQ=["you","dealer","dealer","you","you","dealer"];
+let DD=null;
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const gameRec=key=>{try{return{w:0,l:0,d:0,streak:0,best:0,...JSON.parse(localStorage.getItem(key)||"{}")}}catch(e){return{w:0,l:0,d:0,streak:0,best:0}}};
+function ddDeal(){const pool=S.members.filter(m=>isMine(m)||memberState(m)==="current");if(pool.length<6){DD=null;return}
+  const anchor=+pool[Math.floor(Math.random()*pool.length)].level||1;
+  const table=shuffle(shuffle(pool.slice()).sort((a,b)=>Math.abs((+a.level||1)-anchor)-Math.abs((+b.level||1)-anchor)).slice(0,6)).map(m=>m.id);
+  DD={table,own:{},step:0,phase:"draft",line:[],foe:[],fights:null,last:[]}}
+// How strong a card is against the others on the table: in how many stat match-ups it comes out ahead.
+const ddStrength=(m,others)=>DUEL_ROUNDS.reduce((t,[,get])=>t+others.filter(o=>(get(m)||0)>(get(o)||0)).length,0);
+function ddPick(id){const t=DD;if(!t||t.phase!=="draft"||DD_SEQ[t.step]!=="you"||t.own[id])return;t.own[id]="you";t.step++;t.last=[];
+  const all=t.table.map(memberById);
+  while(t.step<6&&DD_SEQ[t.step]==="dealer"){const left=all.filter(m=>!t.own[m.id]).sort((a,b)=>ddStrength(b,all)-ddStrength(a,all));
+    const pick=left.length>1&&Math.random()>.75?left[1+Math.floor(Math.random()*(left.length-1))]:left[0];t.own[pick.id]="dealer";t.last.push(nameOf(pick));t.step++}
+  if(t.step>=6){t.phase="lineup";t.line=t.table.filter(i=>t.own[i]==="you");t.foe=shuffle(t.table.filter(i=>t.own[i]==="dealer"))}
   render()}
-function viewTrumps(){
-  if(!TT||!TT.you.every(memberById)||!TT.dealer.every(memberById))ttDeal();
-  const head=h("div",{class:"page-head"},h("div",{},h("a",{href:"#cards",class:"small"},"← Cards"),h("h1",{},"Top Trumps"),
-      h("p",{class:"sub"},"Five guild cards each. Name the stat you think your card wins on. Win the round and you pick again; lose and the dealer picks.")),
-    h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>{ttDeal();render()}},"New game")));
-  if(!TT)return[head,h("p",{class:"empty"},"There need to be at least two characters in the guild to deal a game.")];
-  const t=TT,[ys,ds]=t.score,rec=ttRec();
-  const recLine=h("p",{class:"small ter",style:"margin:0"},"Your record on this device: "+rec.w+(rec.w===1?" win":" wins")+", "+rec.l+(rec.l===1?" loss":" losses")+(rec.d?", "+rec.d+(rec.d===1?" draw":" draws"):"")+(rec.best>1?" · best streak "+rec.best:""));
-  const score=h("div",{class:"tt-score",role:"status"},h("span",{class:"tt-side"},h("small",{},"You"),h("b",{},String(ys))),
-    h("span",{class:"tt-round"},t.done?"Full time":"Round "+(t.i+1)+" of "+t.n,h("span",{class:"tt-pips","aria-hidden":"true"},Array.from({length:t.n},(_,k)=>h("i",{class:k<t.i||t.done?"on":k===t.i?"now":""})))),
-    h("span",{class:"tt-side"},h("small",{},"Dealer"),h("b",{},String(ds))));
-  if(t.done){const won=ys>ds,draw=ys===ds,line=draw?"It's a draw, "+ys+"–"+ds:won?"You win "+ys+"–"+ds:"The dealer wins "+ds+"–"+ys;
-    const copy=async()=>{const txt=(draw?"I drew "+ys+"–"+ds+" with":won?"I beat the dealer "+ys+"–"+ds+" at":"The dealer beat me "+ds+"–"+ys+" at")+" Blood and Tears Top Trumps: "+location.origin+location.pathname+"#trumps";
-      try{await navigator.clipboard.writeText(txt);toast("Result copied. Paste it in Discord.")}catch(e){toast("Couldn't copy.")}};
-    return[head,h("section",{class:"card tt","aria-labelledby":"tt-h"},h("h2",{id:"tt-h",class:"visually-hidden"},"Result"),score,
-      h("div",{class:"duel-result"},h("b",{},line),h("span",{class:"ter"},won?"Nicely played.":draw?"Honours even.":"The house always has a chance.")),
-      h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn primary",type:"button",onclick:()=>{ttDeal();render()}},"Play again"),h("button",{class:"btn",type:"button",onclick:copy},"Copy result")),recLine)]}
-  const a=memberById(t.you[t.i]),b=memberById(t.dealer[t.i]),res=t.res,mv=moveOf(a);
-  const down=h("div",{class:"lg-card tt-down",role:"img","aria-label":"The dealer's card, face down"},h("img",{src:"logo.svg",alt:"",width:"96",height:"96"}),h("span",{},"?"));
-  const slot=(label,card,cls)=>h("div",{class:"tt-slot"+(cls?" "+cls:"")},h("span",{class:"duel-place"+(cls==="won"?" win":"")},label),card);
-  const arena=h("div",{class:"tt-arena"},slot("Your card",cardEl(a),res&&res.win==="you"?"won":""),h("span",{class:"tt-vs","aria-hidden":"true"},"vs"),
-    slot("Dealer's card",res?cardEl(b):down,res&&res.win==="dealer"?"won":""));
-  let panel;
-  if(res){const side=(who,r)=>h("div",{class:"tt-val"+(res.win===who?" win":"")},h("small",{},who==="you"?"You":"Dealer"),h("b",{},res.fmt(r.v)),r.why?h("span",{class:"duel-why"+(r.crit?" crit":"")},r.why):null);
-    panel=h("div",{class:"tt-panel",role:"status"},h("p",{class:"tt-call"},(res.by==="dealer"?"The dealer chose ":"You chose ")+res.name+". ",h("b",{},res.win==="you"?"You take the round.":res.win==="dealer"?"The dealer takes it.":"Dead level: no point.")),
-      h("div",{class:"tt-vals"},side("you",res.A),side("dealer",res.B)),
-      h("button",{class:"btn primary",type:"button",id:"tt-next",onclick:ttNext},t.i+1>=t.n?"See the result":"Next round"))}
-  else if(t.turn==="dealer"){const pick=ttDealerPick(b);
-    panel=h("div",{class:"tt-panel"},h("p",{class:"tt-call"},"The dealer won the last round, so it picks. Have a look at your card, then see what it chose."),
-      h("button",{class:"btn primary",type:"button",id:"tt-reveal",onclick:()=>ttPlay(pick)},"Reveal the dealer's pick"))}
-  else panel=h("div",{class:"tt-panel"},h("p",{class:"tt-call"},"Your pick. Which stat does ",h("b",{},nameOf(a))," win on?"),
-      h("div",{class:"tt-stats"},TT_STATS.map(([name,get,fmt])=>{const base=get(a)||0,boosted=mv&&mv.round===name&&base;
-        return h("button",{class:"tt-stat",type:"button",disabled:!base,onclick:()=>ttPlay(name)},h("span",{},name,boosted?h("small",{},mv.name+" "+mv.up):null),h("b",{},fmt(boosted?Math.round(base*mv.k*100)/100:base)))})),
-      h("p",{class:"small ter",style:"margin:0"},"Fighting stats can land a critical hit for +25%. The better a card's crit, the likelier."));
-  return[head,h("section",{class:"card tt","aria-labelledby":"tt-h"},h("h2",{id:"tt-h",class:"visually-hidden"},"The game"),score,arena,panel,recLine)]}
+const ddEdge=(a,b)=>{const x=(COUNTERS[a.cls]||{})[b.cls];return x?clsPlural(a.cls)+" "+x+" "+clsPlural(b.cls):""};
+function ddFight(a,b){let pa=0,pb=0;const rows=[],ca=ddEdge(a,b),cb=ddEdge(b,a);
+  if(ca||cb){if(ca)pa++;if(cb)pb++;rows.push({name:"Class matchup",A:ca?"+1":"—",B:cb?"+1":"—",win:ca&&!cb?"you":cb&&!ca?"dealer":"draw",why:ca||cb})}
+  for(const[name,get,fmt]of DUEL_ROUNDS){const A=duelVal(a,name,get,Math.random()),B=duelVal(b,name,get,Math.random());if(!A.v&&!B.v)continue;
+    const win=A.v>B.v?"you":B.v>A.v?"dealer":"draw";if(win==="you")pa++;else if(win==="dealer")pb++;
+    rows.push({name,A:fmt(A.v),B:fmt(B.v),win,why:[A.why&&"Yours: "+A.why,B.why&&"Dealer's: "+B.why].filter(Boolean).join(" · ")})}
+  return{pa,pb,win:pa>pb?"you":pb>pa?"dealer":"draw",rows}}
+function ddGo(){const t=DD;t.fights=t.line.map((id,i)=>ddFight(memberById(id),memberById(t.foe[i])));t.phase="done";
+  const y=t.fights.filter(f=>f.win==="you").length,d=t.fights.filter(f=>f.win==="dealer").length,r=gameRec("lg-dd");
+  if(y>d){r.w++;r.streak++;r.best=Math.max(r.best,r.streak)}else if(d>y){r.l++;r.streak=0}else r.d++;try{localStorage.setItem("lg-dd",JSON.stringify(r))}catch(e){}
+  render()}
+function viewDraft(){
+  if(!DD||![...DD.table].every(memberById))ddDeal();
+  const head=h("div",{class:"page-head"},h("div",{},h("a",{href:"#cards",class:"small"},"← Cards"),h("h1",{},"Draft Duel"),
+      h("p",{class:"sub"},"Six cards on the table. Draft three, line them up against the dealer's three, and win two of the three fights.")),
+    h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>{ddDeal();render()}},"New game")));
+  if(!DD)return[head,h("p",{class:"empty"},"There need to be at least six characters in the guild to deal a game.")];
+  const t=DD,rec=gameRec("lg-dd"),ph=["draft","lineup","done"].indexOf(t.phase);
+  const steps=h("ol",{class:"dd-steps"},["Draft","Line up","Fight"].map((l,i)=>h("li",{class:i<ph?"done":i===ph?"now":"","aria-current":i===ph?"step":null},h("b",{},String(i+1)),l)));
+  const recLine=h("p",{class:"small ter",style:"margin:0;text-align:center"},"Your record on this device: "+rec.w+(rec.w===1?" win":" wins")+", "+rec.l+(rec.l===1?" loss":" losses")+(rec.d?", "+rec.d+(rec.d===1?" draw":" draws"):"")+(rec.best>1?" · best streak "+rec.best:""));
+  if(t.phase==="draft"){const mine=t.table.filter(i=>t.own[i]==="you").length,now=mine===0?1:3-mine;
+    return[head,h("section",{class:"card dd","aria-labelledby":"dd-h"},steps,
+      h("div",{class:"dd-call",role:"status"},h("h2",{id:"dd-h"},"Your pick: take "+(mine===0?"one card":now===2?"two cards":"one more card")),
+        h("p",{class:"small ter",style:"margin:0"},t.last.length?"The dealer took "+t.last.join(" and ")+". ":"","Tap a card to flip it and see its stats. Think about classes too: some counter others.")),
+      h("div",{class:"binder dd-table"},t.table.map(id=>{const m=memberById(id),o=t.own[id];
+        return h("div",{class:"binder-it"+(o?" taken "+o:"")},flipCard(m),o?h("span",{class:"tag "+(o==="you"?"gold":"")},o==="you"?"Yours":"Dealer's")
+          :h("button",{class:"btn sm primary",type:"button","aria-label":"Draft "+nameOf(m),onclick:()=>ddPick(id)},"Draft"))})),recLine)]}
+  const pairs=t.line.map((id,i)=>{const a=memberById(id),b=memberById(t.foe[i]),f=t.fights&&t.fights[i],edge=ddEdge(a,b),risk=ddEdge(b,a);
+    const side=(label,m,who)=>h("div",{class:"dd-side"+(f&&f.win===who?" won":"")},h("span",{class:"duel-place"+(f&&f.win===who?" win":"")},label+(f?" · "+(who==="you"?f.pa:f.pb):"")),cardEl(m));
+    return h("div",{class:"dd-pair"},h("div",{class:"dd-cards"},side("Yours",a,"you"),h("span",{class:"dd-vs","aria-hidden":"true"},"vs"),side("Dealer's",b,"dealer")),
+      f?h("p",{class:"dd-out",role:"status"},h("b",{},f.win==="you"?nameOf(a)+" wins "+f.pa+"–"+f.pb:f.win==="dealer"?nameOf(b)+" wins "+f.pb+"–"+f.pa:"A draw, "+f.pa+"–"+f.pb))
+       :h("label",{class:"dd-sel"},h("span",{class:"small ter"},"Send against "+nameOf(b)),h("select",{"data-slot":String(i),onchange:e=>{const j=t.line.indexOf(e.target.value);if(j>=0){[t.line[i],t.line[j]]=[t.line[j],t.line[i]];render()}}},
+          t.line.map(x=>h("option",{value:x,selected:x===id},nameOf(memberById(x)))))),
+      !f&&(edge||risk)?h("p",{class:"small",style:"margin:0;text-align:center;color:"+(edge?"var(--accent-text)":"var(--ter)")},edge?"Good matchup: "+edge:"Careful: "+risk):null,
+      f?h("details",{class:"dd-rounds"},h("summary",{class:"small"},"Round by round"),h("table",{},h("thead",{},h("tr",{},h("th",{scope:"col"},"Round"),h("th",{scope:"col"},"Yours"),h("th",{scope:"col"},"Dealer's"))),
+        h("tbody",{},f.rows.map(r=>h("tr",{},h("th",{scope:"row"},r.name,r.why?h("span",{class:"duel-why"},r.why):null),h("td",{class:r.win==="you"?"win":""},r.A),h("td",{class:r.win==="dealer"?"win":""},r.B)))))):null)});
+  if(t.phase==="lineup")return[head,h("section",{class:"card dd","aria-labelledby":"dd-h"},steps,
+      h("div",{class:"dd-call"},h("h2",{id:"dd-h"},"Line them up"),h("p",{class:"small ter",style:"margin:0"},"Choose which of your cards faces each of the dealer's. Each pair fights on its own; win two of the three.")),
+      h("div",{class:"dd-pairs"},pairs),h("button",{class:"btn primary",type:"button",id:"dd-go",style:"align-self:center",onclick:ddGo},"Fight"),recLine)];
+  const y=t.fights.filter(f=>f.win==="you").length,d=t.fights.filter(f=>f.win==="dealer").length,won=y>d,draw=y===d;
+  const copy=async()=>{const txt=(draw?"I drew "+y+"–"+d+" with":won?"I beat the dealer "+y+"–"+d+" at":"The dealer beat me "+d+"–"+y+" at")+" Blood and Tears Draft Duel: "+location.origin+location.pathname+"#draft";
+    try{await navigator.clipboard.writeText(txt);toast("Result copied. Paste it in Discord.")}catch(e){toast("Couldn't copy.")}};
+  return[head,h("section",{class:"card dd","aria-labelledby":"dd-h"},steps,
+    h("div",{class:"duel-result",role:"status"},h("b",{id:"dd-h"},draw?"It's a draw":won?"You win "+y+"–"+d:"The dealer wins "+d+"–"+y),h("span",{class:"ter"},won?"A good draft.":draw?"Honours even.":"Try a different line-up next time.")),
+    h("div",{class:"dd-pairs"},pairs),
+    h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn primary",type:"button",onclick:()=>{ddDeal();render()}},"Play again"),h("button",{class:"btn",type:"button",onclick:copy},"Copy result")),recLine)]}
+
+/* ---------- Guess the Guildie ---------- */
+// One guildie a day, the same for everyone. A clue to start; every wrong guess gives another and says how the guess compares.
+// Six guesses. Today's game and your streak are kept in this browser only.
+const GG_MAX=6;
+let GG=null,ggSel=null;
+const ggPool=()=>S.members.filter(m=>memberState(m)==="current"&&(+m.level||1)>=10&&m.cls).sort((a,b)=>String(a.id).localeCompare(String(b.id)));
+function ggState(){const day=perthDay();
+  if(!GG||GG.day!==day){let st={};try{st=JSON.parse(localStorage.getItem("lg-guess")||"{}")}catch(e){}
+    GG=st.day===day?st:{day,target:null,guesses:[],done:false,won:false,played:+st.played||0,wins:+st.wins||0,streak:+st.streak||0,best:+st.best||0,lastWin:st.lastWin||""}}
+  if(!GG.target||!memberById(GG.target)){const pool=ggPool();GG.target=pool.length?pool[Math.floor(seedRoll("guildie|"+day)*pool.length)%pool.length].id:null;if(!GG.done)GG.guesses=[]}
+  return GG}
+const ggSave=()=>{try{localStorage.setItem("lg-guess",JSON.stringify(GG))}catch(e){}};
+function ggClues(t){const lv=+t.level||1,pr=Object.entries(t.profs||{}).filter(([p])=>PRIMARY.includes(p)).map(([p])=>p),hk=+(t.armory||{}).hk||0,dn=passportOf(t).length,nm=nameOf(t);
+  return[["Role and level",(t.role||"DPS")+", "+(lv>=60?"level 60":"level "+Math.floor(lv/10)*10+" to "+(Math.floor(lv/10)*10+9))],
+    ["Race",t.race||"Not known yet"],
+    ["Professions",pr.length?pr.join(" and "):"None yet"],
+    ["Deeds",hk.toLocaleString("en-AU")+(hk===1?" honourable kill":" honourable kills")+", "+dn+(dn===1?" dungeon stamp":" dungeon stamps")],
+    ["Class",t.cls+(t.spec?" ("+t.spec+")":"")],
+    ["Name","Starts with "+nm[0].toUpperCase()+", "+nm.replace(/\s+/g,"").length+" letters"]]}
+function ggGuess(id){const st=ggState();if(st.done||!id||st.guesses.includes(id))return;st.guesses.push(id);
+  const hit=id===st.target;if(hit||st.guesses.length>=GG_MAX){st.done=true;st.won=hit;st.played++;
+    if(hit){const y=new Date(Date.now()+8*36e5-864e5).toISOString().slice(0,10);st.wins++;st.streak=st.lastWin===y?st.streak+1:1;st.best=Math.max(st.best,st.streak);st.lastWin=st.day}else st.streak=0}
+  ggSave();render()}
+function viewGuess(){
+  const st=ggState(),t=st.target&&memberById(st.target);
+  const head=h("div",{class:"page-head"},h("div",{},h("a",{href:"#cards",class:"small"},"← Cards"),h("h1",{},"Guess the Guildie"),
+    h("p",{class:"sub"},"One guildie a day, the same for everyone. Every wrong guess gives you another clue. Six guesses.")));
+  if(!t)return[head,h("p",{class:"empty"},"There's nobody to guess yet. The game needs guild members at level 10 or above.")];
+  const clues=ggClues(t),wrong=st.guesses.filter(g=>g!==st.target),shown=st.done?clues.length:Math.min(clues.length,1+wrong.length);
+  const clueList=h("ol",{class:"gg-clues"},clues.map(([l,v],i)=>h("li",{class:i<shown?"":"hid"},h("span",{class:"gg-n","aria-hidden":"true"},String(i+1)),h("span",{},h("small",{},l),i<shown?h("b",{},v):h("span",{class:"ter"},"Hidden")))));
+  const cmp=(label,same,txt)=>h("span",{class:"gg-chip"+(same?" hit":"")},h("small",{},label),txt);
+  const rows=st.guesses.map(id=>{const g=memberById(id);if(!g)return null;const gl=+g.level||1,tl=+t.level||1;
+    return h("li",{class:id===st.target?"right":""},h("span",{class:"row",style:"gap:.5rem;flex-wrap:nowrap;min-width:0"},classIcon(g.cls),h("b",{},nameOf(g))),
+      id===st.target?h("span",{class:"gg-chip hit"},"That's them")
+      :h("span",{class:"gg-cmp"},cmp("Class",g.cls===t.cls,g.cls===t.cls?"Same":"Different"),cmp("Race",g.race===t.race,g.race===t.race?"Same":"Different"),cmp("Role",(g.role||"DPS")===(t.role||"DPS"),(g.role||"DPS")===(t.role||"DPS")?"Same":"Different"),
+        cmp("Level",gl===tl,gl===tl?"Same":tl>gl?"They're higher":"They're lower")))});
+  const left=GG_MAX-st.guesses.length,opts=S.members.filter(m=>memberState(m)==="current"&&!st.guesses.includes(m.id)).sort((a,b)=>nameOf(a).localeCompare(nameOf(b)));
+  const stats=h("p",{class:"small ter",style:"margin:0;text-align:center"},"On this device: played "+st.played+", guessed "+st.wins+(st.streak>1?" · "+st.streak+" days in a row":"")+(st.best>1?" · best run "+st.best:""));
+  const dayLabel=new Date(st.day+"T00:00:00Z").toLocaleDateString("en-AU",{day:"numeric",month:"short",timeZone:"UTC"});
+  const copy=async()=>{const txt="Guess the Guildie · "+dayLabel+" · "+(st.won?"got it in "+st.guesses.length+" of "+GG_MAX:"missed it")+" · "+location.origin+location.pathname+"#guess";
+    try{await navigator.clipboard.writeText(txt);toast("Result copied. Paste it in Discord.")}catch(e){toast("Couldn't copy.")}};
+  const play=st.done?h("div",{class:"gg-end",role:"status"},
+      h("div",{class:"duel-result"},h("b",{},st.won?"Got it in "+st.guesses.length+(st.guesses.length===1?" guess":" guesses"):"Not this time"),h("span",{class:"ter"},"It was "+nameOf(t)+". A new guildie at midnight, Perth time.")),
+      flipCard(t),h("div",{class:"row",style:"justify-content:center"},h("a",{class:"btn",href:`#char/${t.isAlt?"alts":"members"}/${t.id}`},"Open their page"),h("button",{class:"btn primary",type:"button",onclick:copy},"Copy result")))
+    :(()=>{const q=String(S.ui.ggq||"").trim().toLowerCase().split(/\s+/).filter(Boolean),hay=m=>[nameOf(m),m.cls,m.race,m.spec,roleText(m)].join(" ").toLowerCase();
+      const list=opts.filter(m=>q.every(w=>hay(m).includes(w))),sel=ggSel&&opts.find(m=>m.id===ggSel);
+      // Tap a card to choose it, then confirm, so a slip of the finger doesn't cost a guess.
+      return h("div",{class:"gg-form"},
+        h("div",{class:"gg-bar"},h("div",{class:"r-search",style:"flex:1 1 12rem"},h("input",{id:"gg-q",type:"search",placeholder:"Search the cards","aria-label":"Search the cards by name, class, race or role",value:S.ui.ggq||"",autocomplete:"off",oninput:e=>{S.ui.ggq=e.target.value;schedule()}})),
+          h("button",{class:"btn primary",type:"button",id:"gg-go",disabled:!sel,onclick:()=>{const id=ggSel;ggSel=null;ggGuess(id)}},sel?"Guess "+nameOf(sel):"Pick a card")),
+        h("p",{class:"small ter",style:"margin:0"},"Who is it? Tap their card. "+left+(left===1?" guess":" guesses")+" left."),
+        list.length?h("div",{class:"gg-pick",role:"group","aria-label":"Cards to choose from"},list.map(m=>{const c=cardEl(m);c.removeAttribute("role");c.removeAttribute("aria-label");c.setAttribute("aria-hidden","true");
+          return h("button",{class:"gg-card",type:"button","aria-pressed":String(ggSel===m.id),"aria-label":nameOf(m)+", level "+(m.level||1)+" "+(m.cls||""),onclick:()=>{ggSel=ggSel===m.id?null:m.id;render()}},c)}))
+          :h("p",{class:"empty"},"No cards match that search."))})();
+  return[head,h("section",{class:"card gg","aria-labelledby":"gg-h"},h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"gg-h"},"Today's Guildie"),h("span",{class:"small ter"},dayLabel)),
+    clueList,rows.length?h("ol",{class:"gg-rows","aria-label":"Your guesses"},rows):null,play,stats)]}
 
 /* ---------- Site use (officers only) ---------- */
 // Each device marks its own characters as visited (at most every 12 hours), so officers can see whether the site is used.
@@ -3121,7 +3232,7 @@ function milestoneToast({badge,title,sub},after){
   document.addEventListener("visibilitychange",vis);document.body.append(el);vis();run()}
 
 /* ---------- render ---------- */
-function route(){const p=(location.hash||"#roster").slice(1).split("/");if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(p[0]==="duel")return{page:"duel",ids:decodeURIComponent(p[1]||"").split(",").filter(Boolean)};if(p[0]==="trumps")return{page:"trumps"};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
+function route(){const p=(location.hash||"#roster").slice(1).split("/");if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(p[0]==="duel")return{page:"duel",ids:decodeURIComponent(p[1]||"").split(",").filter(Boolean)};if(p[0]==="draft"||p[0]==="trumps")return{page:"draft"};if(p[0]==="guess")return{page:"guess"};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
 function render(){
   const app=$("#app");
   const keep=document.activeElement&&document.activeElement.id,typed={};
@@ -3132,10 +3243,10 @@ function render(){
   if(!S.user){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("p",{class:"ter"},"Loading…")));return}
   const r=route();
   const views={roster:viewRoster,lfg:viewLfg,raids:viewRaids,cards:viewCards,professions:viewProfessions,records:viewRecords};
-  const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="duel"?viewDuel(r.ids):r.page==="trumps"?viewTrumps():r.page==="history"?viewHistory():views[r.page]();
+  const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="duel"?viewDuel(r.ids):r.page==="draft"?viewDraft():r.page==="guess"?viewGuess():r.page==="history"?viewHistory():views[r.page]();
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
-  app.replaceChildren(...[header(r.page==="char"?"":r.page==="duel"||r.page==="trumps"?"cards":r.page==="history"?"roster":r.page==="raids"?"lfg":r.page),
+  app.replaceChildren(...[header(r.page==="char"?"":r.page==="duel"||r.page==="draft"||r.page==="guess"?"cards":r.page==="history"?"roster":r.page==="raids"?"lfg":r.page),
     net?h("div",{class:"netbar",role:"status"},net):null,winterVeil(),
     h("main",{class:"wrap"},
     S.error?h("div",{class:"note warn"},S.error):null,

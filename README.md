@@ -8,11 +8,11 @@ This file describes the site as it is today. The older, dated notes on how each 
 
 | Page | What's on it |
 |---|---|
-| **Roster** | Everyone in the guild. Search, Filters, sort, quick chips (Tanks, Healers, DPS, Level 60, Seen this week, Mine) and three views (List, By class, Cards). Each row shows the portrait, name and top title, level, professions, best loot and last seen. The side column has Character of the Day, In Game Today, This Week on Records, Guild Makeup and About the Guild. Below the list is the Guild Feed. |
+| **Roster** | Everyone in the guild. Search, Filters, sort, quick chips (Tanks, Healers, DPS, Level 60, Seen this week, Mine) and three views (List, By class, Cards). Each row shows the portrait, name and top title, level, professions, best loot and last seen; opening a row shows the details with their card beside them. The side column has Character of the Day, In Game Today, This Week on Records, Guild Makeup and About the Guild. Below the list is the Guild Feed. |
 | **Character page** | Portrait, name and titles, a strip of headline numbers, then gear and stats, the Dungeon Passport, professions (with what they can make), their trading card, talents and their Journey. |
 | **Dungeons** | The dungeons grouped like the game's Spelunker achievements (Novice, Experienced, Master). For each: how many are the right level, how many have been, and how many still need it. Open one for the names, Suggest a group, and what drops. |
 | **Raids** (`#raids`, from the switch on Dungeons) | Raid readiness for Barrow Deeps, Hyjal Summit and Onyxia's Lair, every level 60 with their role and gear, and who's between 50 and 59. |
-| **Cards** | Everyone's trading card in sets (Gold foil, Silver, Bronze, Plain), with search and sort, Card of the Week, Card Duels and Top Trumps. |
+| **Cards** | Everyone's trading card in sets (Gold foil, Silver, Bronze, Plain), with search and sort, Card of the Week, and the games: Draft Duel, Guess the Guildie and Card Duels. |
 | **Professions** | Who has what, and **Who Can Make It?**: search any crafted item to see who's skilled enough. |
 | **Records** | Leaderboards for kills, level, dungeons, gear and every profession, with titles for whoever is top, the wooden spoon for last, This Week, the Hall of Titles and the Hall of Firsts. |
 | **Guild History** (`#history`) | Everything the feed has seen, one fold per day, plus the weekly recap picture for any week. |
@@ -21,9 +21,10 @@ Other things worth knowing about:
 
 - **Titles and stamps** are earned automatically. Whoever is alone at the top of a Records board holds its title (Most Wanted, Master Miner and so on), and cards earn stamps for things like level 60, an epic, a PvP rank or a full set of dungeons.
 - **Card frames.** A title holder's card gets a frame for the kind of title: Warlord (most kills), Delver (dungeons), Royal (best dressed), Amethyst (epics), Lightning (levels this week), Oak (longest on the site), Wild (a gathering profession), Forge (a crafting profession), Hearth (Cooking, First Aid, Fishing) and Champion (top of a class, in the class colour). The colours are in `FRAMES` in `public/index.html`.
-- **Signature moves.** Every spec has one (Combat rogues have Blade Flurry, attack +10%). It's printed on the card and lifts that stat in duels and Top Trumps. The list is `MOVES` in `public/index.html`.
+- **Signature moves.** Every spec has one (Combat rogues have Blade Flurry, attack +10%). It's printed on the card and lifts that stat in duels and Draft Duel. The list is `MOVES` in `public/index.html`.
 - **Card Duels** (`#duel`). Two to six cards go head to head a stat at a time. Fighting stats can land a critical hit (+25%); the better a card's crit, the likelier. The dice are set by the day and the fighters, so a shared link shows everyone the same duel and tomorrow it can go differently. **Copy for Discord** makes a picture of the result.
-- **Top Trumps** (`#trumps`). Five guild cards each against the dealer. Whoever picks names a stat and the higher number takes the round; win and you pick again, lose and the dealer picks its card's strongest stat. Only your win and loss record is kept, in that browser.
+- **Draft Duel** (`#draft`). Six cards of a similar level go on the table. You take one, the dealer two, you two, the dealer the last. Then you choose which of your three faces which of theirs; each pair fights a short duel and you need two of the three. Only your win and loss record is kept, in that browser. (It replaced Top Trumps.)
+- **Guess the Guildie** (`#guess`). One guildie a day, the same for everyone. You start with one clue and tap the card you think it is; a wrong guess gives another clue and says whether the class, race, role and level match. Six guesses. Today's game and your streak are kept in that browser.
 - **Celebrations.** When your character levels up, your card flips over with the new level. Guild milestones (such as 1,000 honourable kills) get a small toast.
 - **Since You Were Last Here** sums up what happened since this device last had the site open.
 - **Winter Veil.** A countdown strip runs from 1 November to Boxing Day.

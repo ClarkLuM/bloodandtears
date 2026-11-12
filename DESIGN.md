@@ -791,6 +791,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 - 13 Nov: card game pass. Title frames (`FRAMES`, picked by `frameOf` from the first title; the level tier still colours the round badge), a signature move line over the foot of the card art (`.lg-move`), critical hits in duels (`duelVal`, seeded by day), a duel picture (`duelPng`, 1200 wide, same header and footer treatment as the weekly recap) and Top Trumps (`#trumps`, `.tt-*`: scoreboard with pips, your card beside a face-down crimson dealer card, stat buttons at least 3rem tall).
 
+- 13 Nov: games. Top Trumps was replaced by Draft Duel (`#draft`, `.dd-*`: a three-step header, six cards to draft, then three pairings with a chooser each) and Guess the Guildie was added (`#guess`, `.gg-*`: six clue tiles, guess rows with match chips, and a grid of half-size cards to tap, confirmed with one button). Cards has a Games strip (`.games`). An opened roster row shows the character's card on the right (`.r-open`, `.r-card`).
+
 ## Open Items
 
 **These parts are still defaults, guesses, or waiting for a person.**
