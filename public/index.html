@@ -2731,8 +2731,11 @@ function armoryAllLine(){
 function scribeLine(){const sc=S.scribe;
   const up=isOfficer()?(()=>{const inp=h("input",{type:"file",accept:".lua,text/plain",class:"visually-hidden",id:"scribe-file",onchange:async e=>{const file=e.target.files&&e.target.files[0];e.target.value="";if(!file)return;
       if(file.size>3e6){toast("That file is too big to be the scribe file.");return}
+      const text=await file.text();
+      // Both the addon and its notes are called BloodAndTearsScribe.lua. The notes start with "BloodAndTearsScribeDB =".
+      if(/SlashCmdList|local ADDON|CreateFrame\(/.test(text)||!/^\s*BloodAndTearsScribeDB\s*=\s*\{/m.test(text)){toast(/SlashCmdList|local ADDON|CreateFrame\(/.test(text)?"That's the addon itself, not its notes. Upload the one in WTF\\Account\\<account>\\SavedVariables instead.":"That isn't the scribe file. Look in WTF\\Account\\<account>\\SavedVariables.");return}
       toast("Reading the scribe file…");
-      try{const r=await httpsCallable(fns,"scribeUpload")({text:await file.text()}),d=r.data||{};
+      try{const r=await httpsCallable(fns,"scribeUpload")({text}),d=r.data||{};
         toast("Scribe file read: "+d.matched+(d.matched===1?" guildie":" guildies")+" matched"+(d.recipeChars?", recipes for "+d.recipeChars+(d.recipeChars===1?" character":" characters"):"")+(d.unknownN?". Not on the site yet: "+d.unknown.join(", ")+(d.unknownN>d.unknown.length?" and more":""):"")+".")}
       catch(err){toast(err&&err.message?err.message.replace(/^.*?: /,""):"Couldn't read that file.")}}});
     return[inp,h("label",{for:"scribe-file",class:"btn sm",title:"In your WoW folder: _forever_\WTF\Account\<account>\SavedVariables\BloodAndTearsScribe.lua"},"Upload the scribe file")]})():null;

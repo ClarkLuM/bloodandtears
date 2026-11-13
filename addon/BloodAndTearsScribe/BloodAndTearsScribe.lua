@@ -6,7 +6,8 @@
 --
 -- Everything is kept in BloodAndTearsScribeDB. The game saves it to
 --   World of Warcraft\_forever_\WTF\Account\<ACCOUNT>\SavedVariables\BloodAndTearsScribe.lua
--- when you log out or type /reload. Upload that file on the site (Roster > Details > Upload the scribe file).
+-- when you log out or type /reload. Upload THAT file on the site (Roster > Details > Upload the scribe file),
+-- not this one: this is the addon itself. The notes file starts with "BloodAndTearsScribeDB = {".
 -- The addon never sends anything anywhere, reads nothing during combat and draws nothing on screen. /scribe shows a summary.
 
 local ADDON = ...

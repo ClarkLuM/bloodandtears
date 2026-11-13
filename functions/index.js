@@ -874,6 +874,8 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
   if (!(off.uids || []).includes(req.auth.uid)) throw new HttpsError("permission-denied", "Only officers can upload the scribe file.");
   const text = String((req.data && req.data.text) || "");
   if (!text || text.length > 3e6) throw new HttpsError("invalid-argument", "That file is empty or too big.");
+  if (/SlashCmdList|local ADDON|CreateFrame\(/.test(text) || !/^\s*BloodAndTearsScribeDB\s*=\s*\{/m.test(text)) throw new HttpsError("invalid-argument", /SlashCmdList|local ADDON|CreateFrame\(/.test(text)
+    ? "That's the addon itself, not its notes. Upload the one in WTF\\Account\\<account>\\SavedVariables instead." : "That isn't the scribe file. Look in WTF\\Account\\<account>\\SavedVariables.");
   let sv; try { sv = parseLuaSaved(text).BloodAndTearsScribeDB; } catch (e) { throw new HttpsError("invalid-argument", "That doesn't look like the scribe file: " + e.message); }
   if (!sv || typeof sv !== "object" || !sv.members) throw new HttpsError("invalid-argument", "That doesn't look like the scribe file (BloodAndTearsScribe.lua).");
   if (sv.guild && keyOf(sv.guild).replace(/ /g, "-") !== GUILD_SLUG) throw new HttpsError("failed-precondition", `That file is from ${short(sv.guild, 40)}, not Blood and Tears.`);

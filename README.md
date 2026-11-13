@@ -117,7 +117,7 @@ It sends nothing anywhere, reads nothing in combat and draws nothing on screen. 
 
 **Install:** copy the `BloodAndTearsScribe` folder into the game's `Interface\AddOns` folder (or install it from CurseForge once it's published there), then tick it in the in-game AddOns list.
 
-**Upload:** the game saves the notes when you log out or type `/reload`, to `WTF\Account\<ACCOUNT>\SavedVariables\BloodAndTearsScribe.lua` in the game folder. On the site, open Roster, then Details next to "Up to date", and choose **Upload the scribe file** (officers only). The server (`scribeUpload`) reads the file as data, matches names to characters, skips anyone who opted out, and keeps what it uses in `guild/scribe`. Every few days is plenty: the guild list reports last-online times back from the moment of upload.
+**Upload:** the game saves the notes when you log out or type `/reload`, to `WTF\Account\<ACCOUNT>\SavedVariables\BloodAndTearsScribe.lua` in the game folder. It has the same name as the addon's own file, so check it starts with `BloodAndTearsScribeDB = {`. On the site, open Roster, then Details next to "Up to date", and choose **Upload the scribe file** (officers only). The server (`scribeUpload`) reads the file as data, matches names to characters, skips anyone who opted out, and keeps what it uses in `guild/scribe`. Every few days is plenty: the guild list reports last-online times back from the moment of upload.
 
 **Where it shows:** exact streaks and "last seen" (the later of the armory and the scribe), "Last seen … in <zone>" in an opened roster row, joins and leaves in the Guild Feed, **When the Guild Plays** on Records (after three days of notes), **Raid Nights** on Raids, and "knows it" in Who Can Make It? for recipes the scribe has seen.
 
