@@ -40,7 +40,7 @@ Other things worth knowing about:
 - **The armory sync** (`armorySyncAll`, every hour) reads the guild's member list and each character's armory page: level, class, race, spec, professions, gear, talents, stats, honourable kills, PvP rank, pictures and last seen. **Sync now** and **Sync everyone** do the same on demand.
 - The armory only updates when a character logs out, and characters under level 10 aren't on it. The site shows this as "Up to date", "Data from …" or a dash, with the reason behind **Details**.
 - **Only two things are entered by hand:** passport stamps (also added automatically from dungeon-only loot) and each card's flavour text. Officers also fill in About the Guild.
-- **Worked out in the browser, never stored:** Records, titles, stamps, duels and "who can make it".
+- **Worked out in the browser, never stored:** Records, titles, stamps and "who can make it".
 - **Saved by the server:** a 10-day snapshot for This Week (`guild/records`), finished weekly recaps (`guild/recaps`), the Hall of Firsts and guild milestones (`guild/firsts`), who holds which title and since when (`guild/titles`), and each character's streak of days seen in game (`guild/streaks`).
 
 ## Who can do what
