@@ -923,6 +923,10 @@ a.r-name:hover{color:var(--accent-text)}
 .tp-sw[aria-pressed="true"]{outline:3px solid var(--accent-text);outline-offset:2px}
 .tp-sw:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 .tp-sw:hover{filter:brightness(1.12)}
+/* Card back: nothing may run past the card */
+.lg-back .lg-card-in{overflow:hidden}
+.lg-clip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg-back .lg-br span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 </style>
 </head>
 <body>
@@ -2006,10 +2010,10 @@ function cardBack(m){
       sec("Stats",stats.length?h("div",{class:"lg-bgrid"},stats.map(([k,l])=>h("div",{class:"lg-br"},h("span",{},l),h("b",{},statVal(k,st[k])))))
         :h("p",{class:"lg-none"},"Sync from the armory to fill this in.")),
       trees.length?sec("Talents",h("div",{class:"lg-bgrid"},trees.slice(0,3).map(t=>h("div",{class:"lg-br"+(t.active?" on":"")},h("span",{},t.name),h("b",{},String(+t.points||0)))))):null,
-      sec("Professions",profs.length?profs.map(([p,v])=>h("div",{},h("div",{class:"lg-br"},h("span",{},p),h("b",{},v+" / 300")),
-          h("span",{class:"lg-pbar"},h("i",{style:`width:${Math.min(100,+v/3).toFixed(0)}%;background:${edge}`}))))
+      // Two columns like the stats, so the fullest card (ten stats, three trees, four professions, firsts) still fits.
+      sec("Professions",profs.length?h("div",{class:"lg-bgrid"},profs.map(([p,v])=>h("div",{class:"lg-br"},h("span",{},p),h("b",{},String(v)))))
         :h("p",{class:"lg-none"},"None yet.")),
-      held.length?sec("Hall of Firsts",h("p",{class:"lg-none",style:"color:#e6bc77"},held.join(" · "))):null);
+      held.length?sec("Hall of Firsts",h("p",{class:"lg-none lg-clip",style:"color:#e6bc77",title:held.join(" · ")},held.join(" · "))):null);
   const passPane=h("div",{class:"lg-pane",hidden:!onPass},
       h("div",{class:"lg-pgrid"},DUNGEONS.map(([n])=>h("span",{class:"lg-pstamp"+(got.has(n)?"":" off"),title:n+(got.has(n)?", cleared":"")},dungAbbr(n)))),
       h("p",{class:"lg-none",style:"padding:.375rem .75rem 0"},pass.length?"Cleared "+pass.length+" of "+DUNGEONS.length+".":"No stamps yet. They're added on the character's page."));
