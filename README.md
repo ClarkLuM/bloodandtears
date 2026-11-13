@@ -10,7 +10,7 @@ This file describes the site as it is today. The older, dated notes on how each 
 |---|---|
 | **Roster** | Everyone in the guild. Search, Filters, sort, quick chips (Tanks, Healers, DPS, Level 60, Seen this week, Mine) and three views (List, By class, Cards). Each row shows the portrait, name and top title, level, professions, best loot and last seen; opening a row shows the details with their card beside them. The side column has Character of the Day, In Game Today, This Week on Records, Guild Makeup and About the Guild. Below the list is the Guild Feed. |
 | **Character page** | Portrait, name and titles, a strip of headline numbers, then gear and stats, the Dungeon Passport, professions (with what they can make), their trading card, talents and their Journey. |
-| **Dungeons** | The dungeons grouped like the game's Spelunker achievements (Novice, Experienced, Master). For each: how many are the right level, how many have been, and how many still need it. Open one for the names, Suggest a group, and what drops. |
+| **Dungeons** | The dungeons grouped like the game's Spelunker achievements (Novice, Experienced, Master), with the two Alliance-side ones (Hall of Thanes, The Stockade) folded away at the bottom. For each: how many are the right level, how many have been, and how many still need it. Open one for the names, Suggest a group, and what drops. |
 | **Raids** (`#raids`, from the switch on Dungeons) | Raid readiness for Barrow Deeps, Hyjal Summit and Onyxia's Lair, every level 60 with their role and gear, and who's between 50 and 59. |
 | **Cards** | Everyone's trading card in sets (Gold foil, Silver, Bronze, Plain), with search and sort, and Card of the Week. |
 | **Professions** | Who has what, and **Who Can Make It?**: search any crafted item to see who's skilled enough. |
@@ -24,7 +24,7 @@ Other things worth knowing about:
 - **Reigns.** The server notes who holds Most Wanted, Best Dressed and each profession title, and since when (`guild/titles`, checked every hour). The site shows "3 weeks running" in the Hall of Titles, beside the title on the character page and on the card's label. The other titles (dungeons, epics, speed, longest on the site, top of a class) aren't tracked, so they show no reign.
 - **Title news.** When one of those titles changes hands, the Guild Feed says so: "Mogra took Chief Engineer from Clark".
 - **First edition.** Cards for characters who were on the site in launch week (5 to 11 November) carry "1st ed". It can't be earned later.
-- **Status badges.** A roster row can show one small tag: Fresh blood (joined this week), On a tear (four or more levels this week) or Missing in action (not seen for three weeks). Never more than one.
+- **Status badges.** A roster row can show one small tag: Fresh blood (joined this week), On a tear (levels this week for where they started it: 6 under level 20, 4 from 20, 3 from 40, 2 from 50; only the top three get it, `TEAR_MAX` in `public/index.html`) or Missing in action (not seen for three weeks). Never more than one.
 - **Streaks.** The server counts how many days in a row each character has been seen in game (`guild/streaks`, from the armory's last-logout time). From two days (`STREAK_MIN` in `public/index.html`), a flame and the number show beside "Last seen" on the roster, beside the name on their page, and as a stamp on their card. It goes when they miss a day. The first run looks back once and works out streaks so far from each character's dated history (levels, loot, skill-ups) and the daily snapshots; that can only undercount, since a day with nothing new to show isn't seen. One allowance for characters added in launch week: if their run is unbroken as far back as their history goes, and that history starts within a day of when they were added or has hit its 40-line limit, the streak counts from the day they were added.
 - **Guild Master.** The character at the top rank on the guild's armory list gets a crown and "Guild Master" over a gold name on their card.
 - **PvP rank stripes.** A card shows its PvP rank under the level badge: ranks 1 to 5 are bronze chevrons (one per rank), 6 to 10 are silver chevrons over a bar, and 11 to 14 are gold, two chevrons under one to four stars. It follows whatever rank the armory shows.
@@ -32,7 +32,12 @@ Other things worth knowing about:
 - **Signature moves.** Every spec has one (Combat rogues have Blade Flurry), printed on the card for flavour. The list is `MOVES` in `public/index.html`.
 - **Celebrations.** When your character levels up, your card flips over with the new level. Guild milestones (such as 1,000 honourable kills) get a small toast.
 - **Since You Were Last Here** sums up what happened since this device last had the site open.
-- **Winter Veil.** A countdown strip runs from 1 November to Boxing Day.
+- **Winter Veil.** A countdown strip runs from 1 December to Boxing Day.
+- **Character of the Day** picks from characters at level 10 or more with a real armory picture, seen in game in the last three days (it widens if nobody fits). Recent level-ups and new gear make a pick likelier.
+- **On Discord** names only who's in a voice channel (by channel) and who's playing World of Warcraft, then "+N others online". Officers can leave names off it (bots, say) under **Leave off the Discord box** in Guild Basics.
+- **Short on healers:** Guild Makeup names the Shamans, Druids, Paladins and Priests who aren't set to Healer, as people who could heal as an off-spec.
+- **Up for grabs:** while nobody has an epic or a level 60, those totals say so and open the Hall of Firsts.
+- **Claim Your Character** goes for good on a device once it claims, or once "Not now" is pressed.
 - **Endgame.** Once half the guild is level 60, the roster's "Level race" becomes a "Gear race".
 
 ## Where the data comes from
@@ -65,7 +70,7 @@ Other things worth knowing about:
 | `public/index.html` | The whole site: layout, styles and code |
 | `public/firebase-config.js` | The Firebase project's config and the App Check key |
 | `public/recipes.json` | The recipe list for Who Can Make It? (built by `tools/recipes/build.py`) |
-| `public/sw.js`, `manifest.webmanifest`, `icon*`, `logo.svg`, `og-gingerbread.png` | Offline support, the home-screen icon and the link preview |
+| `manifest.webmanifest`, `icon*`, `logo.svg`, `og-gingerbread.png` | The home-screen icon and the link preview |
 | `public/robots.txt` | Keeps the site out of search engines |
 | `functions/index.js` | The server: armory sync, Hall of Firsts, snapshots, opt-out, item lookups, officers |
 | `firestore.rules` | Who can read and change what |
@@ -124,4 +129,4 @@ It sends nothing anywhere, reads nothing in combat and draws nothing on screen. 
 ## Switched off or removed
 
 - **Discord posting** (webhooks and the daily digest) is switched off with `DISCORD_ON = false` in `functions/index.js`. The code is still there and does nothing. `docs/HISTORY.md` has the steps to turn it back on.
-- **Removed:** group posts, events, trade orders, wishlists, notes, hand-edited gear and professions, achievements, the Discord slash commands, Rivals, and the card games (Card Duels, Draft Duel, Guess the Guildie; old links open Cards). Old data from these can be cleared with **Check for old data**.
+- **Removed:** the empty offline worker (`sw.js`; the page now lets go of old copies), group posts, events, trade orders, wishlists, notes, hand-edited gear and professions, achievements, the Discord slash commands, Rivals, and the card games (Card Duels, Draft Duel, Guess the Guildie; old links open Cards). Old data from these can be cleared with **Check for old data**.

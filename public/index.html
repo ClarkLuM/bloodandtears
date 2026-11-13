@@ -458,6 +458,11 @@ nav.bottom{display:none}
 .mk-cls>span b{margin-left:auto;font-variant-numeric:tabular-nums}
 /* Totals: how far to the next guild milestone */
 .total{position:relative}
+a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:1rem;color:var(--accent-text)}a.total-open:hover b{text-decoration:underline}
+.roster-t td.r-loot{max-width:15rem}.r-loot .item-link{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mk-off{margin:0;color:var(--sec)}
+.dc-sec{display:flex;flex-direction:column;padding:.5rem 0;border-top:1px solid var(--sep)}.dc-sec>.small:first-child{font-weight:600;color:var(--accent-text)}
+.dg-other{border-top:1px solid var(--sep)}.dg-other>summary{padding:.875rem 1.25rem;cursor:pointer;color:var(--sec);font-size:.875rem}.dg-other>summary:hover{color:var(--text)}
 .total-next{position:absolute;left:0;right:0;bottom:0;height:.1875rem}
 .total-next s{display:block;height:100%;background:var(--lvl);opacity:.6;text-decoration:none;border-radius:0 2px 2px 0}
 /* Feed and history */
@@ -956,7 +961,7 @@ const S={user:null,officer:false,members:[],alts:[],guild:{},pending:false,loade
   firsts:{},milestones:{},
   ui:{rangeD:"",role:"All",profTab:"All",suits:false}};
 // Remembered in this browser only: the roster's view and sort, plus a few page filters.
-const UI_KEEP=["role","profTab","suits","rangeD","rView","rSort","sortV2"];
+const UI_KEEP=["role","profTab","suits","rangeD","rView","rSort","sortV2","claimHide","veilHide"];
 try{const u=JSON.parse(localStorage.getItem("lg-ui")||"{}");
   // Once per browser: start everyone on Highest level, like the in-game guild roster, whatever they picked while testing.
   if(!u.sortV2){delete u.rSort;u.sortV2=1;localStorage.setItem("lg-ui",JSON.stringify(u))}
@@ -998,13 +1003,15 @@ const guildTags=m=>{const e=rosterEntry(m);return[e&&e.rank===0?h("span",{class:
 null]};
 // For visitors who haven't picked a character yet: one banner instead of a tag on every unclaimed row.
 function claimBanner(){
-  if(me()||!S.user)return null;
+  if(me()&&!S.ui.claimHide){S.ui.claimHide=true;saveUi()}
+  if(me()||!S.user||S.ui.claimHide)return null;
   const free=S.members.filter(m=>!Array.isArray(m.owners));
   if(!free.length)return null;
   return h("section",{class:"card claim-banner","aria-labelledby":"claim-h"},
     h("div",{style:"display:flex;flex-direction:column;gap:2px;min-width:0"},h("h2",{id:"claim-h",style:"font-size:1.1875rem;line-height:1.625rem"},"Claim Your Character"),
       h("span",{class:"sub"},"Everyone in the guild is already on the roster. Claiming links your character to this device so you can pick your role and stamp your passport. It doesn't change who's listed.")),
-    h("div",{class:"row"},h("button",{class:"btn primary",onclick:()=>openLink()},"Claim my character"),isOfficer()?h("button",{class:"btn",onclick:()=>openEdit(null,{self:true})},"Not listed? Add it"):h("span",{class:"small ter",style:"align-self:center"},"Not listed? New guildies show up within the hour.")))}
+    h("div",{class:"row"},h("button",{class:"btn primary",onclick:()=>openLink()},"Claim my character"),isOfficer()?h("button",{class:"btn",onclick:()=>openEdit(null,{self:true})},"Not listed? Add it"):h("span",{class:"small ter",style:"align-self:center"},"Not listed? New guildies show up within the hour."),
+      h("button",{class:"btn ghost",type:"button",onclick:()=>{setUi({claimHide:true},true);toast("Hidden. Claim any time from a character's page.")}},"Not now")))}
 const charLink=m=>h("a",{class:"linkish",href:`#char/${m.isAlt?"alts":"members"}/${m.id}`},nameOf(m));
 // Class icons from Wowhead's icon set (where the gear icons come from), ringed in the class colour.
 // If an icon can't load, the old colour dot takes its place.
@@ -1080,7 +1087,7 @@ const seg=(label,opts,cur,pick)=>h("div",{class:"seg",role:"group","aria-label":
 // A festive strip under the header counting down to Christmas (Perth time), from 1 November to Boxing Day.
 // It can be hidden for the season. Snow drifts across it, unless the device asks for less motion.
 function winterVeil(){
-  const now=new Date(Date.now()+8*36e5),y=now.getUTCFullYear(),xmas=Date.parse(y+"-12-25T00:00:00+08:00"),start=Date.parse(y+"-11-01T00:00:00+08:00");
+  const now=new Date(Date.now()+8*36e5),y=now.getUTCFullYear(),xmas=Date.parse(y+"-12-25T00:00:00+08:00"),start=Date.parse(y+"-12-01T00:00:00+08:00");
   if(Date.now()<start||Date.now()>=xmas+2*864e5||S.ui.veilHide===y)return null;
   const days=Math.ceil((xmas-Date.now())/864e5);
   const msg=days<=0?"Happy Winter Veil! Merry Christmas from Blood and Tears":days===1?"1 day until Christmas":days+" days until Christmas";
@@ -1216,7 +1223,7 @@ function viewRoster(){
           h("span",{class:"l2"},tt?[h("b",{class:"r-title"},tt.t)," · "]:null,[classLine(m)||"—",roleText(m)].filter(Boolean).join(" · "))))),
       h("td",{"data-label":"Level"},h("span",{class:"r-lv"},h("b",{},String(m.level||1)),h("i",{"aria-hidden":"true"},h("s",{style:`width:${Math.round(lv/60*100)}%`})))),
       h("td",{"data-label":"Professions",class:pr.length?"":"none"},pr.length?h("span",{class:"r-profs"},pr.map(([p,v])=>h("span",{class:"r-prof"},p,h("b",{},String(+v||0))))):h("span",{class:"ter"},"—")),
-      h("td",{"data-label":"Best loot",class:loot?"":"none"},loot?qLink(loot):h("span",{class:"ter"},"—")),
+      h("td",{"data-label":"Best loot",class:"r-loot"+(loot?"":" none"),title:loot?loot.name:null},loot?qLink(loot):h("span",{class:"ter"},"—")),
       // Not on the armory yet is a plain dash here; the reason is in the details and on their page.
       h("td",{"data-label":"Last seen",class:(st.k==="wait"||st.k==="none")&&!sk?"none":""},h("span",{class:"r-seen"},st.k==="fresh"||st.k==="quiet"?h("span",{class:"sync "+st.k,title:st.d},h("i",{"aria-hidden":"true"}),h("span",{class:"seen-l"},"In game "),ago(seenOf(m)))
         :st.k==="wait"||st.k==="none"?h("span",{class:"ter",title:st.t+". "+st.d},"—",h("span",{class:"visually-hidden"},st.t)):syncChip(m),
@@ -1385,6 +1392,10 @@ function guildTotals(){
     ["epics","Epic items",null,"Equipped right now"],["hk","Honourable kills",all.reduce((t,m)=>t+hkWeekOf(m),0)],["sixty","Level 60s"]];
   return h("section",{class:"totals","aria-label":"Guild totals"},tiles.map(([k,label,wk,tip])=>{const nx=msNext(k,v[k]);
     const next=nx?"Next guild milestone: "+fmtN(nx.n)+" ("+fmtN(nx.n-v[k])+" to go)":"";
+    // Nobody's got there yet: say so, and point at the Hall of Firsts.
+    if(!v[k]&&(k==="epics"||k==="sixty"))return h("a",{class:"total total-open",href:"#roster",title:"See the Hall of Firsts",
+      onclick:e=>{e.preventDefault();location.hash="#roster";setUi({raceTab:"firsts"});requestAnimationFrame(()=>{const el=document.getElementById("race-h");if(el)el.scrollIntoView({behavior:"smooth",block:"center"})})}},
+      h("span",{},k==="epics"?"First epic:":"First 60:"),h("b",{},"up for grabs"));
     return h("div",{class:"total",title:[tip,next].filter(Boolean).join(". ")||null},
       h("b",{},fmtN(v[k])),h("span",{},label),wk?h("small",{},"+"+fmtN(wk)+" this week"):null,
       nx?h("i",{class:"total-next","aria-hidden":"true"},h("s",{style:`width:${Math.round(nx.pct*100)}%`})):null,
@@ -1433,7 +1444,7 @@ function checkMilestones(){
 const ROLE_COL={Tank:"#3d6fd6",Healer:"#2e9e3f",DPS:"#c23b54"};
 function guildMakeup(){
   const ps=S.members.filter(m=>isMine(m)||memberState(m)==="current");if(ps.length<2)return null;
-  const n=ps.length,cls={},role={Tank:0,Healer:0,DPS:0},flex={Tank:0,Healer:0};
+  const n=ps.length,cls={},role={Tank:0,Healer:0,DPS:0},flex={Tank:0,Healer:0},HEAL_CLS=["Shaman","Druid","Paladin","Priest"];
   for(const m of ps){const r=ROLES.includes(m.role)?m.role:"DPS";role[r]++;if(m.cls)cls[m.cls]=(cls[m.cls]||0)+1;
     // Could also fill in: their second role.
     for(const x of["Tank","Healer"])if(r!==x&&canRole(m,x))flex[x]++}
@@ -1441,8 +1452,10 @@ function guildMakeup(){
   const plural={Tank:"tanks",Healer:"healers"},verb={Tank:"tank",Healer:"heal"};
   const hint=short.length
     ?`Short on ${short.map(r=>plural[r]).join(" and ")}: ${short.map(r=>role[r]+" "+(role[r]===1?r.toLowerCase():plural[r])).join(" and ")} for ${n} characters.`
-      +short.filter(r=>flex[r]).map(r=>` ${flex[r]} more can ${verb[r]} as a second role.`).join("")
+      +short.filter(r=>r!=="Healer"&&flex[r]).map(r=>` ${flex[r]} more can ${verb[r]} as a second role.`).join("")
     :`Enough tanks and healers for ${groups} group${groups===1?"":"s"} of five.`;
+  // Short on healers: name everyone whose class can heal but who isn't set to Healer.
+  const offHeal=short.includes("Healer")?ps.filter(m=>HEAL_CLS.includes(m.cls)&&m.role!=="Healer").sort((a,b)=>(+b.level||0)-(+a.level||0)||nameOf(a).localeCompare(nameOf(b))):[];
   const list=Object.entries(cls).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
   const missing=Object.keys(CLASSES).filter(c=>!cls[c]&&c!=="Paladin");// Horde: no Paladins in Classic
   return h("aside",{class:"card","aria-labelledby":"mk-h",style:"gap:.625rem"},
@@ -1450,6 +1463,7 @@ function guildMakeup(){
     h("div",{class:"mk-bar",role:"img","aria-label":ROLES.map(r=>role[r]+" "+(r==="DPS"?"DPS":plural[r])).join(", ")},ROLES.filter(r=>role[r]).map(r=>h("i",{style:`flex:${role[r]};background:${ROLE_COL[r]}`}))),
     h("div",{class:"mk-legend"},ROLES.map(r=>h("span",{},h("i",{style:`background:${ROLE_COL[r]}`}),r==="DPS"?"DPS":plural[r][0].toUpperCase()+plural[r].slice(1),h("b",{},String(role[r]))))),
     h("p",{class:"small",style:"margin:0;color:"+(short.length?"var(--accent-text)":"var(--sec)")},hint),
+    offHeal.length?h("p",{class:"small mk-off"},h("span",{class:"ter"},"Could heal as an off-spec: "),offHeal.flatMap((m,i)=>[i?", ":"",charLink(m)])):null,
     h("details",{class:"mk-more",open:!!S.ui.mkOpen||null,ontoggle:e=>{if(e.target.open!==!!S.ui.mkOpen)S.ui.mkOpen=e.target.open}},h("summary",{class:"small"},"By class"),
       h("div",{class:"mk-cls",style:"padding-top:.5rem"},list.map(([c,k])=>h("span",{},classIcon(c),h("span",{},c),h("b",{},String(k))))),
       missing.length&&missing.length<Object.keys(CLASSES).length?h("p",{class:"small ter",style:"margin:.5rem 0 0"},"Nobody's playing "+(missing.length===1?"a "+missing[0]:missing.slice(0,-1).join(", ")+" or "+missing[missing.length-1])+" yet."):null))}
@@ -1489,10 +1503,18 @@ function sinceCard(){
 // A different character each day (the same one for everyone), with a button to see someone else.
 const hashStr=s=>{let x=2166136261;for(const c of String(s))x=Math.imul(x^c.charCodeAt(0),16777619);return x>>>0};
 function spotlight(){
-  const all=[...S.members,...S.alts],pics=all.filter(m=>safePic(m.armory&&m.armory.render)||genericFg(m));
-  const pool=(pics.length?pics:all).slice().sort((a,b)=>hashStr(a.id)-hashStr(b.id));
-  if(!pool.length)return null;
-  const day=Math.floor((Date.now()+8*36e5)/864e5),shift=S.ui.spot||0,m=pool[(day+shift)%pool.length];
+  // Only level 10+ characters with a real armory picture (not the dark stand-in), seen in game in the last 3 days
+  // (widened to 2 weeks, then to anyone with a picture, if nobody fits). Recent level-ups and new gear make a pick likelier.
+  const all=[...S.members,...S.alts],now=Date.now(),day=Math.floor((now+8*36e5)/864e5),shift=S.ui.spot||0;
+  const realPic=m=>{const r=m.armory&&m.armory.render;return!!safePic(r)&&!/\/shadow\//.test(r)};
+  const pics=all.filter(m=>(+m.level||1)>=10&&realPic(m)),seenIn=d=>pics.filter(m=>now-(Date.parse(seenOf(m)||"")||0)<=d*864e5);
+  const base=[seenIn(3),seenIn(14),pics,all].find(l=>l.length);
+  if(!base)return null;
+  const fresh=m=>{const j=Array.isArray(m.journey)?m.journey:[],rec=x=>now-(Date.parse(x.at)||0)<=3*864e5;
+    return 1+(j.some(x=>rec(x)&&/^Reached level /.test(x.t||""))?2:0)+(j.some(x=>rec(x)&&/^Equipped /.test(x.t||""))?2:0)};
+  // A weighted shuffle that's the same for everyone today; "someone else" steps down the list.
+  const pool=base.map(m=>[m,-Math.log((hashStr(day+":"+m.id)+1)/4294967297)/fresh(m)]).sort((a,b)=>a[1]-b[1]).map(x=>x[0]);
+  const m=pool[shift%pool.length];
   const a=m.armory||{},render=charPic(m,"render")||genericFg(m),bg=charPic(m,"bg")||genericBg(m),avatar=charPic(m,"avatar"),cc=CLASSES[m.cls]||"#bfaea9";
   const link=`#char/${m.isAlt?"alts":"members"}/${m.id}`;
   const best=Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=2).sort((x,y)=>y.q-x.q).slice(0,3);
@@ -1561,9 +1583,18 @@ function pvpSvg(rank){const k=pvpMark(rank);if(!k)return"";const W=26,step=7,sta
 // First edition: on the site in launch week. It can't be earned later.
 const firstEd=m=>{const t=Date.parse(m.createdAt||"");return !!t&&t<LAUNCH_WEEK};
 // One small status on a roster row, from recent activity. Only ever one, so rows stay tidy.
+// "On a tear": enough levels this week for where they started it (1-19: 6, 20-39: 4, 40-49: 3, 50-59: 2), and only the
+// top TEAR_MAX of those, so it stays special. Worked out once per roster change.
+const TEAR_MAX=3,tearNeed=lv=>lv<20?6:lv<40?4:lv<50?3:lv<60?2:Infinity;
+let tearCache={src:null,map:null};
+function tearOf(m){
+  if(tearCache.src!==S.members){const q=S.members.map(x=>{const up=weekGained(x);return[x.id,up,up>=tearNeed((+x.level||1)-up)]}).filter(x=>x[2]&&x[1]>0)
+      .sort((a,b)=>b[1]-a[1]||hashStr(a[0])-hashStr(b[0])).slice(0,TEAR_MAX);
+    tearCache={src:S.members,map:new Map(q.map(x=>[x[0],x[1]]))}}
+  return tearCache.map.get(m.id)||0}
 function statusOf(m){const made=Date.parse(m.createdAt||"")||0,seen=Date.parse(seenOf(m)||"")||0,now=Date.now();
   if(made&&now-made<7*864e5&&made>LAUNCH_WEEK)return["Fresh blood","Joined the site this week","fresh"];
-  const up=weekGained(m);if(up>=4)return["On a tear","+"+up+" levels this week","tear"];
+  const up=tearOf(m);if(up)return["On a tear","+"+up+" levels this week","tear"];
   if(seen&&now-seen>=21*864e5)return["Missing in action","Not seen in game for "+Math.floor((now-seen)/(7*864e5))+" weeks","mia"];
   return null}
 const mix=(hex,to,r)=>{const a=hex.match(/\w\w/g).map(x=>parseInt(x,16)),b=to.match(/\w\w/g).map(x=>parseInt(x,16));return"#"+a.map((v,i)=>Math.round(v+(b[i]-v)*r).toString(16).padStart(2,"0")).join("")};
@@ -2065,7 +2096,9 @@ function discordBox(){
   const w=S.widget;
   // If the widget is off, only officers see why (they can ask an admin to turn it on); everyone else just doesn't get the box.
   if(!w)return S.widgetErr&&isOfficer()?h("aside",{class:"card"},h("h2",{},"On Discord"),h("p",{class:"small ter"},S.widgetErr+" Only officers see this note.")):null;
-  const members=[...(w.members||[])].sort((a,b)=>String(a.username).localeCompare(String(b.username)));
+  const hide=new Set(String((S.guild||{}).discordHide||"").split(/[,\n]/).map(x=>x.trim().toLowerCase()).filter(Boolean));
+  const listed=w.members||[],members=listed.filter(m=>!hide.has(String(m.username||"").toLowerCase())).sort((a,b)=>String(a.username).localeCompare(String(b.username)));
+  const hidden=listed.length-members.length;
   const chans=new Map((w.channels||[]).map(c=>[c.id,c.name]));
   const inVoice={};for(const m of members)if(m.channel_id)(inVoice[m.channel_id]=inVoice[m.channel_id]||[]).push(m);
   const person=m=>{const st=STATUS[m.status]||STATUS.online;return h("div",{class:"row",style:"gap:.625rem;flex-wrap:nowrap;padding:.25rem 0"},
@@ -2074,13 +2107,17 @@ function discordBox(){
     h("span",{style:"display:flex;flex-direction:column;min-width:0"},h("span",{style:"overflow:hidden;text-overflow:ellipsis;white-space:nowrap"},m.username),
       m.game&&m.game.name?h("span",{class:"small",style:`overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:${/warcraft|wow/i.test(m.game.name)?"var(--accent-text)":"var(--ter)"}`},"Playing "+m.game.name):null),
     h("span",{class:"visually-hidden"},", "+st[1]))};
+  // Only who's in voice (by channel) and who's playing WoW are named; everyone else is a count. Officers can hide names (bots, say).
   const voice=Object.entries(inVoice);
-  const idle=members.filter(m=>!m.channel_id);
+  const playing=members.filter(m=>!m.channel_id&&m.game&&/warcraft/i.test(m.game.name||""));
+  const total=Math.max(+w.presence_count||0,members.length+hidden),others=Math.max(0,total-playing.length-voice.reduce((t,[,ms])=>t+ms.length,0));
   return h("aside",{class:"card","aria-labelledby":"dc-h"},
-    h("div",{class:"spread"},h("h2",{id:"dc-h"},"On Discord"),h("span",{class:"small ter"},(w.presence_count||members.length)+" online")),
-    voice.map(([id,ms])=>h("div",{style:"display:flex;flex-direction:column;padding:.5rem 0;border-top:1px solid var(--sep)"},h("span",{class:"small",style:"font-weight:600;color:var(--accent-text)"},"In voice · "+(chans.get(id)||"Voice")),ms.map(person))),
-    h("div",{style:"display:flex;flex-direction:column;padding-top:.5rem;border-top:1px solid var(--sep);max-height:20rem;overflow:auto"},
-      idle.length?idle.map(person):h("p",{class:"empty"},voice.length?"Everyone online is in voice.":"Nobody's online right now.")),
+    h("div",{class:"spread"},h("h2",{id:"dc-h"},"On Discord"),h("span",{class:"small ter"},total+" online")),
+    voice.map(([id,ms])=>h("div",{class:"dc-sec"},h("span",{class:"small"},"In voice · "+(chans.get(id)||"Voice")),ms.map(person))),
+    playing.length?h("div",{class:"dc-sec"},h("span",{class:"small"},"Playing World of Warcraft"),playing.map(person)):null,
+    voice.length||playing.length
+      ?(others?h("p",{class:"small ter",style:"margin:0;padding-top:.5rem;border-top:1px solid var(--sep)"},"+"+others+" other"+(others===1?"":"s")+" online"):null)
+      :h("p",{class:"empty",style:"padding-top:.5rem;border-top:1px solid var(--sep)"},total?"Nobody's in voice or playing right now. "+total+" online.":"Nobody's online right now."),
     w.instant_invite?h("a",{class:"btn sm",href:w.instant_invite,target:"_blank",rel:"noopener",style:"align-self:flex-start"},"Open Discord"):null)}
 async function loadWidget(){
   if(!DISCORD_SERVER_ID||document.hidden)return;
@@ -2102,11 +2139,13 @@ function rangeBoard(){
   const sortPpl=(a,b)=>(isAway(a)-isAway(b))||(+b.level||0)-(+a.level||0)||nameOf(a).localeCompare(nameOf(b));
   // Who still needs each dungeon's stamp: anyone active who's high enough for it and hasn't been (so 60s count too).
   const stamps=new Map(chars.map(m=>[m.id,new Set(passportOf(m).map(p=>p.name))])),cur=chars.filter(m=>(isMine(m)||memberState(m)==="current")&&!isAway(m));
-  const all=DUNGEONS.map(([name,range])=>{const r=rangeOf(range);if(!r)return null;
+  let all=DUNGEONS.map(([name,range])=>{const r=rangeOf(range);if(!r)return null;
     const ppl=chars.filter(m=>{const lv=+m.level||1;return lv>=r[0]&&lv<=r[1]}).sort(sortPpl);
     const need=DG_ALLIANCE.includes(name)?[]:cur.filter(m=>(+m.level||1)>=r[0]&&!stamps.get(m.id).has(name)).sort(sortPpl);
     return{name,range,ppl,need,over:need.filter(m=>(+m.level||1)>r[1]),active:ppl.filter(p=>!isAway(p))}}).filter(Boolean);
   // Grouped like the game's Spelunker achievements. Opens on the first group with a dungeon at your level.
+  // Hall of Thanes and The Stockade are Alliance-side: they sit apart, folded up at the bottom, outside the achievement groups.
+  const other=all.filter(x=>DG_ALLIANCE.includes(x.name));all=all.filter(x=>!DG_ALLIANCE.includes(x.name));
   const bandOf=x=>(DG_GROUPS.find(g=>g[2]&&g[2].includes(x.name))||DG_GROUPS[DG_GROUPS.length-1])[0];
   const lv=my?+my.level||1:0,fits=x=>{const r=rangeOf(x.range);return r&&lv>=r[0]&&lv<=r[1]};
   const myBand=(my&&DG_GROUPS.find(g=>all.some(x=>bandOf(x)===g[0]&&fits(x)))||DG_GROUPS[0])[0];
@@ -2118,13 +2157,15 @@ function rangeBoard(){
   // Start on the saved pick, else the busiest dungeon at your level, else the busiest one overall.
   const busiest=list=>list.slice().sort((a,b)=>b.active.length-a.active.length)[0];
   // "-" means they closed every dungeon on purpose.
-  const x=S.ui.rangeD==="-"?null:opts.find(o=>o.name===S.ui.rangeD)||(my&&busiest(opts.filter(o=>o.ppl.some(isMine))))||busiest(opts);
+  const x=S.ui.rangeD==="-"?null:[...opts,...other].find(o=>o.name===S.ui.rangeD)||(my&&busiest(opts.filter(o=>o.ppl.some(isMine))))||busiest(opts);
   const bandSeg=seg("Achievement",[...DG_GROUPS.map(([k,l])=>[k,l,all.filter(x=>bandOf(x)===k).length]),["All","All"]],band,k=>setUi({dgGroup:k},true));
   return h("section",{class:"card dg-list","aria-labelledby":"range-h"},h("div",{class:"dg-list-head"},head,h("div",{class:"dg-bands"},bandSeg),
     band!=="All"?h("p",{class:"small ter dg-ach"},(()=>{const g=DG_GROUPS.find(x=>x[0]===band),l=all.filter(x=>bandOf(x)===band).map(x=>rangeOf(x.range));
       return["Legacy achievement: ",h("b",{},g[3])," · levels "+Math.min(...l.map(r=>r[0]))+"–"+Math.max(...l.map(r=>r[1]))]})()):null),
     h("div",{class:"dg-cols small ter","aria-hidden":"true"},h("span",{},"Dungeon"),h("span",{},"In range"),h("span",{},"Been"),h("span",{title:"High enough for it, and no stamp yet"},"Need it")),
-    opts.map(o=>{const open=x&&o.name===x.name,been=beenCount(o.name),mine=o.ppl.some(isMine);
+    opts.map(o=>dgRow(o)),
+    other.length?h("details",{class:"dg-other",open:other.some(o=>x&&o.name===x.name)||null},h("summary",{},"Other · Alliance-side ("+other.length+")"),other.map(o=>dgRow(o))):null);
+  function dgRow(o){const open=x&&o.name===x.name,been=beenCount(o.name),mine=o.ppl.some(isMine);
       return h("div",{class:"dg-item"+(open?" open":"")},
         h("div",{class:"dg-sum",onclick:e=>{if(!e.target.closest("a,button"))setUi({rangeD:open?"-":o.name},true)}},
           h("button",{type:"button",class:"dg-name","aria-expanded":String(!!open),onclick:()=>setUi({rangeD:open?"-":o.name},true)},
@@ -2132,12 +2173,12 @@ function rangeBoard(){
           h("span",{class:"dg-n"+(o.active.length?"":" zero")},h("b",{},String(o.active.length)),h("span",{class:"dg-n-l"}," in range")),
           h("span",{class:"dg-n"+(been?"":" zero")},h("b",{},String(been)),h("span",{class:"dg-n-l"}," been")),
           h("span",{class:"dg-n"+(o.need.length?"":" zero")},h("b",{},DG_ALLIANCE.includes(o.name)?"—":String(o.need.length)),h("span",{class:"dg-n-l"},DG_ALLIANCE.includes(o.name)?"":" need it"))),
-        open?rangeDetail(o):null)}))}
+        open?rangeDetail(o):null)}}
 // How many current characters have a dungeon stamped (by hand or from loot).
 // The game's Spelunker achievements (legacy points). Master is everything not in the first two.
-// Hall of Thanes and The Stockade sit with Novice by level, but they're Alliance-side, so they don't count for us.
+// Hall of Thanes and The Stockade are Alliance-side, so they don't count for us; the board folds them away at the bottom.
 const DG_ALLIANCE=["Hall of Thanes","The Stockade"];
-const DG_GROUPS=[["novice","Novice",["Ragefire Chasm","Hall of Thanes","Ruins of Lordaeron","Wailing Caverns","The Deadmines","Shadowfang Keep","The Stockade","Excavation Site: Wetlands"],"Novice Spelunker"],
+const DG_GROUPS=[["novice","Novice",["Ragefire Chasm","Ruins of Lordaeron","Wailing Caverns","The Deadmines","Shadowfang Keep","Excavation Site: Wetlands"],"Novice Spelunker"],
   ["experienced","Experienced",["City of Dalaran","Blackfathom Deeps","Gnomeregan","The Drowned City","Scarlet Monastery: Graveyard","Scarlet Monastery: Library",
     "Scarlet Monastery: Armory","Scarlet Monastery: Cathedral","Razorfen Kraul","Krol'Dok Stronghold"],"Experienced Spelunker"],
   ["master","Master",null,"Master Spelunker"]];
@@ -2993,13 +3034,14 @@ function openGuild(){
   const err=h("span",{class:"field-err",hidden:true},"Use a Discord invite link, like https://discord.gg/abc123.");
   const ta=(id,v,ph)=>{const t=h("textarea",{id,rows:"2",maxlength:"500",placeholder:ph});t.value=v||"";return t};
   const gm=h("input",{id:"g-gm",maxlength:"60",value:gi.gm||"",placeholder:"Character name"});
-  const off=ta("g-off",gi.officers,"Character names"),loot=ta("g-loot",gi.loot,"How loot is shared in dungeons and raids"),ev=ta("g-ev",gi.events,"Regular nights, if any");
+  const off=ta("g-off",gi.officers,"Character names"),dh=ta("g-dhide",gi.discordHide,"Discord names, separated by commas"),loot=ta("g-loot",gi.loot,"How loot is shared in dungeons and raids"),ev=ta("g-ev",gi.events,"Regular nights, if any");
   f.replaceChildren(h("h1",{style:"font-size:1.8125rem;line-height:2.25rem"},"Guild Basics"),
     h("label",{class:"f"},"Discord invite",dc,err,h("span",{class:"small ter"},"Set the invite to never expire in Discord so it keeps working.")),
     h("label",{class:"f"},"Guild master",gm),h("label",{class:"f"},"Officers",off),h("label",{class:"f"},"Loot rules",loot),h("label",{class:"f"},"Guild events",ev),
+    h("label",{class:"f"},"Leave off the Discord box",dh,h("span",{class:"small ter"},"Display names as they show in Discord, such as bots. They still count in the number online.")),
     h("div",{class:"dlg-actions"},h("span"),h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>dlg.close()},"Cancel"),h("button",{class:"btn primary",type:"submit"},"Save"))));
   f.onsubmit=e=>{e.preventDefault();const v=dc.value.trim();if(v&&!DISCORD_RE.test(v)){err.hidden=false;return}
-    write(setDoc(doc(db,"guild","info"),{discord:v,gm:gm.value.trim(),officers:off.value.trim(),loot:loot.value.trim(),events:ev.value.trim(),updatedAt:nowIso()}),"Guild basics saved");dlg.close()};
+    write(setDoc(doc(db,"guild","info"),{discord:v,gm:gm.value.trim(),officers:off.value.trim(),loot:loot.value.trim(),events:ev.value.trim(),discordHide:dh.value.trim(),updatedAt:nowIso()}),"Guild basics saved");dlg.close()};
   dlg.showModal()}
 
 /* ---------- theme ---------- */
@@ -3136,7 +3178,8 @@ if(configured){onAuthStateChanged(auth,u=>{S.user=u;
     ?"Anonymous sign-in is turned off. In the Firebase console go to Authentication, Sign-in method, and turn on Anonymous."
     :navigator.onLine?"Couldn't connect. Reload the page to try again.":"You need a connection the first time you open the site.";render()})})}
 else render();
-if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
+// The site used to register an empty service worker (sw.js). It did nothing, so it's gone; this lets go of old copies.
+if("serviceWorker" in navigator&&navigator.serviceWorker.getRegistrations)navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
 </script>
 </body>
 </html>

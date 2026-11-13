@@ -110,7 +110,7 @@ service cloud.firestore {
       allow write: if !(docId in ['officers', 'officerPicks', 'roster', 'armory', 'digest', 'firsts', 'itemIds', 'records', 'recaps', 'optout', 'titles', 'streaks', 'scribe']) && isOfficer() &&
         optStr(request.resource.data, 'discord', 200) && optStr(request.resource.data, 'gm', 60) &&
         optStr(request.resource.data, 'officers', 500) && optStr(request.resource.data, 'loot', 500) &&
-        optStr(request.resource.data, 'events', 500);
+        optStr(request.resource.data, 'events', 500) && optStr(request.resource.data, 'discordHide', 500);
     }
 
   }
