@@ -490,17 +490,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .dg-detail>.range-row{border-top:0}
 @media (max-width:600px){.dg-cols{display:none}.dg-sum{grid-template-columns:minmax(0,1fr) auto;row-gap:0;padding-bottom:.5rem}.dg-name{grid-column:1/-1;padding-bottom:.125rem}
   .dg-n{text-align:left;font-size:.8125rem;padding-left:1.3125rem}.dg-n+.dg-n{padding-left:0;text-align:left}.dg-sum{grid-template-columns:auto auto 1fr;column-gap:1rem}.dg-n-l{display:inline}}
-.pf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;align-items:start}
-@media (max-width:960px){.pf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (max-width:600px){.pf-grid{grid-template-columns:minmax(0,1fr)}}
-.pf-card{gap:.5rem}.pf-top{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:.5rem;align-items:baseline}
 .pf-kind{grid-column:1/-1;font-size:.6875rem;line-height:1rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
-.pf-top h3{margin:0}
-.pf-list{list-style:none;margin:0;padding:0}
-.pf-row{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:.75rem;row-gap:.3125rem;align-items:center;padding:.5rem 0;border-top:1px solid var(--sep)}
-.pf-row .track{grid-column:1/-1}
-.pf-who{display:flex;align-items:center;gap:.5rem;min-width:0}.pf-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pf-sk{font-size:.875rem;color:var(--sec);font-variant-numeric:tabular-nums}.pf-sk.max{color:var(--accent-text);font-weight:600}
-.pf-more{align-self:flex-start;margin-left:-.75rem}
 .dg-top{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem}
 .dg-two{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:1rem 2rem}@media (max-width:760px){.dg-two{grid-template-columns:minmax(0,1fr)}}
 .dg-two>.dg-block{border-top:0;padding-top:0}
@@ -522,7 +512,6 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .dg-loot>p{margin-top:.375rem!important}
 :root[data-theme="light"] .dg-own{color:#8a5a12}
 @media (prefers-reduced-motion:reduce){.dg-loot>summary::before{transition:none}}
-.prof-h{font-size:1.1875rem;line-height:1.625rem;margin:0}
 /* Polish pass: phone tap targets, toolbar and recipe rows */
 @media (max-width:700px){
   .chip{min-height:2.25rem;padding-top:.375rem;padding-bottom:.375rem}
@@ -541,11 +530,20 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .cm-list{list-style:none;margin:0 0 .375rem;padding:0 0 0 1.0625rem;display:flex;flex-direction:column;gap:.25rem}
 .cm-list li{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .5rem;font-size:.875rem;line-height:1.25rem}
 .cm-sk{margin-left:auto}
+.cm-list>li{display:grid;grid-template-columns:.5625rem minmax(0,1fr) auto 2.5rem 2.25rem;align-items:center;gap:.25rem .5rem}.cm-n{min-width:0}
+.cm-list>li>.cm-sk{margin:0;text-align:right}
+.cm-list>li>.rc-panel,.cm-list>li>.rc-panel-msg{grid-column:1/-1;margin:.25rem 0 .5rem}
+@media (max-width:640px){.cm-list>li{grid-template-columns:.5625rem minmax(0,1fr) 2.25rem 2.25rem}.cm-list>li>.rc-src{display:none}}
+.cm-tog{flex:none;width:2.25rem;height:2.25rem;border-radius:6px;border:1px solid var(--sep);background:none;color:var(--sec);font:inherit;cursor:pointer;display:grid;place-items:center;padding:0}
+.cm-tog:hover{border-color:var(--accent-text);color:var(--accent-text)}
+.su{flex:none;width:.5625rem;height:.5625rem;border-radius:50%;display:inline-block}.su.none{background:none}
+.su-o{background:#ff8040}.su-y{background:#e6c34a}.su-g{background:#40bf40}.su-x{background:#6b6060}
+:root[data-theme="light"] .su-o{background:#d4600f}:root[data-theme="light"] .su-y{background:#c79a0a}:root[data-theme="light"] .su-g{background:#2a8d22}:root[data-theme="light"] .su-x{background:#9a9090}
+.su-key{display:flex;flex-wrap:wrap;gap:.25rem .875rem;padding-left:1.0625rem;margin-bottom:.25rem}.su-key>span{display:inline-flex;align-items:center;gap:.375rem}
 .cm-p>a{display:inline-block;margin:0 0 .5rem 1.0625rem}
 @media (prefers-reduced-motion:reduce){.cm-p>summary::before{transition:none}}
 .medal{display:inline-grid;place-items:center;flex:none;width:1.5rem;height:1.5rem;border-radius:50%;font-size:.75rem;font-weight:700;color:var(--sec);background:var(--sunken);border:1px solid var(--b-sub)}
 .medal.m1{background:#e2b552;color:#2b1d02;border-color:#f3d48a}.medal.m2{background:#c3c9d0;color:#1d2228;border-color:#e3e7eb}.medal.m3{background:#c4834f;color:#2a1405;border-color:#dfa678}
-.rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,18rem),1fr));gap:.75rem;align-items:start}
 .rec-card{gap:.5rem}.rec-card h3{margin:0}
 .rec-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .rec-row{display:flex;align-items:center;gap:.625rem;min-height:2.5rem;padding:.25rem .375rem;border-radius:6px}
@@ -554,25 +552,44 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .rec-v{font-variant-numeric:tabular-nums;color:var(--sec);white-space:nowrap;font-size:.875rem}
 .rec-gap{color:var(--ter);padding-left:.875rem;line-height:1rem;font-size:.75rem}
 .spoon-tag{white-space:nowrap}
-.rec-main{grid-template-columns:repeat(2,minmax(0,1fr))}@media (max-width:760px){.rec-main{grid-template-columns:1fr}}.rec-main>.rec-card{align-self:stretch}
 .rec-more{align-self:flex-start;margin:.25rem 0 0 -.75rem}
-.rp{padding:.5rem 0;gap:0}
-.rp-head,.rp-sum{display:grid;grid-template-columns:minmax(9rem,1.1fr) repeat(4,minmax(0,1fr));gap:.75rem;align-items:center;padding:.5rem 1rem}
-.rp-head{padding-top:.25rem;padding-bottom:.25rem;border-bottom:1px solid var(--sep)}
-.rp-row+.rp-row{border-top:1px solid var(--sep)}
-.rp-sum{cursor:pointer;min-height:3.25rem}
-.rp-sum:hover{background:var(--subtle)}.rp-row.open .rp-sum{background:var(--subtle)}
-.rp-p{display:flex;flex-direction:column;line-height:1.25rem;font:inherit;color:inherit;text-align:left;background:none;border:0;padding:0;cursor:pointer;align-items:flex-start}.rp-p:focus-visible{outline:2px solid var(--accent-text);outline-offset:4px;border-radius:4px}
-.rp-c{display:flex;align-items:center;gap:.5rem;min-width:0}.rp-c.empty{color:var(--ter)}
-.rp-who{display:flex;flex-direction:column;min-width:0;line-height:1.125rem}.rp-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rp-v{font-size:.8125rem;color:var(--sec);font-variant-numeric:tabular-nums}
-.rp-c.spoon .rp-who a{color:var(--sec)}
-.rp-spoon{display:none}
-.rp-all{padding:.25rem 1rem .75rem}
-@media (max-width:760px){.rp-head{display:none}.rp-sum{grid-template-columns:1fr;row-gap:.375rem;padding:.75rem 1rem}.rp-p{flex-direction:row;align-items:baseline;gap:.5rem}
-  .rp-who{flex-direction:row;align-items:baseline;gap:.5rem}.rp-c.empty{display:none}
-  .rp-c.spoon{margin-top:.125rem}.rp-c.spoon .rp-spoon{display:inline;font-size:.75rem;color:var(--ter);white-space:nowrap}
-  .rp-c .medal{width:1.25rem;height:1.25rem;font-size:.6875rem}}
+.rec-top{display:grid;grid-template-columns:minmax(0,27rem) minmax(0,1fr);gap:.75rem;align-items:start}
+@media (max-width:960px){.rec-top{grid-template-columns:minmax(0,1fr)}}
+.lb{gap:.625rem}.lb .seg{width:100%}.lb .seg button{flex:1}.lb-title{margin:0;padding:.4375rem .625rem;background:var(--sunken);border:1px solid var(--sep);border-radius:8px;color:var(--sec)}
+.lb-title b{color:var(--accent-text)}
+.rec-link{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.25rem 1rem;text-decoration:none;color:inherit}
+.rec-link:hover{border-color:var(--b-def)}.rec-link-go{color:var(--accent-text);font-size:.875rem}
+.hot-tiles{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
+@media (max-width:1100px) and (min-width:961px){.hot-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.hot-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.hot-tile{background:var(--sunken);border:1px solid var(--sep);border-radius:9px;min-width:0}
+.hot-tile.open{grid-column:1/-1;border-color:var(--accent-b)}.hot-tile.me{border-color:color-mix(in srgb,var(--accent) 55%,var(--sep))}
+.hot-btn{display:flex;align-items:center;gap:.5625rem;width:100%;padding:.5rem .5625rem;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer;border-radius:9px;min-height:2.75rem}
+.hot-btn:hover{background:var(--subtle)}
+.hot-txt{display:flex;flex-direction:column;min-width:0;line-height:1.125rem}
+.hot-txt b{font-size:.8125rem;color:#f0c58c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}:root[data-theme="light"] .hot-txt b{color:#7a5410}
+.hot-txt>span{font-size:.75rem;color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hot-txt i{font-style:normal;color:var(--ter)}
+.hot-tile.free .hot-txt>span{color:var(--ter)}
+.hot-more{display:flex;flex-direction:column;gap:.25rem;padding:0 .75rem .625rem 2.6875rem}
+.hot-fr.none{background:var(--subtle)}
+.pt{padding:0;gap:0;overflow:hidden}
+.pt-grp{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ter);padding:.625rem 1.125rem .375rem;background:var(--sunken);border-top:1px solid var(--sep)}
+.pt-grp:first-child{border-top:0}
+.pt-row{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 1.5rem;gap:.875rem;align-items:center;padding:.625rem 1.125rem;border-top:1px solid var(--sep)}
+.pt-row.open{align-items:start;background:var(--subtle)}
+.pt-name{display:flex;flex-direction:column;align-items:flex-start;background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;line-height:1.25rem}
+.pt-name:disabled{cursor:default}.pt-name b{font-size:.9375rem}
+.pt-ppl{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.5rem}
+.pt-p{display:flex;flex-direction:column;gap:.3125rem;min-width:9.5rem;padding:.375rem .5625rem .4375rem;background:var(--sunken);border:1px solid var(--sep);border-radius:8px}
+.pt-p.me{border-color:color-mix(in srgb,var(--accent) 55%,var(--sep))}.pt-p.spoon{border-style:dashed}
+.pt-t{display:flex;align-items:center;gap:.375rem;font-size:.8125rem;font-weight:600;min-width:0}.pt-t a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pt-t .medal{width:1.125rem;height:1.125rem;font-size:.625rem}
+.pt-v{margin-left:auto;padding-left:.375rem;color:var(--sec);font-variant-numeric:tabular-nums;font-size:.75rem}.pt-v.max{color:var(--accent-text)}
+.pt-p .track{height:.3125rem}.pt-p .track i{background:var(--accent-text)}.pt-p .track i.max{background:var(--link-hover)}
+.pt-spoon{font-size:.625rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
+.pt-more{display:flex;align-items:center}.pt-more .linkish{font-size:.75rem;font-weight:600;color:var(--accent-text);background:none;border:0;cursor:pointer;padding:0 .375rem}
+.pt-chev{color:var(--ter);text-align:center}
+@media (max-width:640px){.pt-row{grid-template-columns:minmax(0,1fr) 1.25rem;gap:.5rem;padding:.625rem .875rem}.pt-ppl{grid-column:1/-1;grid-row:2}.pt-chev{grid-row:1;grid-column:2}.pt-p{min-width:0;flex:1 1 9rem}}
 .arm-line{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .875rem;margin:0}.arm-bits span+span::before{content:"·";margin:0 .5rem;color:var(--ter)}
 @media (max-width:600px){.arm-bits{display:flex;flex-direction:column;gap:.125rem;flex-basis:100%}.arm-bits span+span::before{content:none}}
 .miss-btn{font:inherit;cursor:pointer;border:0;color:inherit;position:relative}.miss-btn::after{content:"";position:absolute;inset:-.625rem -.25rem}.miss-list{flex-basis:100%;color:var(--sec)}
@@ -615,15 +632,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 @media (max-width:760px){.cow{grid-template-columns:minmax(0,1fr)}.cow-card{justify-self:center}.cow-nums,.cow-profs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .lg-title{box-sizing:border-box;flex:none;height:1rem;margin:0 .625rem;padding:0 .5rem;border-radius:3px;text-align:center;font-size:.625rem;line-height:.875rem;font-weight:700;letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;color:#f0c58c;background:linear-gradient(90deg,#4d0100,#a50d2c 50%,#4d0100);border:1px solid #d69d56}
 .hot{gap:.75rem}.hot-g{display:flex;flex-direction:column;gap:.25rem}.hot-g h3{margin:.25rem 0 0}
-.hot-list{list-style:none;margin:0;padding:0}
-.hot-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:.25rem 1rem;align-items:center;padding:.5rem .375rem;border-top:1px solid var(--sep);border-radius:6px}
-.hot-row.me{background:color-mix(in srgb,var(--accent) 12%,transparent)}
-.hot-t{display:flex;align-items:center;gap:.625rem;min-width:0;color:#f0c58c}:root[data-theme="light"] .hot-t{color:#7a5410}
-.hot-t>span:last-child{display:flex;flex-direction:column;min-width:0}.hot-t b{font-weight:700}.hot-t small{color:var(--ter);font-size:.75rem}
 .hot-h{display:flex;flex-direction:column;min-width:0}.hot-h small{color:var(--sec);font-size:.75rem;font-variant-numeric:tabular-nums}
-.hot-who{display:flex;align-items:center;gap:.5rem;min-width:0}.hot-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hot-n{min-width:0}
-@media (max-width:700px){.hot-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.hot-n{grid-column:1/-1}.hot-n:empty{display:none}}
 .flav-edit{width:100%;max-width:22.5rem}.flav-edit>summary{cursor:pointer;color:var(--sec);font-size:.875rem;min-height:2.75rem;display:flex;align-items:center;justify-content:center}
 .stamp-key{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem .875rem;font-size:.75rem;color:var(--ter);max-width:22.5rem}.stamp-key li{display:inline-flex;align-items:center;gap:.375rem}.stamp-key b{font-weight:700;background:#1a0b08;border-radius:999px;padding:0 .375rem;line-height:1.125rem}
 .oo-list{margin:.25rem 0 0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.375rem;color:var(--sec)}
@@ -654,8 +663,8 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .rc-panel h3{margin:0 0 .375rem;font:700 .75rem 'Alegreya Sans SC',serif;letter-spacing:.08em;color:var(--accent-text)}
 .rc-panel ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.25rem;font-size:.875rem}
 .rc-n{display:inline-block;min-width:1.5rem;color:var(--sec);font-size:.75rem;font-variant-numeric:tabular-nums}
-.rc-get b{font-weight:600}.rc-ups{margin-top:.375rem}.su-o{color:#ff8040}.su-y{color:#e6c34a}.su-g{color:#40bf40}
-:root[data-theme="light"] .su-o{color:#b34a00}:root[data-theme="light"] .su-y{color:#8a6d00}:root[data-theme="light"] .su-g{color:#2a7d12}
+.rc-get b{font-weight:600}.rc-ups{margin-top:.375rem}.tx-o{color:#ff8040}.tx-y{color:#e6c34a}.tx-g{color:#40bf40}
+:root[data-theme="light"] .tx-o{color:#b34a00}:root[data-theme="light"] .tx-y{color:#8a6d00}:root[data-theme="light"] .tx-g{color:#2a7d12}
 .rc-panel-msg{margin:0}
 @media (max-width:40rem){.rc-panel{grid-template-columns:minmax(0,1fr)}.rc-tog{margin-left:0}}
 .r-search{position:relative;flex:1 1 12.5rem;min-width:0}
@@ -2285,7 +2294,7 @@ function recipePanel(x){
     else if(sc.includes(2))how.push(h("li",{class:"rc-get"},"Drops from monsters"));
     else if(sc.includes(4))how.push(h("li",{class:"rc-get"},"A quest reward"));
     else how.push(h("li",{class:"small ter"},"Where to get it isn't known yet."))}
-  const ups=col&&col.length===4&&col[3]?h("li",{class:"small ter rc-ups"},"Skill-ups: ",h("span",{class:"su-o"},"orange")," to "+col[1]+", ",h("span",{class:"su-y"},"yellow")," to "+col[2]+", ",h("span",{class:"su-g"},"green")," to "+col[3]):null;
+  const ups=col&&col.length===4&&col[3]?h("li",{class:"small ter rc-ups"},"Skill-ups: ",h("span",{class:"tx-o"},"orange")," to "+col[1]+", ",h("span",{class:"tx-y"},"yellow")," to "+col[2]+", ",h("span",{class:"tx-g"},"green")," to "+col[3]):null;
   return h("div",{class:"rc-panel",id:"rcp-"+spell},
     h("div",{},h("h3",{},"Reagents"),mats.length?h("ul",{},mats):h("p",{class:"small ter",style:"margin:0"},"None listed.")),
     h("div",{},h("h3",{},"The recipe"),h("ul",{},how,ups)))}
@@ -2358,12 +2367,22 @@ function canMake(m){
   const N=12;
   return h("div",{class:"cm"},h("span",{class:"small ter",style:"font-weight:600"},"Can make"),
     rows.map(x=>{const key=m.id+"|"+x.p,open=!!(S.ui.cmOpen||{})[key];
-      return h("details",{class:"cm-p",open:open||null,ontoggle:e=>{if(e.target.open!==!!(S.ui.cmOpen||{})[key])S.ui.cmOpen={...(S.ui.cmOpen||{}),[key]:e.target.open}}},
+      if(open)loadRecipeInfo();
+      return h("details",{class:"cm-p",open:open||null,ontoggle:e=>{if(e.target.open!==!!(S.ui.cmOpen||{})[key]){S.ui.cmOpen={...(S.ui.cmOpen||{}),[key]:e.target.open};if(e.target.open)schedule()}}},
         h("summary",{},h("b",{},x.p),h("span",{class:"small ter"},x.known?x.n+" recipes they know (seen by the guild scribe)":x.learn.length+" known or at the trainer"+(x.need?" · "+x.need+" more with a recipe":""))),
-        x.learn.length?h("ul",{class:"cm-list"},x.learn.slice(0,N).map(r=>h("li",{},itemRef(r[0],r[4]?{id:r[4],q:r[5]}:null),
-          h("span",{class:"rc-src "+r[2]},R_LABEL[r[2]]),h("span",{class:"small ter cm-sk"},(r[3]?"about ":"")+r[1])))):null,
+        open?suKey():null,
+        x.learn.length?h("ul",{class:"cm-list"},x.learn.slice(0,N).map(r=>{const rk=m.id+"|"+x.p+"|"+r[0],ro=S.ui.cmRc===rk,su=open?skillUp(x.p,r[0],skillIn(m,x.p)):null;
+          return h("li",{class:ro?"open":""},su?h("span",{class:"su su-"+su[0],title:su[1]},h("span",{class:"visually-hidden"},su[1])):h("span",{class:"su none","aria-hidden":"true"}),
+            h("span",{class:"cm-n"},itemRef(r[0],r[4]?{id:r[4],q:r[5]}:null)),
+            h("span",{class:"rc-src "+r[2]},R_LABEL[r[2]]),h("span",{class:"small ter cm-sk"},(r[3]?"about ":"")+r[1]),
+            h("button",{type:"button",class:"cm-tog","aria-expanded":String(ro),"aria-label":(ro?"Hide":"Show")+" reagents and recipe for "+r[0],onclick:()=>setUi({cmRc:ro?null:rk})},ro?"⌄":"›"),
+            ro?recipePanel({p:x.p,name:r[0],src:r[2]}):null)})):null,
         x.learn.length>N?h("a",{class:"small",href:"#professions",onclick:()=>setUi({pProf:x.p,pq:"",pKind:"learn",pMore:false})},"See all "+x.learn.length+" in Who Can Make It?"):null)}))}
 
+// Whether a recipe still gives skill points at this skill, from Wowhead's colours [orange, yellow, green, grey].
+function skillUp(p,name,sk){const d=rinfoState==="ok"&&S.rinfo.recipes[p+"|"+name];if(!d||!d[1]||d[1].length!==4||!d[1][3])return null;const [,y,g,gr]=d[1];
+  return sk<y?["o","Orange: a skill-up every time"]:sk<g?["y","Yellow: usually a skill-up"]:sk<gr?["g","Green: sometimes a skill-up"]:["x","Grey: no more skill-ups"]}
+const suKey=()=>rinfoState==="ok"?h("div",{class:"su-key small ter"},h("span",{},h("span",{class:"su su-o"}),"Every time"),h("span",{},h("span",{class:"su su-y"}),"Usually"),h("span",{},h("span",{class:"su su-g"}),"Sometimes"),h("span",{},h("span",{class:"su su-x"}),"No more skill-ups")):null;
 /* ---------- Records ---------- */
 // Everyone in the guild ranked on what the armory already tells us. Nothing here is typed in; ties share a place.
 const ordinal=n=>n+(n%100>=11&&n%100<=13?"th":({1:"st",2:"nd",3:"rd"}[n%10]||"th"));
@@ -2392,55 +2411,50 @@ function recList(k,rows,fmt,n=3){const open=recOpen(k),top=open?rows:rows.slice(
   return[h("ol",{class:"rec-list"},top.map((r,i)=>[open&&i===rows.length-1&&rows.length>n?gap(1):null,recLine(r,fmt,open&&i===rows.length-1&&rows.length>n?"spoon":"")]),
       mine.map(r=>[gap(r===last),recLine(r,fmt,r===last?"spoon me":"me")]),last&&!mine.includes(last)?[gap(1),recLine(last,fmt,"spoon")]:null),
     rows.length>n+1?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(open),onclick:()=>recToggle(k)},open?"Show top 3":"See all "+rows.length):null]}
-function boardCard([k,title,get,fmt]){
-  const rows=ranked(get);if(!rows.length)return null;
-  return h("section",{class:"card rec-card","aria-label":title},
-    h("div",{class:"spread"},h("h3",{},title),h("span",{class:"small ter"},TITLES[k]&&rows.length>1&&rows[1][2]!==1?"Title: "+TITLES[k]:rows.length+(rows.length===1?" character":" characters"))),
-    recList(k,rows,fmt))}
-// Professions as one tidy table: a row each, the top three across, the wooden spoon at the end.
-function profTable(list){
-  const cell=(r,fmt,spoon)=>r?h("span",{class:"rp-c"+(spoon?" spoon":"")},spoon?h("span",{class:"rp-spoon"},"Wooden spoon"):medal(r[2]),h("span",{class:"rp-who"},charLink(r[0]),h("span",{class:"rp-v"},String(r[1])))):h("span",{class:"rp-c empty","aria-hidden":"true"},"—");
-  const rows=list.map(([p,,get,fmt])=>[p,ranked(get),fmt]).filter(x=>x[1].length);
-  if(!rows.length)return h("p",{class:"small ter"},"No one has these professions yet.");
-  return h("section",{class:"card rp"},
-    h("div",{class:"rp-head small ter","aria-hidden":"true"},h("span",{},"Profession"),h("span",{},"1st"),h("span",{},"2nd"),h("span",{},"3rd"),h("span",{},"Last")),
-    rows.map(([p,r,fmt])=>{const k="p:"+p,open=recOpen(k);
-      return h("div",{class:"rp-row"+(open?" open":"")},
-        // The whole row opens it with a mouse or tap; the profession name is the real button for keyboards and screen readers.
-        h("div",{class:"rp-sum",onclick:e=>{if(e.target.closest("a,button"))return;recToggle(k)}},
-          h("button",{type:"button",class:"rp-p","aria-expanded":String(open),onclick:()=>recToggle(k)},h("b",{},p),h("span",{class:"small ter"},r.length+(r.length===1?" character":" characters"))),
-          cell(r[0]),cell(r[1]),cell(r[2]),cell(r.length>3?r[r.length-1]:null,null,true)),
-        open?h("ol",{class:"rec-list rp-all"},r.map((x,i)=>i===r.length-1&&r.length>3?[h("li",{class:"rec-gap","aria-hidden":"true"},"Wooden spoon"),recLine(x,v=>v+" / 300","spoon")]:recLine(x,v=>v+" / 300"))):null)}))}
-// Hall of Titles: every title, who holds it and who's next, grouped. "Up for grabs" until two people are on the board.
+// The four main boards share one card with a switch. The title and who holds it sit above the list.
+function recBoards(){
+  const k=S.ui.recBoard&&REC_BOARDS.some(b=>b[0]===S.ui.recBoard)?S.ui.recBoard:"hk",[,title,get,fmt]=REC_BOARDS.find(b=>b[0]===k),rows=ranked(get);
+  const holder=TITLES[k]&&rows.length>1&&rows[1][2]!==1?rows[0][0]:null,rg=holder?reignOf(k,holder.id):null;
+  const names={hk:"Kills",level:"Level",dungeons:"Dungeons",gear:"Gear"};
+  return h("section",{class:"card rec-card lb","aria-label":title},
+    h("h2",{},"Leaderboards"),
+    seg("Board",REC_BOARDS.map(b=>[b[0],names[b[0]]]),k,v=>setUi({recBoard:v},true)),
+    h("h3",{class:"visually-hidden"},title),
+    holder?h("p",{class:"lb-title small"},"Title: ",h("b",{},TITLES[k])," · ",charLink(holder),rg?" · "+rg.text.toLowerCase():""):
+      h("p",{class:"lb-title small ter"},rows.length+(rows.length===1?" character":" characters")),
+    rows.length?recList(k,rows,fmt,5):h("p",{class:"empty"},"Nobody on this board yet."))}
+// Profession rankings by value, for the Professions page table (members and alts; former members left off).
+// Hall of Titles: a grid of frame tiles, one per title. Tap one for how it's won, its frame, the reign and who's next.
+// Professions and classes show only the held titles until "Show every title".
 function hallOfTitles(){
-  const l=titleList(),open=S.ui.hotAll,groups=["Guild","Professions","Classes"];
-  const row=x=>{const who=m=>h("span",{class:"hot-who"},classIcon(m.cls),charLink(m)),fr=frameFor(x.k),rg=x.holder?reignOf(x.k,x.holder[0].id):null;
-    return h("li",{class:"hot-row"+(x.holder&&isMine(x.holder[0])?" me":"")},
-      h("span",{class:"hot-t"},fr?h("span",{class:"hot-fr",style:`background:linear-gradient(135deg,${fr.f[0]},${fr.f[1]} 35%,${fr.f[2]} 55%,${fr.f[3]})`,title:fr.name,"aria-hidden":"true"}):h("span",{class:"title-ic","aria-hidden":"true"}),
-        h("span",{},h("b",{},x.t),h("small",{},x.how+(fr?" · "+fr.name:"")))),
-      x.holder?h("span",{class:"hot-h"},who(x.holder[0]),h("small",{},x.fmt(x.holder[1])+(rg?" · "+rg.text.toLowerCase():""))):
-        x.tied?h("span",{class:"hot-h"},h("span",{class:"small ter"},"Tied: "),x.tied.slice(0,3).map((r,i)=>[i?", ":"",charLink(r[0])])):
-        h("span",{class:"hot-h small ter"},h("span",{},x.rows.length===1?["Only ",charLink(x.rows[0][0])," so far"]:"Up for grabs")),
-      h("span",{class:"hot-n small ter"},x.next?["Next: ",charLink(x.next[0])," · ",x.fmt(x.next[1])]:""))};
+  const l=titleList(),all=S.ui.hotAll,groups=["Guild","Professions","Classes"],cur=S.ui.hotOpen;
+  const first=m=>String(nameOf(m)).split(" ")[0];
+  const tile=x=>{const fr=frameFor(x.k),rg=x.holder?reignOf(x.k,x.holder[0].id):null,open=cur===x.k;
+    const sw=fr?h("span",{class:"hot-fr",style:`background:linear-gradient(135deg,${fr.f[0]},${fr.f[1]} 35%,${fr.f[2]} 55%,${fr.f[3]})`,"aria-hidden":"true"}):h("span",{class:"hot-fr none","aria-hidden":"true"});
+    const short=x.holder?[nameOf(x.holder[0]),h("i",{}," · "+(rg?rg.text.replace(/ running$/,""):x.fmt(x.holder[1])))]
+      :x.tied?"Tied: "+x.tied.slice(0,3).map(r=>first(r[0])).join(", ")+(x.tied.length>3?"…":""):x.rows.length===1?"Only "+nameOf(x.rows[0][0])+" so far":"Up for grabs";
+    const more=open?h("div",{class:"hot-more small"},
+      h("span",{class:"ter"},x.how+(fr?" · "+(/frame$/i.test(fr.name)?fr.name:fr.name+" frame"):"")),
+      x.holder?h("span",{},charLink(x.holder[0])," · "+x.fmt(x.holder[1])+(rg?" · "+rg.text.toLowerCase():"")):null,
+      x.tied?h("span",{},"Tied: ",x.tied.map((r,i)=>[i?", ":"",charLink(r[0])])," · "+x.fmt(x.tied[0][1])):null,
+      x.next?h("span",{},"Next: ",charLink(x.next[0])," · ",x.fmt(x.next[1])):x.holder?null:h("span",{class:"ter"},"Be alone at the top of the board to take it.")):null;
+    return h("li",{class:"hot-tile"+(open?" open":"")+(x.holder&&isMine(x.holder[0])?" me":"")+(x.holder?"":" free")},
+      h("button",{type:"button",class:"hot-btn","aria-expanded":String(open),onclick:()=>setUi({hotOpen:open?null:x.k})},sw,
+        h("span",{class:"hot-txt"},h("b",{},x.t),h("span",{},short))),more)};
   const lists=groups.map(g=>[g,l.filter(x=>x.group===g)]).filter(x=>x[1].length);
-  const held=l.filter(x=>x.holder).length;
+  const held=l.filter(x=>x.holder).length,hidden=l.filter(x=>x.group!=="Guild"&&!x.holder).length;
   return h("section",{class:"card hot","aria-labelledby":"hot-h"},
     h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"hot-h"},"Hall of Titles"),h("span",{class:"small ter"},held+" of "+l.length+" held")),
-    h("p",{class:"small ter",style:"margin:0"},"Be alone at the top of a board to hold its title and its card frame. It moves the moment someone overtakes you."),
-    lists.map(([g,xs])=>{const shown=open||g==="Guild"?xs:xs.filter(x=>x.holder).slice(0,6);
-      return h("div",{class:"hot-g"},h("h3",{class:"pf-kind"},g),h("ul",{class:"hot-list"},shown.map(row)))}),
-    h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(!!open),onclick:()=>setUi({hotAll:!open},true)},open?"Show fewer":"Show every title"))}
+    lists.map(([g,xs])=>{const shown=all||g==="Guild"?xs:xs.filter(x=>x.holder);
+      return shown.length?h("div",{class:"hot-g"},h("h3",{class:"pf-kind"},g),h("ul",{class:"hot-tiles"},shown.map(tile))):null}),
+    hidden||all?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(!!all),onclick:()=>setUi({hotAll:!all},true)},all?"Show held titles only":"Show every title"):null)}
 function viewRecords(){
-  const u=S.ui,kind=u.recKind||"All";
-  const profs=[...PRIMARY,...SECONDARY].filter(p=>kind==="All"||(kind==="Primary"?PRIMARY:SECONDARY).includes(p)).map(profBoard);
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs."))),
     weekCard(),
-    h("div",{class:"rec-grid rec-main"},REC_BOARDS.map(b=>boardCard(b))),
-    hallOfTitles(),
+    h("div",{class:"rec-top"},recBoards(),hallOfTitles()),
     whenWePlay(),
-    h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"prof-h"},"Professions"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],kind,k=>setUi({recKind:k},true))),
-    profTable(profs),
-    h("p",{class:"small ter"},"Tap a profession to see everyone. Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
+    h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →")),
+    h("p",{class:"small ter"},"Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
 // When the guild plays: how many guildies are online by day of the week and hour (Perth), from the guild scribe's
 // five-minute checks. It only knows hours when the scribe was online, so blank cells are "not watched", not "empty".
 const DOW=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
@@ -2542,29 +2556,33 @@ const titleTags=m=>{const l=titlesOf(m);if(!l.length)return null;const tag=x=>{c
   return h("div",{class:"titles"},l.slice(0,3).map(tag),l.length>3?h("a",{class:"title-tag more",href:"#records",title:l.slice(3).map(x=>x.t).join(", ")},"+"+(l.length-3)+" more"):null)};
 
 function viewProfessions(){
-  const chars=[...S.members,...S.alts];
-  const by={};for(const m of chars)for(const[p,sk]of Object.entries(m.profs||{}))(by[p]=by[p]||[]).push({m,sk:+sk||0});
-  for(const p in by)by[p].sort((a,b)=>b.sk-a.sk);
-  const t=S.ui.profTab;
-  // One line per character: name and skill, the bar underneath. The rank (Expert and so on) is in the tooltip.
-  const who=({m,sk},p)=>h("li",{class:"pf-row",title:CLASS_SKILLS[p]?"":rankOf(sk)+" · "+sk+" / 300"},
-    h("span",{class:"pf-who"},classIcon(m.cls),charLink(m)),h("span",{class:"pf-sk"+(sk>=300?" max":"")},String(sk)),
-    h("span",{class:"track","aria-hidden":"true"},h("i",{class:sk>=300?"max":"",style:`width:${(sk/300*100).toFixed(1)}%`})));
-  // Top 5, then "N more" opens the rest, so the cards stay close in height.
-  const profCard=p=>{const l=by[p]||[],more=(S.ui.pfMore||{})[p],shown=more?l:l.slice(0,5);
-    return h("section",{class:"card pf-card"},h("div",{class:"pf-top"},SECONDARY.includes(p)?null:h("span",{class:"pf-kind"},GATHERING.includes(p)?"Gathering":"Crafting"),h("h3",{},p),h("span",{class:"small ter"},l.length?l.length+(l.length===1?" person":" people"):"")),
-      l.length?h("ol",{class:"pf-list"},shown.map(x=>who(x,p))):h("p",{class:"empty"},"Nobody yet."),
-      l.length>5?h("button",{type:"button",class:"btn ghost sm pf-more","aria-expanded":String(!!more),onclick:()=>setUi({pfMore:{...(S.ui.pfMore||{}),[p]:!more}},true)},more?"Show top 5":(l.length-5)+" more"):null)};
+  const chars=[...S.members,...S.alts].filter(m=>isMine(m)||memberState(m)!=="former");
+  const by={};for(const m of chars)for(const[p,sk]of Object.entries(m.profs||{}))if(+sk>0)(by[p]=by[p]||[]).push({m,sk:+sk||0});
+  for(const p in by){by[p].sort((a,b)=>b.sk-a.sk||nameOf(a.m).localeCompare(nameOf(b.m)));by[p].forEach(x=>{x.pl=1+by[p].filter(y=>y.sk>x.sk).length})}
+  const t=S.ui.profTab||"All",openP=S.ui.pfOpen;
+  // One chip per character: place, name, skill and a bar. The rank (Expert and so on) is in the tooltip.
+  const chip=(x,p,spoon)=>h("li",{class:"pt-p"+(spoon?" spoon":"")+(isMine(x.m)?" me":""),title:CLASS_SKILLS[p]?"":rankOf(x.sk)+" · "+x.sk+" / 300"},
+    h("span",{class:"pt-t"},x.pl<=3&&!spoon?medal(x.pl):null,classIcon(x.m.cls),charLink(x.m),h("span",{class:"pt-v"+(x.sk>=300?" max":"")},String(x.sk))),
+    h("span",{class:"track","aria-hidden":"true"},h("i",{class:x.sk>=300?"max":"",style:`width:${(x.sk/300*100).toFixed(1)}%`})),
+    spoon?h("span",{class:"pt-spoon"},"Wooden spoon"):null);
+  const row=p=>{const l=by[p]||[],open=openP===p,N=3,shown=open?l:l.slice(0,N);
+    const toggle=()=>setUi({pfOpen:open?null:p});
+    return h("div",{class:"pt-row"+(open?" open":"")},
+      h("button",{type:"button",class:"pt-name","aria-expanded":String(open),onclick:toggle,disabled:l.length<=N||null},h("b",{},p),h("span",{class:"small ter"},l.length?l.length+(l.length===1?" character":" characters"):"Nobody yet")),
+      h("ol",{class:"pt-ppl"},shown.map((x,i)=>chip(x,p,open&&l.length>3&&i===l.length-1)),
+        !open&&l.length>N?h("li",{class:"pt-more"},h("button",{type:"button",class:"linkish",onclick:toggle},"+"+(l.length-N)+" more")):null),
+      h("span",{class:"pt-chev","aria-hidden":"true"},l.length>N?(open?"⌄":"›"):""))};
   const missing=PRIMARY.filter(p=>!by[p]);
-  // The finder first; the All / Primary / Secondary switch sits with the profession cards it filters.
-  const out=[h("div",{class:"page-head"},h("div",{},h("h1",{},"Professions"),h("p",{class:"sub"},"Who to whisper for crafts and mats."))),recipeFinder(),
-    h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"big"},"Who Has What"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],t,k=>setUi({profTab:k},true)))];
-  if(t==="All"||t==="Primary"){
-    out.push(h("div",{class:"spread",style:"align-items:baseline"},h("h3",{class:"prof-h"},"Primary"),missing.length?h("span",{class:"small ter"},"Nobody has "+missing.join(", ")+" yet"):null),
-      h("div",{class:"pf-grid"},[...GATHERING,...PRIMARY.filter(p=>!GATHERING.includes(p))].map(profCard)))}
-  if(t==="All"||t==="Secondary"){
-    out.push(h("h3",{class:"prof-h"},"Secondary"),h("div",{class:"pf-grid"},SECONDARY.map(profCard)))}
-  return out}
+  const grp=(name,list)=>[h("div",{class:"pt-grp"},name),list.map(row)];
+  const body=[];
+  if(t!=="Secondary")body.push(grp("Gathering",GATHERING),grp("Crafting",PRIMARY.filter(p=>!GATHERING.includes(p))));
+  if(t!=="Primary")body.push(grp("Secondary",SECONDARY));
+  if(S.ui.profJump){S.ui.profJump=0;requestAnimationFrame(()=>{const e=document.getElementById("pt-h");if(e)e.scrollIntoView({block:"start"})})}
+  // The finder first; the All / Primary / Secondary switch sits with the table it filters.
+  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Professions"),h("p",{class:"sub"},"Who to whisper for crafts and mats."))),recipeFinder(),
+    h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"big",id:"pt-h"},"Who Has What"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],t,k=>setUi({profTab:k},true))),
+    h("section",{class:"card pt","aria-labelledby":"pt-h"},body),
+    h("p",{class:"small ter"},(missing.length&&t!=="Secondary"?"Nobody has "+missing.join(", ")+" yet. ":"")+"Medals go to the top three; the wooden spoon to the lowest, once there are four. Tap a profession to see everyone.")]}
 
 /* ---------- Raids ---------- */
 // Events were cut (raid nights are sorted out in game and on Discord). The raid list stays as a heads-up.
