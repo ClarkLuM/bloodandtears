@@ -919,13 +919,18 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
   events.sort((a, b) => (a.at < b.at ? -1 : 1));
   // Recipes: only for the uploader's own characters, which is all the game lets the addon see.
   let recipeChars = 0;
+  // In Forever the game's own "who am I" gives only the first part of a two-part name ("Baz" for Baz Zil), so match on
+  // that when it points to exactly one character in the scribe's guild list.
+  const listed = Object.keys(sv.members || {});
+  const ownChar = name => { if (byName.get(keyOf(name))) return byName.get(keyOf(name));
+    const full = listed.filter(n => keyOf(n).startsWith(keyOf(name) + " ")); return full.length === 1 ? byName.get(keyOf(full[0])) : null; };
   for (const [name, profs] of Object.entries(sv.recipes || {})) {
-    const hit = byName.get(keyOf(name)); if (!hit || opt[keyOf(name)] || !profs || typeof profs !== "object") continue;
+    const hit = ownChar(name); if (!hit || opt[keyOf(name)] || !profs || typeof profs !== "object") continue;
     const rec = {};
     for (const [p, v] of Object.entries(profs)) { const list = Array.isArray(v && v.list) ? v.list : []; if (list.length) rec[short(p, 40)] = { at: iso(v.at) || new Date().toISOString(), list: list.map(x => short(x, 80)).slice(0, 800) }; }
     if (Object.keys(rec).length) { await db().doc(`${hit.coll}/${hit.id}`).set({ recipes: rec }, { merge: true }); recipeChars++; }
   }
-  await ref.set({ members, days, hours, raids, events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short(sv.by, 40), up: new Date().toISOString() });
+  await ref.set({ members, days, hours, raids, events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short((sv.by && listed.filter(n => keyOf(n).startsWith(keyOf(sv.by) + " ")).length === 1 ? listed.find(n => keyOf(n).startsWith(keyOf(sv.by) + " ")) : sv.by), 40), up: new Date().toISOString() });
   await saveStreaks().catch(err => logger.warn("streaks", err.message));
   return { matched, unknown: unknown.slice(0, 20), unknownN: unknown.length, raids: Object.keys(sv.raids || {}).length, recipeChars };
 });
