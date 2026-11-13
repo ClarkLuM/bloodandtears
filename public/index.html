@@ -1856,8 +1856,11 @@ function reignOf(k,id){const key=TITLE_KEY(k),hd=key&&S.titlesDoc&&S.titlesDoc.h
   const days=Math.floor((Date.now()-t)/864e5),weeks=Math.floor(days/7);
   return{days,weeks,text:weeks>=1?weeks+(weeks===1?" week":" weeks")+" running":days>=1?days+(days===1?" day":" days")+" running":"Since today"}}
 // Streaks: days in a row a character has been seen in game, counted by the server (guild/streaks).
-// It only counts while the last day is today or yesterday, and it shows from three days.
-function streakOf(m){const r=S.streaks&&S.streaks.rows&&S.streaks.rows[m.id];if(!r||!(+r.n>=3))return 0;
+// It only counts while the last day is today or yesterday, and it shows from two days.
+const STREAK_MIN=2;
+// The count whatever its length, while it's still live (for the sync details line).
+const streakLive=m=>{const r=S.streaks&&S.streaks.rows&&S.streaks.rows[m.id];if(!r)return 0;const today=perthDay(),yest=new Date(Date.now()+8*36e5-864e5).toISOString().slice(0,10);return r.last===today||r.last===yest?+r.n||0:0};
+function streakOf(m){const r=S.streaks&&S.streaks.rows&&S.streaks.rows[m.id];if(!r||!(+r.n>=STREAK_MIN))return 0;
   const today=perthDay(),yest=new Date(Date.now()+8*36e5-864e5).toISOString().slice(0,10);return r.last===today||r.last===yest?+r.n:0}
 const FLAME='<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.3 1c.3 2.2-.8 3.300-2 4.600C5.100 6.900 4 8.200 4 10.100 4 12.800 5.800 15 8 15s4-2.100 4-4.700c0-1.500-.6-2.700-1.300-3.700-.3.900-.8 1.500-1.400 1.800.4-2.500-.2-5.200-1-7.400z"/></svg>';
 const flameEl=(n,cls)=>{const e=h("span",{class:"flame"+(cls?" "+cls:""),title:"Seen in game "+n+" days running"},h("span",{"aria-hidden":"true"}),String(n),h("span",{class:"visually-hidden"}," days running"));e.firstChild.innerHTML=FLAME;return e};
@@ -2996,6 +2999,10 @@ function armoryAllLine(){
     open?h("div",{class:"row sync-det",style:"gap:.375rem .75rem;align-items:center"},
       h("span",{},a.at?"Armory checked "+ago(a.at)+(a.checked?" · "+(a.changed||0)+" of "+a.checked+" updated":"")+" · every hour":"Armory checks every hour"),
       !err&&a.roster&&a.roster.at?h("span",{},"Guild list read "+ago(a.roster.at)):null,
+      // So it's plain whether the streak count has run, and what it found.
+      (()=>{const sd=S.streaks;if(!sd||!sd.rows)return h("span",{},"Streaks not counted yet (they're counted during a sync)");
+        const live=S.members.concat(S.alts).map(streakLive).filter(n=>n>0),top=Math.max(0,...live);
+        return h("span",{},"Streaks counted"+(sd.at?" "+ago(sd.at):"")+" · "+live.length+" seen today or yesterday"+(top?", longest "+top+(top===1?" day":" days"):""))})(),
       S.user?h("button",{class:"btn sm",disabled:!!busy,onclick:go},busy?"Syncing everyone…":"⟳ Sync everyone"):null):null)}
 function armoryLine(m,can){
   const a=m.armory,busy=S.ui.armBusy===m.id;
