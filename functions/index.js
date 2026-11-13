@@ -761,15 +761,40 @@ async function saveStreaks() {
   const ref = db().doc("guild/streaks"), cur = (await ref.get()).data() || {}, rows = { ...(cur.rows || {}) };
   const dayOf = iso => { const t = Date.parse(iso || ""); return t ? new Date(t + 8 * 36e5).toISOString().slice(0, 10) : ""; };
   const next = d => new Date(Date.parse(d + "T00:00:00Z") + 864e5).toISOString().slice(0, 10);
+  const prev = d => new Date(Date.parse(d + "T00:00:00Z") - 864e5).toISOString().slice(0, 10);
+  const docs = (await db().collection("members").get()).docs;
   let changed = false; const ids = new Set();
-  for (const doc of (await db().collection("members").get()).docs) {
+  // The first time only: work out streaks so far from what the site already knows. A day counts when the armory showed
+  // something new that day (a level, an item, a skill-up, a kill milestone) or the daily snapshot changed across it.
+  // It can only undercount: a day spent playing with nothing new to show isn't seen.
+  if (!cur.backfilled) {
+    const days = ((await db().doc("guild/records").get()).data() || {}).days || {}, keys = Object.keys(days).sort();
+    const game = /^(Reached |Equipped |Got |Trained )| reached (Apprentice|Journeyman|Expert|Artisan)$/;
+    for (const doc of docs) {
+      const d = doc.data() || {}, on = new Set();
+      for (const j of Array.isArray(d.journey) ? d.journey : []) if (j && game.test(String(j.t || ""))) { const k = dayOf(j.at); if (k) on.add(k); }
+      // Each snapshot is taken early in its day, so a change between two of them happened on the earlier day.
+      for (let i = 0; i + 1 < keys.length; i++) {
+        const a = days[keys[i]][doc.id], b = days[keys[i + 1]][doc.id];
+        if (a && b && next(keys[i]) === keys[i + 1] && JSON.stringify(a) !== JSON.stringify(b)) on.add(keys[i]);
+      }
+      const seen = dayOf((d.armory || {}).updated); if (seen) on.add(seen);
+      if (!on.size) continue;
+      const last = [...on].sort().pop(); let n = 1, k = prev(last);
+      while (on.has(k)) { n++; k = prev(k); }
+      const was = rows[doc.id];
+      if (!was || was.last < last || (was.last === last && (+was.n || 0) < n)) { rows[doc.id] = { n, last }; changed = true; }
+    }
+    changed = true;
+  }
+  for (const doc of docs) {
     ids.add(doc.id);
     const day = dayOf(((doc.data() || {}).armory || {}).updated), was = rows[doc.id];
     if (!day || (was && was.last >= day)) continue;
     rows[doc.id] = { n: was && next(was.last) === day ? (+was.n || 0) + 1 : 1, last: day }; changed = true;
   }
   for (const id of Object.keys(rows)) if (!ids.has(id)) { delete rows[id]; changed = true; }
-  if (changed) await ref.set({ rows, at: new Date().toISOString() });
+  if (changed) await ref.set({ rows, backfilled: true, at: new Date().toISOString() });
 }
 async function syncAll() {
   let n = 0, changed = 0; const missing = [];
