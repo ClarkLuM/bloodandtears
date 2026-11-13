@@ -767,7 +767,11 @@ async function saveStreaks() {
   // The first time only: work out streaks so far from what the site already knows. A day counts when the armory showed
   // something new that day (a level, an item, a skill-up, a kill milestone) or the daily snapshot changed across it.
   // It can only undercount: a day spent playing with nothing new to show isn't seen.
-  if (!cur.backfilled) {
+  // One allowance, for characters added in launch week (5 to 11 November): if the run of days is unbroken as far back as
+  // their history goes, and that history either starts within a day of when they were added or has been cut off at its
+  // 40-line limit, the streak is counted from the day they were added. That's an inference, not a record.
+  const LOOK_BACK = 2, LAUNCH_DAY = "2026-11-05", LAUNCH_END = "2026-11-12";
+  if ((+cur.backfill || 0) < LOOK_BACK) {
     const days = ((await db().doc("guild/records").get()).data() || {}).days || {}, keys = Object.keys(days).sort();
     const game = /^(Reached |Equipped |Got |Trained )| reached (Apprentice|Journeyman|Expert|Artisan)$/;
     for (const doc of docs) {
@@ -780,8 +784,12 @@ async function saveStreaks() {
       }
       const seen = dayOf((d.armory || {}).updated); if (seen) on.add(seen);
       if (!on.size) continue;
-      const last = [...on].sort().pop(); let n = 1, k = prev(last);
+      const sorted = [...on].sort(), last = sorted.pop(), first = sorted[0] || last; let n = 1, k = prev(last);
       while (on.has(k)) { n++; k = prev(k); }
+      const start = next(k), made = dayOf(d.createdAt), from = made && made < LAUNCH_DAY ? LAUNCH_DAY : made;
+      const full = (Array.isArray(d.journey) ? d.journey : []).length >= 40;
+      if (from && from < LAUNCH_END && start === first && from < start && (full || next(from) === start))
+        n += Math.round((Date.parse(start + "T00:00:00Z") - Date.parse(from + "T00:00:00Z")) / 864e5);
       const was = rows[doc.id];
       if (!was || was.last < last || (was.last === last && (+was.n || 0) < n)) { rows[doc.id] = { n, last }; changed = true; }
     }
@@ -794,7 +802,7 @@ async function saveStreaks() {
     rows[doc.id] = { n: was && next(was.last) === day ? (+was.n || 0) + 1 : 1, last: day }; changed = true;
   }
   for (const id of Object.keys(rows)) if (!ids.has(id)) { delete rows[id]; changed = true; }
-  if (changed) await ref.set({ rows, backfilled: true, at: new Date().toISOString() });
+  if (changed) await ref.set({ rows, backfilled: true, backfill: LOOK_BACK, at: new Date().toISOString() });
 }
 async function syncAll() {
   let n = 0, changed = 0; const missing = [];
