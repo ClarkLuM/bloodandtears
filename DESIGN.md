@@ -797,6 +797,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 - 13 Nov: marks. Streak flame (`.flame`, orange, with the day count) beside Last seen on the roster and beside the name on the character page. Guild Master nameplate on the card (`.lg-rank` crown and label, gold name via `.is-gm`). PvP rank stripes under the level badge (`pvpMark` / `pvpSvg`: bronze, silver, gold; the card picture draws the same shapes). Title chooser as frame swatches (`.tp-sw`, 3.5 by 4.5rem, chosen one outlined in the accent text colour).
 
+- 13 Nov: card games removed (Card Duels, Draft Duel, Guess the Guildie, the Games strip and every "Duel this card" button). Duels mostly came down to which character was a DPS, so they weren't fair. Signature moves stay on the card as flavour, names only. Old #duel, #draft, #trumps and #guess links open Cards.
+
 ## Open Items
 
 **These parts are still defaults, guesses, or waiting for a person.**

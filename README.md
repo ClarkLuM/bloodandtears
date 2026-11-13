@@ -12,7 +12,7 @@ This file describes the site as it is today. The older, dated notes on how each 
 | **Character page** | Portrait, name and titles, a strip of headline numbers, then gear and stats, the Dungeon Passport, professions (with what they can make), their trading card, talents and their Journey. |
 | **Dungeons** | The dungeons grouped like the game's Spelunker achievements (Novice, Experienced, Master). For each: how many are the right level, how many have been, and how many still need it. Open one for the names, Suggest a group, and what drops. |
 | **Raids** (`#raids`, from the switch on Dungeons) | Raid readiness for Barrow Deeps, Hyjal Summit and Onyxia's Lair, every level 60 with their role and gear, and who's between 50 and 59. |
-| **Cards** | Everyone's trading card in sets (Gold foil, Silver, Bronze, Plain), with search and sort, Card of the Week, and the games: Draft Duel, Guess the Guildie and Card Duels. |
+| **Cards** | Everyone's trading card in sets (Gold foil, Silver, Bronze, Plain), with search and sort, and Card of the Week. |
 | **Professions** | Who has what, and **Who Can Make It?**: search any crafted item to see who's skilled enough. |
 | **Records** | Leaderboards for kills, level, dungeons, gear and every profession, with titles for whoever is top, the wooden spoon for last, This Week, the Hall of Titles and the Hall of Firsts. |
 | **Guild History** (`#history`) | Everything the feed has seen, one fold per day, plus the weekly recap picture for any week. |
@@ -29,10 +29,7 @@ Other things worth knowing about:
 - **Guild Master.** The character at the top rank on the guild's armory list gets a crown and "Guild Master" over a gold name on their card.
 - **PvP rank stripes.** A card shows its PvP rank under the level badge: ranks 1 to 5 are bronze chevrons (one per rank), 6 to 10 are silver chevrons over a bar, and 11 to 14 are gold, two chevrons under one to four stars. It follows whatever rank the armory shows.
 - **Choose your title.** With more than one title, the owner picks which one their card wears (its ribbon and frame) from the frame swatches under the card on their page.
-- **Signature moves.** Every spec has one (Combat rogues have Blade Flurry, attack +10%). It's printed on the card and lifts that stat in duels and Draft Duel. The list is `MOVES` in `public/index.html`.
-- **Card Duels** (`#duel`). Two to six cards go head to head a stat at a time. Fighting stats can land a critical hit (+25%); the better a card's crit, the likelier. The dice are set by the day and the fighters, so a shared link shows everyone the same duel and tomorrow it can go differently. **Copy for Discord** makes a picture of the result.
-- **Draft Duel** (`#draft`). Six cards of a similar level go on the table. You take one, the dealer two, you two, the dealer the last. Then you choose which of your three faces which of theirs; each pair fights a short duel and you need two of the three. Only your win and loss record is kept, in that browser. (It replaced Top Trumps.)
-- **Guess the Guildie** (`#guess`). One guildie a day, the same for everyone. You start with one clue (their deeds) and tap the face-down card with the name you think it is; a wrong guess gives another clue (professions, role and level, race, class, then the name's first letter) and says whether the class, race, role and level match. Six guesses. Today's game and your streak are kept in that browser.
+- **Signature moves.** Every spec has one (Combat rogues have Blade Flurry), printed on the card for flavour. The list is `MOVES` in `public/index.html`.
 - **Celebrations.** When your character levels up, your card flips over with the new level. Guild milestones (such as 1,000 honourable kills) get a small toast.
 - **Since You Were Last Here** sums up what happened since this device last had the site open.
 - **Winter Veil.** A countdown strip runs from 1 November to Boxing Day.
@@ -108,4 +105,4 @@ These aren't in the code:
 ## Switched off or removed
 
 - **Discord posting** (webhooks and the daily digest) is switched off with `DISCORD_ON = false` in `functions/index.js`. The code is still there and does nothing. `docs/HISTORY.md` has the steps to turn it back on.
-- **Removed:** group posts, events, trade orders, wishlists, notes, hand-edited gear and professions, achievements, the Discord slash commands and Rivals. Old data from these can be cleared with **Check for old data**.
+- **Removed:** group posts, events, trade orders, wishlists, notes, hand-edited gear and professions, achievements, the Discord slash commands, Rivals, and the card games (Card Duels, Draft Duel, Guess the Guildie; old links open Cards). Old data from these can be cleared with **Check for old data**.
