@@ -799,6 +799,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 - 13 Nov: card games removed (Card Duels, Draft Duel, Guess the Guildie, the Games strip and every "Duel this card" button). Duels mostly came down to which character was a DPS, so they weren't fair. Signature moves stay on the card as flavour, names only. Old #duel, #draft, #trumps and #guess links open Cards.
 
+- 13 Nov: guild scribe. When the Guild Plays is a 7 by 24 grid (`.wwp`), one crimson hue from the accent mixed into the subtle surface by how busy the hour is, unwatched hours left as outlined empty cells; the busiest slot is named in a sentence above it. Raid Nights lists each raid with its date and the names as chips (`.rn`). Recipes the scribe has seen show "knows it" in the trim green (`.rc-knows`).
+
 ## Open Items
 
 **These parts are still defaults, guesses, or waiting for a person.**

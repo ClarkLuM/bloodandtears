@@ -1,0 +1,9 @@
+## Interface: 16001
+## Title: Blood and Tears Scribe
+## Notes: Notes who in the guild has been online and when, for the Blood and Tears guild site. Reads the guild list only; nothing is sent anywhere by the addon.
+## Author: Blood and Tears
+## Version: 0.1.0
+## SavedVariables: BloodAndTearsScribeDB
+## IconTexture: Interface\Icons\INV_Misc_Book_09
+
+BloodAndTearsScribe.lua

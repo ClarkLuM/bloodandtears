@@ -473,6 +473,11 @@ exports.optOut = onCall({ region: REGION, maxInstances: 2, timeoutSeconds: 60 },
     tt.log = (tt.log || []).filter(x => !(x.to && x.to.id === id) && !(x.from && x.from.name === name));
     await tref.set(tt);
   }
+  // And the scribe's notes on them.
+  const scref = db().doc("guild/scribe"), sc = (await scref.get()).data();
+  if (sc) { for (const k of ["members", "days"]) if (sc[k]) delete sc[k][id];
+    for (const r of Object.values(sc.raids || {})) if (Array.isArray(r.ids)) r.ids = r.ids.filter(x => x !== id);
+    sc.events = (sc.events || []).filter(e => e.id !== id && keyOf(e.name) !== key); await scref.set(sc); }
   // And their streak.
   const sref = db().doc("guild/streaks"), ss = (await sref.get()).data();
   if (ss && ss.rows && ss.rows[id]) { delete ss.rows[id]; await sref.set(ss); }
@@ -801,9 +806,127 @@ async function saveStreaks() {
     if (!day || (was && was.last >= day)) continue;
     rows[doc.id] = { n: was && next(was.last) === day ? (+was.n || 0) + 1 : 1, last: day }; changed = true;
   }
+  // Days the guild scribe saw each character online. Together with the run already counted, this fills days the
+  // armory missed (no logout, or nothing new to show), so streaks are exact for anyone the scribe has seen.
+  const sdays = ((await db().doc("guild/scribe").get()).data() || {}).days || {};
+  for (const [id, list] of Object.entries(sdays)) {
+    if (!ids.has(id) || !Array.isArray(list) || !list.length) continue;
+    const was = rows[id], on = new Set(list);
+    if (was && was.last) { let k = was.last; for (let j = 0; j < (+was.n || 0); j++) { on.add(k); k = prev(k); } }
+    const last = [...on].sort().pop(); let n = 1, k = prev(last);
+    while (on.has(k)) { n++; k = prev(k); }
+    if (!was || was.last < last || (was.last === last && (+was.n || 0) < n)) { rows[id] = { n, last }; changed = true; }
+  }
   for (const id of Object.keys(rows)) if (!ids.has(id)) { delete rows[id]; changed = true; }
   if (changed) await ref.set({ rows, backfilled: true, backfill: LOOK_BACK, at: new Date().toISOString() });
 }
+/* ---------- The guild scribe (an in-game addon's saved file, uploaded by an officer) ---------- */
+// The addon (addon/BloodAndTearsScribe) reads the in-game guild list while someone plays and the game saves what it noted
+// to a .lua file. An officer uploads that file; this reads it (as data: it is never run), matches names to characters
+// on the site and keeps what the site uses in guild/scribe:
+//   members { <id>: { last, zone, gone } }   days { <id>: ["2026-11-13", ...] }   hours { "2026-11-13 21": <online> }
+//   raids { "<day> <zone>": { day, zone, ids: [...] } }   events [ { at, what, id?, name } ]   at, by, up
+// The days feed the streaks. Recipes from the uploader's own characters go on those characters as `recipes`.
+function parseLuaSaved(text) {
+  let i = 0; const s = String(text || "");
+  const ws = () => { for (;;) {
+    while (i < s.length && /\s/.test(s[i])) i++;
+    if (s.startsWith("--[[", i)) { const e = s.indexOf("]]", i); i = e < 0 ? s.length : e + 2; continue; }
+    if (s.startsWith("--", i)) { while (i < s.length && s[i] !== "\n") i++; continue; }
+    break; } };
+  const fail = m => { throw new Error(m + " near character " + i); };
+  const str = () => { const q = s[i++]; let o = "";
+    while (i < s.length && s[i] !== q) { let c = s[i++];
+      if (c === "\\") { c = s[i++]; const map = { n: "\n", t: "\t", r: "\r", "\\": "\\", '"': '"', "'": "'", "\n": "\n" };
+        if (/[0-9]/.test(c)) { let d = c; while (d.length < 3 && /[0-9]/.test(s[i])) d += s[i++]; c = String.fromCharCode(+d); } else c = map[c] ?? c; }
+      o += c; if (o.length > 5000) fail("string too long"); }
+    i++; return o; };
+  let depth = 0, count = 0;
+  const val = () => { ws(); const c = s[i];
+    if (c === "{") { if (++depth > 12) fail("too deeply nested"); i++; const obj = {}, arr = []; let isArr = true, n = 1;
+      for (;;) { ws(); if (s[i] === "}") { i++; break; }
+        if (++count > 200000) fail("too big");
+        let key;
+        if (s[i] === "[") { i++; ws(); key = s[i] === '"' || s[i] === "'" ? str() : num(); ws(); if (s[i++] !== "]") fail("expected ]"); ws(); if (s[i++] !== "=") fail("expected ="); isArr = false; }
+        else if (/[A-Za-z_]/.test(s[i])) { const st = i; while (/[\w]/.test(s[i])) i++; const id = s.slice(st, i); ws();
+          if (s[i] === "=") { i++; key = id; isArr = false; } else { i = st; key = n++; } }
+        else key = n++;
+        const v = val(); if (typeof key === "number" && isArr) arr.push(v); obj[key] = v;
+        ws(); if (s[i] === "," || s[i] === ";") i++; }
+      depth--; return isArr && arr.length ? arr : obj; }
+    if (c === '"' || c === "'") return str();
+    if (s.startsWith("true", i)) { i += 4; return true; }
+    if (s.startsWith("false", i)) { i += 5; return false; }
+    if (s.startsWith("nil", i)) { i += 3; return null; }
+    return num(); };
+  const num = () => { const m = /^-?(0x[0-9a-fA-F]+|\d+\.?\d*(e[-+]?\d+)?|\.\d+)/.exec(s.slice(i, i + 40)); if (!m) fail("unexpected text"); i += m[0].length; return Number(m[0]); };
+  const out = {};
+  for (;;) { ws(); if (i >= s.length) break;
+    const st = i; while (/[\w]/.test(s[i])) i++; const name = s.slice(st, i); if (!name) fail("expected a name"); ws();
+    if (s[i++] !== "=") fail("expected ="); out[name] = val(); }
+  return out;
+}
+const isDay = d => /^\d{4}-\d{2}-\d{2}$/.test(d), isHour = h => /^\d{4}-\d{2}-\d{2} \d{2}$/.test(h);
+const short = (v, n) => String(v ?? "").slice(0, n);
+exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds: 120 }, async req => {
+  if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
+  const off = (await db().doc("guild/officers").get()).data() || {};
+  if (!(off.uids || []).includes(req.auth.uid)) throw new HttpsError("permission-denied", "Only officers can upload the scribe file.");
+  const text = String((req.data && req.data.text) || "");
+  if (!text || text.length > 3e6) throw new HttpsError("invalid-argument", "That file is empty or too big.");
+  let sv; try { sv = parseLuaSaved(text).BloodAndTearsScribeDB; } catch (e) { throw new HttpsError("invalid-argument", "That doesn't look like the scribe file: " + e.message); }
+  if (!sv || typeof sv !== "object" || !sv.members) throw new HttpsError("invalid-argument", "That doesn't look like the scribe file (BloodAndTearsScribe.lua).");
+  if (sv.guild && keyOf(sv.guild).replace(/ /g, "-") !== GUILD_SLUG) throw new HttpsError("failed-precondition", `That file is from ${short(sv.guild, 40)}, not Blood and Tears.`);
+  // Match the addon's character names to the site's characters. Opted-out names are skipped.
+  const opt = ((await db().doc("guild/optout").get()).data() || {}).names || {};
+  const byName = new Map(), docs = [];
+  for (const coll of ["members", "alts"]) for (const d of (await db().collection(coll).get()).docs) {
+    const k = keyOf(plainName(d.data() || {})); if (!byName.has(k)) byName.set(k, { coll, id: d.id }); docs.push(d); }
+  const ref = db().doc("guild/scribe"), cur = (await ref.get()).data() || {};
+  const members = { ...(cur.members || {}) }, days = { ...(cur.days || {}) }, hours = { ...(cur.hours || {}) }, raids = { ...(cur.raids || {}) };
+  const iso = t => (+t > 1e9 ? new Date(+t * 1000).toISOString() : "");
+  let matched = 0; const unknown = [];
+  for (const [name, m] of Object.entries(sv.members || {})) {
+    const k = keyOf(name); if (opt[k]) continue;
+    const hit = byName.get(k); if (!hit) { if (m && !m.gone) unknown.push(short(name, 40)); continue; }
+    if (!m || typeof m !== "object") continue;
+    matched++;
+    const was = members[hit.id] || {}, last = iso(m.last);
+    members[hit.id] = { last: last && (!was.last || last > was.last) ? last : (was.last || ""), zone: m.zone ? short(m.zone, 60) : (was.zone || ""), gone: !!m.gone };
+    const set = new Set([...(days[hit.id] || []), ...Object.keys(m.days || {}).filter(isDay)]);
+    days[hit.id] = [...set].sort().slice(-60);
+  }
+  const hourCut = new Date(Date.now() + 8 * 36e5 - 42 * 864e5).toISOString().slice(0, 13).replace("T", " ");
+  for (const [h, n] of Object.entries(sv.hours || {})) if (isHour(h) && +n >= 0 && +n < 1000 && h >= hourCut) hours[h] = Math.max(+hours[h] || 0, +n);
+  for (const h of Object.keys(hours)) if (h < hourCut) delete hours[h];
+  for (const [key, r] of Object.entries(sv.raids || {})) {
+    if (!r || !isDay(r.day)) continue;
+    const ids = Object.keys(r.who || {}).map(n => !opt[keyOf(n)] && byName.get(keyOf(n))).filter(Boolean).map(x => x.id);
+    const k = short(r.day + " " + short(r.zone, 60), 80), old = raids[k];
+    raids[k] = { day: r.day, zone: short(r.zone, 60) || "Raid", ids: [...new Set([...((old && old.ids) || []), ...ids])] };
+  }
+  for (const k of Object.keys(raids).sort().slice(0, -60)) delete raids[k];
+  // Joins and leaves for the feed, without repeats.
+  const events = Array.isArray(cur.events) ? cur.events.slice() : [], seenE = new Set(events.map(e => e.at + "|" + e.what + "|" + keyOf(e.name)));
+  for (const e of Array.isArray(sv.events) ? sv.events : []) {
+    if (!e || !["joined", "left", "removed"].includes(e.what) || !e.who || opt[keyOf(e.who)]) continue;
+    const at = iso(e.t), sig = at + "|" + e.what + "|" + keyOf(e.who); if (!at || seenE.has(sig)) continue; seenE.add(sig);
+    const hit = byName.get(keyOf(e.who));
+    events.push({ at, what: e.what, name: short(e.who, 40), ...(hit ? { id: hit.id } : {}) });
+  }
+  events.sort((a, b) => (a.at < b.at ? -1 : 1));
+  // Recipes: only for the uploader's own characters, which is all the game lets the addon see.
+  let recipeChars = 0;
+  for (const [name, profs] of Object.entries(sv.recipes || {})) {
+    const hit = byName.get(keyOf(name)); if (!hit || opt[keyOf(name)] || !profs || typeof profs !== "object") continue;
+    const rec = {};
+    for (const [p, v] of Object.entries(profs)) { const list = Array.isArray(v && v.list) ? v.list : []; if (list.length) rec[short(p, 40)] = { at: iso(v.at) || new Date().toISOString(), list: list.map(x => short(x, 80)).slice(0, 800) }; }
+    if (Object.keys(rec).length) { await db().doc(`${hit.coll}/${hit.id}`).set({ recipes: rec }, { merge: true }); recipeChars++; }
+  }
+  await ref.set({ members, days, hours, raids, events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short(sv.by, 40), up: new Date().toISOString() });
+  await saveStreaks().catch(err => logger.warn("streaks", err.message));
+  return { matched, unknown: unknown.slice(0, 20), unknownN: unknown.length, raids: Object.keys(sv.raids || {}).length, recipeChars };
+});
 async function syncAll() {
   let n = 0, changed = 0; const missing = [];
   await moveAlts().catch(err => logger.warn("moving alts", err.message));

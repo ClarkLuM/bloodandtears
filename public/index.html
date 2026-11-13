@@ -837,6 +837,20 @@ a.r-name:hover{color:var(--accent-text)}
 .lg-back .lg-card-in{overflow:hidden}
 .lg-clip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lg-back .lg-br span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+/* Guild scribe: when the guild plays, raid nights, recipes known */
+.wwp{display:grid;grid-template-columns:2.25rem repeat(24,minmax(0,1fr));gap:2px;align-items:center}
+.wwp-h{font-size:.625rem;line-height:.875rem;color:var(--ter);white-space:nowrap;overflow:visible}
+.wwp-d{font-size:.75rem;color:var(--sec);font-weight:600}
+.wwp-c{display:block;height:1.125rem;border-radius:2px;background:color-mix(in srgb,var(--accent) calc(var(--a,0)*100%),var(--subtle))}
+.wwp-c.none{background:transparent;box-shadow:inset 0 0 0 1px var(--sep)}
+.rn{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.625rem}
+.rn li{display:grid;grid-template-columns:minmax(0,12rem) minmax(0,1fr);gap:.5rem 1rem;align-items:start;padding-top:.625rem;border-top:1px solid var(--sep)}
+.rn li:first-child{border-top:0;padding-top:0}
+.rn-when{display:flex;flex-direction:column}
+.rn-who{display:flex;flex-wrap:wrap;gap:.375rem}
+@media (max-width:640px){.rn li{grid-template-columns:minmax(0,1fr)}.wwp{grid-template-columns:1.75rem repeat(24,minmax(0,1fr));gap:1px}.wwp-c{height:.875rem}}
+.rc-knows{font-size:.75rem;font-weight:700;color:var(--trim)}
+:root[data-theme="light"] .rc-knows{color:#1d6b30}
 </style>
 </head>
 <body>
@@ -1001,7 +1015,9 @@ const classLine=m=>[m.race,m.spec,m.cls].filter(Boolean).join(" ");
 // Armory pictures and icons only ever come from Blizzard's image server.
 const safePic=u=>typeof u==="string"&&/^https:\/\/render\.worldofwarcraft\.com\/[\w\/.-]+$/.test(u)?u:"";
 // When the armory last heard from the game for this character (usually their last logout).
-const seenOf=m=>m&&m.armory&&m.armory.updated||"";
+// Last seen in game: the later of the armory's last logout and the guild scribe's note.
+const scribeOf=m=>m&&S.scribe&&S.scribe.members&&S.scribe.members[m.id]||null;
+const seenOf=m=>{const a=m&&m.armory&&m.armory.updated||"",b=(scribeOf(m)||{}).last||"";return b>a?b:a};
 // Blizzard keeps the same address when it redraws a character, so browsers hang on to the old picture.
 // Adding the armory's update time makes them fetch the new one whenever the armory changes.
 // Blizzard's generic race (and class) pictures, for characters whose own picture is missing or won't load.
@@ -1167,6 +1183,7 @@ function rosterDetail(m){
       h("p",{class:"small"},trees.length?trees.map(t=>t.name+" "+t.points).join(" · "):h("span",{class:"ter"},"No talents from the armory yet.")),
       items.length?[h("h4",{style:"margin-top:.625rem"},"Best gear"),h("div",{class:"r-items"},items.map(qLink))]:null),
     h("div",{},h("h4",{},"Armory"),h("p",{class:"small"},syncChip(m)),h("p",{class:"small ter",style:"margin-top:.25rem"},st.d),
+      (()=>{const sc=scribeOf(m);return sc&&sc.last?h("p",{class:"small",style:"margin-top:.5rem"},"Last seen "+ago(sc.last)+(sc.zone?" in "+sc.zone:""),h("span",{class:"ter"}," · guild scribe")):null})(),
       a.hk!=null?h("p",{class:"small",style:"margin-top:.5rem"},(+a.hk||0).toLocaleString("en-AU")+" honourable kills · "+pvpRank(+a.rank||0)):null),
     h("div",{class:"r-acts"},h("a",{class:"btn sm",href:`#char/members/${m.id}`},"Open their page"),
       free&&!isMine(m)?h("button",{class:"btn sm primary",type:"button",onclick:e=>{e.stopPropagation();claim(m);location.hash="#char/members/"+m.id}},"This is me"):null,
@@ -1811,6 +1828,9 @@ const feedWho=m=>isMine(m)?h("a",{class:"linkish",href:`#char/${m.isAlt?"alts":"
 function feedItems(){
   const out=[],push=(at,parts)=>{const t=Date.parse(at||"");if(t)out.push({t,parts})};
   const who=feedWho;
+  // Joins and leaves the guild scribe noticed in game.
+  for(const e of (S.scribe&&S.scribe.events)||[]){const m=e.id&&memberById(e.id);
+    push(e.at,[m?who(m):h("b",{},e.name||"Someone"),e.what==="joined"?" joined the guild in game":e.what==="removed"?" was removed from the guild":" left the guild"])}
   // Titles changing hands, from the server's record.
   const tName=k=>k==="hk"?"Most Wanted":k==="gear"?"Best Dressed":TITLES[String(k).slice(2)]||null;
   for(const x of (S.titlesDoc&&S.titlesDoc.log)||[]){const t=tName(x.k);if(!t||!x.to)continue;const m=memberById(x.to.id);
@@ -2186,6 +2206,9 @@ const R_LABEL={A:"Known",T:"Trainer",R:"Recipe needed"};
 const R_WHO={A:"Knows it",T:"Can learn it at the trainer",R:"Skilled enough, once they find the recipe"};
 const crafters=()=>[...S.members,...S.alts].filter(m=>isMine(m)||memberState(m)==="current");
 const skillIn=(m,p)=>+((m.profs||{})[p])||0;
+// Recipes a character is known to have, from the guild scribe (only the uploader's own characters). null when not known.
+const knownSet=(m,p)=>{const r=m&&m.recipes&&m.recipes[p];if(!r||!Array.isArray(r.list))return null;if(!r._set)Object.defineProperty(r,"_set",{value:new Set(r.list.map(x=>String(x).toLowerCase()))});return r._set};
+const knowsRecipe=(m,p,name)=>{const k=knownSet(m,p);return k?k.has(String(name).toLowerCase()):null};
 function recipeFinder(){
   loadRecipes();
   const u=S.ui,words=String(u.pq||"").trim().toLowerCase().split(/\s+/).filter(Boolean),prof=u.pProf||"All";
@@ -2201,7 +2224,9 @@ function recipeFinder(){
   if(recipesState==="failed")return wrap([h("p",{class:"small ter"},"Couldn't load the recipe list. Refresh to try again.")]);
   if(recipesState!=="ok")return wrap([h("p",{class:"small ter"},"Loading recipes…")]);
   const all=Object.entries(S.recipes).flatMap(([p,rows])=>rows.map(r=>({p,name:r[0],sk:+r[1],src:r[2],est:!!r[3],id:r[4]||0,q:r[5]})));
-  const whoFor=x=>people.filter(m=>skillIn(m,x.p)>=x.sk).sort((a,b)=>skillIn(b,x.p)-skillIn(a,x.p)||nameOf(a).localeCompare(nameOf(b)));
+  // Someone whose recipes the scribe has seen counts only if they know it; everyone else, by skill.
+  const whoFor=x=>people.filter(m=>{const k=knowsRecipe(m,x.p,x.name);return k===null?skillIn(m,x.p)>=x.sk:k})
+    .sort((a,b)=>(!!knowsRecipe(b,x.p,x.name)-!!knowsRecipe(a,x.p,x.name))||skillIn(b,x.p)-skillIn(a,x.p)||nameOf(a).localeCompare(nameOf(b)));
   const note=h("p",{class:"small ter",style:"margin:0"},"Skills come from the armory. ",h("b",{},"Known")," and ",h("b",{},"Trainer")," recipes are ones they make now or can learn now. ",
     h("b",{},"Recipe needed")," means the recipe drops or comes from a vendor or quest, so a name there is skilled enough, not proof they have it. \u201cAbout\u201d skills are estimates.");
   if(!words.length&&prof==="All")return wrap([h("p",{class:"sub",style:"margin:0"},"Type what you need, like \u201cMithril Spurs\u201d or \u201cSilk Bandage\u201d, or pick a profession to see everything the guild can make with it."),note]);
@@ -2212,13 +2237,13 @@ function recipeFinder(){
   if(!words.length)list=reach.filter(x=>kind==="all"||(kind==="learn"?x.src!=="R":x.src==="R")).sort((a,b)=>b.sk-a.sk||a.name.localeCompare(b.name));
   else list.sort((a,b)=>(!!b.who.length-!!a.who.length)||a.sk-b.sk||a.name.localeCompare(b.name));
   const n=u.pMore?400:20,shown=list.slice(0,n);
-  const chips=(ppl,p)=>{const top=ppl.slice(0,6);return[...top.map(m=>h("span",{class:"rc-chip"},classIcon(m.cls),charLink(m),h("span",{class:"ter"},String(skillIn(m,p))))),
+  const chips=(ppl,p,name)=>{const top=ppl.slice(0,6);return[...top.map(m=>h("span",{class:"rc-chip"},classIcon(m.cls),charLink(m),knowsRecipe(m,p,name)?h("span",{class:"rc-knows",title:"Seen in their profession window by the guild scribe"},"knows it"):h("span",{class:"ter"},String(skillIn(m,p))))),
     ppl.length>6?h("span",{class:"small ter"},"and "+(ppl.length-6)+" more"):null]};
   const row=x=>{const best=people.filter(m=>skillIn(m,x.p)>0).sort((a,b)=>skillIn(b,x.p)-skillIn(a,x.p))[0];
     return h("li",{class:"rc"},
       h("div",{class:"rc-top"},h("b",{class:"rc-name"},x.id?qLink({id:x.id,q:x.q,name:x.name}):itemRef(x.name)),h("span",{class:"rc-src "+x.src,title:{A:"Learned automatically with the profession",T:"Taught by the profession trainer",R:"Learned from a recipe item: a drop, vendor, quest or reputation"}[x.src]},R_LABEL[x.src]),
         h("span",{class:"small ter rc-meta"},x.p+" · "+(x.est?"about ":"")+x.sk)),
-      x.who.length?h("div",{class:"rc-who"},h("span",{class:"small ter"},R_WHO[x.src]+":"),chips(x.who,x.p))
+      x.who.length?h("div",{class:"rc-who"},h("span",{class:"small ter"},R_WHO[x.src]+":"),chips(x.who,x.p,x.name))
         :h("p",{class:"small ter",style:"margin:0"},best?"Nobody's skilled enough yet. Closest: "+nameOf(best)+" ("+skillIn(best,x.p)+")":"Nobody in the guild has "+x.p+" yet."))};
   const count=words.length?list.length+(list.length===1?" match":" matches")+(reach.length!==list.length?", "+reach.length+" someone can make":"")
     :list.length+(kind==="learn"?" known or trainer recipes":kind==="recipe"?" recipes they're skilled enough for":" recipes")+" in reach";
@@ -2234,14 +2259,17 @@ function canMake(m){
   loadRecipes();
   if(recipesState==="failed")return null;
   if(recipesState!=="ok")return h("p",{class:"small ter",style:"margin:0"},"Loading what they can make…");
-  const rows=Object.keys(m.profs).filter(p=>S.recipes[p]).map(p=>{const sk=skillIn(m,p),all=S.recipes[p].filter(r=>+r[1]<=sk);
+  const rows=Object.keys(m.profs).filter(p=>S.recipes[p]).map(p=>{const sk=skillIn(m,p),k=knownSet(m,p);
+    // The scribe has seen their profession window: list exactly what they know.
+    if(k)return{p,known:true,learn:S.recipes[p].filter(r=>k.has(String(r[0]).toLowerCase())).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),need:0,n:k.size};
+    const all=S.recipes[p].filter(r=>+r[1]<=sk);
     return{p,learn:all.filter(r=>r[2]!=="R").sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),need:all.filter(r=>r[2]==="R").length}}).filter(x=>x.learn.length||x.need);
   if(!rows.length)return null;
   const N=12;
   return h("div",{class:"cm"},h("span",{class:"small ter",style:"font-weight:600"},"Can make"),
     rows.map(x=>{const key=m.id+"|"+x.p,open=!!(S.ui.cmOpen||{})[key];
       return h("details",{class:"cm-p",open:open||null,ontoggle:e=>{if(e.target.open!==!!(S.ui.cmOpen||{})[key])S.ui.cmOpen={...(S.ui.cmOpen||{}),[key]:e.target.open}}},
-        h("summary",{},h("b",{},x.p),h("span",{class:"small ter"},x.learn.length+" known or at the trainer"+(x.need?" · "+x.need+" more with a recipe":""))),
+        h("summary",{},h("b",{},x.p),h("span",{class:"small ter"},x.known?x.n+" recipes they know (seen by the guild scribe)":x.learn.length+" known or at the trainer"+(x.need?" · "+x.need+" more with a recipe":""))),
         x.learn.length?h("ul",{class:"cm-list"},x.learn.slice(0,N).map(r=>h("li",{},itemRef(r[0],r[4]?{id:r[4],q:r[5]}:null),
           h("span",{class:"rc-src "+r[2]},R_LABEL[r[2]]),h("span",{class:"small ter cm-sk"},(r[3]?"about ":"")+r[1])))):null,
         x.learn.length>N?h("a",{class:"small",href:"#professions",onclick:()=>setUi({pProf:x.p,pq:"",pKind:"learn",pMore:false})},"See all "+x.learn.length+" in Who Can Make It?"):null)}))}
@@ -2319,9 +2347,28 @@ function viewRecords(){
     weekCard(),
     h("div",{class:"rec-grid rec-main"},REC_BOARDS.map(b=>boardCard(b))),
     hallOfTitles(),
+    whenWePlay(),
     h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"prof-h"},"Professions"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],kind,k=>setUi({recKind:k},true))),
     profTable(profs),
     h("p",{class:"small ter"},"Tap a profession to see everyone. Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
+// When the guild plays: how many guildies are online by day of the week and hour (Perth), from the guild scribe's
+// five-minute checks. It only knows hours when the scribe was online, so blank cells are "not watched", not "empty".
+const DOW=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+function whenWePlay(){const hrs=(S.scribe&&S.scribe.hours)||{},keys=Object.keys(hrs);if(!keys.length)return null;
+  const days=new Set(keys.map(k=>k.slice(0,10))),sum=Array.from({length:7},()=>Array(24).fill(0)),cnt=Array.from({length:7},()=>Array(24).fill(0));
+  for(const k of keys){const d=(new Date(k.slice(0,10)+"T00:00:00Z").getUTCDay()+6)%7,hr=+k.slice(11,13);sum[d][hr]+=+hrs[k]||0;cnt[d][hr]++}
+  const avg=sum.map((r,d)=>r.map((v,hr)=>cnt[d][hr]?v/cnt[d][hr]:null)),max=Math.max(1,...avg.flat().filter(v=>v!=null));
+  let best=null;avg.forEach((r,d)=>r.forEach((v,hr)=>{if(v!=null&&(!best||v>best[2]))best=[d,hr,v]}));
+  const hourName=hr=>(hr%12||12)+(hr<12?"am":"pm");
+  const head=h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"wwp-h"},"When the Guild Plays"),h("span",{class:"small ter"},days.size+(days.size===1?" day":" days")+" of notes"));
+  if(days.size<3)return h("section",{class:"card","aria-labelledby":"wwp-h",style:"gap:.5rem"},head,h("p",{class:"small ter",style:"margin:0"},"Building up. This fills in once the guild scribe has a few days of notes."));
+  const cell=(d,hr)=>{const v=avg[d][hr];return h("span",{class:"wwp-c"+(v==null?" none":""),style:v==null?"":`--a:${(.12+.88*v/max).toFixed(2)}`,title:DOW[d]+" "+hourName(hr)+": "+(v==null?"not watched":(Math.round(v*10)/10)+" online on average")})};
+  return h("section",{class:"card","aria-labelledby":"wwp-h",style:"gap:.75rem"},head,
+    best?h("p",{style:"margin:0"},"Busiest: ",h("b",{},DOW[best[0]]+"s around "+hourName(best[1])),", with "+(Math.round(best[2]*10)/10)+" online on average."):null,
+    h("div",{class:"wwp",role:"img","aria-label":best?"Chart of guildies online by day and hour. Busiest is "+DOW[best[0]]+"s around "+hourName(best[1])+".":"Chart of guildies online by day and hour."},
+      h("span",{}),...Array.from({length:24},(_,hr)=>h("span",{class:"wwp-h"},hr%6===0?hourName(hr):"")),
+      ...DOW.flatMap((n,d)=>[h("span",{class:"wwp-d"},n.slice(0,3)),...Array.from({length:24},(_,hr)=>cell(d,hr))])),
+    h("p",{class:"small ter",style:"margin:0"},"Perth time. Counted every five minutes while the guild scribe is online, so blank hours just weren't watched."))}
 // "2nd of 6 in the guild": a line under each profession and the honourable kills on a character's page.
 function rankLine(get,m,noun){const r=rankOfIn(get,m);if(!r||r.of<2)return null;
   const t=r.place===1&&!r.tied?"Best "+noun+" in the guild":(r.tied?"Joint ":"")+ordinal(r.place)+" of "+r.of+" in the guild";
@@ -2491,8 +2538,19 @@ function viewRaids(){
     raidsCard(),
     h("section",{class:"card","aria-labelledby":"rd60-h",style:"gap:.75rem"},h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"rd60-h"},"The Level 60s"),h("span",{class:"small ter"},sixty.length+(sixty.length===1?" character":" characters"))),table,
       sixty.length?h("p",{class:"small ter",style:"margin:0"},"Onyxia's Lair needs the Drakefire Amulet. The site can only see it when it's worn, so “Not seen” may just mean it's in their bags."):null),
+    raidNights(),
     h("section",{class:"card","aria-labelledby":"rdway-h",style:"gap:.75rem"},h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"rdway-h"},"On the Way"),h("span",{class:"small ter"},"Levels 50 to 59")),way)]}
 
+// Raid nights the guild scribe was in: who was there. Newest first.
+function raidNights(){const rs=Object.values((S.scribe&&S.scribe.raids)||{}).filter(r=>r&&r.day).sort((a,b)=>a.day<b.day?1:a.day>b.day?-1:0).slice(0,8);
+  if(!rs.length)return null;
+  const att=new Map();for(const r of Object.values(S.scribe.raids))for(const id of r.ids||[])att.set(id,(att.get(id)||0)+1);
+  const total=Object.keys(S.scribe.raids).length,top=[...att.entries()].map(([id,n])=>[memberById(id),n]).filter(x=>x[0]).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  return h("section",{class:"card","aria-labelledby":"rn-h",style:"gap:.75rem"},h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"rn-h"},"Raid Nights"),h("span",{class:"small ter"},total+(total===1?" raid":" raids")+" noted")),
+    h("ul",{class:"rn"},rs.map(r=>h("li",{},h("span",{class:"rn-when"},h("b",{},r.zone),h("span",{class:"small ter"},new Date(r.day+"T00:00:00Z").toLocaleDateString("en-AU",{weekday:"short",day:"numeric",month:"short",timeZone:"UTC"})+" · "+(r.ids||[]).length+" there")),
+      h("span",{class:"rn-who"},(r.ids||[]).map(memberById).filter(Boolean).map(m=>h("span",{class:"rc-chip"},classIcon(m.cls),charLink(m))))))),
+    top.length?h("p",{class:"small",style:"margin:0"},h("span",{class:"ter"},"Most raids: "),top.map(([m,n],i)=>[i?", ":"",nameOf(m)+" ("+n+")"])):null,
+    h("p",{class:"small ter",style:"margin:0"},"Noted by the guild scribe, so only raids it was in."))}
 /* ---------- About the guild ---------- */
 // Guild basics (officers edit them), shown on the roster.
 function aboutCard(){
@@ -2667,7 +2725,18 @@ function armoryAllLine(){
       (()=>{const sd=S.streaks;if(!sd||!sd.rows)return h("span",{},"Streaks not counted yet (they're counted during a sync)");
         const live=S.members.concat(S.alts).map(streakLive).filter(n=>n>0),top=Math.max(0,...live);
         return h("span",{},"Streaks counted"+(sd.at?" "+ago(sd.at):"")+" · "+live.length+" seen today or yesterday"+(top?", longest "+top+(top===1?" day":" days"):""))})(),
-      S.user?h("button",{class:"btn sm",disabled:!!busy,onclick:go},busy?"Syncing everyone…":"⟳ Sync everyone"):null):null)}
+      S.user?h("button",{class:"btn sm",disabled:!!busy,onclick:go},busy?"Syncing everyone…":"⟳ Sync everyone"):null,
+      scribeLine()):null)}
+// The guild scribe: when its file was last uploaded, and (for officers) the upload button.
+function scribeLine(){const sc=S.scribe;
+  const up=isOfficer()?(()=>{const inp=h("input",{type:"file",accept:".lua,text/plain",class:"visually-hidden",id:"scribe-file",onchange:async e=>{const file=e.target.files&&e.target.files[0];e.target.value="";if(!file)return;
+      if(file.size>3e6){toast("That file is too big to be the scribe file.");return}
+      toast("Reading the scribe file…");
+      try{const r=await httpsCallable(fns,"scribeUpload")({text:await file.text()}),d=r.data||{};
+        toast("Scribe file read: "+d.matched+(d.matched===1?" guildie":" guildies")+" matched"+(d.recipeChars?", recipes for "+d.recipeChars+(d.recipeChars===1?" character":" characters"):"")+(d.unknownN?". Not on the site yet: "+d.unknown.join(", ")+(d.unknownN>d.unknown.length?" and more":""):"")+".")}
+      catch(err){toast(err&&err.message?err.message.replace(/^.*?: /,""):"Couldn't read that file.")}}});
+    return[inp,h("label",{for:"scribe-file",class:"btn sm",title:"In your WoW folder: _forever_\WTF\Account\<account>\SavedVariables\BloodAndTearsScribe.lua"},"Upload the scribe file")]})():null;
+  return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):isOfficer()?h("span",{},"No guild scribe file yet"):null,up)}
 function armoryLine(m,can){
   const a=m.armory,busy=S.ui.armBusy===m.id;
   const sync=async()=>{if(!fns){toast("Sync isn't switched on yet.");return}S.ui.armBusy=m.id;render();
@@ -2799,6 +2868,7 @@ function openPrivacy(){
     h("div",{class:"pv"},
       h("h2",{},"What the site keeps"),
       h("p",{},"Character names, class, race, level, professions, gear, talents, honourable kills and when each character was last seen in game. All of it comes from Blizzard's public armory, the same pages anyone can look up. On top of that: dungeon stamps and flavour text people add themselves."),
+      h("p",{},"An officer can also upload notes from the guild scribe, an in-game addon that reads the guild list while they play: when each guildie was last online and in which zone, how many are online each hour, joins and leaves, who was in a raid, and the uploader's own recipes. It's what anyone in the guild can see in the guild window."),
       h("p",{},"No real names, email addresses, passwords or payment details. There's no sign-up: each browser gets an anonymous ID, used only to remember which characters it can edit."),
       h("h2",{},"Who can see it"),
       h("p",{},"Anyone with the link. Treat it like a public notice board. The site asks search engines not to list it, so it won't turn up when someone searches a character's name."),
@@ -3045,6 +3115,7 @@ function subscribe(){
   S.unsub.push(onSnapshot(doc(db,"guild","info"),snap=>{S.guild=snap.exists()?snap.data():{};schedule()},()=>{}));
   // Only officers can read the opt-out list; for everyone else this quietly fails.
   S.unsub.push(onSnapshot(doc(db,"guild","optout"),snap=>{S.optout=snap.exists()?(snap.data().names||{}):{};schedule()},()=>{S.optout=null}));
+  S.unsub.push(onSnapshot(doc(db,"guild","scribe"),snap=>{S.scribe=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","streaks"),snap=>{S.streaks=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","titles"),snap=>{S.titlesDoc=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","recaps"),snap=>{S.recapWeeks=snap.exists()?(snap.data().weeks||{}):{};schedule()},()=>{}));

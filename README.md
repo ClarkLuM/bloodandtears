@@ -70,6 +70,7 @@ Other things worth knowing about:
 | `functions/index.js` | The server: armory sync, Hall of Firsts, snapshots, opt-out, item lookups, officers |
 | `firestore.rules` | Who can read and change what |
 | `firebase.json`, `.firebaserc` | What gets deployed and where, plus the security headers |
+| `addon/BloodAndTearsScribe` | The guild scribe addon for WoW Forever |
 | `tools/` | Scripts that rebuild the dungeon loot list, recipe list, item IDs and the icon |
 | `DESIGN.md`, `PRODUCT.md` | The design system and what the site is for |
 | `docs/HISTORY.md` | The build diary |
@@ -101,6 +102,24 @@ These aren't in the code:
 - **The raids list:** `RAIDS` in `public/index.html`.
 - **Guild milestones:** `MILESTONES` in `functions/index.js` and `MS_STEPS` in `public/index.html` must match.
 - **New styles:** sizes are in rem. If you add any in px, run `python3 tools/scale/to_rem.py`.
+
+## The guild scribe (in-game addon)
+
+`addon/BloodAndTearsScribe` is a small WoW Forever addon (interface 16001). While whoever runs it plays, it reads the in-game guild list every five minutes and notes:
+
+- when each guildie was last online (the guild list gives this for everyone, online or not), which days they were on, and the last zone they were seen in
+- how many guildies are online each hour
+- joins and leaves
+- who was in the raid group inside a raid
+- the recipes the uploader's own characters know (read when a profession window is opened)
+
+It sends nothing anywhere, reads nothing in combat and draws nothing on screen. `/scribe` in game shows a summary.
+
+**Install:** copy the `BloodAndTearsScribe` folder into the game's `Interface\AddOns` folder (or install it from CurseForge once it's published there), then tick it in the in-game AddOns list.
+
+**Upload:** the game saves the notes when you log out or type `/reload`, to `WTF\Account\<ACCOUNT>\SavedVariables\BloodAndTearsScribe.lua` in the game folder. On the site, open Roster, then Details next to "Up to date", and choose **Upload the scribe file** (officers only). The server (`scribeUpload`) reads the file as data, matches names to characters, skips anyone who opted out, and keeps what it uses in `guild/scribe`. Every few days is plenty: the guild list reports last-online times back from the moment of upload.
+
+**Where it shows:** exact streaks and "last seen" (the later of the armory and the scribe), "Last seen … in <zone>" in an opened roster row, joins and leaves in the Guild Feed, **When the Guild Plays** on Records (after three days of notes), **Raid Nights** on Raids, and "knows it" in Who Can Make It? for recipes the scribe has seen.
 
 ## Switched off or removed
 

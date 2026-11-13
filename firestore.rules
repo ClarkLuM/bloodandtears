@@ -42,7 +42,9 @@ service cloud.firestore {
         optStr(d, 'flavour', 40) && optStr(d, 'visitedAt', 40) && optStr(d, 'titlePick', 40) &&
         (!('cleared' in d) || (d.cleared is map && d.cleared.size() <= 40)) &&
         armoryKept() &&
-        request.resource.data.get('discordId', null) == (resource == null ? null : resource.data.get('discordId', null));
+        request.resource.data.get('discordId', null) == (resource == null ? null : resource.data.get('discordId', null)) &&
+        // Recipes only ever come from the guild scribe upload (the server).
+        request.resource.data.get('recipes', null) == (resource == null ? null : resource.data.get('recipes', null));
     }
 
     match /members/{memberId} {
@@ -105,7 +107,7 @@ service cloud.firestore {
       allow read: if signedIn() && (docId != 'optout' || isOfficer());
       // officers, officerPicks, roster, armory, digest, firsts (the Hall of Firsts), itemIds (Wowhead IDs for items) records (daily snapshots for Records' This week) recaps (each finished week's recap) and optout (characters whose players opted out)
       // are written by the server only.
-      allow write: if !(docId in ['officers', 'officerPicks', 'roster', 'armory', 'digest', 'firsts', 'itemIds', 'records', 'recaps', 'optout', 'titles', 'streaks']) && isOfficer() &&
+      allow write: if !(docId in ['officers', 'officerPicks', 'roster', 'armory', 'digest', 'firsts', 'itemIds', 'records', 'recaps', 'optout', 'titles', 'streaks', 'scribe']) && isOfficer() &&
         optStr(request.resource.data, 'discord', 200) && optStr(request.resource.data, 'gm', 60) &&
         optStr(request.resource.data, 'officers', 500) && optStr(request.resource.data, 'loot', 500) &&
         optStr(request.resource.data, 'events', 500);
