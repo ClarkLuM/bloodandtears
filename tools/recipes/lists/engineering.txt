@@ -258,6 +258,7 @@ Swiftfeather Arrow|300|R
 Swiftstrike Shot|300|R
 Ultra-Flash Shadow Reflector|300|R
 Ultralight Goblin Glider|300|R
+Gnomish Weather Machine|300|R
 Ultrasafe Rechargeable Battery|300|R
 Arcane Megabomb|310*|T
 G00 DV-1B3 Generator|310*|R

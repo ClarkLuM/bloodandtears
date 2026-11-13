@@ -459,7 +459,7 @@ nav.bottom{display:none}
 /* Totals: how far to the next guild milestone */
 .total{position:relative}
 a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:1rem;color:var(--accent-text)}a.total-open:hover b{text-decoration:underline}
-.roster-t td.r-loot{max-width:15rem}.r-loot .item-link{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.r-loot .item-link{white-space:normal;overflow-wrap:break-word}
 .mk-off{margin:0;color:var(--sec)}
 .dc-sec{display:flex;flex-direction:column;padding:.5rem 0;border-top:1px solid var(--sep)}.dc-sec>.small:first-child{font-weight:600;color:var(--accent-text)}
 .dg-other{border-top:1px solid var(--sep)}.dg-other>summary{padding:.875rem 1.25rem;cursor:pointer;color:var(--sec);font-size:.875rem}.dg-other>summary:hover{color:var(--text)}
@@ -733,7 +733,7 @@ a.r-name:hover{color:var(--accent-text)}
 .roster-t th,.roster-t td{padding-left:.75rem;padding-right:.75rem}
 .roster-t th:first-child,.roster-t td:first-child{padding-left:1rem}
 .roster-t td{padding-top:.5rem;padding-bottom:.5rem}
-.roster-t th:nth-child(2){width:4rem}.roster-t th:nth-child(3){width:10.5rem}.roster-t th:nth-child(4){width:8rem}.roster-t th:nth-child(5){width:7.75rem}.roster-t th:nth-child(6){width:3rem}
+.roster-t th:nth-child(2){width:4rem}.roster-t th:nth-child(3){width:10.5rem}.roster-t th:nth-child(4){width:10.5rem}.roster-t th:nth-child(5){width:7.75rem}.roster-t th:nth-child(6){width:3rem}
 .roster-t .l2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .r-profs{flex-direction:column;align-items:flex-start}
 }
@@ -1224,7 +1224,7 @@ function viewRoster(){
           h("span",{class:"l2"},tt?[h("b",{class:"r-title"},tt.t)," · "]:null,[classLine(m)||"—",roleText(m)].filter(Boolean).join(" · "))))),
       h("td",{"data-label":"Level"},h("span",{class:"r-lv"},h("b",{},String(m.level||1)),h("i",{"aria-hidden":"true"},h("s",{style:`width:${Math.round(lv/60*100)}%`})))),
       h("td",{"data-label":"Professions",class:pr.length?"":"none"},pr.length?h("span",{class:"r-profs"},pr.map(([p,v])=>h("span",{class:"r-prof"},p,h("b",{},String(+v||0))))):h("span",{class:"ter"},"—")),
-      h("td",{"data-label":"Best loot",class:"r-loot"+(loot?"":" none"),title:loot?loot.name:null},loot?qLink(loot):h("span",{class:"ter"},"—")),
+      h("td",{"data-label":"Best loot",class:"r-loot"+(loot?"":" none")},loot?qLink(loot):h("span",{class:"ter"},"—")),
       // Not on the armory yet is a plain dash here; the reason is in the details and on their page.
       h("td",{"data-label":"Last seen",class:(st.k==="wait"||st.k==="none")&&!sk?"none":""},h("span",{class:"r-seen"},st.k==="fresh"||st.k==="quiet"?h("span",{class:"sync "+st.k,title:st.d},h("i",{"aria-hidden":"true"}),h("span",{class:"seen-l"},"In game "),ago(seenOf(m)))
         :st.k==="wait"||st.k==="none"?h("span",{class:"ter",title:st.t+". "+st.d},"—",h("span",{class:"visually-hidden"},st.t)):syncChip(m),

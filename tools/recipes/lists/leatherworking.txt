@@ -257,6 +257,7 @@ Skirmisher's Mail Shoulders|210|R
 Skulker's Leather Shoulder|210|R
 Skycaller's Leather Shoulders|210|R
 Skycaller's Mail Shoulders|210|R
+Stalker's Mail Shoulders|210|R
 Tough Scorpid Boots|210|R
 Turtle Scale Leggings|210*|T
 Warden's Leather Shoulders|210|R
