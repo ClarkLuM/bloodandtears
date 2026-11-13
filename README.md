@@ -102,7 +102,7 @@ These aren't in the code:
 
 - **A dungeon's loot:** edit its file in `tools/dungeon-loot/lists/`, then run `python3 tools/dungeon-loot/build.py`.
 - **A dungeon's level range:** `DUNGEONS` in `public/index.html`.
-- **A recipe:** edit the profession's file in `tools/recipes/lists/`, then run `python3 tools/recipes/build.py`. Wowhead IDs come from `tools/item-ids/ids.json` (classic items) and `tools/item-ids/forever-crafted.txt` (WoW Forever's own new items, from Wowhead's Forever profession pages). A recipe with neither shows as plain text.
+- **A recipe:** edit the profession's file in `tools/recipes/lists/`, then run `python3 tools/recipes/build.py`. Wowhead IDs come from `tools/item-ids/ids.json` (classic items) and `tools/item-ids/forever-crafted.txt` (WoW Forever's own new items, from Wowhead's Forever profession pages). Enchants link to Wowhead's spell pages, with spell IDs from `tools/item-ids/forever-enchants.txt`. A recipe with neither shows as plain text.
 - **The icon or logo:** edit and run `python3 tools/icon/make_icon.py`.
 - **The raids list:** `RAIDS` in `public/index.html`.
 - **Guild milestones:** `MILESTONES` in `functions/index.js` and `MS_STEPS` in `public/index.html` must match.

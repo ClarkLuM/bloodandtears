@@ -1,0 +1,175 @@
+# Enchanting's enchants are spells, not items: Wowhead spell ID|name (without "Enchant ").
+# Taken from Wowhead's WoW Forever Enchanting page (wowhead.com/forever/spells/professions/enchanting), 13 November 2026.
+# tools/recipes/build.py stores these as negative IDs in recipes.json, and the site links them to Wowhead's spell pages.
+7418|Bracer - Inferior Stamina
+7420|Chest - Inferior Stamina
+7426|Chest - Minor Absorption
+7428|Bracer - Minor Deflect
+7443|Chest - Minor Intellect
+7454|Cloak - Minor Resistance
+7457|Bracer - Minor Stamina
+7745|2H Weapon - Minor Impact
+7748|Chest - Lesser Stamina
+7766|Bracer - Minor Spirit
+7771|Cloak - Minor Protection
+7776|Chest - Lesser Intellect
+7779|Bracer - Minor Agility
+7782|Bracer - Minor Strength
+7786|Weapon - Minor Beastslayer
+7788|Weapon - Minor Striking
+7793|2H Weapon - Lesser Intellect
+7857|Chest - Stamina
+7859|Bracer - Lesser Spirit
+7861|Cloak - Lesser Fire Resistance
+7863|Boots - Minor Stamina
+7867|Boots - Minor Agility
+13378|Shield - Minor Stamina
+13380|2H Weapon - Lesser Spirit
+13419|Cloak - Minor Agility
+13421|Cloak - Lesser Protection
+13464|Shield - Lesser Protection
+13485|Shield - Lesser Spirit
+13501|Bracer - Lesser Stamina
+13503|Weapon - Lesser Striking
+13522|Cloak - Lesser Shadow Resistance
+13529|2H Weapon - Lesser Impact
+13536|Bracer - Lesser Strength
+13538|Chest - Lesser Absorption
+13607|Chest - Intellect
+13612|Gloves - Mining
+13617|Gloves - Herbalism
+13620|Gloves - Fishing
+13622|Bracer - Lesser Intellect
+13626|Chest - Minor Stats
+13631|Shield - Lesser Stamina
+13635|Cloak - Defense
+13637|Boots - Lesser Agility
+13640|Chest - Greater Stamina
+13642|Bracer - Spirit
+13644|Boots - Lesser Stamina
+13646|Bracer - Lesser Deflection
+13648|Bracer - Stamina
+13653|Weapon - Lesser Beastslayer
+13655|Weapon - Lesser Elemental Slayer
+13657|Cloak - Fire Resistance
+13659|Shield - Spirit
+13661|Bracer - Strength
+13663|Chest - Greater Intellect
+13687|Boots - Lesser Spirit
+13689|Shield - Lesser Block
+13693|Weapon - Striking
+13695|2H Weapon - Impact
+13698|Gloves - Skinning
+13700|Chest - Lesser Stats
+13746|Cloak - Greater Defense
+13794|Cloak - Resistance
+13815|Gloves - Agility
+13817|Shield - Stamina
+13822|Bracer - Intellect
+13836|Boots - Stamina
+13841|Gloves - Advanced Mining
+13846|Bracer - Greater Spirit
+13858|Chest - Superior Stamina
+13868|Gloves - Advanced Herbalism
+13882|Cloak - Lesser Agility
+13887|Gloves - Strength
+13890|Boots - Minor Speed
+13898|Weapon - Fiery Weapon
+13905|Shield - Greater Spirit
+13915|Weapon - Demonslaying
+13917|Chest - Superior Intellect
+13931|Bracer - Deflection
+13933|Shield - Frost Resistance
+13935|Boots - Agility
+13937|2H Weapon - Greater Impact
+13939|Bracer - Greater Strength
+13941|Chest - Stats
+13943|Weapon - Greater Striking
+13945|Bracer - Greater Stamina
+13947|Gloves - Riding Skill
+13948|Gloves - Minor Haste
+20008|Bracer - Greater Intellect
+20009|Bracer - Superior Spirit
+20010|Bracer - Superior Strength
+20011|Bracer - Superior Stamina
+20012|Gloves - Greater Agility
+20013|Gloves - Greater Strength
+20014|Cloak - Greater Resistance
+20015|Cloak - Superior Defense
+20016|Shield - Superior Spirit
+20017|Shield - Greater Stamina
+20020|Boots - Greater Stamina
+20023|Boots - Greater Agility
+20024|Boots - Spirit
+20025|Chest - Greater Stats
+20026|Chest - Major Stamina
+20028|Chest - Major Intellect
+20029|Weapon - Icy Chill
+20030|2H Weapon - Superior Impact
+20031|Weapon - Superior Striking
+20032|Weapon - Lifestealing
+20033|Weapon - Unholy Weapon
+20034|Weapon - Crusader
+20035|2H Weapon - Major Spirit
+20036|2H Weapon - Major Intellect
+21931|Weapon - Winter's Might
+22749|Weapon - Spell Power
+22750|Weapon - Healing Power
+23799|Weapon - Strength
+23800|Weapon - Agility
+23801|Bracer - Mana Regeneration
+23802|Bracer - Healing Power
+23803|Weapon - Mighty Spirit
+23804|Weapon - Mighty Intellect
+25072|Gloves - Threat
+25073|Gloves - Shadow Power
+25074|Gloves - Frost Power
+25078|Gloves - Fire Power
+25079|Gloves - Healing Power
+25080|Gloves - Superior Agility
+25081|Cloak - Greater Fire Resistance
+25082|Cloak - Greater Nature Resistance
+25083|Cloak - Stealth
+25084|Cloak - Subtlety
+25086|Cloak - Dodge
+27837|2H Weapon - Agility
+1213622|Gloves - Holy Power
+1213626|Gloves - Arcane Power
+1217189|Bracer - Spell Power
+1219577|Off-Hand - Superior Intellect
+1219578|Off-Hand - Excellent Spirit
+1219579|Off-Hand - Wisdom
+1219580|2H Weapon - Spellblasting
+1219581|Shield - Excellent Stamina
+1219587|Cloak - Agility
+1220623|Shield - Critical Strike
+1220624|Bracer - Greater Spellpower
+1231164|Weapon - Grand Sorcerer
+1248458|Bracer - Minor Intellect
+1248459|Bracer - Minor Healing Power
+1248460|Bracer - Lesser Agility
+1248497|Bracer - Agility
+1248498|Bracer - Lesser Healing Power
+1248500|Bracer - Greater Agility
+1248510|2H Weapon - Lesser Agility
+1248511|2H Weapon - Lesser Strength
+1248528|Gloves - Advanced Skinning
+1248599|Bracer - Superior Agility
+1248607|2H Weapon - Mighty Spell Power
+1248636|2H Weapon - Mighty Healing Power
+1248640|Gloves - Superior Strength
+1248645|Gloves - Natural Power
+1248661|Bracer - Superior Intellect
+1248665|Bracer - Superior Deflection
+1248668|2H Weapon - Strength
+1248757|Weapon - Insight
+1248760|Weapon - Recovery
+1248805|Weapon - Revelation
+1249019|Necklace - Strength
+1249057|Necklace - Spell Power
+1249058|Necklace - Healing Power
+1249059|Necklace - Agility
+1249060|Necklace - Deflection
+1249071|Chest - Absorption
+1294054|Gloves - Lotus Claw
+1328948|Boots - Speed

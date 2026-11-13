@@ -928,8 +928,9 @@ function shortDate(s){if(!s)return"";const d=new Date(s.length===10?s+"T12:00:00
 const rangeOf=r=>{const m=String(r||"").match(/(\d+)(?:\D+(\d+))?/);return m?[+m[1],+(m[2]||m[1])]:null};
 // Item tooltips, drawn by the site from Wowhead's WoW Forever item data (Wowhead's own script doesn't handle Forever links).
 // Anything with data-item="<id>", or a link to a Wowhead item, shows one on hover (mouse and trackpad only).
+// Enchants are spells: they carry a negative ID (from recipes.json) and use Wowhead's spell tooltips and pages.
 const tipCache=new Map();
-const tipData=id=>{if(!tipCache.has(id))tipCache.set(id,(async()=>{for(const env of["forever","classic"]){try{const r=await fetch(`https://nether.wowhead.com/${env}/tooltip/item/${id}`);if(r.ok){const j=await r.json();if(j&&j.tooltip)return j}}catch(e){}}return null})());return tipCache.get(id)};
+const tipData=id=>{if(!tipCache.has(id))tipCache.set(id,(async()=>{const kind=+id<0?"spell":"item";for(const env of["forever","classic"]){try{const r=await fetch(`https://nether.wowhead.com/${env}/tooltip/${kind}/${Math.abs(+id)}`);if(r.ok){const j=await r.json();if(j&&j.tooltip)return j}}catch(e){}}return null})());return tipCache.get(id)};
 // Keeps only plain formatting from Wowhead's tooltip markup: no scripts, links, styles or event handlers.
 function cleanTip(html){const doc=new DOMParser().parseFromString(String(html),"text/html"),ok=new Set(["TABLE","TBODY","TR","TD","TH","B","I","SPAN","BR","DIV","SMALL","A","UL","LI"]);
   const walk=n=>{for(const c of[...n.childNodes]){if(c.nodeType===8){c.remove();continue}if(c.nodeType!==1)continue;
@@ -941,7 +942,7 @@ function cleanTip(html){const doc=new DOMParser().parseFromString(String(html),"
   let tip=null,cur=null,timer=0,mx=0,my=0;
   const place=()=>{if(!tip)return;const w=tip.offsetWidth,hh=tip.offsetHeight;let x=mx+16,y=my+16;if(x+w>innerWidth-8)x=mx-w-16;if(y+hh>innerHeight-8)y=Math.max(8,innerHeight-hh-8);tip.style.left=Math.max(8,x)+"px";tip.style.top=y+"px"};
   const hide=()=>{clearTimeout(timer);cur=null;if(tip){tip.remove();tip=null}};
-  const idOf=el=>el.dataset.item||((/item=(\d+)/.exec(el.getAttribute("href")||"")||[])[1]);
+  const idOf=el=>{if(el.dataset.item)return el.dataset.item;const u=el.getAttribute("href")||"",i=/item=(\d+)/.exec(u),sp=/spell=(\d+)/.exec(u);return i?i[1]:sp?"-"+sp[1]:null};
   document.addEventListener("mouseover",e=>{const el=e.target.closest&&e.target.closest("[data-item],a[href*='wowhead.com'],[data-tip-name]");if(!el||el===cur)return;
     // Talents: the armory's own text for their rank, in the same box as Wowhead's item tooltips.
     if(el.dataset.tipName){hide();cur=el;timer=setTimeout(()=>{if(cur!==el)return;const ic=safePic(el.dataset.tipIcon||"");
@@ -2678,7 +2679,7 @@ const GEAR_ALL=[...GEAR_LEFT,...GEAR_RIGHT,...GEAR_BOTTOM];
 const slotBase=s=>s.replace(/ \d$/,"");
 const SLOT_ICON={Head:"head",Neck:"neck",Shoulder:"shoulder",Back:"chest",Chest:"chest",Shirt:"shirt",Tabard:"tabard",Wrist:"wrists",Hands:"hands",Waist:"waist",Legs:"legs",Feet:"feet",Finger:"finger",Trinket:"trinket","Main hand":"mainhand","Off hand":"offhand",Ranged:"ranged"};
 const WH_ICON=(n,size)=>`https://wow.zamimg.com/images/wow/icons/${size||"large"}/${n}.jpg`;
-const whItemUrl=id=>`https://www.wowhead.com/forever/item=${id}`;
+const whItemUrl=id=>+id<0?`https://www.wowhead.com/forever/spell=${-id}`:`https://www.wowhead.com/forever/item=${id}`;
 const ini3=n=>String(n).replace(/'s\b/g,"").split(/\s+/).filter(w=>!/^(of|the)$/i.test(w)).map(w=>w[0]).join("").slice(0,3).toUpperCase();
 function iconImg(it,size,fallback){
   const srcs=[it.iconUrl,it.icon?WH_ICON(it.icon,size):""].filter(Boolean);

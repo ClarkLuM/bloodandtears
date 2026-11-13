@@ -24,6 +24,13 @@ if os.path.exists(FOREVER_FILE):
         if ln.startswith("#") or ln.count("|") != 2: continue
         i, q, n = ln.rstrip("\n").split("|")
         IDS.setdefault(n.strip().lower(), [int(i), int(q)])
+# Enchants are spells, not items. They're stored as negative IDs, which the site turns into Wowhead spell links.
+ENCH_FILE = os.path.join(HERE, "..", "item-ids", "forever-enchants.txt")
+if os.path.exists(ENCH_FILE):
+    for ln in open(ENCH_FILE, encoding="utf-8"):
+        if ln.startswith("#") or ln.count("|") != 1: continue
+        i, n = ln.rstrip("\n").split("|")
+        IDS.setdefault("enchant " + n.strip().lower(), [-int(i), 1])
 out, total = {}, 0
 for f in sorted(os.listdir(os.path.join(HERE, "lists"))):
     key = f[:-4]
