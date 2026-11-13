@@ -17,6 +17,13 @@ RANK = {"A": 0, "T": 1, "R": 2}
 # Wowhead item IDs and qualities from tools/item-ids (built from the wow-classic-items database).
 IDS_FILE = os.path.join(HERE, "..", "item-ids", "ids.json")
 IDS = json.load(open(IDS_FILE, encoding="utf-8")) if os.path.exists(IDS_FILE) else {}
+# WoW Forever's own new recipes make items the classic database doesn't have; their IDs are in forever-crafted.txt.
+FOREVER_FILE = os.path.join(HERE, "..", "item-ids", "forever-crafted.txt")
+if os.path.exists(FOREVER_FILE):
+    for ln in open(FOREVER_FILE, encoding="utf-8"):
+        if ln.startswith("#") or ln.count("|") != 2: continue
+        i, q, n = ln.rstrip("\n").split("|")
+        IDS.setdefault(n.strip().lower(), [int(i), int(q)])
 out, total = {}, 0
 for f in sorted(os.listdir(os.path.join(HERE, "lists"))):
     key = f[:-4]

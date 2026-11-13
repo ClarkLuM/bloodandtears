@@ -1,0 +1,933 @@
+# Items made by WoW Forever's new recipes, which aren't in the classic item database: item ID|quality|name.
+# Taken from Wowhead's WoW Forever profession pages (wowhead.com/forever/spells/professions/...), 13 November 2026.
+# tools/recipes/build.py uses these when ids.json has no match. Add a line for any new recipe Wowhead adds.
+279956|1|Mana Well
+241650|1|Major Discolored Healing Potion
+246948|1|Distilled Firewater
+247239|1|Lesser Discolored Healing Potion
+247240|1|Discolored Healing Potion
+247241|1|Greater Discolored Healing Potion
+247242|1|Superior Discolored Healing Potion
+247754|1|Minor Arcane Elixir
+247755|1|Elixir of Minor Force
+249409|2|Cerulean Dye
+249430|2|Magenta Dye
+249431|2|Viridian Dye
+249410|2|Sulfuric Acid
+250327|1|Potion of Predatory Senses
+250328|1|Elixir of Cunning
+250329|1|Elixir of the Phalanx
+250330|1|Minor Cleric's Elixir
+250331|1|Lesser Cleric's Elixir
+250332|1|Cleric's Elixir
+250333|1|Greater Cleric's Elixir
+250334|1|Elixir of Fortitude
+250335|1|Elixir of Greater Fortitude
+250336|1|Elixir of Wicked Regeneration
+250337|1|Elixir of the Owl
+250338|1|Elixir of Sages
+250339|1|Minor Mageblood Elixir
+250340|1|Lesser Mageblood Elixir
+250341|1|Greater Mageblood Elixir
+250342|1|Lesser Arcane Elixir
+250343|1|Elixir of Nature Power
+250344|1|Elixir of Minor Spirit
+250345|1|Elixir of Lesser Spirit
+250346|1|Elixir of Spirit
+250347|1|Elixir of Greater Spirit
+250348|1|Elixir of the Whale
+250349|1|Elixir of Strength
+250350|1|Elixir of Ferocity
+250351|1|Elixir of the Grizzly
+250353|1|Elixir of Lesser Intellect
+250354|1|Elixir of Intellect
+250932|1|Minor Spellblasting Potion
+250933|1|Lesser Spellblasting Potion
+250934|1|Spellblasting Potion
+250935|1|Greater Spellblasting Potion
+250936|1|Superior Spellblasting Potion
+250937|1|Major Spellblasting Potion
+250938|1|Minor Frenzy Potion
+250939|1|Lesser Frenzy Potion
+250940|1|Frenzy Potion
+250941|1|Greater Frenzy Potion
+250942|1|Superior Frenzy Potion
+250943|1|Major Frenzy Potion
+250944|1|Minor Mender's Potion
+250945|1|Lesser Mender's Potion
+250946|1|Mender's Potion
+250947|1|Greater Mender's Potion
+250948|1|Superior Mender's Potion
+250949|1|Major Mender's Potion
+250950|1|Potion of Venomous Blood
+250951|1|Caustic Smog Potion
+250953|1|Dragonfire Potion
+250954|1|Potion of Elemental Purging
+250955|1|Potion of Beast Slaying
+279970|1|Fermenter
+279990|1|Alchemy Laboratory
+274273|2|Flask of Natural Accuracy
+274274|2|Flask of Natural Aggression
+274275|2|Flask of Natural Precision
+274276|2|Flask of Natural Swiftness
+251290|2|Transmute: Legionite
+213376|3|Low-Background Truesilver Plates
+279944|1|Sharpening Wheel
+250620|3|Gemmed Copper Boots
+250621|3|Strange Copper Boots
+250482|3|Glowing Copper Boots
+250483|2|Sterling Silver Boots
+250484|2|Sterling Silver Leggings
+250485|2|Sterling Silver Gauntlet
+250486|2|Sterling Silver Shoulders
+250487|2|Sterling Silver Breastplate
+250488|3|Veteran's Chain Shirt
+250489|3|Guard's Chain Shirt
+250490|3|Protector's Chain Shirt
+250491|3|Acolyte's Chain Shirt
+250492|3|Crusader's Chain Shirt
+250493|3|Veteran's Chain Leggings
+250494|3|Guard's Chain Leggings
+250495|3|Protector's Chain Leggings
+250496|3|Acolyte's Chain Leggings
+250497|3|Crusader's Chain Leggings
+250498|3|Veteran's Chain Helm
+250499|3|Guard's Chain Helm
+250500|3|Protector's Chain Helm
+250501|3|Acolyte's Chain Helm
+250502|3|Crusader's Chain Helm
+250503|3|Veteran's Boots
+250504|3|Guard's Boots
+250505|3|Protector's Boots
+250506|3|Acolyte's Boots
+250507|3|Crusader's Boots
+250508|3|Veteran's Gloves
+250509|3|Guard's Gloves
+250510|3|Protector's Gloves
+250511|3|Acolyte's Gloves
+250512|3|Crusader's Gloves
+250513|3|Veteran's Chain Belt
+250514|3|Guard's Chain Belt
+250515|3|Protector's Chain Belt
+250516|3|Acolyte's Chain Belt
+250517|3|Crusader's Chain Belt
+250518|3|Veteran's Silvered Chain Shirt
+250519|3|Guard's Silvered Chain Shirt
+250520|3|Protector's Silvered Chain Shirt
+250521|3|Acolyte's Silvered Chain Shirt
+250522|3|Crusader's Silvered Chain Shirt
+250523|3|Veteran's Silvered Chain Leggings
+250524|3|Guard's Silvered Chain Leggings
+250525|3|Protector's Silvered Chain Leggings
+250526|3|Acolyte's Silvered Chain Leggings
+250527|3|Crusader's Silvered Chain Leggings
+250528|3|Veteran's Silvered Chain Helm
+250529|3|Guard's Silvered Chain Helm
+250530|3|Protector's Silvered Chain Helm
+250531|3|Acolyte's Silvered Chain Helm
+250532|3|Crusader's Silvered Chain Helm
+250533|2|Hard Gold Cuirass
+250534|2|Hard Gold Boots
+250535|2|Hard Gold Bracers
+250536|2|Hard Gold Leggings
+250537|2|Hard Gold Coif
+250538|2|Hard Gold Gauntlet
+250539|2|Hard Gold Pauldrons
+250540|2|Shining Mithril Breastplate
+250541|2|Shining Mithril Pauldrons
+250542|2|Shining Mithril Boots
+250543|2|Shining Mithril Helm
+250544|2|Shining Mithril Pants
+250545|2|Shining Mithril Gauntlet
+250546|3|Officer's Boots
+250547|3|Sentinel's Boots
+250548|3|Warder's Boots
+250549|3|Prefect's Boots
+250550|3|Justicar's Boots
+250551|3|Officer's Gloves
+250552|3|Sentinel's Gloves
+250553|3|Warder's Gloves
+250554|3|Prefect's Gloves
+250555|3|Justicar's Gloves
+250556|3|Officer's Belt
+250557|3|Sentinel's Belt
+250558|3|Warder's Belt
+250559|3|Prefect's Belt
+250560|3|Justicar's Belt
+250561|3|Officer's Sabatons
+250562|3|Sentinel's Sabatons
+250563|3|Warder's Sabatons
+250564|3|Prefect's Sabatons
+250565|3|Justicar's Sabatons
+250566|3|Officer's Gauntlet
+250567|3|Sentinel's Gauntlet
+250568|3|Warder's Gauntlet
+250569|3|Prefect's Gauntlet
+250570|3|Justicar's Gauntlet
+250571|3|Officer's Waistguard
+250572|3|Sentinel's Waistguard
+250573|3|Warder's Waistguard
+250574|3|Prefect's Waistguard
+250575|3|Justicar's Waistguard
+250576|3|Officer's Pauldrons
+250577|3|Sentinel's Pauldrons
+250578|3|Warder's Pauldrons
+250579|3|Prefect's Pauldrons
+250580|3|Justicar's Pauldrons
+250581|3|Officer's Wristguards
+250582|3|Sentinel's Wristguards
+250583|3|Warder's Wristguards
+250584|3|Prefect's Wristguards
+250585|3|Justicar's Wristguards
+250586|2|Blessed Plate Pauldrons
+250587|2|Blessed Plate Boots
+250588|2|Blessed Plate Gauntlet
+250589|2|Imperial Plate Gauntlets
+250590|2|Blessed Plate Bracers
+250591|2|Blessed Plate Leggings
+250592|2|Blessed Plate Belt
+250593|2|Blessed Plate Helm
+250594|2|Blessed Plate Chest
+250595|3|Enriched Thorium Breastplate
+250596|3|Enriched Thorium Leggings
+250597|3|Enriched Thorium Helm
+250598|4|Champion's Legplates
+250599|4|Stalwart Helm
+250600|4|Martyr's Legplates
+250601|4|Breastplate of Salvation
+250602|2|Brass Knuckles
+250603|2|Bronze Dory
+250604|2|Iron Fists
+250605|2|Steel Spear
+250606|2|Iron Morningstar
+250607|2|Mithril Shortsword
+250608|2|Mithril Warhammer
+250609|2|Mithril Claws
+250610|2|Mithril Claymore
+250611|2|Mithril Stiletto
+250612|2|Charged Mithril Battleaxe
+250613|3|Thorium Greatmace
+250614|3|Thorium Cestus
+250615|3|Thorium Poleaxe
+250616|2|Bold Dirk
+250617|3|Stormcarver
+250618|3|Bagh Nakh
+250619|3|Legionite Glaive
+279988|1|Anvil
+279955|1|Master Forge
+273908|4|Justice Leggings
+273909|4|Justice Gauntlets
+273910|4|Justice Spaulders
+273911|4|Justice Greaves
+273912|4|Justice Legplates
+273913|4|Justice Gloves
+273914|4|Justice Epaulets
+273915|4|Justice Treads
+273916|4|Justice Legguards
+273917|4|Justice Handguards
+273918|4|Justice Pauldrons
+273919|4|Justice Sabatons
+273944|4|Legplates of Glory
+273945|4|Gauntlets of Glory
+273946|4|Shoulders of Glory
+273947|4|Greaves of Glory
+273948|4|Legguards of Glory
+273949|4|Handguards of Glory
+273950|4|Pauldrons of Glory
+273951|4|Sabatons of Glory
+275622|3|Goregasher Grips
+275623|3|Goregasher Support
+275624|3|Goregasher Stompers
+275625|3|Clutchlord's Grips
+275626|3|Clutchlord's Support
+275627|3|Clutchlord's Stompers
+276992|2|Cloudy Skyforged Chainmail
+276993|2|Cloudy Skyforged Wristguards
+276994|2|Cloudy Skyforged Gauntlets
+276995|2|Cloudy Skyforged Chain
+276996|2|Cloudy Skyforged Legguards
+276997|2|Cloudy Skyforged Greaves
+277016|2|Azure Skyforged Chainmail
+277017|2|Azure Skyforged Wristguards
+277018|2|Azure Skyforged Gauntlets
+277019|2|Azure Skyforged Chain
+277020|2|Azure Skyforged Legguards
+277021|2|Azure Skyforged Greaves
+277040|2|Cloudy Skyforged Helm
+277041|2|Cloudy Skyforged Pauldrons
+277048|2|Azure Skyforged Helm
+277049|2|Azure Skyforged Pauldrons
+277672|2|Rough Copper Chain Boots
+279259|4|Ironwood Blade
+279260|4|Forest Defender's Axe
+279261|4|Greenhammer
+279262|4|Evergreen Shield
+279263|4|Depleted Thorium Sabatons
+279264|4|Heavy Thorium Gauntlets
+279265|4|Azerothium Legplates
+285279|2|Cracked Blacksmith Hammer
+285280|2|Mithril Blacksmith Hammer
+285281|3|Arcanite Blacksmith Hammer
+217287|2|Greater Mystic Wand
+220792|2|Scroll of Spatial Mending
+279976|1|Enchanted Lute
+247786|1|Dust to Motes
+247789|1|Novice's Practice Wand
+249144|2|Twisted Nether Wand
+249232|2|Lesser Eternal Wand
+249234|2|Dreambough Wand
+249237|2|Greater Eternal Wand
+249385|3|Brilliant Wand
+249392|3|Glimmering Staff
+249393|3|Soulstaff
+249394|3|Orb of Mystic Insight
+249395|3|Orb of Souls
+249396|3|Mystic Mushroom
+249397|3|Tenets of the Silver Hand
+249398|3|Polished Driftwood Icon
+249441|3|Talons of Wrath
+249442|3|Libram of Invocation
+249443|3|Totem of Ancestral Protection
+249453|3|Radiant Staff
+249454|3|Dreamstaff
+249455|3|Truesilver Conduit
+249456|3|Twisting Essence Jar
+249469|3|Frozen Heart of the Mountain
+249470|3|Molten Heart of the Mountain
+249473|3|Dormant Heart of the Mountain
+220606|3|Idol of the Dream
+228175|3|Libram of Holy Alacrity
+228176|3|Totem of Thunder
+279985|1|Arcane Salvager
+279987|1|Arcane Forge
+279246|4|Torch of Light
+279247|4|Steadfast Libram
+279248|4|Libram of Infusion
+279249|4|Totem of Urgency
+279250|4|Idol of Swiftness
+279251|4|Idol of the Ursine Twins
+210147|1|Shredder Autosalvage Unit
+213383|3|Polished Truesilver Gears
+215127|2|High-Yield Radiation Bomb
+215168|2|Ez-Thro Radiation Bomb
+238737|1|Tinkerbox
+238734|2|Tinkerbox: Teleport
+238735|2|Tinkerbox: Nitro Boosts
+238736|2|Tinkerbox: Magnetic Displacement
+237023|1|Pop-Up Shrub
+279950|1|Reagent Bot
+249432|2|Sandpaper
+279949|1|Repair Bot
+279989|1|Anarchist's Workbench
+260784|1|SAF-T Tabs
+260792|1|SAF-T Dynamite
+260793|1|SAF-T Copper Bomb
+260794|1|EZ-Thro Wrap
+260795|1|EZ-Thro Copper Bomb XL
+260796|1|No Slip SAF-T Padding
+260797|1|SAF-T Bronze Bomb
+260798|1|SAF-T Jumbo Dynamite
+260799|1|SAF-T Bell
+260800|1|Shafety Sheep
+260801|1|EZ-Thro Fireproof Fuse
+260802|1|EZ-Thro Bronze Mortar
+260803|1|EZ-Thro Grenade
+260804|1|SAF-T Casing
+260805|1|SAF-T Bomb
+260806|1|Emergency Field Cloak
+260807|1|Compact Critter Carrier
+260808|1|EZ-Thro Tru-Trigger
+260809|1|Tru-Trigger Frag Bomb
+260810|1|SAF-T Disposable Parachute
+260811|1|Gnomish Army Knife
+260812|3|Loot-A-Rang
+260813|1|SAF-T Tube
+260814|1|SAF-T Clever Dynamite
+260815|1|EZ-Thro Shell
+260816|1|EZ-Thro Thorium Grenade
+260817|1|EZ-Thro Dark Bomb
+260818|1|EZ-Thro Mana Bomb
+260819|2|EZ-Thro Field Transporter: Gadgetzan
+260820|2|SAF-T Emergency Ripper: Everlook
+260821|2|EZ and SAF Field Transporter: Mt. Hyjal
+260822|2|Ultrasafe Rechargeable Battery
+260823|2|Dimensional Transporter - Mt. Hyjal
+260824|3|Gnomish Poultryizer
+260825|2|Ultralight Goblin Glider
+260826|2|Gnomish Weather Machine
+260827|2|Stealthman 52
+260828|2|SAF-T Nitro Boosts
+260829|2|EZ-Thro Magnetic Displacer
+260830|2|SAF-T Teleport
+269900|2|Centaur Banner Deployment Device
+269902|1|Hoof-Shaped Foot Pedal
+274048|2|9-60 Battery Pack
+274387|4|Swiftfeather Arrow
+274388|4|Swiftstrike Shot
+277132|2|Harvester Override Signalcaster
+279272|3|SAF-T Ultra Precision Scope
+279273|4|Hyper Deluxe Sniper Rifle Mk XVII
+280306|2|Whimsical Waistwrap
+280307|2|Gizmo Girdle
+280308|2|Clanking Cord
+280310|2|Floppy Goggles
+280311|2|Bent Goggles
+280312|2|Stuckbutton Goggles
+280313|2|Dented Goggles
+284869|1|Unsanctified Grenade
+285275|2|Satchel of Copper Bombs
+285276|2|Satchel of Bronze Bombs
+285277|2|Satchel of Iron Bombs
+285278|2|Satchel of Dark Iron Bombs
+279978|1|Camp Tent
+252488|2|Forceful Rugged Armor Kit
+252487|2|Mystic Rugged Armor Kit
+252606|4|Pristine Scorpid Leggings
+252605|4|Black Dragonscale Helm
+252604|4|Blue Dragonscale Helm
+252603|4|Red Dragonscale Leggings
+252602|2|Charged Scorpid Boots
+252601|2|Supple Scorpid Sabatons
+252600|2|Charged Scorpid Leggings
+252599|2|Supple Scorpid Vest
+252598|2|Charged Scorpid Vest
+252597|2|Supple Scorpid Helm
+252596|2|Charged Scorpid Gauntlets
+252595|2|Supple Scorpid Belt
+252594|2|Heavy Scorpid Boots
+252593|2|Charged Scorpid Bracers
+252592|2|Supple Scorpid Shoulders
+252591|3|Mender's Mail Belt
+252590|3|Skirmisher's Mail Belt
+252589|3|Skycaller's Mail Belt
+252588|3|Stalker's Mail Belt
+252587|3|Mender's Mail Gauntlets
+252586|3|Skirmisher's Mail Gauntlets
+252585|3|Skycaller's Mail Gauntlets
+252584|3|Stalker's Mail Gauntlets
+252583|2|Charged Scorpid Shoulders
+252582|2|Supple Scorpid Bracers
+252581|2|Charged Scorpid Helm
+252580|2|Supple Scorpid Leggings
+252579|3|Mender's Mail Sabatons
+252578|3|Skirmisher's Mail Sabatons
+252577|3|Skycaller's Mail Sabatons
+252576|3|Stalker's Mail Sabatons
+252575|2|Charged Scorpid Belt
+252574|2|Supple Scorpid Boots
+252573|3|Mender's Mail Bracers
+252572|3|Skirmisher's Mail Bracers
+252571|3|Skycaller's Mail Bracers
+252570|3|Stalker's Mail Bracers
+252569|3|Mender's Mail Shoulders
+252568|3|Skirmisher's Mail Shoulders
+252567|3|Skycaller's Mail Shoulders
+252566|3|Stalker's Mail Shoulders
+252565|3|Mender's Mail Boots
+252564|3|Skirmisher's Mail Boots
+252563|3|Skycaller's Mail Boots
+252562|3|Stalker's Mail Boots
+252486|4|Ironfeather Leggings
+252485|4|Warbear Helm
+252484|4|Timbermaw Tunic
+252483|4|Dawn Armor
+252561|4|Living Crown
+252482|2|Blue Suede Hat
+252560|2|Tooled Leather Pants
+252559|2|Blue Suede Bracers
+252558|2|Tooled Leather Epaulets
+252481|2|Blue Suede Belt
+252557|2|Tooled Leather Bracers
+252556|2|Wicked Leather Shoulders
+252480|2|Blue Suede Armor
+252555|2|Tooled Leather Crown
+252554|2|Blue Suede Shoulders
+252553|2|Tooled Leather Gauntlets
+252479|2|Wicked Leather Boots
+252478|2|Blue Suede Pants
+252552|2|Tooled Leather Armor
+252477|3|Mender's Leather Waistguard
+252476|3|Skycaller's Leather Waistguard
+252475|3|Warden's Leather Waistguard
+252474|3|Skulker's Leather Waistguard
+252473|3|Prowler's Leather Waistguard
+252551|3|Mender's Leather Gauntlets
+252550|3|Skycaller's Leather Gauntlets
+252549|3|Warden's Leather Gauntlets
+252548|3|Skulker's Leather Gauntlets
+252547|3|Prowler's Leather Gauntlets
+252546|2|Blue Suede Gloves
+252545|2|Tooled Leather Boots
+252472|3|Mender's Leather Boots
+252471|3|Skycaller's Leather Boots
+252470|3|Warden's Leather Boots
+252469|3|Skulker's Leather Boots
+252468|3|Prowler's Leather Boots
+252467|2|Blue Suede Shoes
+252544|2|Tooled Leather Belt
+252543|3|Mender's Leather Bracers
+252542|3|Skycaller's Leather Bracers
+252541|3|Warden's Leather Bracers
+252540|3|Skulker's Leather Bracers
+252539|3|Prowler's Leather Bracers
+252538|3|Mender's Leather Shoulders
+252537|3|Skycaller's Leather Shoulders
+252536|3|Warden's Leather Shoulders
+252535|3|Skulker's Leather Shoulders
+252534|3|Prowler's Leather Shoulders
+252533|3|Mender's Leather Shoes
+252532|3|Skycaller's Leather Shoes
+252466|3|Warden's Leather Shoes
+252531|3|Skulker's Leather Shoes
+252465|3|Prowler's Leather Shoes
+252530|3|Mender's Leather Gloves
+252529|3|Skycaller's Leather Gloves
+252528|3|Skirmisher's Leather Gloves
+252527|3|Warden's Leather Gloves
+252526|3|Stalker's Leather Gloves
+252525|3|Skulker's Leather Gloves
+252524|3|Prowler's Leather Gloves
+252463|2|Forceful Thick Armor Kit
+252462|2|Mystic Thick Armor Kit
+252523|3|Mender's Leather Belt
+252522|3|Skycaller's Leather Belt
+252461|3|Skirmisher's Leather Belt
+252460|3|Warden's Leather Belt
+252521|3|Stalker's Leather Belt
+252520|3|Skulker's Leather Belt
+252459|3|Prowler's Leather Belt
+252519|3|Wisdom's Leather Leggings
+252518|3|Stormrider's Leather Kilt
+252458|3|Totemic Leather Leggings
+252457|3|Defender's Leather Kilt
+252517|3|Trapper's Leather Legguards
+252516|3|Brawler's Leather Legguards
+252515|3|Wisdom's Leather Helm
+252514|3|Stormrider's Leather Helm
+252456|3|Totemic Leather Helm
+252455|3|Defender's Leather Helm
+252513|3|Trapper's Leather Helm
+252512|3|Brawler's Leather Helm
+252453|2|Forceful Heavy Armor Kit
+252452|2|Mystic Heavy Armor Kit
+252511|3|Wisdom's Leather Tunic
+252510|3|Stormrider's Leather Tunic
+252451|3|Totemic Leather Tunic
+252450|3|Defender's Leather Tunic
+252509|3|Trapper's Leather Tunic
+252508|3|Brawler's Leather Tunic
+252449|2|Hillman's Leather Boots
+252507|3|Wisdom's Leather Hood
+252506|3|Stormrider's Leather Hood
+252448|3|Totemic Leather Hood
+252447|3|Defender's Leather Hood
+252505|3|Trapper's Leather Hood
+252504|3|Brawler's Leather Hood
+252503|3|Wisdom's Leather Pants
+252502|3|Stormrider's Leather Pants
+252446|3|Totemic Leather Pants
+252445|3|Defender's Leather Pants
+252501|3|Trapper's Leather Pants
+252500|3|Brawler's Leather Pants
+252444|3|Wisdom's Leather Boots
+252443|3|Stormrider's Leather Boots
+252442|3|Totemic Leather Boots
+252441|3|Defender's Leather Boots
+252440|3|Trapper's Leather Boots
+252439|3|Brawler's Leather Boots
+252437|2|Forceful Medium Armor Kit
+252436|2|Mystic Medium Armor Kit
+252499|3|Wisdom's Leather Gloves
+252498|3|Stormrider's Leather Gloves
+252497|3|Totemic Leather Gloves
+252496|3|Defender's Leather Gloves
+252495|3|Trapper's Leather Gloves
+252494|3|Brawler's Leather Gloves
+252493|3|Wisdom's Leather Armor
+252492|3|Stormrider's Leather Armor
+252435|3|Totemic Leather Armor
+252434|3|Defender's Leather Armor
+252491|3|Trapper's Leather Armor
+252490|3|Brawler's Leather Armor
+252433|3|Wisdom's Leather Belt
+252432|3|Stormrider's Leather Belt
+252431|3|Totemic Leather Belt
+252430|3|Defender's Leather Belt
+252429|3|Trapper's Leather Belt
+252428|3|Brawler's Leather Belt
+252427|3|Moonglow Boots
+252426|3|Murloc Scale Shoes
+252425|3|Dark Leather Boots
+252424|3|Black Whelp Slippers
+279941|1|Tanning Rack
+279945|1|Sewing Machine
+273884|4|Grovekeeper Trousers
+273885|4|Grovekeeper Grips
+273886|4|Grovekeeper Shoulderpads
+273887|4|Grovekeeper Stompers
+273888|4|Grovekeeper Kilt
+273889|4|Grovekeeper Mitts
+273890|4|Grovekeeper Mantle
+273891|4|Grovekeeper Sandals
+273892|4|Grovekeeper Legguards
+273893|4|Grovekeeper Handguards
+273894|4|Grovekeeper Pauldrons
+273895|4|Grovekeeper Boots
+273896|4|Grovekeeper Leggings
+273897|4|Grovekeeper Gauntlets
+273898|4|Grovekeeper Spaulders
+273899|4|Grovekeeper Treads
+273900|4|Wildstalker's Legguards
+273901|4|Wildstalker's Gauntlets
+273902|4|Wildstalker's Spaulders
+273903|4|Wildstalker's Greaves
+273928|4|Grimstitch Pants
+273929|4|Grimstitch Gloves
+273930|4|Grimstitch Spaulders
+273931|4|Grimstitch Boots
+273932|4|Spiritcaller Leggings
+273933|4|Spiritcaller Grips
+273934|4|Spiritcaller Spaulders
+273935|4|Spiritcaller Treads
+273936|4|Spiritcaller Pants
+273937|4|Spiritcaller Gauntlets
+273938|4|Spiritcaller Epaulets
+273939|4|Spiritcaller Greaves
+275610|3|Bileblister Claws
+275611|3|Bileblister Girdle
+275612|3|Bileblister Boots
+275613|3|Hivethrasher's Claws
+275614|3|Hivethrasher's Girdle
+275615|3|Hivethrasher's Boots
+275616|3|Scalegut Clenchers
+275617|3|Scalegut Belt
+275618|3|Scalegut Treaders
+275619|3|Broodwatcher's Clenchers
+275620|3|Broodwatcher's Belt
+275621|3|Broodwatcher's Treaders
+276538|4|Spiritcaller Kilt
+276539|4|Spiritcaller Gloves
+276540|4|Spiritcaller Mantle
+276541|4|Spiritcaller Boots
+276998|2|Cloudy Gustwoven Harness
+276999|2|Cloudy Gustwoven Bracers
+277000|2|Cloudy Gustwoven Gloves
+277001|2|Cloudy Gustwoven Belt
+277002|2|Cloudy Gustwoven Trousers
+277003|2|Cloudy Gustwoven Boots
+277004|2|Cloudy Windraveled Jerkin
+277005|2|Cloudy Windraveled Armguards
+277006|2|Cloudy Windraveled Mitts
+277007|2|Cloudy Windraveled Strap
+277008|2|Cloudy Windraveled Pants
+277009|2|Cloudy Windraveled Footwraps
+277022|2|Azure Gustwoven Harness
+277023|2|Azure Gustwoven Bracers
+277024|2|Azure Gustwoven Gloves
+277025|2|Azure Gustwoven Belt
+277026|2|Azure Gustwoven Trousers
+277027|2|Azure Gustwoven Boots
+277028|2|Azure Windraveled Jerkin
+277029|2|Azure Windraveled Armguards
+277030|2|Azure Windraveled Mitts
+277031|2|Azure Windraveled Strap
+277032|2|Azure Windraveled Pants
+277033|2|Azure Windraveled Footwraps
+277042|2|Cloudy Gustwoven Hood
+277043|2|Cloudy Gustwoven Spaulders
+277044|2|Cloudy Windraveled Cover
+277045|2|Cloudy Windraveled Drapes
+277050|2|Azure Gustwoven Hood
+277051|2|Azure Gustwoven Spaulders
+277052|2|Azure Windraveled Cover
+277053|2|Azure Windraveled Drapes
+277715|1|Light Leather Reagent Bag
+279252|4|Elderwild Waistcord
+279253|4|Outlaw's Collar
+279254|4|Elderwild Pants
+279255|4|Eternity Pauldrons
+279256|4|Tranquil Wristguards
+279257|4|Mourning Handguards
+279258|3|Wild Leather Armor Kit
+213379|3|Hyperconductive Arcano-Filament
+239147|3|Crusader's Knapsack
+239148|4|Crimson Dawnwoven Bag
+279972|1|Faction Banner
+253664|1|Linen Reagent Bag
+253667|1|Woolen Reagent Bag
+253885|3|Novice Arcanist's Sash
+253887|3|Novice Ardent's Sash
+253889|3|Pristine Boots
+253891|3|Silky Boots
+253893|3|Flame Boots
+253895|3|Shadow Boots
+253897|3|Pearly Boots
+253899|3|Shining Boots
+253901|3|Filigreed Pristine Gown
+253903|3|Filigreed Silky Gown
+253905|3|Filigreed Flame Gown
+253907|3|Filigreed Shadow Gown
+253909|3|Filigreed Pearly Gown
+253911|3|Filigreed Shining Gown
+253913|3|Pristine Gloves
+253915|3|Silky Gloves
+253917|3|Flame Gloves
+253919|3|Shadow Gloves
+253921|3|Pearly Gloves
+253923|3|Shining Gloves
+253925|3|Pristine Sash
+253927|3|Silky Sash
+253929|3|Flame Sash
+253931|3|Shadow Sash
+253933|3|Pearly Sash
+253935|3|Shining Sash
+253937|3|Filigreed Pristine Leggings
+253939|3|Filigreed Silky Leggings
+253941|3|Filigreed Flame Leggings
+253943|3|Filigreed Shadow Leggings
+253945|3|Filigreed Pearly Leggings
+253947|3|Filigreed Shining Leggings
+253949|3|Pristine Circlet
+253951|3|Silky Circlet
+253953|3|Flame Circlet
+253955|3|Shadow Circlet
+253957|3|Pearly Circlet
+253959|3|Shining Circlet
+253961|3|Pristine Gown
+253963|3|Silky Gown
+253965|3|Flame Gown
+253967|3|Shadow Gown
+253969|3|Pearly Gown
+253971|3|Shining Gown
+253973|1|Silk Reagent Bag
+253975|3|Filigreed Pristine Circlet
+253977|3|Filigreed Silky Circlet
+253979|3|Filigreed Flame Circlet
+253981|3|Filigreed Shadow Circlet
+253983|3|Filigreed Pearly Circlet
+253985|3|Filigreed Shining Circlet
+253987|3|Pristine Leggings
+253989|3|Silky Leggings
+253991|3|Flame Leggings
+253993|3|Shadow Leggings
+253995|3|Pearly Leggings
+253997|3|Shining Leggings
+253999|2|Earthen Leggings
+254001|3|Gilded Slippers
+254003|3|Frothing Slippers
+254005|3|Fiery Slippers
+254007|3|Black Slippers
+254009|3|Golden Slippers
+254011|3|Radiant Slippers
+254013|2|Earthen Silk Slippers
+254015|2|Earthen Silk Hood
+254017|2|Earthen Silk Gloves
+254019|2|Earthen Silk Cuffs
+254021|3|Gilded Handwraps
+254023|3|Frothing Handwraps
+254025|3|Fiery Handwraps
+254027|3|Black Handwraps
+254029|3|Golden Handwraps
+254031|3|Radiant Handwraps
+254033|2|Earthen Silk Shoulders
+254035|1|Mageweave Reagent Bag
+254037|3|Gilded Cord
+254039|3|Frothing Cord
+254041|3|Fiery Cord
+254043|3|Black Cord
+254045|3|Golden Cord
+254047|3|Radiant Cord
+254049|3|Nethergeld Shoulders
+254051|3|Netherfroth Shoulders
+254053|3|Netherflame Shoulders
+254055|3|Netherpearl Shoulders
+254057|3|Nethershine Shoulders
+254059|3|Netherlight Shoulders
+254061|3|Nethergeld Cuffs
+254063|3|Netherfroth Cuffs
+254065|3|Netherflame Cuffs
+254067|3|Netherpearl Cuffs
+254069|3|Nethershine Cuffs
+254071|3|Netherlight Cuffs
+254073|2|Ghostweave Cord
+254075|2|Earthenweave Gloves
+254077|2|Earthenweave Cord
+254079|1|Runecloth Reagent Bag
+254081|3|Gilded Waistcord
+254083|3|Frothing Waistcord
+254085|3|Fiery Waistcord
+254087|3|Black Waistcord
+254089|3|Golden Waistcord
+254091|3|Radiant Waistcord
+254093|2|Earthenweave Boots
+254095|3|Gilded Gloves
+254097|3|Frothing Gloves
+254099|3|Fiery Gloves
+254101|3|Black Gloves
+254103|3|Golden Gloves
+254105|3|Radiant Gloves
+254107|3|Gilded Sandals
+254109|3|Frothing Sandals
+254111|3|Fiery Sandals
+254113|3|Black Sandals
+254115|3|Golden Sandals
+254117|3|Radiant Sandals
+254119|2|Earthenweave Mantle
+254121|2|Earthenweave Vest
+254123|2|Runecloth Cuffs
+254125|2|Earthenweave Leggings
+254127|2|Ghostweave Mantle
+254129|2|Ghostweave Boots
+254131|2|Earthenweave Cuffs
+254133|1|Mooncloth Reagent Bag
+254135|2|Ghostweave Hood
+254137|2|Earthenweave Crown
+254139|1|Bottomless Reagent Bag
+279943|1|Spinning Wheel
+279959|1|Loom
+273904|4|Manaflare Pants
+273905|4|Manaflare Gloves
+273906|4|Manaflare Mantle
+273907|4|Manaflare Boots
+273920|4|Pants of Conviction
+273921|4|Gloves of Conviction
+273922|4|Mantle of Conviction
+273923|4|Treads of Conviction
+273924|4|Leggings of Conviction
+273925|4|Handguards of Conviction
+273926|4|Pauldrons of Conviction
+273927|4|Boots of Conviction
+273940|4|Demonheart Leggings
+273941|4|Demonheart Gloves
+273942|4|Demonheart Spaulders
+273943|4|Demonheart Boots
+275604|3|Venomspew Gloves
+275605|3|Venomspew Cord
+275606|3|Venomspew Footpads
+275607|3|Swarmtender's Gloves
+275608|3|Swarmtender's Cord
+275609|3|Swarmtender's Footpads
+277010|2|Cloudy Stormsewn Vest
+277011|2|Cloudy Stormsewn Cuffs
+277012|2|Cloudy Stormsewn Handwraps
+277013|2|Cloudy Stormsewn Cord
+277014|2|Cloudy Stormsewn Leggings
+277015|2|Cloudy Stormsewn Shoes
+277034|2|Azure Stormsewn Vest
+277035|2|Azure Stormsewn Cuffs
+277036|2|Azure Stormsewn Handwraps
+277037|2|Azure Stormsewn Cord
+277038|2|Azure Stormsewn Leggings
+277039|2|Azure Stormsewn Shoes
+277046|2|Cloudy Stormsewn Cowl
+277047|2|Cloudy Stormsewn Epaulets
+277054|2|Azure Stormsewn Cowl
+277055|2|Azure Stormsewn Epaulets
+279266|4|Robes of Fiery Devastation
+279267|4|Mana-infused Cord
+279268|4|Rime-encrusted Boots
+279269|4|Fel Cape
+279270|4|Cloak of Earth and Sky
+279271|4|Felblood Soul Bag
+279960|1|Lodestone
+249726|2|Smelt Azerothium
+279948|1|Rock Garden
+279952|1|Molten Foundry
+251291|2|Smelt Heavy Thorium
+238637|1|Prowler Steak
+238638|1|Filet o' Flank
+238639|1|Sunrise Omelette
+238641|2|Specklefin Feast
+238642|2|Grand Lobster Banquet
+279981|1|Basic Campfire
+249865|1|Peace Tea
+249866|1|Royal Tea
+249867|1|Root Tea
+249868|1|Triage Tea
+249869|1|Sunny Tea
+249870|1|Sage's Tea
+249871|1|Venomous Smoothie
+249872|1|Slimy Smoothie
+249873|1|Mrrggl Smrrthle
+249874|1|Calcified Smoothie
+249875|1|Spicy Smoothie
+249876|1|Wicked Smoothie
+250065|1|Savory Stag Sliders
+250066|1|Soaring Pamplona
+250067|1|Bat Hachee
+250068|1|Savory Turtle Stew
+250069|1|Flank au Poivre
+250070|1|Bear Bruscitti
+250071|1|Steaming Stag Steak
+250072|1|Swiftstrike Steak
+250073|1|Raging Raptor Ribs
+250074|1|Bear Brisket
+250075|1|Prehistoric Pulled Raptor
+250076|1|Raptor Rouladen
+250077|1|Twice-Spiced Raptor Slice
+250078|1|Giant Scrambled Eggs
+250079|1|Tasty Raptor Bites
+250080|1|Breakfast Omelette
+250081|1|Clam Linguine
+251525|1|Savory Whimsyfin Delight
+279957|1|Cookie's Feast
+279982|1|Iron Oven
+263509|1|Skywall Souffle
+263512|1|Pincer Bites
+279961|1|Journeyman Campfire
+279974|1|Expert Campfire
+267341|1|Sweetpaw Jam
+274971|1|Briny Seafood Stew
+274976|1|Plain Ol' Paletusk
+286152|1|Plated Armorfish
+279968|1|First Aid Kit
+255715|1|Potent Anti-Venom
+255716|1|Simple Poultice
+255717|1|Clever Poultice
+255718|1|Superior Poultice
+255719|1|Powerful Poultice
+255720|1|Woolen Tourniquet
+255721|1|Leather Tourniquet
+255722|1|Surgical Tourniquet
+279940|1|Toxin Study
+279951|1|Plague Doctor's Laboratory
+# Found one by one with Wowhead's WoW Forever search (names the classic database spells differently, or had no match)
+249726|2|Azerothium Bar
+279981|1|Basic Campfire Kit
+10592|1|Catseye Draught
+23684|1|Crystal Infused Bandage
+9233|1|Draught of Detect Demon
+3828|1|Draught of Detect Lesser Invisibility
+9154|1|Draught of Detect Undead
+9197|1|Draught of Dream Vision
+18294|1|Draught of Greater Water Breathing
+5996|1|Draught of Water Breathing
+8827|1|Draught of Water Walking
+6373|1|Elixir of Fire Power
+9206|1|Elixir of Greater Strength
+21546|1|Elixir of Holy Power
+3389|1|Elixir of Lesser Defense
+3825|1|Elixir of Lesser Fortitude
+2454|1|Elixir of Minor Strength
+3391|1|Elixir of Ogre Strength
+279974|1|Expert Campfire Kit
+13506|1|Flask of Petrification
+2315|2|Gray Leather Boots
+15078|2|Heavy Scorpid Gauntlet
+251291|2|Heavy Thorium Bar
+279961|1|Journeyman Campfire Kit
+251290|2|Legionite Bar
+3388|1|Lesser Troll's Blood Elixir
+4596|1|Minor Discolored Healing Potion
+3382|1|Minor Troll's Blood Elixir
+7924|2|Mithril Plate Bracers
+7925|2|Mithril Plate Gloves
+7920|2|Mithril Plate Pants
+7932|2|Mithril Plate Shoulders
+247786|1|Mote of Magic
+7928|2|Ornate Mithril Shoulders
+9224|1|Potion of Demon Slaying
+3386|1|Potion of Poison Cleansing
+17967|3|Refined Scale of Onyxia
+252535|3|Skulker's Leather Shoulder
+3826|1|Troll's Blood Elixir
