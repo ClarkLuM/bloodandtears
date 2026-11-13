@@ -68,7 +68,7 @@ Other things worth knowing about:
 | `public/index.html` | The whole site: layout, styles and code |
 | `public/firebase-config.js` | The Firebase project's config and the App Check key |
 | `public/recipes.json` | The recipe list for Who Can Make It? (built by `tools/recipes/build.py`) |
-| `public/sw.js`, `manifest.webmanifest`, `icon*`, `logo.svg`, `og.png` | Offline support, the home-screen icon and the link preview |
+| `public/sw.js`, `manifest.webmanifest`, `icon*`, `logo.svg`, `og-gingerbread.png` | Offline support, the home-screen icon and the link preview |
 | `public/robots.txt` | Keeps the site out of search engines |
 | `functions/index.js` | The server: armory sync, Hall of Firsts, snapshots, opt-out, item lookups, officers |
 | `firestore.rules` | Who can read and change what |
