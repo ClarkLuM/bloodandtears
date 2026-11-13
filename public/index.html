@@ -648,6 +648,16 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .rc-who{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem .75rem}
 .rc-chip{display:inline-flex;align-items:center;gap:.375rem;font-size:.875rem}
 .rc-chip .ter{font-size:.75rem}
+.rc-tog{font-family:inherit;font-weight:600;font-size:.75rem;line-height:1.25rem;color:var(--accent-text);background:none;border:1px solid var(--b-def);border-radius:7px;padding:.0625rem .5625rem;cursor:pointer;margin-left:auto}
+.rc-tog:hover{border-color:var(--accent-text)}
+.rc-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;padding:.75rem .875rem;background:var(--sunken);border:1px solid var(--sep);border-radius:9px}
+.rc-panel h3{margin:0 0 .375rem;font:700 .75rem 'Alegreya Sans SC',serif;letter-spacing:.08em;color:var(--accent-text)}
+.rc-panel ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.25rem;font-size:.875rem}
+.rc-n{display:inline-block;min-width:1.5rem;color:var(--sec);font-size:.75rem;font-variant-numeric:tabular-nums}
+.rc-get b{font-weight:600}.rc-ups{margin-top:.375rem}.su-o{color:#ff8040}.su-y{color:#e6c34a}.su-g{color:#40bf40}
+:root[data-theme="light"] .su-o{color:#b34a00}:root[data-theme="light"] .su-y{color:#8a6d00}:root[data-theme="light"] .su-g{color:#2a7d12}
+.rc-panel-msg{margin:0}
+@media (max-width:40rem){.rc-panel{grid-template-columns:minmax(0,1fr)}.rc-tog{margin-left:0}}
 .r-search{position:relative;flex:1 1 12.5rem;min-width:0}
 .r-search input{width:100%;padding-left:2.25rem}
 .r-search svg{position:absolute;z-index:1;left:.75rem;top:50%;width:1rem;height:1rem;margin-top:-.5rem;color:var(--ter);pointer-events:none}
@@ -2244,6 +2254,39 @@ let recipesState="";
 function loadRecipes(){if(recipesState==="loading"||recipesState==="ok")return;recipesState="loading";
   fetch("recipes.json").then(r=>r.ok?r.json():Promise.reject(new Error(r.status))).then(d=>{S.recipes=d.recipes||{};recipesState="ok";schedule()})
     .catch(()=>{recipesState="failed";schedule()})}
+// Reagents, skill-up colours and where each recipe comes from (public/recipe-info.json, from Wowhead's WoW Forever
+// pages; built by tools/recipes/build.py). Loaded the first time someone opens a recipe's details.
+let rinfoState="";
+function loadRecipeInfo(){if(rinfoState==="loading"||rinfoState==="ok")return;rinfoState="loading";
+  fetch("recipe-info.json").then(r=>r.ok?r.json():Promise.reject(new Error(r.status))).then(d=>{S.rinfo=d;rinfoState="ok";schedule()})
+    .catch(()=>{rinfoState="failed";schedule()})}
+const money=c=>{c=+c||0;const g=Math.floor(c/1e4),s=Math.floor(c/100)%100,k=c%100;return[g?g+"g":"",s?s+"s":"",k||(!g&&!s)?k+"c":""].filter(Boolean).join(" ")};
+const RECIPE_WORD={Blacksmithing:"Plans",Leatherworking:"Pattern",Tailoring:"Pattern",Engineering:"Schematic",Alchemy:"Recipe",Cooking:"Recipe",Enchanting:"Formula","First Aid":"Manual"};
+function recipePanel(x){
+  loadRecipeInfo();
+  if(rinfoState==="failed")return h("p",{class:"small ter rc-panel-msg"},"Couldn't load the recipe details. Refresh to try again.");
+  if(rinfoState!=="ok")return h("p",{class:"small ter rc-panel-msg"},"Loading…");
+  const d=S.rinfo.recipes[x.p+"|"+x.name];
+  if(!d)return h("p",{class:"small ter rc-panel-msg"},"Wowhead doesn't have this one in its WoW Forever pages yet.");
+  const [spell,col,reag,tc,src,ri]=d,items=S.rinfo.items||{},zones=S.rinfo.zones||{};
+  const mats=reag.map(([id,n])=>{const it=items[id]||["Item "+id,1];return h("li",{},h("span",{class:"rc-n"},n+"×"),qLink({id,q:it[1],name:it[0]}))});
+  const at=z=>z&&zones[z]?" ("+zones[z]+")":"";
+  let how=[];
+  if(x.src==="A")how=[h("li",{},"Learned automatically with "+x.p)];
+  else if(x.src==="T")how=[h("li",{},"From any "+x.p+" trainer"+(tc?" for "+money(tc):""))];
+  else{
+    const sc=(ri&&ri[2]&&ri[2].length?ri[2]:src)||[],sm=ri?ri[3]:[];
+    if(ri)how.push(h("li",{},qLink({id:ri[0],q:ri[1],name:(RECIPE_WORD[x.p]||"Recipe")+": "+x.name})));
+    const verb=sc.includes(5)?"Sold by":sc.includes(4)?"A reward from":sc.includes(2)?"Drops from":"From";
+    if(sm.length)how.push(h("li",{class:"rc-get"},verb+" ",...sm.slice(0,3).flatMap(([t,n,z],i)=>[i?" or ":"",h("b",{},n),at(z)])));
+    else if(sc.includes(5))how.push(h("li",{class:"rc-get"},"Sold by a vendor"));
+    else if(sc.includes(2))how.push(h("li",{class:"rc-get"},"Drops from monsters"));
+    else if(sc.includes(4))how.push(h("li",{class:"rc-get"},"A quest reward"));
+    else how.push(h("li",{class:"small ter"},"Where to get it isn't known yet."))}
+  const ups=col&&col.length===4&&col[3]?h("li",{class:"small ter rc-ups"},"Skill-ups: ",h("span",{class:"su-o"},"orange")," to "+col[1]+", ",h("span",{class:"su-y"},"yellow")," to "+col[2]+", ",h("span",{class:"su-g"},"green")," to "+col[3]):null;
+  return h("div",{class:"rc-panel",id:"rcp-"+spell},
+    h("div",{},h("h3",{},"Reagents"),mats.length?h("ul",{},mats):h("p",{class:"small ter",style:"margin:0"},"None listed.")),
+    h("div",{},h("h3",{},"The recipe"),h("ul",{},how,ups)))}
 const R_LABEL={A:"Known",T:"Trainer",R:"Recipe needed"};
 const R_WHO={A:"Knows it",T:"Can learn it at the trainer",R:"Skilled enough, once they find the recipe"};
 const crafters=()=>[...S.members,...S.alts].filter(m=>isMine(m)||memberState(m)==="current");
@@ -2282,11 +2325,14 @@ function recipeFinder(){
   const chips=(ppl,p,name)=>{const top=ppl.slice(0,6);return[...top.map(m=>h("span",{class:"rc-chip"},classIcon(m.cls),charLink(m),knowsRecipe(m,p,name)?h("span",{class:"rc-knows",title:"Seen in their profession window by the guild scribe"},"knows it"):h("span",{class:"ter"},String(skillIn(m,p))))),
     ppl.length>6?h("span",{class:"small ter"},"and "+(ppl.length-6)+" more"):null]};
   const row=x=>{const best=people.filter(m=>skillIn(m,x.p)>0).sort((a,b)=>skillIn(b,x.p)-skillIn(a,x.p))[0];
-    return h("li",{class:"rc"},
+    const key=x.p+"|"+x.name,open=S.ui.rcOpen===key;
+    const tog=h("button",{class:"rc-tog",type:"button","aria-expanded":String(open),onclick:()=>setUi({rcOpen:open?null:key})},open?"Hide":"Reagents and recipe");
+    return h("li",{class:"rc"+(open?" open":"")},
       h("div",{class:"rc-top"},h("b",{class:"rc-name"},x.id?qLink({id:x.id,q:x.q,name:x.name}):itemRef(x.name)),h("span",{class:"rc-src "+x.src,title:{A:"Learned automatically with the profession",T:"Taught by the profession trainer",R:"Learned from a recipe item: a drop, vendor, quest or reputation"}[x.src]},R_LABEL[x.src]),
         h("span",{class:"small ter rc-meta"},x.p+" · "+(x.est?"about ":"")+x.sk)),
-      x.who.length?h("div",{class:"rc-who"},h("span",{class:"small ter"},R_WHO[x.src]+":"),chips(x.who,x.p,x.name))
-        :h("p",{class:"small ter",style:"margin:0"},best?"Nobody's skilled enough yet. Closest: "+nameOf(best)+" ("+skillIn(best,x.p)+")":"Nobody in the guild has "+x.p+" yet."))};
+      x.who.length?h("div",{class:"rc-who"},h("span",{class:"small ter"},R_WHO[x.src]+":"),chips(x.who,x.p,x.name),tog)
+        :h("div",{class:"rc-who"},h("span",{class:"small ter"},best?"Nobody's skilled enough yet. Closest: "+nameOf(best)+" ("+skillIn(best,x.p)+")":"Nobody in the guild has "+x.p+" yet."),tog),
+      open?recipePanel(x):null)};
   const count=words.length?list.length+(list.length===1?" match":" matches")+(reach.length!==list.length?", "+reach.length+" someone can make":"")
     :list.length+(kind==="learn"?" known or trainer recipes":kind==="recipe"?" recipes they're skilled enough for":" recipes")+" in reach";
   const kinds=!words.length?seg("Show",[["learn","Trainer"],["recipe","Recipe"],["all","All"]],kind,k=>setUi({pKind:k,pMore:false})):null;

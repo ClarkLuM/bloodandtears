@@ -13,7 +13,7 @@ This file describes the site as it is today. The older, dated notes on how each 
 | **Dungeons** | The dungeons grouped like the game's Spelunker achievements (Novice, Experienced, Master), with the two Alliance-side ones (Hall of Thanes, The Stockade) folded away at the bottom. For each: how many are the right level, how many have been, and how many still need it. Open one for the names, Suggest a group, and what drops. |
 | **Raids** (`#raids`, from the switch on Dungeons) | Raid readiness for Barrow Deeps, Hyjal Summit and Onyxia's Lair, every level 60 with their role and gear, and who's between 50 and 59. |
 | **Cards** | Everyone's trading card in sets (Gold foil, Silver, Bronze, Plain), with search and sort, and Card of the Week. |
-| **Professions** | Who has what, and **Who Can Make It?**: search any crafted item to see who's skilled enough. |
+| **Professions** | Who has what, and **Who Can Make It?**: search any crafted item to see who's skilled enough. **Reagents and recipe** on a result opens its reagents, where the recipe comes from and its skill-up colours (from `public/recipe-info.json`, loaded on first open). |
 | **Records** | Leaderboards for kills, level, dungeons, gear and every profession, with titles for whoever is top, the wooden spoon for last, This Week, the Hall of Titles and the Hall of Firsts. |
 | **Guild History** (`#history`) | Everything the feed has seen, one fold per day, plus the weekly recap picture for any week. |
 
@@ -102,7 +102,7 @@ These aren't in the code:
 
 - **A dungeon's loot:** edit its file in `tools/dungeon-loot/lists/`, then run `python3 tools/dungeon-loot/build.py`.
 - **A dungeon's level range:** `DUNGEONS` in `public/index.html`.
-- **A recipe:** edit the profession's file in `tools/recipes/lists/`, then run `python3 tools/recipes/build.py`. Wowhead IDs come from `tools/item-ids/ids.json` (classic items) and `tools/item-ids/forever-crafted.txt` (WoW Forever's own new items, from Wowhead's Forever profession pages). Enchants link to Wowhead's spell pages, with spell IDs from `tools/item-ids/forever-enchants.txt`. A recipe with neither shows as plain text.
+- **A recipe:** edit the profession's file in `tools/recipes/lists/`, then run `python3 tools/recipes/build.py`. Wowhead IDs come from `tools/item-ids/ids.json` (classic items) and `tools/item-ids/forever-crafted.txt` (WoW Forever's own new items, from Wowhead's Forever profession pages). Enchants link to Wowhead's spell pages, with spell IDs from `tools/item-ids/forever-enchants.txt`. Learn levels, reagents, skill-up colours and recipe sources come from `tools/recipes/wowhead-forever.json`, saved from Wowhead's WoW Forever profession and recipe pages; `build.py` writes them to `public/recipe-info.json`. A recipe with neither shows as plain text.
 - **The icon or logo:** edit and run `python3 tools/icon/make_icon.py`.
 - **The raids list:** `RAIDS` in `public/index.html`.
 - **Guild milestones:** `MILESTONES` in `functions/index.js` and `MS_STEPS` in `public/index.html` must match.

@@ -31,6 +31,18 @@ if os.path.exists(ENCH_FILE):
         if ln.startswith("#") or ln.count("|") != 1: continue
         i, n = ln.rstrip("\n").split("|")
         IDS.setdefault("enchant " + n.strip().lower(), [-int(i), 1])
+# Wowhead's WoW Forever profession pages (saved to wowhead-forever.json, 14 November 2026): the learn level, skill-up
+# colours, reagents and where the recipe comes from. The site loads the details from public/recipe-info.json when a
+# recipe's "Reagents and recipe" panel is opened.
+WH_FILE = os.path.join(HERE, "wowhead-forever.json")
+WH = json.load(open(WH_FILE, encoding="utf-8")) if os.path.exists(WH_FILE) else {"prof": {}, "items": {}, "zones": {}}
+def wh_of(prof, name):
+    rows = {k.lower(): v for k, v in WH["prof"].get(prof, {}).items()}
+    o = rows.get(name.lower())
+    if not o and prof == "Mining" and name.endswith(" Bar"): o = rows.get("smelt " + name[:-4].lower())
+    return o
+INFO_OUT = os.path.join(HERE, "..", "..", "public", "recipe-info.json")
+info, used_items, used_zones = {}, set(), set()
 out, total = {}, 0
 for f in sorted(os.listdir(os.path.join(HERE, "lists"))):
     key = f[:-4]
@@ -44,7 +56,15 @@ for f in sorted(os.listdir(os.path.join(HERE, "lists"))):
         name, sk, src = parts
         est = sk.endswith("*"); sk = sk.rstrip("*")
         if not sk.isdigit(): continue
+        wh = wh_of(NAMES[key], name)
+        if wh and wh.get("l"): sk, est = str(wh["l"]), False  # Wowhead's learn level beats the estimate
         row = [name, int(sk), src, 1 if est else 0] + IDS.get(name.lower(), [])  # then Wowhead item ID and quality if known
+        if wh:
+            ri = wh.get("ri")
+            info[NAMES[key] + "|" + name] = [wh["s"], wh.get("c") or [], wh.get("r") or [], wh.get("tc") or 0, wh.get("src") or [],
+                                             ri[:3] + [[[t, n, z] for t, n, z in ri[3]]] if ri else None]
+            used_items.update(str(r[0]) for r in wh.get("r") or [])
+            if ri: used_zones.update(str(z) for _, _, z in ri[3] if z)
         k = name.lower(); old = best.get(k)
         # The same recipe listed twice (trainer and recipe item, say): keep the easiest way to get it.
         if not old or (RANK[src], row[1]) < (RANK[old[2]], old[1]): best[k] = row
@@ -52,6 +72,10 @@ for f in sorted(os.listdir(os.path.join(HERE, "lists"))):
     out[NAMES[key]] = rows; total += len(rows)
 json.dump({"source": "metabot.gg WoW Forever profession pages, Nov 2026", "recipes": out}, open(OUT, "w", encoding="utf-8"),
           ensure_ascii=False, separators=(",", ":"))
+json.dump({"recipes": info, "items": {i: WH["items"][i] for i in sorted(used_items) if i in WH["items"]},
+           "zones": {z: WH["zones"][z] for z in sorted(used_zones) if z in WH["zones"]}},
+          open(INFO_OUT, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+print(f"{len(info)} recipes with reagents and sources -> public/recipe-info.json ({os.path.getsize(INFO_OUT)//1024} KB)")
 print(f"{sum(len(r) > 4 for rows in out.values() for r in rows)} with Wowhead IDs")
 print(f"{total} recipes across {len(out)} professions -> public/recipes.json ({os.path.getsize(OUT)//1024} KB)")
 for p, rows in out.items(): print(f"  {p}: {len(rows)} ({sum(r[2]=='T' for r in rows)} trainer, {sum(r[2]=='A' for r in rows)} automatic)")
