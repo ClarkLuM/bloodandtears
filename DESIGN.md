@@ -795,6 +795,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 - 13 Nov: reigns and marks. The Hall of Titles shows each title's frame as a small swatch (`.hot-fr`) and how long it has been held; title tags show weeks held (`.title-wk`); cards from launch week say "1st ed" in the footer; roster rows can carry one status tag (`.tag.st-fresh`, `.st-tear`, `.st-mia`); title changes appear in the feed with the title in the accent colour (`.feed-title`).
 
+- 13 Nov: marks. Streak flame (`.flame`, orange, with the day count) beside Last seen on the roster and beside the name on the character page. Guild Master nameplate on the card (`.lg-rank` crown and label, gold name via `.is-gm`). PvP rank stripes under the level badge (`pvpMark` / `pvpSvg`: bronze, silver, gold; the card picture draws the same shapes). Title chooser as frame swatches (`.tp-sw`, 3.5 by 4.5rem, chosen one outlined in the accent text colour).
+
 ## Open Items
 
 **These parts are still defaults, guesses, or waiting for a person.**

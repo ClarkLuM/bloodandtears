@@ -159,7 +159,7 @@ td .l2{display:block;font-size:.75rem;line-height:1rem;color:var(--ter)}
   td>*{text-align:right}
   td:first-child>*{text-align:left}
   /* The roster: two or three tight lines per person instead of a label for every value */
-  .roster-t tbody tr{display:grid;grid-template-columns:minmax(0,1fr) fit-content(45%) 2rem;grid-template-areas:"name lv x" "prof seen x" "loot loot x";gap:.25rem .75rem;padding:.625rem .5rem .625rem .875rem;align-items:center}
+  .roster-t tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto 2rem;grid-template-areas:"name lv x" "prof prof x" "seen seen x" "loot loot x";gap:.25rem .75rem;padding:.625rem .5rem .625rem .875rem;align-items:center}
   .roster-t td:nth-child(6){grid-area:x;align-self:center}
   .roster-t tbody tr.r-more{display:block;padding:0}.roster-t tr.r-more>td{display:block;padding:.25rem .875rem 1rem}
   .roster-t tbody tr.r-group{display:block;padding:0}.roster-t tr.r-group>td{display:block;padding:.5rem .875rem}
@@ -170,7 +170,7 @@ td .l2{display:block;font-size:.75rem;line-height:1rem;color:var(--ter)}
   .roster-t td:nth-child(2){grid-area:lv;justify-self:end}
   .roster-t td:nth-child(3){grid-area:prof}
   .roster-t td:nth-child(4){grid-area:loot}
-  .roster-t td:nth-child(5){grid-area:seen;justify-self:end;color:var(--ter);white-space:nowrap}
+  .roster-t td:nth-child(5){grid-area:seen;color:var(--ter);white-space:nowrap}
   .roster-t td:nth-child(5) .ter{color:inherit}
   .roster-t .seen-l{display:none}
   .roster-t td.none{display:none}
@@ -752,7 +752,7 @@ a.r-name:hover{color:var(--accent-text)}
 .roster-t th,.roster-t td{padding-left:.75rem;padding-right:.75rem}
 .roster-t th:first-child,.roster-t td:first-child{padding-left:1rem}
 .roster-t td{padding-top:.5rem;padding-bottom:.5rem}
-.roster-t th:nth-child(2){width:4rem}.roster-t th:nth-child(3){width:10.5rem}.roster-t th:nth-child(4){width:8rem}.roster-t th:nth-child(5){width:6.5rem}.roster-t th:nth-child(6){width:3rem}
+.roster-t th:nth-child(2){width:4rem}.roster-t th:nth-child(3){width:10.5rem}.roster-t th:nth-child(4){width:8rem}.roster-t th:nth-child(5){width:7.75rem}.roster-t th:nth-child(6){width:3rem}
 .roster-t .l2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .r-profs{flex-direction:column;align-items:flex-start}
 }
@@ -903,6 +903,26 @@ a.r-name:hover{color:var(--accent-text)}
 .tag.st-fresh{color:var(--trim);border-color:color-mix(in srgb,var(--trim) 45%,transparent)}
 .tag.st-tear{color:var(--accent-text);border-color:color-mix(in srgb,var(--accent-text) 45%,transparent)}
 .tag.st-mia{color:var(--ter)}
+/* Streak flame, guild rank and PvP pennants on the card, and the title chooser */
+.flame{display:inline-flex;align-items:center;gap:.125rem;font-size:.75rem;line-height:1.25rem;font-weight:700;color:#e2752a;font-variant-numeric:tabular-nums;white-space:nowrap}
+:root[data-theme="light"] .flame{color:#a8480c}
+.flame>span:first-child{display:inline-flex;width:.875rem;height:.875rem}
+.flame svg{width:100%;height:100%}
+.r-seen{display:inline-flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.flame.big{font-size:1rem;margin-left:.625rem;vertical-align:middle}
+.flame.big>span:first-child{width:1.125rem;height:1.125rem}
+.lg-pvp{position:absolute;top:3.125rem;right:.5rem;width:2.25rem;z-index:1;display:flex;justify-content:center;filter:drop-shadow(0 1px 2px rgb(0 0 0 / .85))}
+.lg-rank{position:absolute;left:.75rem;bottom:1.875rem;z-index:1;display:flex;align-items:center;gap:.3125rem;font:700 .6875rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:#f6d77a;text-shadow:0 1px 3px rgb(0 0 0 / .9)}
+.lg-rank>span{display:inline-flex;width:.8125rem;height:.8125rem}.lg-rank svg{width:100%;height:100%}
+.lg-art.has-move .lg-rank{bottom:2.4375rem}
+.lg-art.is-gm .lg-hd b{color:#f6d77a}
+.title-pick{display:flex;flex-direction:column;align-items:center;gap:.5rem;width:100%}
+.tp-row{display:flex;flex-wrap:wrap;justify-content:center;gap:.625rem}
+.tp-sw{width:3.5rem;height:4.5rem;box-sizing:border-box;border:0;border-radius:8px;padding:0 0 .375rem;display:flex;align-items:flex-end;justify-content:center;cursor:pointer;box-shadow:inset 0 0 0 2px rgb(15 10 9 / .45)}
+.tp-sw span{font:700 .5625rem/1 var(--display);letter-spacing:.06em;text-transform:uppercase;color:#fff;text-shadow:0 1px 2px rgb(0 0 0 / .9);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 .125rem}
+.tp-sw[aria-pressed="true"]{outline:3px solid var(--accent-text);outline-offset:2px}
+.tp-sw:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.tp-sw:hover{filter:brightness(1.12)}
 </style>
 </head>
 <body>
@@ -1253,7 +1273,7 @@ function viewRoster(){
     h("span",{class:"row",style:"gap:.75rem"},(u.rMem||"current")==="current"&&hidden?h("button",{class:"linkish small",type:"button",onclick:()=>setUi({rMem:"all"},true)},`${hidden} not in the guild hidden · Show`):null,
       filtered?h("button",{class:"linkish small",type:"button",onclick:clear},"Clear filters"):null));
   // One tidy line each: face, name in class colour with their top title, level, professions with skill, best loot, last seen.
-  const row=m=>{const loot=bestLoot(m),open=u.rOpen===m.id,st=syncState(m),cc=CLASSES[m.cls]||"#bfaea9",lv=Math.max(1,Math.min(60,+m.level||1)),tt=titlesOf(m)[0],stt=statusOf(m);
+  const row=m=>{const loot=bestLoot(m),open=u.rOpen===m.id,st=syncState(m),cc=CLASSES[m.cls]||"#bfaea9",lv=Math.max(1,Math.min(60,+m.level||1)),tt=titlesOf(m)[0],stt=statusOf(m),sk=streakOf(m);
     const toggle=()=>setUi({rOpen:open?null:m.id});
     const av=charPic(m,"avatar"),ini=nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
     const pr=Object.entries(m.profs||{}).filter(([p])=>PRIMARY.includes(p)).sort((x,y)=>+y[1]-+x[1]);
@@ -1267,8 +1287,10 @@ function viewRoster(){
       h("td",{"data-label":"Professions",class:pr.length?"":"none"},pr.length?h("span",{class:"r-profs"},pr.map(([p,v])=>h("span",{class:"r-prof"},p,h("b",{},String(+v||0))))):h("span",{class:"ter"},"—")),
       h("td",{"data-label":"Best loot",class:loot?"":"none"},loot?qLink(loot):h("span",{class:"ter"},"—")),
       // Not on the armory yet is a plain dash here; the reason is in the details and on their page.
-      h("td",{"data-label":"Last seen",class:st.k==="wait"||st.k==="none"?"none":""},st.k==="fresh"||st.k==="quiet"?h("span",{class:"sync "+st.k,title:st.d},h("i",{"aria-hidden":"true"}),h("span",{class:"seen-l"},"In game "),ago(seenOf(m)))
-        :st.k==="wait"||st.k==="none"?h("span",{class:"ter",title:st.t+". "+st.d},"—",h("span",{class:"visually-hidden"},st.t)):syncChip(m)),
+      h("td",{"data-label":"Last seen",class:(st.k==="wait"||st.k==="none")&&!sk?"none":""},h("span",{class:"r-seen"},st.k==="fresh"||st.k==="quiet"?h("span",{class:"sync "+st.k,title:st.d},h("i",{"aria-hidden":"true"}),h("span",{class:"seen-l"},"In game "),ago(seenOf(m)))
+        :st.k==="wait"||st.k==="none"?h("span",{class:"ter",title:st.t+". "+st.d},"—",h("span",{class:"visually-hidden"},st.t)):syncChip(m),
+        // The streak sits beside when they were last on, since that's what it counts.
+        sk?flameEl(sk):null)),
       h("td",{},h("button",{class:"r-x",type:"button","aria-expanded":String(open),"aria-label":(open?"Hide details for ":"More about ")+nameOf(m),onclick:toggle})));
     return open?[tr,h("tr",{class:"r-more"},h("td",{colspan:"6"},rosterDetail(m)))]:[tr]};
   let body;
@@ -1829,6 +1851,25 @@ function reignOf(k,id){const key=TITLE_KEY(k),hd=key&&S.titlesDoc&&S.titlesDoc.h
   if(!hd||hd.id!==id)return null;const t=Date.parse(hd.since||"");if(!t)return null;
   const days=Math.floor((Date.now()-t)/864e5),weeks=Math.floor(days/7);
   return{days,weeks,text:weeks>=1?weeks+(weeks===1?" week":" weeks")+" running":days>=1?days+(days===1?" day":" days")+" running":"Since today"}}
+// Streaks: days in a row a character has been seen in game, counted by the server (guild/streaks).
+// It only counts while the last day is today or yesterday, and it shows from three days.
+function streakOf(m){const r=S.streaks&&S.streaks.rows&&S.streaks.rows[m.id];if(!r||!(+r.n>=3))return 0;
+  const today=perthDay(),yest=new Date(Date.now()+8*36e5-864e5).toISOString().slice(0,10);return r.last===today||r.last===yest?+r.n:0}
+const FLAME='<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.3 1c.3 2.2-.8 3.300-2 4.600C5.100 6.900 4 8.200 4 10.100 4 12.800 5.800 15 8 15s4-2.100 4-4.700c0-1.500-.6-2.700-1.300-3.700-.3.900-.8 1.500-1.400 1.800.4-2.500-.2-5.200-1-7.400z"/></svg>';
+const flameEl=(n,cls)=>{const e=h("span",{class:"flame"+(cls?" "+cls:""),title:"Seen in game "+n+" days running"},h("span",{"aria-hidden":"true"}),String(n),h("span",{class:"visually-hidden"}," days running"));e.firstChild.innerHTML=FLAME;return e};
+// The Guild Master (rank 0 on the guild's armory list) gets a crown and a gold name on their card.
+const isGM=m=>{const e=rosterEntry(m);return !!e&&e.rank===0};
+const CROWN='<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2 12h12l1-7-3.500 2.800L8 3 4.500 7.800 1 5z"/></svg>';
+// PvP rank as uniform stripes. Ranks 1 to 5 are bronze chevrons (one per rank); 6 to 10 are silver chevrons over a bar;
+// 11 to 14 are gold: two chevrons under one to four stars. Returned as plain shapes so the card and its picture draw the same thing.
+function pvpMark(rank){const r=Math.max(0,Math.min(14,+rank||0));if(!r)return null;
+  return r<=5?{col:"#d9935a",chev:r,bar:false,stars:0}:r<=10?{col:"#dfe5eb",chev:r-5,bar:true,stars:0}:{col:"#f5cf58",chev:2,bar:false,stars:r-10}}
+function pvpSvg(rank){const k=pvpMark(rank);if(!k)return"";const W=26,step=7,starH=k.stars?(k.stars>2?16:9):0,chevH=k.chev*step+3,H=starH+chevH+(k.bar?6:0)+2;let o="";
+  const star=(cx,cy)=>{let d="";for(let i=0;i<10;i++){const rr=i%2?1.700:4,a=-Math.PI/2+i*Math.PI/5;d+=(i?"L":"M")+(cx+rr*Math.cos(a)).toFixed(2)+" "+(cy+rr*Math.sin(a)).toFixed(2)}return`<path d="${d}Z" fill="${k.col}" stroke="none"/>`};
+  if(k.stars){const rows=k.stars>2?[2,k.stars-2]:[k.stars];rows.forEach((n,ri)=>{for(let i=0;i<n;i++)o+=star(W/2+(i-(n-1)/2)*9,5+ri*8)})}
+  for(let i=0;i<k.chev;i++){const y=starH+2+i*step;o+=`<path d="M3 ${y+6} ${W/2} ${y} ${W-3} ${y+6}"/>`}
+  if(k.bar){const y=starH+chevH+3;o+=`<path d="M4 ${y}H${W-4}"/>`}
+  return`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" fill="none" stroke="${k.col}" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${o}</svg>`}
 // First edition: on the site in launch week. It can't be earned later.
 const firstEd=m=>{const t=Date.parse(m.createdAt||"");return !!t&&t<LAUNCH_WEEK};
 // One small status on a roster row, from recent activity. Only ever one, so rows stay tidy.
@@ -1885,19 +1926,21 @@ function cardData(m){
     art:[mix(cc,"#000000",.55),mix(cc,"#000000",.25),"#0f0a09"],rows,hp:typeof st.health==="number"?Math.round(st.health):0,
     name:nameOf(m),line:["Level "+lv,classLine(m),roleText(m)].filter(Boolean).join(" · "),
     initials:nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(),
-    mini,num,rarity,flav:flavourOf(m),stamps:stampsOf(m),frame,move:moveOf(m),first:firstEd(m)}}
+    mini,num,rarity,flav:flavourOf(m),stamps:stampsOf(m),frame,move:moveOf(m),first:firstEd(m),gm:isGM(m),pvp:+(m.armory||{}).rank||0}}
 function cardEl(m){
   const d=cardData(m),[,tname,f,edge]=d.tier;
   const artStyle=d.bg?`background-image:linear-gradient(180deg,${d.art[0]}55,${d.art[2]}cc),url(${d.bg})`:`background:linear-gradient(160deg,${d.art[0]},${d.art[1]} 55%,${d.art[2]})`;
   const shine={"Gold foil":"rgb(255 240 190 / .55)","Silver":"rgb(255 255 255 / .38)","Bronze":"rgb(255 222 186 / .26)"}[tname]||(d.frame?"rgb(255 255 255 / .32)":undefined);
-  return h("div",{class:"lg-card"+(shine?" foil":""),style:`background:linear-gradient(135deg,${f[0]},${f[1]} 35%,${f[2]} 55%,${f[3]})`+(shine?`;--shine:${shine}`:""),role:"img","aria-label":`${d.name}, ${d.line}, ${tname} card${d.frame?", "+d.frame.name:""}. ${d.move?"Signature move: "+d.move.text+". ":""}${d.flav}`+(d.stamps.length?" Stamps: "+d.stamps.map(x=>x[1]).join(", ")+".":"")},
+  return h("div",{class:"lg-card"+(shine?" foil":""),style:`background:linear-gradient(135deg,${f[0]},${f[1]} 35%,${f[2]} 55%,${f[3]})`+(shine?`;--shine:${shine}`:""),role:"img","aria-label":`${d.name}, ${d.line}, ${tname} card${d.frame?", "+d.frame.name:""}. ${d.gm?"Guild Master. ":""}${d.pvp?"PvP "+pvpRank(d.pvp)+". ":""}${d.move?"Signature move: "+d.move.text+". ":""}${d.flav}`+(d.stamps.length?" Stamps: "+d.stamps.map(x=>x[1]).join(", ")+".":"")},
     h("div",{class:"lg-card-in"},
-      h("div",{class:"lg-art"+(d.move?" has-move":""),style:artStyle},
+      h("div",{class:"lg-art"+(d.move?" has-move":"")+(d.gm?" is-gm":""),style:artStyle},
         d.render?h("img",{class:"r",src:d.render,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(d.fg)})
           :h("span",{class:"lg-face",style:`border-color:${d.cc};color:${d.cc}`},d.avatar?h("img",{src:d.avatar,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(d.initials)}):d.initials),
         d.lv>=60?h("span",{class:"lg-holo","aria-hidden":"true"}):null,
         d.stamps.length?h("span",{class:"lg-stamps"},d.stamps.map(([t,how,c])=>h("span",{class:"lg-stamp",style:`color:${c}`,title:how},t))):null,
         h("span",{class:"lg-lv",style:`border-color:${edge};color:${edge}`,"aria-hidden":"true"},String(d.lv)),
+        d.pvp?(()=>{const e=h("span",{class:"lg-pvp",title:"PvP "+pvpRank(d.pvp)});e.innerHTML=pvpSvg(d.pvp);return e})():null,
+        d.gm?(()=>{const e=h("span",{class:"lg-rank"},h("span",{}),"Guild Master");e.firstChild.innerHTML=CROWN;return e})():null,
         h("div",{class:"lg-hd"},h("b",{},d.name),d.hp?h("span",{class:"lg-hp"},h("small",{},"HP"),d.hp.toLocaleString("en-AU")):null),
         d.move?h("span",{class:"lg-move"},d.move.text):null),
       h("div",{class:"lg-type",style:`background:${mix(d.cc,"#0f0a09",.72)};color:${mix(d.cc,"#ffffff",.25)}`},d.line.replace(/^Level \d+ · /,"")),
@@ -1934,7 +1977,7 @@ function stampsOf(m){const out=[],a=m.armory||{};
   if(+m.level>=60)out.push(["60","Level 60","#e0a862"]);
   if(Object.entries(m.profs||{}).some(([p,v])=>!CLASS_SKILLS[p]&&+v>=300))out.push(["300","300 in a profession","#ff8000"]);
   if(Object.values(m.gear||{}).some(g=>g&&g.id&&+g.q>=4))out.push(["Epic","Wearing an epic","#b968f5"]);
-  if(+a.rank>=1)out.push(["PvP",pvpRank(+a.rank),"#c9cfd6"]);
+  const sk=streakOf(m);if(sk)out.push([sk+"d","Seen in game "+sk+" days running","#ff9d4d"]);
   // Earned on Records and in the passport: a title, a Spelunker set, and (for fun) a wooden spoon.
   const t=titlesOf(m);if(t.length)out.push(["No.1","Top of the guild: "+t.map(x=>x.t).join(", "),"#f0c58c"]);
   const been=new Set(passportOf(m).map(x=>x.name)),done=g=>(g[2]||DUNGEONS.map(d=>d[0]).filter(n=>!DG_GROUPS.some(x=>x[2]&&x[2].includes(n)))).filter(n=>!DG_ALLIANCE.includes(n)).every(n=>been.has(n));
@@ -2013,13 +2056,22 @@ async function cardPng(m){
   x.restore();
   // Name and HP over the foot of the picture
   x.save();x.shadowColor="rgba(0,0,0,.85)";x.shadowBlur=4*K;x.shadowOffsetY=K;
-  x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e2";x.font=disp.replace("SZ",19*K);const ny=ay+ah-(d.move?21:9)*K;x.fillText(d.name,18*K,ny,(d.hp?150:220)*K);
+  x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e2";x.font=disp.replace("SZ",19*K);const ny=ay+ah-(d.move?21:9)*K;if(d.gm)x.fillStyle="#f6d77a";x.fillText(d.name,18*K,ny,(d.hp?150:220)*K);
+  if(d.gm){x.font=disp.replace("SZ",11*K);try{x.letterSpacing=(1.1*K)+"px"}catch(e){}x.fillText("GUILD MASTER",33*K,ny-22*K);try{x.letterSpacing="0px"}catch(e){}
+    const cx=18*K,cy=ny-33*K,u=12*K/16;x.beginPath();[[2,12],[14,12],[15,5],[11.5,7.8],[8,3],[4.5,7.8],[1,5]].forEach(([px,py],i)=>i?x.lineTo(cx+px*u,cy+py*u):x.moveTo(cx+px*u,cy+py*u));x.closePath();x.fill()}
   if(d.hp){x.textAlign="right";x.fillStyle="#ff7a6b";x.font=body(700,15);x.fillText(d.hp.toLocaleString("en-AU"),W-18*K,ny);const w=x.measureText(d.hp.toLocaleString("en-AU")).width;x.font=body(700,10);x.fillText("HP",W-18*K-w-3*K,ny)}
   if(d.move){x.textAlign="left";x.fillStyle="#e9b877";x.font=body(600,10);x.fillText(d.move.text,18*K,ay+ah-6*K,W-36*K)}
   x.restore();
   // Level badge, top right
   {const bx=ax+aw-26*K,by=ay+26*K;x.beginPath();x.arc(bx,by,17*K,0,7);x.fillStyle="rgba(15,10,9,.88)";x.fill();x.lineWidth=2*K;x.strokeStyle=edge;x.stroke();
-    x.fillStyle=edge;x.font=body(700,15);x.textAlign="center";x.textBaseline="middle";x.fillText(String(d.lv),bx,by+.5*K)}
+    x.fillStyle=edge;x.font=body(700,15);x.textAlign="center";x.textBaseline="middle";x.fillText(String(d.lv),bx,by+.5*K);
+    // PvP rank: stripes under the badge, the same shapes as on the site
+    const k=pvpMark(d.pvp);if(k){const PW=26*K,step=7*K,starH=k.stars?(k.stars>2?16:9)*K:0,px=bx-PW/2,py=by+24*K;
+      x.save();x.shadowColor="rgba(0,0,0,.8)";x.shadowBlur=3*K;x.shadowOffsetY=K;x.strokeStyle=k.col;x.fillStyle=k.col;x.lineWidth=2.6*K;x.lineCap="round";x.lineJoin="round";
+      if(k.stars){const rows=k.stars>2?[2,k.stars-2]:[k.stars];rows.forEach((n,ri)=>{for(let i=0;i<n;i++){const cx=bx+(i-(n-1)/2)*9*K,cy=py+(5+ri*8)*K;x.beginPath();for(let j=0;j<10;j++){const rr=(j%2?1.7:4)*K,a=-Math.PI/2+j*Math.PI/5;x.lineTo(cx+rr*Math.cos(a),cy+rr*Math.sin(a))}x.closePath();x.fill()}})}
+      for(let i=0;i<k.chev;i++){const y=py+starH+2*K+i*step;x.beginPath();x.moveTo(px+3*K,y+6*K);x.lineTo(bx,y);x.lineTo(px+PW-3*K,y+6*K);x.stroke()}
+      if(k.bar){const y=py+starH+k.chev*step+3*K+3*K;x.beginPath();x.moveTo(px+4*K,y);x.lineTo(px+PW-4*K,y);x.stroke()}
+      x.restore()}}
   // Type line
   d.stamps.forEach(([t,,c],i)=>{const cx=ax+21*K+i*30*K,cy=ay+21*K;x.beginPath();x.arc(cx,cy,13*K,0,7);x.fillStyle="rgba(15,14,14,.85)";x.fill();x.lineWidth=1.5*K;x.strokeStyle=c;x.stroke();
     x.fillStyle=c;x.font=body(700,8);x.textAlign="center";x.textBaseline="middle";x.fillText(t,cx,cy+.5*K)});
@@ -2063,9 +2115,17 @@ function cardSection(m){
       h("div",{style:"display:flex;flex-direction:column;gap:.375rem;padding-top:.5rem"},
         h("label",{class:"f tiny",for:"flav-in"},"Up to 40 characters. Leave it empty for an automatic line."),
         h("div",{class:"row",style:"flex-wrap:nowrap"},inp,h("button",{class:"btn sm",type:"button",onclick:save},"Save"))))}
+  // With more than one title, the owner chooses which one the card wears (its ribbon and its frame).
+  const mine=titlesOf(m),setPick=v=>{const before=m.titlePick||"";if(v===mine[0].k)return;write(updateDoc(charRef(m),{titlePick:v,updatedAt:nowIso()}));
+      toast("Card updated",()=>write(updateDoc(charRef(m),{titlePick:before||deleteField(),updatedAt:nowIso()}),"Put back"))};
+  const pickT=canEdit(m)&&mine.length>1?h("div",{class:"title-pick",role:"group","aria-label":"Title and frame on the card"},h("span",{class:"small ter"},"Title and frame on the card"),
+    h("div",{class:"tp-row"},mine.map(x=>{const fr=frameFor(x.k),on=x.k===mine[0].k;
+      return h("button",{type:"button",class:"tp-sw","aria-pressed":String(on),title:x.t+(fr?" · "+fr.name:""),"aria-label":x.t+(fr?", "+fr.name:""),onclick:()=>setPick(x.k),
+        style:fr?`background:linear-gradient(135deg,${fr.f[0]},${fr.f[1]} 35%,${fr.f[2]} 55%,${fr.f[3]})`:"background:var(--subtle)"},h("span",{},(fr?fr.name.replace(/ frame$/,""):x.t)))})),
+    (()=>{const x=mine[0],rg=reignOf(x.k,m.id);return h("span",{class:"small",style:"text-align:center"},h("b",{style:"color:var(--accent-text)"},x.t)," · "+x.board.toLowerCase()+(rg?" · "+rg.text.toLowerCase():""))})()):null;
   return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%"},h("h2",{id:"card-h"},"Card"),h("span",{class:"small ter"},d.frame?d.frame.name+" · for "+d.frame.title+(d.frame.reign?" · "+d.frame.reign.text.toLowerCase():""):(d.first?"First edition · ":"")+tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
     flipCard(m),h("p",{class:"small ter",style:"margin:0;text-align:center"},"Tap the card to see the back."),
-    d.stamps.length?h("ul",{class:"stamp-key"},d.stamps.map(([t,how,c])=>h("li",{},h("b",{style:`color:${c}`},t),h("span",{},how)))):null,h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn",onclick:()=>copyCard(m)},"Copy for Discord"),h("a",{class:"btn ghost",href:"#duel/"+m.id},"Duel this card")),flav)}
+    d.stamps.length?h("ul",{class:"stamp-key"},d.stamps.map(([t,how,c])=>h("li",{},h("b",{style:`color:${c}`},t),h("span",{},how)))):null,h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn",onclick:()=>copyCard(m)},"Copy for Discord"),h("a",{class:"btn ghost",href:"#duel/"+m.id},"Duel this card")),pickT,flav)}
 
 // Journey lines on a character page: "Equipped X" links the item to Wowhead in its quality colour (with the tooltip).
 // Older lines without the item saved are matched to current gear by name.
@@ -2668,7 +2728,7 @@ function titleList(){if(_tl&&_tlFor===S.members&&Date.now()-_tlAt<1000)return _t
 function titleMap(){const mp=new Map();
   for(const x of titleList())if(x.holder)(mp.get(x.holder[0].id)||mp.set(x.holder[0].id,[]).get(x.holder[0].id)).push({k:x.k,t:x.t,board:x.how.replace(/^Most |^Highest |^Longest /,""),v:x.holder[1]});
   return mp}
-const titlesOf=m=>titleMap().get(m.id)||[];
+const titlesOf=m=>{const l=titleMap().get(m.id)||[],i=m.titlePick?l.findIndex(x=>x.k===m.titlePick):-1;return i>0?[l[i],...l.slice(0,i),...l.slice(i+1)]:l};
 // Up to three titles by name; the rest fold into "+N", which lists them on hover.
 const titleTags=m=>{const l=titlesOf(m);if(!l.length)return null;const tag=x=>{const rg=reignOf(x.k,m.id);return h("a",{class:"title-tag",href:"#records",title:"Top of the guild in "+x.board.toLowerCase()+(rg?" · "+rg.text.toLowerCase():"")},h("span",{class:"title-ic","aria-hidden":"true"}),x.t,rg&&rg.weeks>=1?h("small",{class:"title-wk"},rg.weeks+(rg.weeks===1?" wk":" wks")):null)};
   return h("div",{class:"titles"},l.slice(0,3).map(tag),l.length>3?h("a",{class:"title-tag more",href:"#records",title:l.slice(3).map(x=>x.t).join(", ")},"+"+(l.length-3)+" more"):null)};
@@ -2806,7 +2866,7 @@ function viewChar(coll,id){
   const out=[h("div",{},h("div",{class:"page-head"},h("div",{style:"display:flex;flex-direction:column;gap:.375rem;min-width:0"},h("a",{href:"#roster",class:"small"},"← Roster"),
       h("div",{class:"ch-hero"},
         h("span",{class:"ch-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?h("img",{src:av,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
-        h("div",{style:"display:flex;flex-direction:column;gap:.25rem;min-width:0"},h("h1",{},nameOf(m)),
+        h("div",{style:"display:flex;flex-direction:column;gap:.25rem;min-width:0"},h("h1",{},nameOf(m),streakOf(m)?flameEl(streakOf(m),"big"):null),
           h("p",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),titleTags(m),
           h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—"))))),
     can||isOfficer()?h("div",{class:"row"},moreMenu([
@@ -3310,6 +3370,7 @@ function subscribe(){
   S.unsub.push(onSnapshot(doc(db,"guild","info"),snap=>{S.guild=snap.exists()?snap.data():{};schedule()},()=>{}));
   // Only officers can read the opt-out list; for everyone else this quietly fails.
   S.unsub.push(onSnapshot(doc(db,"guild","optout"),snap=>{S.optout=snap.exists()?(snap.data().names||{}):{};schedule()},()=>{S.optout=null}));
+  S.unsub.push(onSnapshot(doc(db,"guild","streaks"),snap=>{S.streaks=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","titles"),snap=>{S.titlesDoc=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","recaps"),snap=>{S.recapWeeks=snap.exists()?(snap.data().weeks||{}):{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","records"),snap=>{S.recDays=snap.exists()?(snap.data().days||{}):{};schedule()},()=>{}));

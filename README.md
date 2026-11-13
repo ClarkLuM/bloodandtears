@@ -25,6 +25,10 @@ Other things worth knowing about:
 - **Title news.** When one of those titles changes hands, the Guild Feed says so: "Mogra took Chief Engineer from Clark".
 - **First edition.** Cards for characters who were on the site in launch week (5 to 11 November) carry "1st ed". It can't be earned later.
 - **Status badges.** A roster row can show one small tag: Fresh blood (joined this week), On a tear (four or more levels this week) or Missing in action (not seen for three weeks). Never more than one.
+- **Streaks.** The server counts how many days in a row each character has been seen in game (`guild/streaks`, from the armory's last-logout time). From three days, a flame and the number show beside "Last seen" on the roster, beside the name on their page, and as a stamp on their card. It goes when they miss a day.
+- **Guild Master.** The character at the top rank on the guild's armory list gets a crown and "Guild Master" over a gold name on their card.
+- **PvP rank stripes.** A card shows its PvP rank under the level badge: ranks 1 to 5 are bronze chevrons (one per rank), 6 to 10 are silver chevrons over a bar, and 11 to 14 are gold, two chevrons under one to four stars. It follows whatever rank the armory shows.
+- **Choose your title.** With more than one title, the owner picks which one their card wears (its ribbon and frame) from the frame swatches under the card on their page.
 - **Signature moves.** Every spec has one (Combat rogues have Blade Flurry, attack +10%). It's printed on the card and lifts that stat in duels and Draft Duel. The list is `MOVES` in `public/index.html`.
 - **Card Duels** (`#duel`). Two to six cards go head to head a stat at a time. Fighting stats can land a critical hit (+25%); the better a card's crit, the likelier. The dice are set by the day and the fighters, so a shared link shows everyone the same duel and tomorrow it can go differently. **Copy for Discord** makes a picture of the result.
 - **Draft Duel** (`#draft`). Six cards of a similar level go on the table. You take one, the dealer two, you two, the dealer the last. Then you choose which of your three faces which of theirs; each pair fights a short duel and you need two of the three. Only your win and loss record is kept, in that browser. (It replaced Top Trumps.)
@@ -40,7 +44,7 @@ Other things worth knowing about:
 - The armory only updates when a character logs out, and characters under level 10 aren't on it. The site shows this as "Up to date", "Data from …" or a dash, with the reason behind **Details**.
 - **Only two things are entered by hand:** passport stamps (also added automatically from dungeon-only loot) and each card's flavour text. Officers also fill in About the Guild.
 - **Worked out in the browser, never stored:** Records, titles, stamps, duels and "who can make it".
-- **Saved by the server:** a 10-day snapshot for This Week (`guild/records`), finished weekly recaps (`guild/recaps`), the Hall of Firsts and guild milestones (`guild/firsts`), and who holds which title and since when (`guild/titles`).
+- **Saved by the server:** a 10-day snapshot for This Week (`guild/records`), finished weekly recaps (`guild/recaps`), the Hall of Firsts and guild milestones (`guild/firsts`), who holds which title and since when (`guild/titles`), and each character's streak of days seen in game (`guild/streaks`).
 
 ## Who can do what
 

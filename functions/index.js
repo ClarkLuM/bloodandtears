@@ -473,6 +473,9 @@ exports.optOut = onCall({ region: REGION, maxInstances: 2, timeoutSeconds: 60 },
     tt.log = (tt.log || []).filter(x => !(x.to && x.to.id === id) && !(x.from && x.from.name === name));
     await tref.set(tt);
   }
+  // And their streak.
+  const sref = db().doc("guild/streaks"), ss = (await sref.get()).data();
+  if (ss && ss.rows && ss.rows[id]) { delete ss.rows[id]; await sref.set(ss); }
   // Off the saved guild list too.
   const gref = db().doc("guild/roster"), g = (await gref.get()).data();
   if (g && Array.isArray(g.members)) await gref.set({ ...g, members: g.members.filter(x => keyOf(x.name) !== key) });
@@ -751,6 +754,23 @@ async function saveTitles() {
   if (!first && JSON.stringify(holders) === JSON.stringify(old)) return;
   await ref.set({ holders, log: log.slice(-60), at: now });
 }
+// Streaks: how many days in a row each character has been seen in game. The armory says when a character last logged out;
+// when that lands on a new day (Perth time), their streak grows by one if the last day counted was the day before, or
+// starts again at 1. guild/streaks = { rows: { <id>: { n, last: "2026-11-13" } } }. The site shows it while `last` is today or yesterday.
+async function saveStreaks() {
+  const ref = db().doc("guild/streaks"), cur = (await ref.get()).data() || {}, rows = { ...(cur.rows || {}) };
+  const dayOf = iso => { const t = Date.parse(iso || ""); return t ? new Date(t + 8 * 36e5).toISOString().slice(0, 10) : ""; };
+  const next = d => new Date(Date.parse(d + "T00:00:00Z") + 864e5).toISOString().slice(0, 10);
+  let changed = false; const ids = new Set();
+  for (const doc of (await db().collection("members").get()).docs) {
+    ids.add(doc.id);
+    const day = dayOf(((doc.data() || {}).armory || {}).updated), was = rows[doc.id];
+    if (!day || (was && was.last >= day)) continue;
+    rows[doc.id] = { n: was && next(was.last) === day ? (+was.n || 0) + 1 : 1, last: day }; changed = true;
+  }
+  for (const id of Object.keys(rows)) if (!ids.has(id)) { delete rows[id]; changed = true; }
+  if (changed) await ref.set({ rows, at: new Date().toISOString() });
+}
 async function syncAll() {
   let n = 0, changed = 0; const missing = [];
   await moveAlts().catch(err => logger.warn("moving alts", err.message));
@@ -768,6 +788,7 @@ async function syncAll() {
   await saveRecordsDay().catch(err => logger.warn("records", err.message));
   await saveWeekRecap().catch(err => logger.warn("recaps", err.message));
   await saveTitles().catch(err => logger.warn("titles", err.message));
+  await saveStreaks().catch(err => logger.warn("streaks", err.message));
   const now = new Date().toISOString(), prev = (await db().doc("guild/armory").get()).data() || {};
   // Remember when the guild list was last read, and say so if it couldn't be (Blizzard may have changed their site).
   // missing: characters the armory had no page for this time (new, under level 10, or renamed), so the roster can say so.
