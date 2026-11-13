@@ -793,6 +793,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 - 13 Nov: games. Top Trumps was replaced by Draft Duel (`#draft`, `.dd-*`: a three-step header, six cards to draft, then three pairings with a chooser each) and Guess the Guildie was added (`#guess`, `.gg-*`: six clue tiles, guess rows with match chips, and a grid of half-size cards to tap, confirmed with one button). Cards has a Games strip (`.games`). An opened roster row shows the character's card on the right (`.r-open`, `.r-card`).
 
+- 13 Nov: reigns and marks. The Hall of Titles shows each title's frame as a small swatch (`.hot-fr`) and how long it has been held; title tags show weeks held (`.title-wk`); cards from launch week say "1st ed" in the footer; roster rows can carry one status tag (`.tag.st-fresh`, `.st-tear`, `.st-mia`); title changes appear in the feed with the title in the accent colour (`.feed-title`).
+
 ## Open Items
 
 **These parts are still defaults, guesses, or waiting for a person.**

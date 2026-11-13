@@ -896,6 +896,13 @@ a.r-name:hover{color:var(--accent-text)}
 .gg-card[aria-pressed="true"]{box-shadow:inset 0 0 0 2px #e0a862,inset 0 0 0 4px #2f9a46,0 0 0 3px var(--accent-text);transform:translateY(-2px)}
 .gg-card:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 @media (max-width:420px){.gg-pick{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Reigns, frame swatches, title news and roster status badges */
+.hot-fr{flex:none;width:1.125rem;height:1.5rem;border-radius:3px;box-shadow:inset 0 0 0 2px rgb(15 10 9 / .55)}
+.title-wk{margin-left:.375rem;font-size:.6875rem;font-weight:700}
+.feed-title{color:var(--accent-text)}
+.tag.st-fresh{color:var(--trim);border-color:color-mix(in srgb,var(--trim) 45%,transparent)}
+.tag.st-tear{color:var(--accent-text);border-color:color-mix(in srgb,var(--accent-text) 45%,transparent)}
+.tag.st-mia{color:var(--ter)}
 </style>
 </head>
 <body>
@@ -1246,7 +1253,7 @@ function viewRoster(){
     h("span",{class:"row",style:"gap:.75rem"},(u.rMem||"current")==="current"&&hidden?h("button",{class:"linkish small",type:"button",onclick:()=>setUi({rMem:"all"},true)},`${hidden} not in the guild hidden · Show`):null,
       filtered?h("button",{class:"linkish small",type:"button",onclick:clear},"Clear filters"):null));
   // One tidy line each: face, name in class colour with their top title, level, professions with skill, best loot, last seen.
-  const row=m=>{const loot=bestLoot(m),open=u.rOpen===m.id,st=syncState(m),cc=CLASSES[m.cls]||"#bfaea9",lv=Math.max(1,Math.min(60,+m.level||1)),tt=titlesOf(m)[0];
+  const row=m=>{const loot=bestLoot(m),open=u.rOpen===m.id,st=syncState(m),cc=CLASSES[m.cls]||"#bfaea9",lv=Math.max(1,Math.min(60,+m.level||1)),tt=titlesOf(m)[0],stt=statusOf(m);
     const toggle=()=>setUi({rOpen:open?null:m.id});
     const av=charPic(m,"avatar"),ini=nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
     const pr=Object.entries(m.profs||{}).filter(([p])=>PRIMARY.includes(p)).sort((x,y)=>+y[1]-+x[1]);
@@ -1254,7 +1261,7 @@ function viewRoster(){
       h("td",{"data-label":"Character"},h("div",{class:"r-who"},
         h("span",{class:"r-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?h("img",{src:av,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
         h("div",{style:"min-width:0"},
-          h("span",{class:"row",style:"gap:.375rem"},h("a",{class:"linkish r-name",style:`--cc:${cc}`,href:`#char/${m.isAlt?"alts":"members"}/${m.id}`},nameOf(m)),isMine(m)?h("span",{class:"tag gold"},"You"):null,guildTags(m)),
+          h("span",{class:"row",style:"gap:.375rem"},h("a",{class:"linkish r-name",style:`--cc:${cc}`,href:`#char/${m.isAlt?"alts":"members"}/${m.id}`},nameOf(m)),isMine(m)?h("span",{class:"tag gold"},"You"):null,guildTags(m),stt?h("span",{class:"tag st-"+stt[2],title:stt[1]},stt[0]):null),
           h("span",{class:"l2"},tt?[h("b",{class:"r-title"},tt.t)," · "]:null,[classLine(m)||"—",roleText(m)].filter(Boolean).join(" · "))))),
       h("td",{"data-label":"Level"},h("span",{class:"r-lv"},h("b",{},String(m.level||1)),h("i",{"aria-hidden":"true"},h("s",{style:`width:${Math.round(lv/60*100)}%`})))),
       h("td",{"data-label":"Professions",class:pr.length?"":"none"},pr.length?h("span",{class:"r-profs"},pr.map(([p,v])=>h("span",{class:"r-prof"},p,h("b",{},String(+v||0))))):h("span",{class:"ter"},"—")),
@@ -1810,10 +1817,26 @@ const FRAMES={pvp:["Warlord frame",["#e36a78","#5c0a18","#f39aa3","#3d0610"]],cr
   gatherer:["Wild frame",["#9bd66f","#35601c","#c6efa5","#234312"]],crafter:["Forge frame",["#ff9d4d","#7a3306","#ffc08a","#532103"]],
   hearth:["Hearth frame",["#f4b8a0","#7d3b28","#ffd9c9","#56261a"]]};
 const FRAME_OF={hk:"pvp",dungeons:"crawler",gear:"dressed",epics:"collector",speed:"speed",oldest:"faithful"};
-function frameOf(m){const t=titlesOf(m)[0];if(!t)return null;const k=String(t.k||"");
-  if(k.startsWith("cls:")){const cc=CLASSES[k.slice(4)]||"#bfaea9";return{name:"Champion frame",title:t.t,f:[mix(cc,"#ffffff",.3),mix(cc,"#000000",.55),mix(cc,"#ffffff",.55),mix(cc,"#000000",.7)]}}
+function frameFor(key){const k=String(key||"");
+  if(k.startsWith("cls:")){const cc=CLASSES[k.slice(4)]||"#bfaea9";return{name:"Champion frame",f:[mix(cc,"#ffffff",.3),mix(cc,"#000000",.55),mix(cc,"#ffffff",.55),mix(cc,"#000000",.7)]}}
   const kind=FRAME_OF[k]||(GATHERING.includes(k)?"gatherer":PRIMARY.includes(k)?"crafter":SECONDARY.includes(k)?"hearth":null);
-  return kind?{name:FRAMES[kind][0],title:t.t,f:FRAMES[kind][1]}:null}
+  return kind?{name:FRAMES[kind][0],f:FRAMES[kind][1]}:null}
+function frameOf(m){const t=titlesOf(m)[0],fr=t&&frameFor(t.k);return fr?{...fr,title:t.t,reign:reignOf(t.k,m.id)}:null}
+// Reigns: how long the same character has held a title, from the server's record (guild/titles).
+// Only kills, loot points and professions are tracked there; the others show no reign.
+const TITLE_KEY=k=>k==="hk"||k==="gear"?k:[...PRIMARY,...SECONDARY].includes(k)?"p:"+k:null;
+function reignOf(k,id){const key=TITLE_KEY(k),hd=key&&S.titlesDoc&&S.titlesDoc.holders&&S.titlesDoc.holders[key];
+  if(!hd||hd.id!==id)return null;const t=Date.parse(hd.since||"");if(!t)return null;
+  const days=Math.floor((Date.now()-t)/864e5),weeks=Math.floor(days/7);
+  return{days,weeks,text:weeks>=1?weeks+(weeks===1?" week":" weeks")+" running":days>=1?days+(days===1?" day":" days")+" running":"Since today"}}
+// First edition: on the site in launch week. It can't be earned later.
+const firstEd=m=>{const t=Date.parse(m.createdAt||"");return !!t&&t<LAUNCH_WEEK};
+// One small status on a roster row, from recent activity. Only ever one, so rows stay tidy.
+function statusOf(m){const made=Date.parse(m.createdAt||"")||0,seen=Date.parse(seenOf(m)||"")||0,now=Date.now();
+  if(made&&now-made<7*864e5&&made>LAUNCH_WEEK)return["Fresh blood","Joined the site this week","fresh"];
+  const up=weekGained(m);if(up>=4)return["On a tear","+"+up+" levels this week","tear"];
+  if(seen&&now-seen>=21*864e5)return["Missing in action","Not seen in game for "+Math.floor((now-seen)/(7*864e5))+" weeks","mia"];
+  return null}
 const mix=(hex,to,r)=>{const a=hex.match(/\w\w/g).map(x=>parseInt(x,16)),b=to.match(/\w\w/g).map(x=>parseInt(x,16));return"#"+a.map((v,i)=>Math.round(v+(b[i]-v)*r).toString(16).padStart(2,"0")).join("")};
 // Three stats per card, picked by class and role (see the design canvas). Missing ones are filled from a backup list.
 const STAT_META={strength:["Strength","St","#c0392f"],agility:["Agility","Ag","#23802f"],stamina:["Stamina","Sta","#9c5220"],intellect:["Intellect","In","#3d6fd6"],
@@ -1862,7 +1885,7 @@ function cardData(m){
     art:[mix(cc,"#000000",.55),mix(cc,"#000000",.25),"#0f0a09"],rows,hp:typeof st.health==="number"?Math.round(st.health):0,
     name:nameOf(m),line:["Level "+lv,classLine(m),roleText(m)].filter(Boolean).join(" · "),
     initials:nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(),
-    mini,num,rarity,flav:flavourOf(m),stamps:stampsOf(m),frame,move:moveOf(m)}}
+    mini,num,rarity,flav:flavourOf(m),stamps:stampsOf(m),frame,move:moveOf(m),first:firstEd(m)}}
 function cardEl(m){
   const d=cardData(m),[,tname,f,edge]=d.tier;
   const artStyle=d.bg?`background-image:linear-gradient(180deg,${d.art[0]}55,${d.art[2]}cc),url(${d.bg})`:`background:linear-gradient(160deg,${d.art[0]},${d.art[1]} 55%,${d.art[2]})`;
@@ -1881,7 +1904,7 @@ function cardEl(m){
       h("div",{class:"lg-stats"},d.rows.map(x=>h("div",{class:"lg-st"},h("i",{style:`background:${x.col}`},x.icon),h("span",{},x.label),h("b",{},x.val),
         h("u",{},h("s",{style:`width:${x.pct.toFixed(0)}%;background:${edge}`}))))),
       titlesOf(m).length?h("p",{class:"lg-title",title:"Top of the guild: "+titlesOf(m).map(x=>x.t).join(", ")},titlesOf(m)[0].t+(titlesOf(m).length>1?" +"+(titlesOf(m).length-1):"")):h("p",{class:"lg-flav"},d.flav),
-      h("div",{class:"lg-ft"},h("div",{class:"lg-mini"},d.mini.map(([l,v])=>h("span",{},h("small",{},l),h("b",{},v)))),h("span",{style:`color:${edge}`,title:tname+" card · number "+d.num+" in the guild"},d.rarity+" "+d.num)),
+      h("div",{class:"lg-ft"},h("div",{class:"lg-mini"},d.mini.map(([l,v])=>h("span",{},h("small",{},l),h("b",{},v)))),h("span",{style:`color:${edge}`,title:(d.first?"First edition (on the site in launch week) · ":"")+tname+" card · number "+d.num+" in the guild"},(d.first?"1st ed · ":"")+d.rarity+" "+d.num)),
       d.lv>=60?h("span",{class:"lg-holo","aria-hidden":"true"}):null))}
 // Dungeon passport: every dungeon a character has cleared. Owners tap a stamp on their page to mark it (saved in
 // `cleared`); older ticked-off dungeon goals and "Finished ..." journey lines count too.
@@ -1954,7 +1977,7 @@ function cardBack(m){
       h("div",{class:"lg-hd"},h("b",{},d.name),h("span",{class:"lg-lv lg-lv-b",style:`border-color:${edge};color:${edge}`,title:"Level "+d.lv},String(d.lv))),
       h("div",{class:"lg-tabs",role:"tablist","aria-label":"Card back"},tab("stats","Stats"),tab("pass","Passport "+pass.length+"/"+DUNGEONS.length)),
       statsPane,passPane,
-      h("div",{class:"lg-ft"},h("span",{},"Tap to flip"),h("span",{style:`color:${edge}`},d.rarity+" "+d.num))))}
+      h("div",{class:"lg-ft"},h("span",{},"Tap to flip"),h("span",{style:`color:${edge}`},(d.first?"1st ed · ":"")+d.rarity+" "+d.num))))}
 // Front and back together. Click, tap, Enter or Space flips it; which cards are flipped (and which tab the back is on)
 // is remembered while the page is open.
 const flipped=new Set(),backTab=new Map();
@@ -2016,7 +2039,7 @@ async function cardPng(m){
     x.fillStyle="#f0c58c";x.textAlign="center";x.textBaseline="middle";x.fillText(txt,W/2,ry+rh/2+.5*K,rw-16*K);try{x.letterSpacing="0px"}catch(e){}}
   else{x.textBaseline="alphabetic";x.textAlign="center";x.fillStyle="#bfaea9";x.font=`italic 500 ${11*K}px Figtree, sans-serif`;x.fillText(d.flav,W/2,H-44*K,W-36*K)}
   // Footer
-  x.textBaseline="alphabetic";x.font=body(700,11);x.textAlign="right";x.fillStyle=edge;x.fillText(d.rarity+" "+d.num,W-18*K,H-18*K);
+  x.textBaseline="alphabetic";x.font=body(700,11);x.textAlign="right";x.fillStyle=edge;x.fillText((d.first?"1st ed · ":"")+d.rarity+" "+d.num,W-18*K,H-18*K);
   let mx=18*K;x.textAlign="left";
   for(const[l,v]of d.mini){x.font=body(700,8);x.fillStyle="#8f826f";const lw=x.measureText(l.toUpperCase()).width;x.fillText(l.toUpperCase(),mx,H-30*K);
     x.font=body(700,12);x.fillStyle="#efe6e2";const vw=x.measureText(v).width;x.fillText(v,mx,H-17*K);mx+=Math.max(lw,vw)+10*K}
@@ -2040,7 +2063,7 @@ function cardSection(m){
       h("div",{style:"display:flex;flex-direction:column;gap:.375rem;padding-top:.5rem"},
         h("label",{class:"f tiny",for:"flav-in"},"Up to 40 characters. Leave it empty for an automatic line."),
         h("div",{class:"row",style:"flex-wrap:nowrap"},inp,h("button",{class:"btn sm",type:"button",onclick:save},"Save"))))}
-  return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%"},h("h2",{id:"card-h"},"Card"),h("span",{class:"small ter"},d.frame?d.frame.name+" · for "+d.frame.title:tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
+  return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%"},h("h2",{id:"card-h"},"Card"),h("span",{class:"small ter"},d.frame?d.frame.name+" · for "+d.frame.title+(d.frame.reign?" · "+d.frame.reign.text.toLowerCase():""):(d.first?"First edition · ":"")+tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
     flipCard(m),h("p",{class:"small ter",style:"margin:0;text-align:center"},"Tap the card to see the back."),
     d.stamps.length?h("ul",{class:"stamp-key"},d.stamps.map(([t,how,c])=>h("li",{},h("b",{style:`color:${c}`},t),h("span",{},how)))):null,h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn",onclick:()=>copyCard(m)},"Copy for Discord"),h("a",{class:"btn ghost",href:"#duel/"+m.id},"Duel this card")),flav)}
 
@@ -2057,6 +2080,10 @@ const feedWho=m=>isMine(m)?h("a",{class:"linkish",href:`#char/${m.isAlt?"alts":"
 function feedItems(){
   const out=[],push=(at,parts)=>{const t=Date.parse(at||"");if(t)out.push({t,parts})};
   const who=feedWho;
+  // Titles changing hands, from the server's record.
+  const tName=k=>k==="hk"?"Most Wanted":k==="gear"?"Best Dressed":TITLES[String(k).slice(2)]||null;
+  for(const x of (S.titlesDoc&&S.titlesDoc.log)||[]){const t=tName(x.k);if(!t||!x.to)continue;const m=memberById(x.to.id);
+    push(x.at,[m?who(m):h("b",{},x.to.name||"Someone"),x.from&&x.from.name?" took ":" claimed ",h("b",{class:"feed-title"},t),x.from&&x.from.name?" from "+x.from.name:""])}
   for(const m of [...S.members,...S.alts]){
     for(const j of Array.isArray(m.journey)?m.journey:[]){const t=String(j.t||"");
       // Items link to Wowhead in their quality colour. Older lines without the item saved are matched to current gear by name.
@@ -2538,10 +2565,11 @@ function profTable(list){
 // Hall of Titles: every title, who holds it and who's next, grouped. "Up for grabs" until two people are on the board.
 function hallOfTitles(){
   const l=titleList(),open=S.ui.hotAll,groups=["Guild","Professions","Classes"];
-  const row=x=>{const who=m=>h("span",{class:"hot-who"},classIcon(m.cls),charLink(m));
+  const row=x=>{const who=m=>h("span",{class:"hot-who"},classIcon(m.cls),charLink(m)),fr=frameFor(x.k),rg=x.holder?reignOf(x.k,x.holder[0].id):null;
     return h("li",{class:"hot-row"+(x.holder&&isMine(x.holder[0])?" me":"")},
-      h("span",{class:"hot-t"},h("span",{class:"title-ic","aria-hidden":"true"}),h("span",{},h("b",{},x.t),h("small",{},x.how))),
-      x.holder?h("span",{class:"hot-h"},who(x.holder[0]),h("small",{},x.fmt(x.holder[1]))):
+      h("span",{class:"hot-t"},fr?h("span",{class:"hot-fr",style:`background:linear-gradient(135deg,${fr.f[0]},${fr.f[1]} 35%,${fr.f[2]} 55%,${fr.f[3]})`,title:fr.name,"aria-hidden":"true"}):h("span",{class:"title-ic","aria-hidden":"true"}),
+        h("span",{},h("b",{},x.t),h("small",{},x.how+(fr?" · "+fr.name:"")))),
+      x.holder?h("span",{class:"hot-h"},who(x.holder[0]),h("small",{},x.fmt(x.holder[1])+(rg?" · "+rg.text.toLowerCase():""))):
         x.tied?h("span",{class:"hot-h"},h("span",{class:"small ter"},"Tied: "),x.tied.slice(0,3).map((r,i)=>[i?", ":"",charLink(r[0])])):
         h("span",{class:"hot-h small ter"},h("span",{},x.rows.length===1?["Only ",charLink(x.rows[0][0])," so far"]:"Up for grabs")),
       h("span",{class:"hot-n small ter"},x.next?["Next: ",charLink(x.next[0])," · ",x.fmt(x.next[1])]:""))};
@@ -2549,7 +2577,7 @@ function hallOfTitles(){
   const held=l.filter(x=>x.holder).length;
   return h("section",{class:"card hot","aria-labelledby":"hot-h"},
     h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"hot-h"},"Hall of Titles"),h("span",{class:"small ter"},held+" of "+l.length+" held")),
-    h("p",{class:"small ter",style:"margin:0"},"Be alone at the top of a board to hold its title. It moves the moment someone overtakes you."),
+    h("p",{class:"small ter",style:"margin:0"},"Be alone at the top of a board to hold its title and its card frame. It moves the moment someone overtakes you."),
     lists.map(([g,xs])=>{const shown=open||g==="Guild"?xs:xs.filter(x=>x.holder).slice(0,6);
       return h("div",{class:"hot-g"},h("h3",{class:"pf-kind"},g),h("ul",{class:"hot-list"},shown.map(row)))}),
     h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(!!open),onclick:()=>setUi({hotAll:!open},true)},open?"Show fewer":"Show every title"))}
@@ -2642,7 +2670,7 @@ function titleMap(){const mp=new Map();
   return mp}
 const titlesOf=m=>titleMap().get(m.id)||[];
 // Up to three titles by name; the rest fold into "+N", which lists them on hover.
-const titleTags=m=>{const l=titlesOf(m);if(!l.length)return null;const tag=x=>h("a",{class:"title-tag",href:"#records",title:"Top of the guild in "+x.board.toLowerCase()},h("span",{class:"title-ic","aria-hidden":"true"}),x.t);
+const titleTags=m=>{const l=titlesOf(m);if(!l.length)return null;const tag=x=>{const rg=reignOf(x.k,m.id);return h("a",{class:"title-tag",href:"#records",title:"Top of the guild in "+x.board.toLowerCase()+(rg?" · "+rg.text.toLowerCase():"")},h("span",{class:"title-ic","aria-hidden":"true"}),x.t,rg&&rg.weeks>=1?h("small",{class:"title-wk"},rg.weeks+(rg.weeks===1?" wk":" wks")):null)};
   return h("div",{class:"titles"},l.slice(0,3).map(tag),l.length>3?h("a",{class:"title-tag more",href:"#records",title:l.slice(3).map(x=>x.t).join(", ")},"+"+(l.length-3)+" more"):null)};
 
 function viewProfessions(){
@@ -3282,6 +3310,7 @@ function subscribe(){
   S.unsub.push(onSnapshot(doc(db,"guild","info"),snap=>{S.guild=snap.exists()?snap.data():{};schedule()},()=>{}));
   // Only officers can read the opt-out list; for everyone else this quietly fails.
   S.unsub.push(onSnapshot(doc(db,"guild","optout"),snap=>{S.optout=snap.exists()?(snap.data().names||{}):{};schedule()},()=>{S.optout=null}));
+  S.unsub.push(onSnapshot(doc(db,"guild","titles"),snap=>{S.titlesDoc=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","recaps"),snap=>{S.recapWeeks=snap.exists()?(snap.data().weeks||{}):{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","records"),snap=>{S.recDays=snap.exists()?(snap.data().days||{}):{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","firsts"),snap=>{const d=snap.exists()?snap.data():{};S.firsts=d.list||{};S.milestones=d.milestones||{};S.firstsReady=true;schedule()},()=>{S.firstsReady=true;schedule()}));

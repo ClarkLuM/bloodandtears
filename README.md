@@ -21,6 +21,10 @@ Other things worth knowing about:
 
 - **Titles and stamps** are earned automatically. Whoever is alone at the top of a Records board holds its title (Most Wanted, Master Miner and so on), and cards earn stamps for things like level 60, an epic, a PvP rank or a full set of dungeons.
 - **Card frames.** A title holder's card gets a frame for the kind of title: Warlord (most kills), Delver (dungeons), Royal (best dressed), Amethyst (epics), Lightning (levels this week), Oak (longest on the site), Wild (a gathering profession), Forge (a crafting profession), Hearth (Cooking, First Aid, Fishing) and Champion (top of a class, in the class colour). The colours are in `FRAMES` in `public/index.html`.
+- **Reigns.** The server notes who holds Most Wanted, Best Dressed and each profession title, and since when (`guild/titles`, checked every hour). The site shows "3 weeks running" in the Hall of Titles, beside the title on the character page and on the card's label. The other titles (dungeons, epics, speed, longest on the site, top of a class) aren't tracked, so they show no reign.
+- **Title news.** When one of those titles changes hands, the Guild Feed says so: "Mogra took Chief Engineer from Clark".
+- **First edition.** Cards for characters who were on the site in launch week (5 to 11 November) carry "1st ed". It can't be earned later.
+- **Status badges.** A roster row can show one small tag: Fresh blood (joined this week), On a tear (four or more levels this week) or Missing in action (not seen for three weeks). Never more than one.
 - **Signature moves.** Every spec has one (Combat rogues have Blade Flurry, attack +10%). It's printed on the card and lifts that stat in duels and Draft Duel. The list is `MOVES` in `public/index.html`.
 - **Card Duels** (`#duel`). Two to six cards go head to head a stat at a time. Fighting stats can land a critical hit (+25%); the better a card's crit, the likelier. The dice are set by the day and the fighters, so a shared link shows everyone the same duel and tomorrow it can go differently. **Copy for Discord** makes a picture of the result.
 - **Draft Duel** (`#draft`). Six cards of a similar level go on the table. You take one, the dealer two, you two, the dealer the last. Then you choose which of your three faces which of theirs; each pair fights a short duel and you need two of the three. Only your win and loss record is kept, in that browser. (It replaced Top Trumps.)
@@ -36,7 +40,7 @@ Other things worth knowing about:
 - The armory only updates when a character logs out, and characters under level 10 aren't on it. The site shows this as "Up to date", "Data from …" or a dash, with the reason behind **Details**.
 - **Only two things are entered by hand:** passport stamps (also added automatically from dungeon-only loot) and each card's flavour text. Officers also fill in About the Guild.
 - **Worked out in the browser, never stored:** Records, titles, stamps, duels and "who can make it".
-- **Saved by the server once a day or week:** a 10-day snapshot for This Week (`guild/records`), finished weekly recaps (`guild/recaps`), the Hall of Firsts and guild milestones (`guild/firsts`).
+- **Saved by the server:** a 10-day snapshot for This Week (`guild/records`), finished weekly recaps (`guild/recaps`), the Hall of Firsts and guild milestones (`guild/firsts`), and who holds which title and since when (`guild/titles`).
 
 ## Who can do what
 

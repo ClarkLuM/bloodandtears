@@ -466,6 +466,13 @@ exports.optOut = onCall({ region: REGION, maxInstances: 2, timeoutSeconds: 60 },
     for (const w of Object.values(cap.weeks || {})) for (const k of ["lev", "kw", "loot", "firsts"]) if (Array.isArray(w[k])) w[k] = w[k].filter(x => (k === "firsts" ? x[1] : x[0]) !== name);
     await cref.set(cap);
   }
+  // Title reigns and the title news.
+  const tref = db().doc("guild/titles"), tt = (await tref.get()).data();
+  if (tt) {
+    for (const [k, v] of Object.entries(tt.holders || {})) if (v && v.id === id) delete tt.holders[k];
+    tt.log = (tt.log || []).filter(x => !(x.to && x.to.id === id) && !(x.from && x.from.name === name));
+    await tref.set(tt);
+  }
   // Off the saved guild list too.
   const gref = db().doc("guild/roster"), g = (await gref.get()).data();
   if (g && Array.isArray(g.members)) await gref.set({ ...g, members: g.members.filter(x => keyOf(x.name) !== key) });
@@ -710,6 +717,40 @@ async function saveWeekRecap() {
   // A week opened by the first run after the week turned over counts as the full week.
   await ref.set({ open: { wk, at: now, full: !!open, rows: rowsNow }, weeks, at: now });
 }
+// Title reigns: who is alone at the top of the boards the server can work out from what it already reads
+// (honourable kills, loot points and each profession), and since when.
+// guild/titles = { holders: { <key>: { id, name, cls, since } }, log: [ { at, k, to: { id, name, cls }, from: { name, cls } | null } ] }
+// (the last 60 changes). Keys are "hk", "gear" and "p:<Profession>". The site shows "3 weeks running" from `since`
+// and the changes in the Guild Feed. A tie means nobody holds the title, the same rule the site uses.
+const TITLE_PROFS = ["Alchemy", "Blacksmithing", "Enchanting", "Engineering", "Herbalism", "Leatherworking", "Mining", "Skinning", "Tailoring", "Cooking", "First Aid", "Fishing"];
+async function saveTitles() {
+  const ref = db().doc("guild/titles"), cur = (await ref.get()).data() || {}, now = new Date().toISOString();
+  const roster = ((await db().doc("guild/roster").get()).data() || {}).members;
+  const inGuild = Array.isArray(roster) && roster.length ? new Set(roster.map(x => keyOf(x && x.name))) : null;
+  const ms = [];
+  for (const doc of (await db().collection("members").get()).docs) {
+    const d = doc.data() || {}, name = plainName(d);
+    if (inGuild && !inGuild.has(keyOf(name))) continue; // people who have left don't hold titles
+    ms.push({ id: doc.id, name: name.slice(0, 41), cls: String(d.cls || "").slice(0, 12), hk: +((d.armory || {}).hk) || 0,
+      gear: Object.values(d.gear || {}).reduce((t, g) => t + (g && g.id ? Math.max(0, +g.q - 1) : 0), 0), profs: d.profs || {} });
+  }
+  const boards = [["hk", m => m.hk], ["gear", m => m.gear], ...TITLE_PROFS.map(p => ["p:" + p, m => +m.profs[p] || 0])];
+  const old = cur.holders || {}, holders = {}, log = Array.isArray(cur.log) ? cur.log.slice() : [], first = !cur.holders;
+  for (const [k, get] of boards) {
+    const rows = ms.map(m => [m, get(m)]).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]);
+    const lead = rows.length > 1 && rows[0][1] > rows[1][1] ? rows[0][0] : null;
+    if (!lead) continue;
+    const was = old[k];
+    if (was && was.id === lead.id) holders[k] = { ...was, name: lead.name, cls: lead.cls };
+    else {
+      holders[k] = { id: lead.id, name: lead.name, cls: lead.cls, since: now };
+      // The very first run just notes who holds what; it isn't news.
+      if (!first) log.push({ at: now, k, to: { id: lead.id, name: lead.name, cls: lead.cls }, from: was ? { name: was.name, cls: was.cls } : null });
+    }
+  }
+  if (!first && JSON.stringify(holders) === JSON.stringify(old)) return;
+  await ref.set({ holders, log: log.slice(-60), at: now });
+}
 async function syncAll() {
   let n = 0, changed = 0; const missing = [];
   await moveAlts().catch(err => logger.warn("moving alts", err.message));
@@ -726,6 +767,7 @@ async function syncAll() {
   await updateFirsts().catch(err => logger.warn("firsts", err.message));
   await saveRecordsDay().catch(err => logger.warn("records", err.message));
   await saveWeekRecap().catch(err => logger.warn("recaps", err.message));
+  await saveTitles().catch(err => logger.warn("titles", err.message));
   const now = new Date().toISOString(), prev = (await db().doc("guild/armory").get()).data() || {};
   // Remember when the guild list was last read, and say so if it couldn't be (Blizzard may have changed their site).
   // missing: characters the armory had no page for this time (new, under level 10, or renamed), so the roster can say so.
