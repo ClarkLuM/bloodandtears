@@ -747,14 +747,14 @@ a.r-name:hover{color:var(--accent-text)}
 .roster-t .l2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .r-profs{flex-direction:column;align-items:flex-start}
 }
-.r-quick{display:flex;flex-wrap:wrap;gap:.375rem}
+.r-quick{display:flex;flex-wrap:wrap;gap:.375rem;grid-column:1/-1}
 .q-chip{height:2rem;padding:0 .75rem;border-radius:1rem;border:1px solid var(--sep);background:var(--raised);color:var(--sec);font:inherit;font-size:.8125rem;font-weight:600;cursor:pointer;white-space:nowrap}
 .q-chip span{font-weight:400;color:var(--ter)}
 .q-chip:hover{color:var(--text);background:var(--subtle)}
 .q-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 .q-chip[aria-pressed="true"] span{color:rgb(255 255 255 / .85)}
 .q-chip:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-@media (max-width:640px){.r-quick{flex-wrap:nowrap;overflow-x:auto;margin:0 -1rem;padding:2px 1rem;scrollbar-width:none}.r-quick::-webkit-scrollbar{display:none}.q-chip{flex:none;height:2.25rem}}
+@media (max-width:640px){.q-chip{height:2.25rem}}
 /* Guild totals as one slim strip, so the list starts higher */
 .totals{display:flex;flex-wrap:wrap;gap:1px}
 .total{flex:1 1 auto;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 .375rem;padding:.4375rem .75rem}
@@ -1158,7 +1158,8 @@ function rosterFilters(){
   // What's on, as removable chips, so the panel can stay shut.
   const chips=[u.role&&u.role!=="All"?[u.role,{role:"All"},1]:null,u.rCls&&u.rCls!=="All"?[u.rCls,{rCls:"All"}]:null,
     u.rProf&&u.rProf!=="All"?[u.rProf,{rProf:"All"}]:null,u.rLv&&u.rLv!=="all"?["Level "+lbl(LEVEL_BANDS,u.rLv),{rLv:"all"},u.rLv==="60"?1:0]:null,
-    off&&u.rClaim&&u.rClaim!=="all"?[lbl(CLAIM,u.rClaim),{rClaim:"all"}]:null,u.rMem&&u.rMem!=="current"?[lbl(MEM,u.rMem),{rMem:"current"}]:null].filter(Boolean);
+    off&&u.rClaim&&u.rClaim!=="all"?[lbl(CLAIM,u.rClaim),{rClaim:"all"}]:null,u.rMem&&u.rMem!=="current"?[lbl(MEM,u.rMem),{rMem:"current"}]:null,
+    u.rSeen?["Seen this week",{rSeen:false}]:null,u.rMine?["Mine",{rMine:false}]:null].filter(Boolean);
   const icon=(svg,cls)=>{const e=h("span",{"aria-hidden":"true",class:cls||""});e.innerHTML=svg;return e};
   const glass=icon('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5" stroke-linecap="round"/></svg>');
   const search=h("div",{class:"r-search"},glass,
@@ -1169,7 +1170,8 @@ function rosterFilters(){
     icon('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 4h12M4.5 8h7M7 12h2"/></svg>',"r-ficon"),"Filters",
     chips.length?h("span",{class:"r-badge","aria-label":chips.length+" on"},String(chips.length)):null);
   const sort=h("label",{class:"r-sort"},h("span",{class:"ter"},"Sort"),h("select",{id:"r-sort",onchange:e=>set({rSort:e.target.value})},R_SORTS.map(([v,l])=>h("option",{value:v,selected:(u.rSort||"level-desc")===v},l))));
-  // One-tap shortcuts for the common questions. They set the same filters as the panel, so the two stay in step.
+  // One-tap shortcuts for the common questions, at the top of the Filters panel (folded away by default). They set the
+  // same filters as the menus below them, so the two stay in step.
   const cur=S.members.filter(m=>isMine(m)||memberState(m)==="current"),noQuick=(!u.role||u.role==="All")&&u.rLv!=="60"&&!u.rSeen&&!u.rMine;
   const qc=(label,n,on,patch)=>h("button",{class:"q-chip",type:"button","aria-pressed":String(!!on),onclick:()=>set({...patch,rOpen:null})},label,n!=null?h("span",{}," "+n):null);
   const quick=h("div",{class:"r-quick",role:"group","aria-label":"Quick filters"},
@@ -1178,10 +1180,10 @@ function rosterFilters(){
     qc("Level 60",cur.filter(m=>(+m.level||1)>=60).length,u.rLv==="60",{rLv:u.rLv==="60"?"all":"60"}),
     qc("Seen this week",null,u.rSeen,{rSeen:!u.rSeen}),
     S.members.some(isMine)?qc("Mine",null,u.rMine,{rMine:!u.rMine}):null);
-  const shown=chips.filter(c=>!c[2]);
+  const shown=chips;
   return h("div",{class:"r-tools"},
-    h("div",{class:"r-top"},search,h("div",{class:"r-ctrls"},toggle,sort,view)),quick,
-    h("div",{class:"r-filters",id:"r-filters","data-shut":u.rFiltersOpen?null:""},
+    h("div",{class:"r-top"},search,h("div",{class:"r-ctrls"},toggle,sort,view)),
+    h("div",{class:"r-filters",id:"r-filters","data-shut":u.rFiltersOpen?null:""},quick,
       sel("r-role","Role",[["All","Any role"],...ROLES.map(r=>[r,r])],u.role||"All",v=>set({role:v})),
       sel("r-cls","Class",[["All","Any class"],...classes.map(c=>[c,c])],u.rCls||"All",v=>set({rCls:v})),
       sel("r-prof","Profession",[["All","Any profession"],...profs.map(p=>[p,p])],u.rProf||"All",v=>set({rProf:v})),
@@ -3164,8 +3166,8 @@ function route(){const p=(location.hash||"#roster").slice(1).split("/");if(p[0]=
 function render(){
   const app=$("#app");
   const keep=document.activeElement&&document.activeElement.id,typed={};
-  // Typed text survives a redraw; checkboxes always show what's saved.
-  for(const el of app.querySelectorAll("input[id],textarea[id],select[id]"))if(el.type!=="checkbox")typed[el.id]=el.value;
+  // Typed text survives a redraw; checkboxes and menus always show what's saved (a quick chip can change a menu).
+  for(const el of app.querySelectorAll("input[id],textarea[id]"))if(el.type!=="checkbox")typed[el.id]=el.value;
   if(!configured){app.replaceChildren(h("main",{class:"wrap"},h("div",{class:"note warn"},"This copy isn't connected to Firebase yet. Paste your project's config into firebase-config.js.")));return}
   if(S.authError){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("div",{class:"note warn"},S.authError)));return}
   if(!S.user){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("p",{class:"ter"},"Loading…")));return}
