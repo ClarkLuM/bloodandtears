@@ -868,3 +868,7 @@ Your own decisions first (the newest value per path), then your changes to stand
 - Every menu and search box is 16px text, including the Sort and filter menus (`.r-sort select`).
 - Every fold uses one of two arrows: rows that open (roster, profession table, dungeon rows) end with the 36px bordered arrow button; small folds inside a card (History days, What Drops, Can make, Alliance-side, By class, Change the flavour text) open with the small turning chevron at their start. No browser triangles.
 - Folds and tabs are at least 28px tall; the trading card's flip tabs keep their look but get a bigger invisible hit area.
+
+## Tablet and trends (15 Nov 2026)
+- When the roster table is 641 to 780px wide (tablets, small laptops with the side column), Best loot hides so names have room; it still shows when a row opens.
+- Totals: on wide screens, five figures side by side, each with its label, "this week" and, where there's a day-by-day history, 14 thin bars (levels gained per day, characters joined per day; today on the right in the brighter gold). Three then two on tablets; the swipe row without bars on phones. Honourable kills have no daily history (the armory gives weekly totals), so no bars.
