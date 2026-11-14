@@ -100,7 +100,7 @@ p{margin:0}
 .btn.quiet{color:var(--sec);border-color:var(--b-sub);padding:0 .75rem}
 .btn.sm{height:2rem;padding:0 .75rem}
 .btn.danger{border:0;color:var(--danger);padding:0 .75rem}
-.btn.ghost{border-color:transparent;color:var(--sec)}
+.btn.ghost{border-color:var(--sep);color:var(--sec)}.btn.ghost:hover{border-color:var(--b-def)}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .btn[aria-pressed="true"]{background:var(--accent-subtle);border-color:var(--accent-b);color:var(--accent-text)}
 input,select,textarea{font:inherit;font-size:1rem;height:2.5rem;padding:0 .75rem;background:var(--base);color:var(--text);border:1px solid var(--field-b);border-radius:6px;min-width:0}
@@ -1974,7 +1974,7 @@ function cardSection(m){
       return h("button",{type:"button",class:"tp-sw","aria-pressed":String(on),title:x.t+(fr?" · "+fr.name:""),"aria-label":x.t+(fr?", "+fr.name:""),onclick:()=>setPick(x.k),
         style:fr?`background:linear-gradient(135deg,${fr.f[0]},${fr.f[1]} 35%,${fr.f[2]} 55%,${fr.f[3]})`:"background:var(--subtle)"},h("span",{},(fr?fr.name.replace(/ frame$/,""):x.t)))})),
     (()=>{const x=mine[0],rg=reignOf(x.k,m.id);return h("span",{class:"small",style:"text-align:center"},h("b",{style:"color:var(--accent-text)"},x.t)," · "+x.board.toLowerCase()+(rg?" · "+rg.text.toLowerCase():""))})()):null;
-  return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%;flex-wrap:nowrap"},h("h2",{id:"card-h",style:"flex:none"},"Card"),h("span",{class:"small ter",style:"min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"},d.frame?d.frame.name+" · for "+d.frame.title+(d.frame.reign?" · "+d.frame.reign.text.toLowerCase():""):(d.first?"First edition · ":"")+tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
+  return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%;flex-wrap:nowrap"},h("h2",{id:"card-h",style:"flex:none"},"Card"),h("span",{class:"small ter",style:"min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap",title:d.frame?"For "+d.frame.title+(d.frame.reign?" · "+d.frame.reign.text.toLowerCase():""):null},d.frame?(/frame$/i.test(d.frame.name)?d.frame.name:d.frame.name+" frame"):(d.first?"First edition · ":"")+tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
     flipCard(m),h("p",{class:"small ter",style:"margin:0;text-align:center"},"Tap the card to see the back."),
     d.stamps.length?h("ul",{class:"stamp-key"},d.stamps.map(([t,how,c])=>h("li",{},h("b",{style:`color:${c}`},t),h("span",{},how)))):null,h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn",onclick:()=>copyCard(m)},"Copy for Discord")),pickT,flav)}
 

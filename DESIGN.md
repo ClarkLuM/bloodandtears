@@ -844,7 +844,7 @@ Your own decisions first (the newest value per path), then your changes to stand
 - Corners: 6px for small things (tags, buttons, inputs, arrows), 10px for cards, tiles, panels and tables, pills only for filter chips.
 - Gold: `--accent-text` for text and links, `--gold-hi` for "the best" (titles, the crown, maxed bars). Both have light-mode values; never type a gold hex into a rule.
 - Tags are labels: outlined, 6px corners, weight 600. Filled chips are for values (a skill and its number).
-- Anything that shows more or opens a list is a small ghost button (`btn ghost sm`). Underlined text is only for links to another page.
+- Anything that shows more or opens a list is a small ghost button (`btn ghost sm`), with a faint border so it reads as tappable. Underlined text is only for links to another page.
 - Every row that opens has the same arrow button (`.r-x` / `.cm-tog`): 36px, bordered, right when closed, down when open; 44px on phones.
 - Bars (`.track`) are 6px, no border, gold fill, brighter gold when maxed.
 - Every input and menu: 6px corners, 16px text (stops phones zooming in).
