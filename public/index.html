@@ -198,6 +198,7 @@ td .l2{display:block;font-size:.75rem;line-height:1rem;color:var(--ter)}
 /* Items and coins */
 .item-plain{font-weight:600}
 .item-link{font-weight:600;text-decoration:none;color:var(--accent-text);overflow-wrap:anywhere}
+.item-ic{display:inline-block;width:1.125em;height:1.125em;margin-right:.3em;vertical-align:-.2em;border-radius:3px;background:var(--sunken);box-shadow:0 0 0 1px color-mix(in srgb,currentColor 45%,transparent);object-fit:cover}
 .item-link.q0{color:var(--q0)!important}.item-link.q1{color:var(--q1)!important}.item-link.q2{color:var(--q2)!important}.item-link.q3{color:var(--q3)!important}.item-link.q4{color:var(--q4)!important}.item-link.q5{color:var(--q5)!important}.item-link.q6,.item-link.q7{color:var(--q6)!important}
 
 /* Profile */
@@ -1135,7 +1136,31 @@ const weekKey=()=>{const d=new Date(Date.now()+8*36e5);d.setUTCDate(d.getUTCDate
 const PVP_RANKS=["","Scout","Grunt","Sergeant","Senior Sergeant","First Sergeant","Stone Guard","Blood Guard","Legionnaire","Centurion","Champion","Lieutenant General","General","Warlord","High Warlord"];
 const pvpRank=n=>n>0?(PVP_RANKS[n]?`Rank ${n} · ${PVP_RANKS[n]}`:`Rank ${n}`):"No rank yet";
 const hkWeekOf=m=>{const a=m.armory||{};return a.hkWeek&&a.hkWeek.wk===weekKey()?Math.max(0,(+a.hk||0)-(+a.hkWeek.base||0)):0};
-const qLink=g=>h("a",{class:"item-link",href:whItemUrl(g.id),target:"_blank",rel:"noopener",style:`color:var(--q${Math.max(0,Math.min(6,+g.q||1))})`},"["+g.name+"]");
+// Item icons beside every item link. Worn items already carry Blizzard's icon from the armory; anything else asks
+// Wowhead's tooltip data for its icon name the first time the link scrolls into view (a few at a time), and keeps
+// the answer on this device for a month so it isn't asked again.
+const WH_ICON=(n,size)=>`https://wow.zamimg.com/images/wow/icons/${size||"large"}/${n}.jpg`;
+const ICON_KEY="bt-icons",ICON_TTL=30*864e5,iconMem=new Map(),iconWait=new Set(),iconQ=[];let iconRun=0,iconObs=null;
+try{const c=JSON.parse(localStorage.getItem(ICON_KEY)||"{}");if(c&&Date.now()-(+c.at||0)<ICON_TTL)for(const[k,v]of Object.entries(c.m||{}))iconMem.set(k,v)}catch(e){}
+let iconSaveT=0;const iconSave=()=>{clearTimeout(iconSaveT);iconSaveT=setTimeout(()=>{try{const o={};for(const[k,v]of iconMem)if(v&&!/^https?:/.test(v))o[k]=v;localStorage.setItem(ICON_KEY,JSON.stringify({at:Date.now(),m:o}))}catch(e){}},2000)};
+// Icons from the armory, by item ID, for anything someone in the guild is wearing.
+function wornIcon(id){for(const m of[...S.members,...S.alts]){for(const g of Object.values(m.gear||{}))if(g&&String(g.id)===String(id)&&(g.iconUrl||g.icon))return g.iconUrl||WH_ICON(g.icon,"small")}return""}
+const iconSrc=id=>{const v=iconMem.get(String(id));return v?(/^https?:/.test(v)?v:WH_ICON(v,"small")):""};
+function iconPump(){while(iconRun<4&&iconQ.length){const id=iconQ.shift();iconRun++;
+  tipData(id).then(d=>{iconMem.set(String(id),d&&d.icon?d.icon:"inv_misc_questionmark");iconSave();
+    for(const im of document.querySelectorAll(`img.item-ic[data-icon="${id}"]`)){im.src=iconSrc(id);im.removeAttribute("data-icon")}})
+    .finally(()=>{iconRun--;iconWait.delete(String(id));iconPump()})}}
+function iconWatch(img){
+  if(!iconObs)iconObs="IntersectionObserver"in window?new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){iconObs.unobserve(e.target);const id=e.target.dataset.icon;
+    if(id&&!iconMem.has(id)&&!iconWait.has(id)){iconWait.add(id);iconQ.push(id);iconPump()}}},{rootMargin:"200px"}):{observe(im){const id=im.dataset.icon;if(!iconWait.has(id)){iconWait.add(id);iconQ.push(id);iconPump()}},unobserve(){}};
+  iconObs.observe(img)}
+function itemIcon(id){const k=String(id);let src=iconSrc(k);
+  if(!src&&+id>0){const w=wornIcon(k);if(w){iconMem.set(k,w);src=w}}
+  const img=h("img",{class:"item-ic",alt:"",width:"16",height:"16",loading:"lazy",decoding:"async",src:src||"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="});
+  if(!src){img.dataset.icon=k;queueMicrotask(()=>iconWatch(img))}
+  img.addEventListener("error",()=>{if(!/questionmark/.test(img.src))img.src=WH_ICON("inv_misc_questionmark","small")},{once:true});
+  return img}
+const qLink=g=>h("a",{class:"item-link",href:whItemUrl(g.id),target:"_blank",rel:"noopener",style:`color:var(--q${Math.max(0,Math.min(6,+g.q||1))})`},itemIcon(g.id),"["+g.name+"]");
 // Any item by name. With a known ID (saved with it, in the dungeon loot list or in the recipe list) it links to Wowhead
 // and shows the tooltip on hover. WoW Forever's own new items are looked up on Wowhead by the server (askItemId below);
 // until an answer arrives, or if Wowhead doesn't have it, the name stays plain text rather than wear a made-up colour.
@@ -2889,7 +2914,6 @@ const GEAR_BOTTOM=["Main hand","Off hand","Ranged"];
 const GEAR_ALL=[...GEAR_LEFT,...GEAR_RIGHT,...GEAR_BOTTOM];
 const slotBase=s=>s.replace(/ \d$/,"");
 const SLOT_ICON={Head:"head",Neck:"neck",Shoulder:"shoulder",Back:"chest",Chest:"chest",Shirt:"shirt",Tabard:"tabard",Wrist:"wrists",Hands:"hands",Waist:"waist",Legs:"legs",Feet:"feet",Finger:"finger",Trinket:"trinket","Main hand":"mainhand","Off hand":"offhand",Ranged:"ranged"};
-const WH_ICON=(n,size)=>`https://wow.zamimg.com/images/wow/icons/${size||"large"}/${n}.jpg`;
 const whItemUrl=id=>+id<0?`https://www.wowhead.com/forever/spell=${-id}`:`https://www.wowhead.com/forever/item=${id}`;
 const ini3=n=>String(n).replace(/'s\b/g,"").split(/\s+/).filter(w=>!/^(of|the)$/i.test(w)).map(w=>w[0]).join("").slice(0,3).toUpperCase();
 function iconImg(it,size,fallback){

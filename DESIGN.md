@@ -848,3 +848,8 @@ Your own decisions first (the newest value per path), then your changes to stand
 - Every row that opens has the same arrow button (`.r-x` / `.cm-tog`): 36px, bordered, right when closed, down when open; 44px on phones.
 - Bars (`.track`) are 6px, no border, gold fill, brighter gold when maxed.
 - Every input and menu: 6px corners, 16px text (stops phones zooming in).
+
+## Item icons (Nov 2026)
+- Every item link (`qLink`) starts with its 18px icon (`.item-ic`: 1.125em square, 3px corners, a faint ring in the item's quality colour).
+- Icons for worn items come from the armory (Blizzard's image server). Anything else asks Wowhead's tooltip data for the icon name when the link scrolls into view, four at a time, and keeps the answer on that device for 30 days (`localStorage` key `bt-icons`). Links inside closed folds aren't asked about until opened.
+- Until an icon arrives, a blank square of the same size holds its place, so nothing shifts. If Wowhead has no icon, the question-mark icon stands in.
