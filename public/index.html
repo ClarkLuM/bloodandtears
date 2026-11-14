@@ -527,7 +527,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
   .lg-tab{position:relative}.lg-tab::after{content:"";position:absolute;inset:-.5625rem -2px}
   .r-ctrls>.seg{flex:1 1 100%;width:auto}.r-ctrls>.seg button{flex:1}
   .r-ctrls>.r-ftoggle{flex:none}
-  .rc-meta{margin-left:0;flex-basis:100%}
+  .rc-meta{white-space:nowrap}
 }
 /* Can make (character page) */
 .cm{display:flex;flex-direction:column;gap:.375rem;padding-top:.75rem;border-top:1px solid var(--sep)}
@@ -541,7 +541,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .cm-list>li{display:grid;grid-template-columns:.5625rem minmax(0,1fr) auto 2.5rem 2.25rem;align-items:center;gap:.25rem .5rem}.cm-n{min-width:0}
 .cm-list>li>.cm-sk{margin:0;text-align:right}
 .cm-list>li>.rc-panel,.cm-list>li>.rc-panel-msg{grid-column:1/-1;margin:.25rem 0 .5rem}
-@media (max-width:640px){.cm-list>li{grid-template-columns:.5625rem minmax(0,1fr) 2.25rem 2.25rem}.cm-list>li>.rc-src{display:none}}
+@media (max-width:640px){.cm-list>li{grid-template-columns:.5625rem minmax(0,1fr) 2.25rem 2.75rem}.cm-list>li>.rc-src{display:none}}
 .cm-tog{flex:none;width:2.25rem;height:2.25rem;border-radius:6px;border:1px solid var(--sep);background:none;color:var(--sec);font:inherit;cursor:pointer;display:grid;place-items:center;padding:0}
 .cm-tog:hover{border-color:var(--accent-text);color:var(--accent-text)}
 .su{flex:none;width:.5625rem;height:.5625rem;border-radius:50%;display:inline-block}.su.none{background:none}
@@ -583,7 +583,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .pt{padding:0;gap:0;overflow:hidden}
 .pt-grp{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ter);padding:.625rem 1.125rem .375rem;background:var(--sunken);border-top:1px solid var(--sep)}
 .pt-grp:first-child{border-top:0}
-.pt-row{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 1.5rem;gap:.875rem;align-items:center;padding:.625rem 1.125rem;border-top:1px solid var(--sep)}
+.pt-row{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 2.25rem;gap:.875rem;align-items:center;padding:.625rem 1.125rem;border-top:1px solid var(--sep)}
 .pt-row.open{align-items:start;background:var(--subtle)}
 .pt-name{display:flex;flex-direction:column;align-items:flex-start;background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;line-height:1.25rem}
 .pt-name:disabled{cursor:default}.pt-name b{font-size:.9375rem}
@@ -596,8 +596,8 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .pt-p .track{height:.3125rem}.pt-p .track i{background:var(--accent-text)}.pt-p .track i.max{background:var(--link-hover)}
 .pt-spoon{font-size:.625rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
 .pt-more{display:flex;align-items:center}.pt-more .linkish{font-size:.75rem;font-weight:600;color:var(--accent-text);background:none;border:0;cursor:pointer;padding:0 .375rem}
-.pt-chev{color:var(--ter);text-align:center}
-@media (max-width:640px){.pt-row{grid-template-columns:minmax(0,1fr) 1.25rem;gap:.5rem;padding:.625rem .875rem}.pt-ppl{grid-column:1/-1;grid-row:2}.pt-chev{grid-row:1;grid-column:2}.pt-p{min-width:0;flex:1 1 9rem}}
+.pt-chev{align-self:center}
+@media (max-width:640px){.pt-row{grid-template-columns:minmax(0,1fr) 2.75rem;gap:.5rem;padding:.625rem .875rem}.pt-ppl{grid-column:1/-1;grid-row:2}.pt-chev{grid-row:1;grid-column:2}.pt-p{min-width:0;flex:1 1 9rem}}
 .arm-line{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .875rem;margin:0}.arm-bits span+span::before{content:"·";margin:0 .5rem;color:var(--ter)}
 @media (max-width:600px){.arm-bits{display:flex;flex-direction:column;gap:.125rem;flex-basis:100%}.arm-bits span+span::before{content:none}}
 .miss-btn{font:inherit;cursor:pointer;border:0;color:inherit;position:relative}.miss-btn::after{content:"";position:absolute;inset:-.625rem -.25rem}.miss-list{flex-basis:100%;color:var(--sec)}
@@ -658,15 +658,13 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .rc{display:flex;flex-direction:column;gap:.375rem;padding:.625rem 0;border-top:1px solid var(--sep)}
 .rc-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .625rem}
 .rc-name{font-weight:600}
-.rc-meta{margin-left:auto}
+.rc-meta{white-space:nowrap}.rc-top{align-items:center}.rc-end{margin-left:auto;display:inline-flex;align-items:center;gap:.5rem}
 .rc-src{font-size:.75rem;line-height:1.125rem;padding:0 .5rem;border-radius:9px;border:1px solid var(--sep);color:var(--sec);white-space:nowrap}
 .rc-src.A{border-color:rgb(71 194 108 / .5);color:#7fd69a}.rc-src.T{border-color:rgb(212 162 76 / .55);color:var(--gold)}
 :root[data-theme="light"] .rc-src.A{color:#2a7d12}:root[data-theme="light"] .rc-src.T{color:#8a5a12}
 .rc-who{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem .75rem}
 .rc-chip{display:inline-flex;align-items:center;gap:.375rem;font-size:.875rem}
 .rc-chip .ter{font-size:.75rem}
-.rc-tog{font-family:inherit;font-weight:600;font-size:.75rem;line-height:1.25rem;color:var(--accent-text);background:none;border:1px solid var(--b-def);border-radius:7px;padding:.0625rem .5625rem;cursor:pointer;margin-left:auto}
-.rc-tog:hover{border-color:var(--accent-text)}
 .rc-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;padding:.75rem .875rem;background:var(--sunken);border:1px solid var(--sep);border-radius:9px}
 .rc-panel h3{margin:0 0 .375rem;font:700 .75rem 'Alegreya Sans SC',serif;letter-spacing:.08em;color:var(--accent-text)}
 .rc-panel ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.25rem;font-size:.875rem}
@@ -674,7 +672,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .rc-get b{font-weight:600}.rc-ups{margin-top:.375rem}.tx-o{color:#ff8040}.tx-y{color:#e6c34a}.tx-g{color:#40bf40}
 :root[data-theme="light"] .tx-o{color:#b34a00}:root[data-theme="light"] .tx-y{color:#8a6d00}:root[data-theme="light"] .tx-g{color:#2a7d12}
 .rc-panel-msg{margin:0}
-@media (max-width:40rem){.rc-panel{grid-template-columns:minmax(0,1fr)}.rc-tog{margin-left:0}}
+@media (max-width:40rem){.rc-panel{grid-template-columns:minmax(0,1fr)}}
 .r-search{position:relative;flex:1 1 12.5rem;min-width:0}
 .r-search input{width:100%;padding-left:2.25rem}
 .r-search svg{position:absolute;z-index:1;left:.75rem;top:50%;width:1rem;height:1rem;margin-top:-.5rem;color:var(--ter);pointer-events:none}
@@ -843,6 +841,7 @@ a.r-name:hover{color:var(--accent-text)}
 .sync-all{display:flex;flex-direction:column;gap:.375rem;margin-top:.375rem}
 .sync-more{font-weight:500;color:var(--ter);text-decoration:underline;text-underline-offset:2px;min-height:1.75rem;padding:0 .25rem}
 .sync-more:hover{color:var(--text)}
+@media (pointer:coarse),(max-width:640px){.pt-more .linkish{min-height:2.75rem}.mk-more>summary{padding:.875rem 0}.sync-more{min-height:2.75rem}.lg-tab{min-height:2.25rem}.linkish.small,.foot-link{min-height:2.5rem}.cm-tog{width:2.75rem;height:2.75rem}}
 .mk-more summary{cursor:pointer;color:var(--sec);font-weight:600}
 .lg-tab{line-height:1.625rem;font-size:.6875rem}
 .lg-lv.lg-lv-b{position:static;flex:none;width:1.875rem;height:1.875rem;font-size:.8125rem;align-self:center}
@@ -900,9 +899,40 @@ a.r-name:hover{color:var(--accent-text)}
 @media (max-width:640px){.rn li{grid-template-columns:minmax(0,1fr)}.wwp{grid-template-columns:1.75rem repeat(24,minmax(0,1fr));gap:1px}.wwp-c{height:.875rem}}
 .rc-knows{font-size:.75rem;font-weight:700;color:var(--trim)}
 :root[data-theme="light"] .rc-knows{color:#1d6b30}
+/* The loading screen: the gingerbread badge spins (or gently pulses, for anyone who's asked for less motion) until the
+   roster arrives, then fades away. */
+/* The site search: a button in the header and a dialog of results */
+.srch-btn{display:inline-flex;align-items:center;gap:.375rem}.srch-ic{display:inline-flex;flex:none}
+.srch-k{font:600 .6875rem/1 inherit;font-family:inherit;padding:.125rem .375rem;border:1px solid var(--b-def);border-radius:4px;color:var(--ter)}
+@media (max-width:900px){.srch-k{display:none}}@media (max-width:640px){.srch-l{display:none}}
+dialog.srch-dlg{width:min(36rem,calc(100vw - 2rem));margin-top:12vh}
+dialog.srch-dlg form{padding:1rem;gap:.5rem}
+.srch-box{display:flex;align-items:center;gap:.5rem;padding:0 .75rem;border:1px solid var(--b-def);border-radius:10px;background:var(--sunken);color:var(--ter)}
+.srch-box:focus-within{border-color:var(--focus)}
+.srch-in{flex:1;min-width:0;height:3rem;border:0;background:none;color:var(--text);font:inherit;font-size:1.0625rem;outline:none}
+.srch-hint{margin:.25rem .25rem 0}.srch-hint:empty{display:none}
+.srch-list{list-style:none;margin:0;padding:0;max-height:min(26rem,55vh);overflow:auto;display:flex;flex-direction:column;gap:2px}
+.srch-o{display:flex;align-items:center;gap:.75rem;padding:.5rem .625rem;border-radius:8px;cursor:pointer;min-height:2.75rem;box-sizing:border-box}
+.srch-o[aria-selected="true"]{background:var(--subtle);box-shadow:inset 3px 0 0 var(--accent-text)}
+.srch-t{flex:none;width:4.75rem;font-size:.6875rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
+.srch-main{display:flex;flex-direction:column;min-width:0}.srch-main b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.srch-main .small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srch-main b.q2{color:var(--q2,#1eff00)}.srch-main b.q3{color:var(--q3,#3b9cff)}.srch-main b.q4{color:var(--q4,#c06bff)}
+#boot{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:var(--base);color:var(--ter);font-size:.9375rem;transition:opacity .35s ease,visibility .35s}
+#boot.gone{opacity:0;visibility:hidden;pointer-events:none}
+.boot-gb{width:7rem;height:7rem;animation:gb-spin 1.6s cubic-bezier(.55,.05,.35,1) infinite;filter:drop-shadow(0 6px 14px rgb(0 0 0 / .45))}
+@keyframes gb-spin{0%{transform:rotate(0) scale(1)}45%{transform:rotate(200deg) scale(1.06)}100%{transform:rotate(360deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){.boot-gb{animation:gb-pulse 1.8s ease-in-out infinite}@keyframes gb-pulse{50%{opacity:.55}}#boot{transition:none}}
+/* Pictures fade in the first time they load, and a box keeps their space so nothing jumps. */
+img.fade{opacity:0;transition:opacity .3s ease}img.fade.in{opacity:1}
+@media (prefers-reduced-motion:reduce){img.fade{transition:none}}
+/* Opening something slides it down into place (only when it's opened, not on every redraw). */
+@keyframes slide-open{from{opacity:0;transform:translateY(-.375rem);clip-path:inset(0 0 100% 0)}to{opacity:1;transform:none;clip-path:inset(0 0 0 0)}}
+.opening,details.opening>:not(summary){animation:slide-open .24s cubic-bezier(.2,.7,.3,1)}
+@media (prefers-reduced-motion:reduce){.opening,details.opening>:not(summary){animation:none}}
 </style>
 </head>
 <body>
+<div id="boot" role="status"><img class="boot-gb" src="logo.svg" alt="" width="112" height="112"><span>Gathering the guild…</span></div>
 <div id="app"></div>
 <dialog id="dlg"><form id="dlgForm" method="dialog"></form></dialog>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -1155,10 +1185,52 @@ function header(page){
     // On phones the menu moves to a bar along the bottom.
     h("nav",{class:"bottom","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null},l))),
     h("div",{class:"hdr-tools"},
+      h("button",{class:"btn quiet srch-btn",type:"button",onclick:openSearch,"aria-label":"Search the site",title:"Search (press /)"},
+        srchIcon(),h("span",{class:"srch-l"},"Search"),h("kbd",{class:"srch-k"},"/")),
       h("button",{class:"btn quiet theme-btn",onclick:toggleTheme,"aria-label":isDark()?"Light mode":"Dark mode",title:isDark()?"Light mode":"Dark mode"},
         h("span",{class:"theme-ic","aria-hidden":"true"},isDark()?"\u2600":"\u263E"),h("span",{class:"theme-l"},isDark()?"Light mode":"Dark mode")),
       (dc||S.widget&&S.widget.instant_invite)?h("a",{class:"btn quiet",href:dc||S.widget.instant_invite,target:"_blank",rel:"noopener"},"Discord",S.widget?h("span",{style:"display:inline-flex;align-items:center;gap:.25rem;font-weight:400"},h("i",{class:"dot",style:"width:.5rem;height:.5rem;background:#3ba55d"}),S.widget.presence_count||0):null):null,
     )))}
+
+/* ---------- One search for the whole site ---------- */
+// The Search button in the header (or "/" anywhere) finds characters, recipes, dungeon drops, dungeons and pages, and goes
+// straight there. Recipes are loaded the first time it opens.
+const srchIcon=()=>{const x=h("span",{class:"srch-ic","aria-hidden":"true"});x.innerHTML='<svg viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m13 13 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';return x};
+const SRCH_PAGES=[["Roster","#roster"],["Dungeons","#lfg"],["Raids","#raids"],["Cards","#cards"],["Professions","#professions"],["Records","#records"],["Guild History","#history"]];
+function searchIndex(){
+  const out=[],go=(hash,ui)=>()=>{if(ui)Object.assign(S.ui,ui);if(location.hash===hash)render();else location.hash=hash};
+  for(const m of [...S.members,...S.alts])if(isMine(m)||memberState(m)!=="former")
+    out.push({t:"Character",l:nameOf(m),sub:"Level "+(m.level||1)+" · "+([m.race,m.cls].filter(Boolean).join(" ")||"Unknown class"),cc:CLASSES[m.cls],go:go(`#char/${m.isAlt?"alts":"members"}/${m.id}`)});
+  for(const[n,r]of DUNGEONS)out.push({t:"Dungeon",l:n,sub:"Levels "+r,go:go("#lfg",{rangeD:n,dgGroup:"All"})});
+  for(const v of Object.values(DUNGEON_LOOT))out.push({t:"Drop",l:v[2],sub:v[0]+" · "+v[1],q:v[5],go:go("#lfg",{rangeD:v[0],dgGroup:"All",dgLoot:{...(S.ui.dgLoot||{}),[v[0]]:true}})});
+  for(const[p,rows]of Object.entries(S.recipes||{}))for(const x of rows)out.push({t:"Recipe",l:x[0],sub:p+" · "+(x[3]?"about ":"")+x[1],q:x[5],go:go("#professions",{pq:x[0]})});
+  for(const[l,hash]of SRCH_PAGES)out.push({t:"Page",l,sub:"Go to "+l,go:go(hash)});
+  return out}
+function searchFind(idx,q){const w=q.toLowerCase().split(/\s+/).filter(Boolean);if(!w.length)return[];
+  const order={Character:0,Page:1,Dungeon:2,Recipe:3,Drop:4},seen=new Set();
+  return idx.filter(x=>{const l=x.l.toLowerCase();return w.every(y=>l.includes(y))}).map(x=>{const l=x.l.toLowerCase();return[x,(l===w.join(" ")?0:l.startsWith(w[0])?1:2)*10+order[x.t]]})
+    .sort((a,b)=>a[1]-b[1]||a[0].l.localeCompare(b[0].l)).map(x=>x[0]).filter(x=>{const k=x.t+"|"+x.l;if(seen.has(k))return false;seen.add(k);return true}).slice(0,12)}
+function openSearch(){
+  const dlg=$("#dlg"),f=$("#dlgForm");if(dlg.open)return;loadRecipes();
+  let idx=searchIndex(),hits=[],cur=0;
+  const inp=h("input",{type:"search",id:"srch-in",class:"srch-in",placeholder:"Characters, recipes, drops, dungeons…",autocomplete:"off",spellcheck:"false",
+    role:"combobox","aria-expanded":"false","aria-controls":"srch-list","aria-autocomplete":"list","aria-label":"Search the site"});
+  const list=h("ul",{id:"srch-list",class:"srch-list",role:"listbox","aria-label":"Results"}),hint=h("p",{class:"small ter srch-hint"},"Type a name. Arrow keys to move, Enter to go.");
+  const pick=x=>{dlg.close();x.go()};
+  const draw=()=>{const q=inp.value.trim();if(recipesState==="ok"&&!idx.some(x=>x.t==="Recipe"))idx=searchIndex();hits=searchFind(idx,q);cur=Math.min(cur,Math.max(0,hits.length-1));
+    inp.setAttribute("aria-expanded",String(!!hits.length));inp.setAttribute("aria-activedescendant",hits.length?"srch-o"+cur:"");
+    list.replaceChildren(...hits.map((x,i)=>h("li",{id:"srch-o"+i,role:"option","aria-selected":String(i===cur),class:"srch-o",onmousedown:e=>{e.preventDefault();pick(x)},onmousemove:()=>{if(cur!==i){cur=i;draw()}}},
+      h("span",{class:"srch-t"},x.t),h("span",{class:"srch-main"},h("b",{class:x.q?"q"+x.q:"",style:x.cc?`color:${x.cc}`:null},x.l),h("span",{class:"small ter"},x.sub)))));
+    hint.textContent=!q?"Type a name. Arrow keys to move, Enter to go.":hits.length?"":"Nothing found for “"+q+"”."+(recipesState!=="ok"?" Recipes are still loading.":"")};
+  inp.addEventListener("input",()=>{cur=0;draw()});
+  inp.addEventListener("keydown",e=>{if(e.key==="ArrowDown"){e.preventDefault();cur=Math.min(hits.length-1,cur+1);draw();document.getElementById("srch-o"+cur)?.scrollIntoView({block:"nearest"})}
+    else if(e.key==="ArrowUp"){e.preventDefault();cur=Math.max(0,cur-1);draw();document.getElementById("srch-o"+cur)?.scrollIntoView({block:"nearest"})}
+    else if(e.key==="Enter"){e.preventDefault();if(hits[cur])pick(hits[cur])}});
+  const wait=setInterval(()=>{if(!dlg.open){clearInterval(wait);return}if(recipesState==="ok"&&!idx.some(x=>x.t==="Recipe")){idx=searchIndex();draw()}},300);
+  f.replaceChildren(h("div",{class:"srch"},h("label",{class:"srch-box"},srchIcon(),inp),hint,list));
+  f.onsubmit=e=>e.preventDefault();dlg.classList.add("srch-dlg");dlg.addEventListener("close",()=>dlg.classList.remove("srch-dlg"),{once:true});
+  dlg.showModal();inp.focus();draw()}
+document.addEventListener("keydown",e=>{if(e.key!=="/"||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target;if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))return;if($("#dlg").open)return;e.preventDefault();openSearch()});
 
 /* ---------- Roster ---------- */
 /* ---------- Roster ---------- */
@@ -1264,12 +1336,12 @@ function viewRoster(){
       filtered?h("button",{class:"linkish small",type:"button",onclick:clear},"Clear filters"):null));
   // One tidy line each: face, name in class colour with their top title, level, professions with skill, best loot, last seen.
   const row=m=>{const loot=bestLoot(m),open=u.rOpen===m.id,st=syncState(m),cc=CLASSES[m.cls]||"#bfaea9",lv=Math.max(1,Math.min(60,+m.level||1)),tt=titlesOf(m)[0],stt=statusOf(m),sk=streakOf(m);
-    const toggle=()=>setUi({rOpen:open?null:m.id});
+    const toggle=()=>{if(!open)openAnim("r:"+m.id);setUi({rOpen:open?null:m.id})};
     const av=charPic(m,"avatar"),ini=nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
     const pr=Object.entries(m.profs||{}).filter(([p])=>PRIMARY.includes(p)).sort((x,y)=>+y[1]-+x[1]);
     const tr=h("tr",{class:"r-row"+(open?" open":""),onclick:e=>{if(e.target.closest("a,button,input"))return;toggle()}},
       h("td",{"data-label":"Character"},h("div",{class:"r-who"},
-        h("span",{class:"r-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?h("img",{src:av,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
+        h("span",{class:"r-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?fadeImg({src:av,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
         h("div",{style:"min-width:0"},
           // One tag at most beside the name (You, then Guild Master, Officer, Not in the guild), so the line under it has room.
           h("span",{class:"row r-l1",style:"gap:.375rem;flex-wrap:nowrap"},h("a",{class:"linkish r-name",style:`--cc:${cc}`,href:`#char/${m.isAlt?"alts":"members"}/${m.id}`},nameOf(m)),isMine(m)?h("span",{class:"tag gold"},"You"):rosterTag(m)),
@@ -1284,7 +1356,7 @@ function viewRoster(){
         // The streak sits beside when they were last on, since that's what it counts.
         sk?flameEl(sk):null)),
       h("td",{},h("button",{class:"r-x",type:"button","aria-expanded":String(open),"aria-label":(open?"Hide details for ":"More about ")+nameOf(m),onclick:toggle})));
-    return open?[tr,h("tr",{class:"r-more"},h("td",{colspan:"6"},rosterDetail(m)))]:[tr]};
+    return open?[tr,h("tr",{class:"r-more"+anim("r:"+m.id)},h("td",{colspan:"6"},rosterDetail(m)))]:[tr]};
   let body;
   if(view==="class"){
     const groups=new Map();for(const m of list){const k=m.cls||"Unknown";(groups.get(k)||groups.set(k,[]).get(k)).push(m)}
@@ -1579,7 +1651,7 @@ function spotlight(){
   const link=`#char/${m.isAlt?"alts":"members"}/${m.id}`;
   const best=Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=2).sort((x,y)=>y.q-x.q).slice(0,3);
   const art=h("a",{class:"spot-art",href:link,"aria-label":"Open "+nameOf(m),style:bg?`background-image:linear-gradient(180deg,rgb(15 10 9 / .1),rgb(15 10 9 / .55)),url(${bg})`:`background:linear-gradient(160deg,${mix(cc,"#000000",.55)},#0f0a09)`},
-    render?h("img",{class:"r",src:render,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))})
+    render?fadeImg({class:"r",src:render,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))})
       :h("span",{class:"face",style:`border-color:${cc};color:${cc}`},avatar?h("img",{src:avatar,alt:"",referrerpolicy:"no-referrer"}):nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase()));
   return h("section",{class:"card spot","aria-labelledby":"spot-h"},art,
     h("div",{class:"spot-body"},
@@ -1713,7 +1785,7 @@ function cardEl(m){
   return h("div",{class:"lg-card"+(shine?" foil":""),style:`background:linear-gradient(135deg,${f[0]},${f[1]} 35%,${f[2]} 55%,${f[3]})`+(shine?`;--shine:${shine}`:""),role:"img","aria-label":`${d.name}, ${d.line}, ${tname} card${d.frame?", "+d.frame.name:""}. ${d.gm?"Guild Master. ":""}${d.pvp?"PvP "+pvpRank(d.pvp)+". ":""}${d.move?d.move.text+". ":""}${d.flav}`+(d.stamps.length?" Stamps: "+d.stamps.map(x=>x[1]).join(", ")+".":"")},
     h("div",{class:"lg-card-in"},
       h("div",{class:"lg-art"+(d.move?" has-move":"")+(d.gm?" is-gm":""),style:artStyle},
-        d.render?h("img",{class:"r",src:d.render,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(d.fg)})
+        d.render?fadeImg({class:"r",src:d.render,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(d.fg)})
           :h("span",{class:"lg-face",style:`border-color:${d.cc};color:${d.cc}`},d.avatar?h("img",{src:d.avatar,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(d.initials)}):d.initials),
         d.lv>=60?h("span",{class:"lg-holo","aria-hidden":"true"}):null,
         d.stamps.length?h("span",{class:"lg-stamps"},d.stamps.map(([t,how,c])=>h("span",{class:"lg-stamp",style:`color:${c}`,title:how},t))):null,
@@ -1898,11 +1970,12 @@ function cardSection(m){
   const mine=titlesOf(m),setPick=v=>{const before=m.titlePick||"";if(v===mine[0].k)return;write(updateDoc(charRef(m),{titlePick:v,updatedAt:nowIso()}));
       toast("Card updated",()=>write(updateDoc(charRef(m),{titlePick:before||deleteField(),updatedAt:nowIso()}),"Put back"))};
   const pickT=canEdit(m)&&mine.length>1?h("div",{class:"title-pick",role:"group","aria-label":"Title and frame on the card"},h("span",{class:"small ter"},"Title and frame on the card"),
-    h("div",{class:"tp-row"},mine.map(x=>{const fr=frameFor(x.k),on=x.k===mine[0].k;
+    // The swatches keep the same order when one is picked, so the one under your finger doesn't move.
+    h("div",{class:"tp-row"},(titleMap().get(m.id)||mine).map(x=>{const fr=frameFor(x.k),on=x.k===mine[0].k;
       return h("button",{type:"button",class:"tp-sw","aria-pressed":String(on),title:x.t+(fr?" · "+fr.name:""),"aria-label":x.t+(fr?", "+fr.name:""),onclick:()=>setPick(x.k),
         style:fr?`background:linear-gradient(135deg,${fr.f[0]},${fr.f[1]} 35%,${fr.f[2]} 55%,${fr.f[3]})`:"background:var(--subtle)"},h("span",{},(fr?fr.name.replace(/ frame$/,""):x.t)))})),
     (()=>{const x=mine[0],rg=reignOf(x.k,m.id);return h("span",{class:"small",style:"text-align:center"},h("b",{style:"color:var(--accent-text)"},x.t)," · "+x.board.toLowerCase()+(rg?" · "+rg.text.toLowerCase():""))})()):null;
-  return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%"},h("h2",{id:"card-h"},"Card"),h("span",{class:"small ter"},d.frame?d.frame.name+" · for "+d.frame.title+(d.frame.reign?" · "+d.frame.reign.text.toLowerCase():""):(d.first?"First edition · ":"")+tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
+  return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%;flex-wrap:nowrap"},h("h2",{id:"card-h",style:"flex:none"},"Card"),h("span",{class:"small ter",style:"min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"},d.frame?d.frame.name+" · for "+d.frame.title+(d.frame.reign?" · "+d.frame.reign.text.toLowerCase():""):(d.first?"First edition · ":"")+tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
     flipCard(m),h("p",{class:"small ter",style:"margin:0;text-align:center"},"Tap the card to see the back."),
     d.stamps.length?h("ul",{class:"stamp-key"},d.stamps.map(([t,how,c])=>h("li",{},h("b",{style:`color:${c}`},t),h("span",{},how)))):null,h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn",onclick:()=>copyCard(m)},"Copy for Discord")),pickT,flav)}
 
@@ -2251,13 +2324,13 @@ function rangeBoard(){
   // Tag only the dungeons one of your characters is the right level for and hasn't done yet.
   function dgRow(o){const open=x&&o.name===x.name,been=beenCount(o.name),mine=o.ppl.some(m=>isMine(m)&&!passportOf(m).some(p=>p.name===o.name));
       return h("div",{class:"dg-item"+(open?" open":"")},
-        h("div",{class:"dg-sum",onclick:e=>{if(!e.target.closest("a,button"))setUi({rangeD:open?"-":o.name},true)}},
-          h("button",{type:"button",class:"dg-name","aria-expanded":String(!!open),onclick:()=>setUi({rangeD:open?"-":o.name},true)},
+        h("div",{class:"dg-sum",onclick:e=>{if(!e.target.closest("a,button")){if(!open)openAnim("d:"+o.name);setUi({rangeD:open?"-":o.name},true)}}},
+          h("button",{type:"button",class:"dg-name","aria-expanded":String(!!open),onclick:()=>{if(!open)openAnim("d:"+o.name);setUi({rangeD:open?"-":o.name},true)}},
             h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon. Horde can run it, but it's a trek to get to, and it doesn't count toward the Horde Spelunker achievement or give Legacy points."},"Alliance · no Legacy points"):null,mine?h("span",{class:"tag gold"},"You need this"):null),
           h("span",{class:"dg-n"+(o.active.length?"":" zero")},h("b",{},String(o.active.length)),h("span",{class:"dg-n-l"}," in range")),
           h("span",{class:"dg-n"+(been?"":" zero")},h("b",{},String(been)),h("span",{class:"dg-n-l"}," been")),
           h("span",{class:"dg-n"+(o.need.length?"":" zero")},h("b",{},DG_ALLIANCE.includes(o.name)?"—":String(o.need.length)),h("span",{class:"dg-n-l"},DG_ALLIANCE.includes(o.name)?"":" need it"))),
-        open?rangeDetail(o):null)}}
+        open?(()=>{const d=rangeDetail(o);if(d&&d.classList)d.className+=anim("d:"+o.name);return d})():null)}}
 // How many current characters have a dungeon stamped (by hand or from loot).
 // The game's Spelunker achievements (legacy points). Master is everything not in the first two.
 // Hall of Thanes and The Stockade are Alliance-side, so they don't count for us; the board folds them away at the bottom.
@@ -2399,13 +2472,13 @@ function recipeFinder(){
     ppl.length>6?h("span",{class:"small ter"},"and "+(ppl.length-6)+" more"):null]};
   const row=x=>{const best=people.filter(m=>skillIn(m,x.p)>0).sort((a,b)=>skillIn(b,x.p)-skillIn(a,x.p))[0];
     const key=x.p+"|"+x.name,open=S.ui.rcOpen===key;
-    const tog=h("button",{class:"rc-tog",type:"button","aria-expanded":String(open),onclick:()=>setUi({rcOpen:open?null:key})},open?"Hide":"Reagents and recipe");
+    const tog=h("button",{class:"cm-tog rc-chev",type:"button","aria-expanded":String(open),"aria-label":(open?"Hide":"Show")+" reagents and recipe for "+x.name,title:"Reagents and recipe",onclick:()=>{if(!open)openAnim("rc:"+key);setUi({rcOpen:open?null:key})}},open?"⌄":"›");
     return h("li",{class:"rc"+(open?" open":"")},
       h("div",{class:"rc-top"},h("b",{class:"rc-name"},x.id?qLink({id:x.id,q:x.q,name:x.name}):itemRef(x.name)),h("span",{class:"rc-src "+x.src,title:{A:"Learned automatically with the profession",T:"Taught by the profession trainer",R:"Learned from a recipe item: a drop, vendor, quest or reputation"}[x.src]},R_LABEL[x.src]),
-        h("span",{class:"small ter rc-meta"},x.p+" · "+(x.est?"about ":"")+x.sk)),
-      x.who.length?h("div",{class:"rc-who"},h("span",{class:"small ter"},R_WHO[x.src]+":"),chips(x.who,x.p,x.name),tog)
-        :h("div",{class:"rc-who"},h("span",{class:"small ter"},best?"Nobody's skilled enough yet. Closest: "+nameOf(best)+" ("+skillIn(best,x.p)+")":"Nobody in the guild has "+x.p+" yet."),tog),
-      open?recipePanel(x):null)};
+        h("span",{class:"rc-end"},h("span",{class:"small ter rc-meta"},x.p+" · "+(x.est?"about ":"")+x.sk),tog)),
+      x.who.length?h("div",{class:"rc-who"},h("span",{class:"small ter"},R_WHO[x.src]+":"),chips(x.who,x.p,x.name))
+        :h("div",{class:"rc-who"},h("span",{class:"small ter"},best?"Nobody's skilled enough yet. Closest: "+nameOf(best)+" ("+skillIn(best,x.p)+")":"Nobody in the guild has "+x.p+" yet.")),
+      open?(()=>{const d=recipePanel(x);d.className+=anim("rc:"+key);return d})():null)};
   const count=words.length?list.length+(list.length===1?" match":" matches")+(reach.length!==list.length?", "+reach.length+" someone can make":"")
     :list.length+(kind==="learn"?" known or trainer recipes":kind==="recipe"?" recipes they're skilled enough for":" recipes")+" in reach";
   const kinds=!words.length?seg("Show",[["learn","Trainer"],["recipe","Recipe"],["all","All"]],kind,k=>setUi({pKind:k,pMore:false})):null;
@@ -2437,8 +2510,8 @@ function canMake(m){
           return h("li",{class:ro?"open":""},su?h("span",{class:"su su-"+su[0],title:su[1]},h("span",{class:"visually-hidden"},su[1])):h("span",{class:"su none","aria-hidden":"true"}),
             h("span",{class:"cm-n"},itemRef(r[0],r[4]?{id:r[4],q:r[5]}:null)),
             h("span",{class:"rc-src "+r[2]},R_LABEL[r[2]]),h("span",{class:"small ter cm-sk"},(r[3]?"about ":"")+r[1]),
-            h("button",{type:"button",class:"cm-tog","aria-expanded":String(ro),"aria-label":(ro?"Hide":"Show")+" reagents and recipe for "+r[0],onclick:()=>setUi({cmRc:ro?null:rk})},ro?"⌄":"›"),
-            ro?recipePanel({p:x.p,name:r[0],src:r[2]}):null)})):null,
+            h("button",{type:"button",class:"cm-tog","aria-expanded":String(ro),"aria-label":(ro?"Hide":"Show")+" reagents and recipe for "+r[0],onclick:()=>{if(!ro)openAnim("c:"+rk);setUi({cmRc:ro?null:rk})}},ro?"⌄":"›"),
+            ro?(()=>{const d=recipePanel({p:x.p,name:r[0],src:r[2]});d.className+=anim("c:"+rk);return d})():null)})):null,
         x.learn.length>N?h("a",{class:"small",href:"#professions",onclick:()=>setUi({pProf:x.p,pq:"",pKind:"learn",pMore:false})},"See all "+x.learn.length+" in Who Can Make It?"):null)}))}
 
 // Whether a recipe still gives skill points at this skill, from Wowhead's colours [orange, yellow, green, grey].
@@ -2495,13 +2568,13 @@ function hallOfTitles(){
     const sw=fr?h("span",{class:"hot-fr",style:`background:linear-gradient(135deg,${fr.f[0]},${fr.f[1]} 35%,${fr.f[2]} 55%,${fr.f[3]})`,"aria-hidden":"true"}):h("span",{class:"hot-fr none","aria-hidden":"true"});
     const short=x.holder?[nameOf(x.holder[0]),h("i",{}," · "+(rg?rg.text.replace(/ running$/,""):x.fmt(x.holder[1])))]
       :x.tied?"Tied: "+x.tied.slice(0,3).map(r=>first(r[0])).join(", ")+(x.tied.length>3?"…":""):x.rows.length===1?"Only "+nameOf(x.rows[0][0])+" so far":"Up for grabs";
-    const more=open?h("div",{class:"hot-more small"},
+    const more=open?h("div",{class:"hot-more small"+anim("t:"+x.k)},
       h("span",{class:"ter"},x.how+(fr?" · "+(/frame$/i.test(fr.name)?fr.name:fr.name+" frame"):"")),
       x.holder?h("span",{},charLink(x.holder[0])," · "+x.fmt(x.holder[1])+(rg?" · "+rg.text.toLowerCase():"")):null,
       x.tied?h("span",{},"Tied: ",x.tied.map((r,i)=>[i?", ":"",charLink(r[0])])," · "+x.fmt(x.tied[0][1])):null,
       x.next?h("span",{},"Next: ",charLink(x.next[0])," · ",x.fmt(x.next[1])):x.holder?null:h("span",{class:"ter"},"Be alone at the top of the board to take it.")):null;
     return h("li",{class:"hot-tile"+(open?" open":"")+(x.holder&&isMine(x.holder[0])?" me":"")+(x.holder?"":" free")},
-      h("button",{type:"button",class:"hot-btn","aria-expanded":String(open),onclick:()=>setUi({hotOpen:open?null:x.k})},sw,
+      h("button",{type:"button",class:"hot-btn","aria-expanded":String(open),onclick:()=>{if(!open)openAnim("t:"+x.k);setUi({hotOpen:open?null:x.k})}},sw,
         h("span",{class:"hot-txt"},h("b",{},x.t),h("span",{},short))),more)};
   const lists=groups.map(g=>[g,l.filter(x=>x.group===g)]).filter(x=>x[1].length);
   const held=l.filter(x=>x.holder).length,hidden=l.filter(x=>x.group!=="Guild"&&!x.holder).length;
@@ -2628,12 +2701,12 @@ function viewProfessions(){
     h("span",{class:"track","aria-hidden":"true"},h("i",{class:x.sk>=300?"max":"",style:`width:${(x.sk/300*100).toFixed(1)}%`})),
     spoon?h("span",{class:"pt-spoon"},"Wooden spoon"):null);
   const row=p=>{const l=by[p]||[],open=openP===p,N=3,shown=open?l:l.slice(0,N);
-    const toggle=()=>setUi({pfOpen:open?null:p});
+    const toggle=()=>{if(!open)openAnim("p:"+p);setUi({pfOpen:open?null:p})};
     return h("div",{class:"pt-row"+(open?" open":"")},
       h("button",{type:"button",class:"pt-name","aria-expanded":String(open),onclick:toggle,disabled:l.length<=N||null},h("b",{},p),h("span",{class:"small ter"},l.length?l.length+(l.length===1?" character":" characters"):"Nobody yet")),
-      h("ol",{class:"pt-ppl"},shown.map((x,i)=>chip(x,p,open&&l.length>3&&i===l.length-1)),
+      h("ol",{class:"pt-ppl"+(open?anim("p:"+p):"")},shown.map((x,i)=>chip(x,p,open&&l.length>3&&i===l.length-1)),
         !open&&l.length>N?h("li",{class:"pt-more"},h("button",{type:"button",class:"linkish",onclick:toggle},"+"+(l.length-N)+" more")):null),
-      h("span",{class:"pt-chev","aria-hidden":"true"},l.length>N?(open?"⌄":"›"):""))};
+      l.length>N?h("button",{type:"button",class:"cm-tog pt-chev","aria-expanded":String(open),"aria-label":(open?"Show fewer in ":"Show everyone in ")+p,onclick:toggle},open?"⌄":"›"):h("span",{"aria-hidden":"true"}))};
   const missing=PRIMARY.filter(p=>!by[p]);
   const grp=(name,list)=>[h("div",{class:"pt-grp"},name),list.map(row)];
   const body=[];
@@ -2764,7 +2837,7 @@ function viewChar(coll,id){
     m.isAlt?null:["Loot points",String(lootPts(m))]].filter(Boolean);
   const out=[h("div",{},h("div",{class:"page-head"},h("div",{style:"display:flex;flex-direction:column;gap:.375rem;min-width:0"},h("a",{href:"#roster",class:"small"},"← Roster"),
       h("div",{class:"ch-hero"},
-        h("span",{class:"ch-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?h("img",{src:av,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
+        h("span",{class:"ch-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?fadeImg({src:av,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
         h("div",{style:"display:flex;flex-direction:column;gap:.25rem;min-width:0"},h("h1",{},nameOf(m),streakOf(m)?flameEl(streakOf(m),"big"):null),
           h("p",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),titleTags(m),
           h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—"))))),
@@ -3266,7 +3339,24 @@ function render(){
     h("footer",{class:"site-foot wrap"},h("span",{},"Blood and Tears · a guild site, made by guildies"),h("button",{type:"button",class:"foot-link",onclick:openPrivacy},"Privacy and opting out"))].filter(Boolean));
   for(const[id,v]of Object.entries(typed)){const el=document.getElementById(id);if(!el||el.closest("dialog"))continue;el.value=v}
   if(keep){const el=document.getElementById(keep);if(el)el.focus()}
+  // The loading screen goes once the roster is in (or something's gone wrong, or it's taking too long).
+  if(S.loaded||S.error||S.authError||!configured)bootDone();
+  S.anim=null;
   checkDing();checkMilestones();markVisit()}
+function bootDone(){const b=document.getElementById("boot");if(b&&!b.classList.contains("gone")){b.classList.add("gone");setTimeout(()=>b.remove(),500)}}
+setTimeout(bootDone,10000);
+// Pictures: the first load fades in; after that the same picture shows straight away on every redraw.
+const seenImg=new Set();
+function fadeImg(attrs){const src=attrs.src,img=h("img",{...attrs,class:((attrs.class||"")+" fade"+(seenImg.has(src)?" in":"")).trim()});
+  if(!seenImg.has(src)){const done=()=>{seenImg.add(src);img.classList.add("in")};img.addEventListener("load",done,{once:true});img.addEventListener("error",done,{once:true})}
+  return img}
+// Something just opened by a tap: it slides in on the next redraw only.
+const anim=k=>S.anim!=null&&S.anim===k?" opening":"";
+const openAnim=k=>{S.anim=k};
+// <details> folds slide open too, when someone opens one by hand.
+let foldTap=false;
+document.addEventListener("click",e=>{if(e.target.closest("summary"))foldTap=true},true);
+document.addEventListener("toggle",e=>{const d=e.target;if(!(d instanceof HTMLDetailsElement))return;if(foldTap&&d.open){d.classList.add("opening");setTimeout(()=>d.classList.remove("opening"),300)}foldTap=false},true);
 let rq=0;const schedule=()=>{if(rq)return;rq=requestAnimationFrame(()=>{rq=0;if(!$("#dlg").open)render();else schedule._pending=true})};
 $("#dlg").addEventListener("close",()=>{if(schedule._pending){schedule._pending=false;render()}});
 let syncTimer=0;
@@ -3299,7 +3389,13 @@ function subscribe(){
 addEventListener("online",render);addEventListener("offline",render);
 // Refresh who's online every minute while the page is open.
 if(DISCORD_SERVER_ID){loadWidget();setInterval(loadWidget,60000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadWidget()})}
-addEventListener("hashchange",()=>{if(/^#link\//.test(location.hash))return checkLinkHash();render();scrollTo(0,0)});
+// Each page remembers how far down it was scrolled (in the browser's history entry), so Back returns to the same spot.
+let scrollSave=0;
+addEventListener("scroll",()=>{if(scrollSave)return;scrollSave=setTimeout(()=>{scrollSave=0;try{history.replaceState({...(history.state||{}),y:scrollY},"")}catch(e){}},150)},{passive:true});
+addEventListener("hashchange",()=>{if(/^#link\//.test(location.hash))return checkLinkHash();clearTimeout(scrollSave);scrollSave=0;
+  const y=history.state&&typeof history.state.y==="number"?history.state.y:0;render();
+  if(y)requestAnimationFrame(()=>scrollTo(0,y));else scrollTo(0,0)});
+if("scrollRestoration" in history)history.scrollRestoration="manual";
 // No sign-in screen: each browser quietly gets its own anonymous ID, and characters remember which IDs can edit them.
 if(configured){onAuthStateChanged(auth,u=>{S.user=u;
   if(u){subscribe();render()}

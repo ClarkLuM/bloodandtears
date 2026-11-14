@@ -32,6 +32,8 @@ Other things worth knowing about:
 - **Signature moves.** Every spec has one (Combat rogues have Blade Flurry), printed on the card for flavour. The list is `MOVES` in `public/index.html`.
 - **Celebrations.** When your character levels up, your card flips over with the new level. Guild milestones (such as 1,000 honourable kills) get a small toast.
 - **Since You Were Last Here** sums up what happened since this device last had the site open.
+- **Search** (the header button, or press `/` anywhere) finds characters, recipes, dungeon drops, dungeons and pages, and goes straight there: a recipe opens Who Can Make It with it filled in, a drop opens its dungeon with What Drops open.
+- **Smooth to use:** a spinning gingerbread loading screen until the roster arrives, pictures that fade in once, Back returning to the same spot on the page, and things sliding open when tapped (all motion is switched off for anyone who's asked their device for less).
 - **Winter Veil.** A countdown strip runs from 1 December to Boxing Day.
 - **Character of the Day** picks from characters at level 10 or more with a real armory picture, seen in game in the last three days (it widens if nobody fits). Recent level-ups and new gear make a pick likelier.
 - **On Discord** names only who's in a voice channel (by channel) and who's playing World of Warcraft, then "+N others online". Officers can leave names off it (bots, say) under **Leave off the Discord box** in Guild Basics.
