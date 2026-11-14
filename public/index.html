@@ -461,6 +461,8 @@ nav.bottom{display:none}
 a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:1rem;color:var(--accent-text)}a.total-open:hover b{text-decoration:underline}
 .r-loot .item-link{white-space:normal;overflow-wrap:break-word}
 .mk-off{margin:0;color:var(--sec)}
+.mk-about{display:flex;flex-direction:column;padding-top:.75rem;margin-top:.25rem;border-top:1px solid var(--sep)}.mk-about h3{margin:0;font-size:1rem}
+.mk-about>div:not(.spread){border-top:0!important;padding:.375rem 0 0!important}
 .dc-sec{display:flex;flex-direction:column;padding:.5rem 0;border-top:1px solid var(--sep)}.dc-sec>.small:first-child{font-weight:600;color:var(--accent-text)}
 .dg-other{border-top:1px solid var(--sep)}.dg-other>summary{padding:.875rem 1.25rem;cursor:pointer;color:var(--sec);font-size:.875rem}.dg-other>summary:hover{color:var(--text)}
 .total-next{position:absolute;left:0;right:0;bottom:0;height:.1875rem}
@@ -768,7 +770,8 @@ a.r-name:hover{color:var(--accent-text)}
 .totals{display:flex;flex-wrap:wrap;gap:1px}
 .total{flex:1 1 auto;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 .375rem;padding:.4375rem .75rem}
 .total b{font-size:1.0625rem;line-height:1.5rem}
-@media (max-width:640px){.total{padding:.375rem .625rem}.total b{font-size:1rem;line-height:1.375rem}.total:last-child{grid-column:auto}}
+@media (max-width:640px){.totals{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -1rem;border-radius:0;border-left:0;border-right:0}.totals::-webkit-scrollbar{display:none}
+  .total{flex:none;padding:.375rem .75rem;white-space:nowrap}.total b{font-size:1rem;line-height:1.375rem}.total:last-child{grid-column:auto}}
 /* Character of the day in the side column: picture on top at full width, details underneath */
 .spot{grid-template-columns:minmax(0,1fr)}
 .spot-art{min-height:13.5rem}
@@ -1266,7 +1269,7 @@ function viewRoster(){
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
   const at=(el,n)=>{if(el&&el.style)el.style.setProperty("--o",n);return el};
   return[head,h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(sinceCard(),0),at(claimBanner(),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
-    h("div",{class:"rl-col"},at(spotlight(),7),at(inGameToday(),6),at(leaderboards(),9),at(guildMakeup(),10),at(aboutCard(),11),at(siteUse(),12),at(discordBox(),13)))]}
+    h("div",{class:"rl-col"},at(spotlight(),7),at(inGameToday(),6),at(weekTeaser(),9),at(guildMakeup(),10),at(siteUse(),12),at(discordBox(),13)))]}
 
 // Their best equipped item: highest quality first (green and up).
 const bestLoot=m=>Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=2).sort((x,y)=>+y.q-+x.q)[0]||null;
@@ -1415,8 +1418,8 @@ function guildTotals(){
   return h("section",{class:"totals","aria-label":"Guild totals"},tiles.map(([k,label,wk,tip])=>{const nx=msNext(k,v[k]);
     const next=nx?"Next guild milestone: "+fmtN(nx.n)+" ("+fmtN(nx.n-v[k])+" to go)":"";
     // Nobody's got there yet: say so, and point at the Hall of Firsts.
-    if(!v[k]&&(k==="epics"||k==="sixty"))return h("a",{class:"total total-open",href:"#roster",title:"See the Hall of Firsts",
-      onclick:e=>{e.preventDefault();location.hash="#roster";setUi({raceTab:"firsts"});requestAnimationFrame(()=>{const el=document.getElementById("race-h");if(el)el.scrollIntoView({behavior:"smooth",block:"center"})})}},
+    if(!v[k]&&(k==="epics"||k==="sixty"))return h("a",{class:"total total-open",href:"#records",title:"See the Hall of Firsts",
+      onclick:e=>{e.preventDefault();setUi({raceTab:"firsts"},true);location.hash="#records";setTimeout(()=>{const el=document.getElementById("race-h");if(el)el.scrollIntoView({behavior:"smooth",block:"start"})},250)}},
       h("span",{},k==="epics"?"First epic:":"First 60:"),h("b",{},"up for grabs"));
     return h("div",{class:"total",title:[tip,next].filter(Boolean).join(". ")||null},
       h("b",{},fmtN(v[k])),h("span",{},label),wk?h("small",{},"+"+fmtN(wk)+" this week"):null,
@@ -1465,7 +1468,7 @@ function checkMilestones(){
 // wants a tank and a healer, so it says when there aren't enough to go round.
 const ROLE_COL={Tank:"#3d6fd6",Healer:"#2e9e3f",DPS:"#c23b54"};
 function guildMakeup(){
-  const ps=S.members.filter(m=>isMine(m)||memberState(m)==="current");if(ps.length<2)return null;
+  const ps=S.members.filter(m=>isMine(m)||memberState(m)==="current");if(ps.length<2)return aboutCard();
   const n=ps.length,cls={},role={Tank:0,Healer:0,DPS:0},flex={Tank:0,Healer:0},HEAL_CLS=["Shaman","Druid","Paladin","Priest"];
   for(const m of ps){const r=ROLES.includes(m.role)?m.role:"DPS";role[r]++;if(m.cls)cls[m.cls]=(cls[m.cls]||0)+1;
     // Could also fill in: their second role.
@@ -1488,7 +1491,8 @@ function guildMakeup(){
     offHeal.length?h("p",{class:"small mk-off"},h("span",{class:"ter"},"Could heal as an off-spec: "),offHeal.flatMap((m,i)=>[i?", ":"",charLink(m)])):null,
     h("details",{class:"mk-more",open:!!S.ui.mkOpen||null,ontoggle:e=>{if(e.target.open!==!!S.ui.mkOpen)S.ui.mkOpen=e.target.open}},h("summary",{class:"small"},"By class"),
       h("div",{class:"mk-cls",style:"padding-top:.5rem"},list.map(([c,k])=>h("span",{},classIcon(c),h("span",{},c),h("b",{},String(k))))),
-      missing.length&&missing.length<Object.keys(CLASSES).length?h("p",{class:"small ter",style:"margin:.5rem 0 0"},"Nobody's playing "+(missing.length===1?"a "+missing[0]:missing.slice(0,-1).join(", ")+" or "+missing[missing.length-1])+" yet."):null))}
+      missing.length&&missing.length<Object.keys(CLASSES).length?h("p",{class:"small ter",style:"margin:.5rem 0 0"},"Nobody's playing "+(missing.length===1?"a "+missing[0]:missing.slice(0,-1).join(", ")+" or "+missing[missing.length-1])+" yet."):null),
+    aboutCard(true))}
 
 /* ---------- Since you were last here ---------- */
 // This device remembers when the site was last open on it (lg-last, in this browser only). If that was over an hour
@@ -2082,8 +2086,9 @@ function weekGained(m,since=Date.now()-7*864e5,until=Infinity){const lv=+m.level
   let n=ups.filter(j=>Date.parse(j.at)>=since&&Date.parse(j.at)<until).reduce((t,j)=>{const to=+String(j.t).replace(/\D/g,"");return t+Math.max(1,to-(+j.from||to-1))},0);
   if(LAUNCH>=since&&LAUNCH<until&&(Date.parse(m.createdAt||"")||0)<LAUNCH_WEEK){const f=ups[0],first=f?(f.from!=null?+f.from:+String(f.t).replace(/\D/g,"")-1):lv;n+=Math.max(0,first-1)}
   return n}
-function leaderboards(){
-  if(!S.members.length)return null;
+// Records' "This Week" card: the week's biggest moves, then the level race, Hall of Firsts and honour, on a switch.
+function raceCard(){
+  if(!S.members.length)return weekCard();
   const withHk=[...S.members,...S.alts].filter(m=>m.armory&&m.armory.hk!==undefined);
   // "This Week on Records": the week's biggest moves from Records first, then the level race, Hall of Firsts and honour.
   const wk=weekMoves(),moves=wk?wk.list:[];
@@ -2091,24 +2096,30 @@ function leaderboards(){
   const base=wk&&wk.base,gearMode=!!base&&S.members.filter(m=>(+m.level||1)>=60).length*2>=S.members.length;
   const tabs=[...(moves.length?[["moves","Moves"]]:[]),["week",gearMode?"Gear race":"Level race"],["firsts","Firsts"],...(withHk.length?[["hk","Honour"]]:[])];
   const tab=tabs.some(t=>t[0]===S.ui.raceTab)?S.ui.raceTab:tabs[0][0],since=Date.now()-7*864e5;
-  const more=h("a",{class:"small",href:"#records"},"See all the guild records");
-  const head=h("div",{style:"display:flex;flex-direction:column;gap:.5rem"},h("h2",{id:"race-h"},"This Week on Records"),seg("Show",tabs,tab,k=>setUi({raceTab:k})));
-  if(tab==="moves")return h("aside",{class:"card","aria-labelledby":"race-h"},head,
-    h("ul",{class:"wk-list"},moves.slice(0,4).map(e=>h("li",{},e.kind==="crown"?h("span",{class:"wk-b crown"},medal(1)):h("span",{class:"wk-b "+e.kind},e.kind==="up"?"▲"+e.n:e.n),h("span",{class:"small"},e.parts)))),more);
-  if(tab==="firsts")return h("aside",{class:"card","aria-labelledby":"race-h"},head,...firstsList(),more);
+  const more=null;
+  const head=h("div",{class:"spread",style:"gap:.5rem 1rem"},h("h2",{id:"race-h"},"This Week"),seg("Show",tabs,tab,k=>setUi({raceTab:k},true)));
+  if(tab==="moves"){const c=weekCard();c.replaceChild(head,c.firstChild);c.setAttribute("aria-labelledby","race-h");return c}
+  if(tab==="firsts")return h("section",{class:"card","aria-labelledby":"race-h"},head,...firstsList());
   const rows=(tab==="week"&&gearMode?S.members.filter(m=>base.row[m.id]).map(m=>[m,lootPts(m)-(+base.row[m.id][2]||0)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]||nameOf(a[0]).localeCompare(nameOf(b[0])))
     :tab==="week"?S.members.map(m=>[m,weekGained(m,since)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]||(+b[0].level||0)-(+a[0].level||0))
     :withHk.map(m=>[m,+m.armory.hk||0]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]||nameOf(a[0]).localeCompare(nameOf(b[0])))).slice(0,5);
   const top=rows.length?rows[0][1]:1;
   const label=(m,v)=>tab==="week"&&gearMode?"+"+v+(v===1?" loot point":" loot points"):tab==="week"?"+"+v+(v===1?" level":" levels"):v.toLocaleString("en-AU")+(v===1?" kill":" kills")+(hkWeekOf(m)?" · +"+hkWeekOf(m)+" this week":"");
-  return h("aside",{class:"card","aria-labelledby":"race-h"},head,
+  return h("section",{class:"card","aria-labelledby":"race-h"},head,
     rows.length?rows.map(([m,v],i)=>h("div",{style:"display:flex;flex-direction:column;gap:.25rem;padding:.375rem 0"},
       h("span",{class:"spread",style:"flex-wrap:nowrap"},h("span",{class:"row",style:"gap:.5rem;flex-wrap:nowrap;min-width:0"},h("span",{class:"small ter",style:"width:1.2em"},String(i+1)),classIcon(m.cls),charLink(m)),
         h("span",{class:"small",title:tab==="hk"?pvpRank(+m.armory.rank||0):null,style:"white-space:nowrap;color:"+(i===0?"var(--accent-text)":"var(--sec)")},label(m,v))),
       h("span",{class:"track","aria-hidden":"true"},h("i",{class:i===0?"max":"",style:`width:${Math.max(4,v/top*100).toFixed(0)}%`}))))
     :h("p",{class:"empty"},tab==="week"&&gearMode?"No new loot this week yet.":tab==="week"?"Nobody's levelled this week yet.":"Nobody has an honourable kill yet. Go gank something."),
-    tab==="hk"?h("p",{class:"small ter",style:"margin:0"},"From the armory, so it's only as up to date as the last logout."):null,
-    h("a",{class:"small",href:"#records"},"See all the guild records"))}
+    tab==="hk"?h("p",{class:"small ter",style:"margin:0"},"From the armory, so it's only as up to date as the last logout."):null)}
+// The roster's side box: just the week's top three moves, and a way to the rest on Records.
+function weekTeaser(){
+  if(!S.members.length)return null;
+  const wk=weekMoves(),moves=wk?wk.list.slice(0,3):[];
+  const lines=moves.length?h("ul",{class:"wk-list"},moves.map(e=>h("li",{},e.kind==="crown"?h("span",{class:"wk-b crown"},medal(1)):h("span",{class:"wk-b "+e.kind},e.kind==="up"?"▲"+e.n:e.n),h("span",{class:"small"},e.parts))))
+    :h("p",{class:"small ter",style:"margin:0"},wk?"No big moves yet this week.":"This fills in after the first day.");
+  return h("aside",{class:"card","aria-labelledby":"wt-h"},h("h2",{id:"wt-h"},"This Week"),lines,
+    h("a",{class:"small",href:"#records"},"Level race, Firsts and more on Records"))}
 /* ---------- Discord online box ---------- */
 // Uses Discord's public server widget (Server Settings > Widget > Enable Server Widget). No bot or login needed.
 // It shows Discord names, not character names, and leaves out anyone set to invisible.
@@ -2450,7 +2461,7 @@ function hallOfTitles(){
     hidden||all?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(!!all),onclick:()=>setUi({hotAll:!all},true)},all?"Show held titles only":"Show every title"):null)}
 function viewRecords(){
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs."))),
-    weekCard(),
+    raceCard(),
     h("div",{class:"rec-top"},recBoards(),hallOfTitles()),
     whenWePlay(),
     h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →")),
@@ -2661,10 +2672,10 @@ function raidNights(){const rs=Object.values((S.scribe&&S.scribe.raids)||{}).fil
     h("p",{class:"small ter",style:"margin:0"},"Noted by the guild scribe, so only raids it was in."))}
 /* ---------- About the guild ---------- */
 // Guild basics (officers edit them), shown on the roster.
-function aboutCard(){
+function aboutCard(inner){
   const gi=S.guild||{},basics=[["Guild Master","gm"],["Officers","officers"],["Loot rules","loot"],["Guild events","events"]].filter(([,k])=>gi[k]);
   if(!basics.length&&!isOfficer())return null;
-  return h("aside",{class:"card","aria-labelledby":"about-h"},h("div",{class:"spread"},h("h2",{id:"about-h"},"About the Guild"),isOfficer()?h("div",{class:"row",style:"gap:.375rem"},h("button",{class:"btn sm",onclick:openGuild},"Edit")):null),
+  return h(inner?"div":"aside",{class:inner?"mk-about":"card","aria-labelledby":inner?null:"about-h"},h("div",{class:"spread"},h(inner?"h3":"h2",{id:"about-h"},"About the Guild"),isOfficer()?h("div",{class:"row",style:"gap:.375rem"},h("button",{class:"btn sm",onclick:openGuild},"Edit")):null),
     basics.length?basics.map(([l,k])=>h("div",{style:"display:flex;flex-direction:column;gap:2px;padding:.5rem 0;border-top:1px solid var(--sep)"},h("span",{class:"small ter",style:"font-weight:600"},l),h("span",{style:"white-space:pre-wrap;overflow-wrap:anywhere"},gi[k])))
       :h("p",{class:"empty"},"Add the Guild Master, officers, loot rules and guild events so new guildies know how things work."))}
 
