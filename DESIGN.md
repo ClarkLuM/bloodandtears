@@ -856,3 +856,9 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 ## Grouped feed lines (Nov 2026)
 - In the Guild Feed and each Guild History day, a run of the same kind of moment for one character, each within three hours of the last, is one line: "looted [a], [b], [c] and 2 more", "dinged 32 to 34", "cleared A and B", "trained x, y and z". The line takes the newest time. History's "N things" still counts every moment.
+
+## Character sheet gear (Nov 2026)
+- The Gear card is a character sheet: left-hand slots (Head to Wrist) with the item name to their left, right-hand slots (Hands to Trinket) with the name to their right, the character picture between. Names use the in-game quality colours whatever the theme (the sheet is always dark). Empty slots say the slot and "Empty".
+- The weapons sit touching (2px apart) under the character, as in game, with their names on one line beneath.
+- A summary line above: the armory's item level when it has one, then epics, blues, greens and empty slots. The armory has no item level per item.
+- Stats sit underneath at full width, in as many columns as fit. Under 560px of card width the picture goes on top and the slots become two columns, names to the right, wrapping.
