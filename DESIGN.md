@@ -853,3 +853,6 @@ Your own decisions first (the newest value per path), then your changes to stand
 - Every item link (`qLink`) starts with its 18px icon (`.item-ic`: 1.125em square, 3px corners, a faint ring in the item's quality colour).
 - Icons for worn items come from the armory (Blizzard's image server). Anything else asks Wowhead's tooltip data for the icon name when the link scrolls into view, four at a time, and keeps the answer on that device for 30 days (`localStorage` key `bt-icons`). Links inside closed folds aren't asked about until opened.
 - Until an icon arrives, a blank square of the same size holds its place, so nothing shifts. If Wowhead has no icon, the question-mark icon stands in.
+
+## Grouped feed lines (Nov 2026)
+- In the Guild Feed and each Guild History day, a run of the same kind of moment for one character, each within three hours of the last, is one line: "looted [a], [b], [c] and 2 more", "dinged 32 to 34", "cleared A and B", "trained x, y and z". The line takes the newest time. History's "N things" still counts every moment.

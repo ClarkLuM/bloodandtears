@@ -2025,7 +2025,7 @@ function journeyText(j,m){const t=String(j.t||""),eq=/^(Equipped|Got) (.+)$/.exe
 const feedWho=m=>isMine(m)?h("a",{class:"linkish",href:`#char/${m.isAlt?"alts":"members"}/${m.id}`},nameOf(m)+" (you)"):charLink(m);
 function feedItems(){
   // Each line has a kind, so Guild History can filter: level, loot, title, guild (joins and leaves), prof, pvp, dungeon, other.
-  const out=[],push=(at,parts,k="other",m=null)=>{const t=Date.parse(at||"");if(t)out.push({t,parts,k,who:m?nameOf(m).toLowerCase():""})};
+  const out=[],push=(at,parts,k="other",m=null,bit)=>{const t=Date.parse(at||"");if(t)out.push({t,parts,k,who:m?nameOf(m).toLowerCase():"",m,bit})};
   const who=feedWho;
   // Joins and leaves the guild scribe noticed in game.
   for(const e of (S.scribe&&S.scribe.events)||[]){const m=e.id&&memberById(e.id);
@@ -2039,12 +2039,12 @@ function feedItems(){
       // Items link to Wowhead in their quality colour. Older lines without the item saved are matched to current gear by name.
       const eq=/^Equipped (.+)$/.exec(t);
       if(eq){const nm=eq[1],it=j.item&&j.item.id?{...j.item,name:nm}:Object.values(m.gear||{}).find(g=>g&&g.name===nm);
-        push(j.at,[who(m)," looted ",itemRef(nm,it)],"loot",m)}
-      else if(/^Reached level \d+/.test(t))push(j.at,[who(m)," dinged "+lvlOf(t)+(lvlOf(t)>=60?"!":"")],"level",m);
+        const r=itemRef(nm,it);push(j.at,[who(m)," looted ",r],"loot",m,r)}
+      else if(/^Reached level \d+/.test(t))push(j.at,[who(m)," dinged "+lvlOf(t)+(lvlOf(t)>=60?"!":"")],"level",m,lvlOf(t));
       else if(/^Reached PvP /.test(t)){const pv=/Rank (\d+)(?:: (.+))?$/.exec(t);push(j.at,[who(m),pv&&pv[2]?" ranked up to "+pv[2]+" in PvP":" hit PvP "+t.slice(12)],"pvp",m)}
-      else if(/^Finished /.test(t)){const what=t.slice(9);push(j.at,[who(m),(DUNGEONS.some(d=>d[0]===what)?" cleared ":" finished ")+what],"dungeon",m)}
-      else if(/^Got /.test(t))push(j.at,[who(m)," looted ",itemRef(t.slice(4),j.item)],"loot",m);
-      else if(/^Trained /.test(t))push(j.at,[who(m)," trained "+t.slice(8)],"prof",m);
+      else if(/^Finished /.test(t)){const what=t.slice(9);push(j.at,[who(m),(DUNGEONS.some(d=>d[0]===what)?" cleared ":" finished ")+what],"dungeon",m,DUNGEONS.some(d=>d[0]===what)?what:undefined)}
+      else if(/^Got /.test(t)){const r=itemRef(t.slice(4),j.item);push(j.at,[who(m)," looted ",r],"loot",m,r)}
+      else if(/^Trained /.test(t))push(j.at,[who(m)," trained "+t.slice(8)],"prof",m,t.slice(8));
       else if(/ reached (Apprentice|Journeyman|Expert|Artisan)$/.test(t)){const i=t.lastIndexOf(" reached "),r=t.slice(i+9);push(j.at,[who(m)," is now "+(/^[AEIOU]/.test(r)?"an ":"a ")+r+" in "+t.slice(0,i)],"prof",m)}
       else if(/^Joined /.test(t))push(j.at,[who(m)," joined "+t.slice(7)],"guild",m);
       else if(/^Reached \d+ honourable kills$/.test(t))push(j.at,[who(m)," hit ",h("b",{},(+t.split(" ")[1]).toLocaleString("en-AU")+" honourable kills")],"pvp",m);
@@ -2076,8 +2076,22 @@ function raceItems(){
     const names=shown.flatMap((x,i)=>[i?(i===shown.length-1&&!more?" and ":", "):"",feedWho(x.m)]);
     out.push({t:Math.max(...ppl.map(x=>x.t)),parts:[...names,more?" and "+more+" more":""," are neck and neck at ",h("b",{},"level "+lv),". Who dings first?"]})}
   return out.sort((a,b)=>b.t-a.t).slice(0,3)}
+// Runs of the same kind of moment for one character, close together (each within three hours of the last), become
+// one line: "looted [a], [b] and 2 more", "dinged 23 to 25", "cleared A and B", "trained x, y and z".
+// The line takes the time of the newest one.
+const andList=l=>l.flatMap((x,i)=>[i?(i===l.length-1?" and ":", "):"",x]);
+function groupFeed(items){const out=[];
+  for(const x of items){const g=out[out.length-1];
+    if(g&&x.bit!==undefined&&g.bits&&g.k===x.k&&g.m&&x.m&&g.m.id===x.m.id&&g.last-x.t<=3*36e5){g.bits.push(x.bit);g.last=x.t;continue}
+    out.push({...x,bits:x.bit!==undefined?[x.bit]:null,last:x.t})}
+  return out.map(g=>{if(!g.bits||g.bits.length<2)return g;const b=[...g.bits].reverse(),who=g.parts[0];let parts;
+    if(g.k==="loot")parts=[who," looted ",...andList(b.length>3?[...b.slice(0,3),(b.length-3)+" more"]:b)];
+    else if(g.k==="level"){const lo=Math.min(...b),hi=Math.max(...b);parts=[who," dinged "+(hi-lo===b.length-1?lo+" to "+hi:b.join(", "))+(hi>=60?"!":"")]}
+    else if(g.k==="dungeon")parts=[who," cleared ",...andList(b)];
+    else parts=[who," trained ",...andList(b)];
+    return{...g,parts,n:b.length}})}
 function guildFeed(){
-  const items=feedItems(),races=raceItems(),n=S.ui.feedAll?40:8;
+  const items=groupFeed(feedItems()),races=raceItems(),n=S.ui.feedAll?40:8;
   const line=(parts,when,now)=>h("div",{class:"spread",style:"padding:.5rem 0;border-top:1px solid var(--sep);flex-wrap:nowrap;align-items:baseline"},h("span",{style:"min-width:0"},parts),h("span",{class:"small ter"+(now?" feed-now":""),style:"white-space:nowrap"},when));
   return h("section",{class:"card","aria-labelledby":"feed-h",style:"gap:0"},h("div",{class:"spread",style:"padding-bottom:.5rem"},h("h2",{id:"feed-h"},"Guild Feed"),h("span",{class:"small ter"},"What everyone's been up to")),
     races.map(x=>line(x.parts,"now",true)),
@@ -2104,6 +2118,7 @@ function viewHistory(){
   const label=t=>{const d=new Date(t);d.setHours(0,0,0,0);const n=Math.round((today-d)/864e5);
     return n===0?"Today":n===1?"Yesterday":d.toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long"})};
   const days=[];for(const x of items){const l=label(x.t);if(!days.length||days[days.length-1][0]!==l)days.push([l,[]]);days[days.length-1][1].push(x)}
+  for(const d of days)d[1]=groupFeed(d[1]);
   const time=t=>new Date(t).toLocaleTimeString("en-AU",{hour:"numeric",minute:"2-digit"}).replace(" ","").toLowerCase();
   // A line above the first thing that happened before this device's last visit (if it was a while ago).
   let marked=!awhile()||!items.length||items[0].t<=lastHere;
@@ -2120,7 +2135,7 @@ function viewHistory(){
     // not what was saved when the fold was drawn, so closing then reopening without a redraw is remembered too.
     days.length?h("section",{class:"card hist-days"},days.map(([l,list],i)=>{const open=S.ui.histOpen&&l in S.ui.histOpen?S.ui.histOpen[l]:(l==="Today"||(i===0&&days[0][0]!=="Today"&&!days.some(d=>d[0]==="Today")));
       return h("details",{class:"hist-day",open:open||null,ontoggle:e=>{if(e.target.open!==(S.ui.histOpen&&l in S.ui.histOpen?S.ui.histOpen[l]:open))S.ui.histOpen={...(S.ui.histOpen||{}),[l]:e.target.open}}},
-        h("summary",{},h("h2",{},l),h("span",{class:"small ter"},list.length+(list.length===1?" thing":" things"))),
+        h("summary",{},h("h2",{},l),(c=>h("span",{class:"small ter"},c+(c===1?" thing":" things")))(list.reduce((t,x)=>t+(x.n||1),0))),
         list.map(x=>[mark(x),h("div",{class:"hist-row"},h("span",{style:"min-width:0"},x.parts),h("span",{class:"small ter",style:"white-space:nowrap"},time(x.t)))]))}))
       :h("p",{class:"empty"},all.length?"Nothing matches. Try another character or show everything.":"Nothing yet. Level up and it starts here.")]}
 
