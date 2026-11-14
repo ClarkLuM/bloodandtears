@@ -837,3 +837,14 @@ Your own decisions first (the newest value per path), then your changes to stand
 | Elevation | `shadow-raised`, `shadow-floating`, `shadow-overlay` |
 | Type | `text-body-md`, `text-label-lg`, `text-title-md`, `text-headline-md` |
 | Motion | `transition-feedback`, `ease-enter`, `ease-exit`, `ease-hover` |
+
+## Consistency rules (tidy-up, Nov 2026)
+- Headings: page titles 32px, card and section headings 20px, sub-headings (History days, groups inside a card) 16px in Figtree.
+- Spacing: 12px between the parts of a card, 8px between rows of a list.
+- Corners: 6px for small things (tags, buttons, inputs, arrows), 10px for cards, tiles, panels and tables, pills only for filter chips.
+- Gold: `--accent-text` for text and links, `--gold-hi` for "the best" (titles, the crown, maxed bars). Both have light-mode values; never type a gold hex into a rule.
+- Tags are labels: outlined, 6px corners, weight 600. Filled chips are for values (a skill and its number).
+- Anything that shows more or opens a list is a small ghost button (`btn ghost sm`). Underlined text is only for links to another page.
+- Every row that opens has the same arrow button (`.r-x` / `.cm-tog`): 36px, bordered, right when closed, down when open; 44px on phones.
+- Bars (`.track`) are 6px, no border, gold fill, brighter gold when maxed.
+- Every input and menu: 6px corners, 16px text (stops phones zooming in).
