@@ -13,3 +13,7 @@ Verdict: the site is consistent and passes its floors. What's left is a broken m
 | 5 | Text sizes: 14 on the character page (8 to 35 px), 12 on the roster; 12, 13, 14 and 15 px all in use; page titles 35 px (measured) | Several sizes sit within a pixel of each other, so the levels blur; page titles are bigger than the 32 px the tidy-up set | Map to one scale: 12 (small), 14 (body), 16 (sub-heading), 20 (section), 32 (page); 13 → 12 or 14, 15 and 17 → 16 | About 8 sizes, none within 10% of another (preflight 7); your DESIGN.md heading scale |
 
 Not findings (checked and fine): one filled button per view ("My character", "This is me"); two typefaces, each with a job (Figtree, Alegreya Sans SC for small headings); three weights (400, 600, 700); smallest text 11 px on short labels only, apart from the trading cards' own stamps, which are scaled like real cards; no tap targets under 24 px elsewhere; focus and contrast pass (axe).
+
+
+## Status
+All five fixed on 15 Nov 2026 (History and Dungeons first, then the rest of the site). Re-measured: no menus or search boxes under 16px, no folds or tabs under 24px tall, the browser's own fold triangles gone, page titles 32px.

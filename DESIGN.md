@@ -862,3 +862,9 @@ Your own decisions first (the newest value per path), then your changes to stand
 - The weapons sit touching (2px apart) under the character, as in game, with their names on one line beneath.
 - A summary line above: the armory's item level when it has one, then epics, blues, greens and empty slots. The armory has no item level per item.
 - Stats sit underneath at full width, in as many columns as fit. Under 560px of card width the picture goes on top and the slots become two columns, names to the right, wrapping.
+
+## Audit fixes (15 Nov 2026)
+- Text sizes outside the trading cards come from one scale: 11px (short uppercase labels only), 12px (meta: counts, footers, captions), 14px (body, table cells, chips, tags), 16px (sub-headings, inputs and menus), 20px (sections), 32px (page titles). Display numbers (totals, the raid countdown, a character's name on its feature) keep their own size.
+- Every menu and search box is 16px text, including the Sort and filter menus (`.r-sort select`).
+- Every fold uses one of two arrows: rows that open (roster, profession table, dungeon rows) end with the 36px bordered arrow button; small folds inside a card (History days, What Drops, Can make, Alliance-side, By class, Change the flavour text) open with the small turning chevron at their start. No browser triangles.
+- Folds and tabs are at least 28px tall; the trading card's flip tabs keep their look but get a bigger invisible hit area.
