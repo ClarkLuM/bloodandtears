@@ -794,6 +794,11 @@ a.r-name:hover{color:var(--accent-text)}
 .binder-it{gap:.25rem}
 .binder-link{font-size:.8125rem;line-height:1.75rem;color:var(--ter);text-decoration:none;padding:0 .5rem}
 .binder-link:hover{color:var(--accent-text);text-decoration:underline}
+/* "Open page" stays out of the way: it shows on hover or keyboard focus, and under a card once it's flipped (touch screens). */
+.binder-link{opacity:0;transition:opacity .15s}
+.binder-it:hover .binder-link,.binder-link:focus-visible,.lg-flip.on~.binder-link{opacity:1}
+@media (hover:none){.binder-link{pointer-events:none}.lg-flip.on~.binder-link{pointer-events:auto}}
+@media (prefers-reduced-motion:reduce){.binder-link{transition:none}}
 @media (max-width:600px){
   .binder{grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem .625rem;justify-items:center}
   .binder .lg-flip{zoom:.64}
@@ -1297,7 +1302,7 @@ function viewCards(){
     :sort!=="level"?binder(list)
     :SETS.map(([t,range])=>{const ms=list.filter(m=>tierOf(+m.level||1)[1]===t);
       return ms.length?h("section",{class:"binder-set","aria-label":t+" cards"},h("div",{class:"binder-h"},h("h2",{},t),h("span",{class:"small ter"},range+" · "+ms.length+(ms.length===1?" card":" cards"))),binder(ms)):null});
-  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Cards"),h("p",{class:"sub"},"Everyone's trading card. Tap one to flip it.")),
+  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Cards"),h("p",{class:"sub"},"Everyone's trading card. Tap one to flip it; \"Open page\" shows under it.")),
       null),
     cardOfWeek(),tools,
     h("div",{class:"r-count",role:"status"},list.length===S.members.length?`${list.length} cards`:`Showing ${list.length} of ${S.members.length} cards`),
@@ -2184,8 +2189,8 @@ function rangeBoard(){
   const myBand=(my&&DG_GROUPS.find(g=>all.some(x=>bandOf(x)===g[0]&&fits(x)))||DG_GROUPS[0])[0];
   const band=S.ui.dgGroup&&(S.ui.dgGroup==="All"||DG_GROUPS.some(b=>b[0]===S.ui.dgGroup))?S.ui.dgGroup:myBand;
   const opts=band==="All"?all:all.filter(x=>bandOf(x)===band);
-  const head=h("div",{},h("h2",{id:"range-h"},"Dungeons"),
-    h("p",{class:"sub"},"How many of the guild are the right level and how many have been. Open one to see who, and what drops."));
+  const head=h("div",{},h("h2",{id:"range-h",class:"visually-hidden"},"Dungeon list"),
+    h("p",{class:"sub",style:"margin:0"},"How many of the guild are the right level and how many have been. Open one to see who, and what drops."));
   if(!opts.length)return h("section",{class:"card","aria-labelledby":"range-h",style:"gap:.75rem;margin-top:1rem"},head,h("p",{class:"empty"},"Nobody else is in range of a dungeon at your level yet."));
   // Start on the saved pick, else the busiest dungeon at your level, else the busiest one overall.
   const busiest=list=>list.slice().sort((a,b)=>b.active.length-a.active.length)[0];
@@ -2198,11 +2203,12 @@ function rangeBoard(){
     h("div",{class:"dg-cols small ter","aria-hidden":"true"},h("span",{},"Dungeon"),h("span",{},"In range"),h("span",{},"Been"),h("span",{title:"High enough for it, and no stamp yet"},"Need it")),
     opts.map(o=>dgRow(o)),
     other.length?h("details",{class:"dg-other",open:other.some(o=>x&&o.name===x.name)||null},h("summary",{},"Other · Alliance-side ("+other.length+")"),other.map(o=>dgRow(o))):null);
-  function dgRow(o){const open=x&&o.name===x.name,been=beenCount(o.name),mine=o.ppl.some(isMine);
+  // Tag only the dungeons one of your characters is the right level for and hasn't done yet.
+  function dgRow(o){const open=x&&o.name===x.name,been=beenCount(o.name),mine=o.ppl.some(m=>isMine(m)&&!passportOf(m).some(p=>p.name===o.name));
       return h("div",{class:"dg-item"+(open?" open":"")},
         h("div",{class:"dg-sum",onclick:e=>{if(!e.target.closest("a,button"))setUi({rangeD:open?"-":o.name},true)}},
           h("button",{type:"button",class:"dg-name","aria-expanded":String(!!open),onclick:()=>setUi({rangeD:open?"-":o.name},true)},
-            h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon. Horde can run it, but it's a trek to get to, and it doesn't count toward the Horde Spelunker achievement or give Legacy points."},"Alliance · no Legacy points"):null,mine?h("span",{class:"tag gold"},"Your level"):null),
+            h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon. Horde can run it, but it's a trek to get to, and it doesn't count toward the Horde Spelunker achievement or give Legacy points."},"Alliance · no Legacy points"):null,mine?h("span",{class:"tag gold"},"You need this"):null),
           h("span",{class:"dg-n"+(o.active.length?"":" zero")},h("b",{},String(o.active.length)),h("span",{class:"dg-n-l"}," in range")),
           h("span",{class:"dg-n"+(been?"":" zero")},h("b",{},String(been)),h("span",{class:"dg-n-l"}," been")),
           h("span",{class:"dg-n"+(o.need.length?"":" zero")},h("b",{},DG_ALLIANCE.includes(o.name)?"—":String(o.need.length)),h("span",{class:"dg-n-l"},DG_ALLIANCE.includes(o.name)?"":" need it"))),
