@@ -1,0 +1,47 @@
+# Dungeon drops new in WoW Forever, which aren't in the classic item database: item ID|quality|name.
+# Found with Wowhead's WoW Forever search, a few at a time, 14 November 2026. tools/dungeon-loot/build.py uses these.
+271205|3|Abomination Bones
+271096|3|Aetherwisp Bracers
+273049|3|Archmagister's Faceted Pendant
+271201|3|Atrophic Girdle
+274295|3|Band of Crimson Light
+273293|3|Bandsaw Wristbands
+272999|3|Barbaric Crossbow
+280065|3|Behemoth Bones
+274600|3|Berserker Shackles
+286429|3|Big-Belly Belt
+273805|3|Blackrock Harness
+273637|3|Blade of Silverlaine
+280075|3|Bleak Eye Shoulderplates
+273039|3|Blightleaf Rope
+273645|3|Blindwatcher's Sight
+271212|3|Bloodied Chestwraps
+274598|3|Bloodslash Axe
+272998|3|Bone Knuckles
+273032|3|Bonebinder's Signet
+273055|3|Bonepile Gaze
+271209|3|Bonerust Leggings
+273819|3|Boneslicer
+273808|3|Bridgebreaker Bindings
+274602|3|Brinebelly Leggings
+274605|3|Briny Sash
+273054|3|Cartilage Shapers
+273456|3|Cell Keeper's Claws
+275004|3|Chain of the Corruptor
+273007|3|Chasm Walkers
+273084|3|Cloak of Hermitic Bliss
+280062|3|Cloak of the Fleshborer
+276737|3|Cloak of the Tidemistress
+271215|3|Coldspire Staff
+273829|3|Concealed Hand Crossbow
+271217|3|Corpse Chopper
+273840|3|Cursed Murloc Eye
+273806|3|Dark Horde Band
+274158|3|Death Prophet Spine
+273827|3|Debt Collector
+273824|3|Defias Jailbreakers
+273807|3|Demolition Girdle
+270260|3|Direhammer Leggings
+273045|3|Drape of Shifting Energy
+274603|3|Dreadfrost Saber
+285292|3|Dull Sawblade

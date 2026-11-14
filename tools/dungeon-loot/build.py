@@ -38,6 +38,13 @@ WORLD = {w.strip().lower() for w in WORLD.split("|") if w.strip()}
 # Wowhead item IDs and qualities from tools/item-ids (built from the wow-classic-items database).
 IDS_FILE = os.path.join(HERE, "..", "item-ids", "ids.json")
 IDS = json.load(open(IDS_FILE, encoding="utf-8")) if os.path.exists(IDS_FILE) else {}
+# WoW Forever's own new drops, found on Wowhead's Forever pages (forever-loot.txt: ID|quality|name).
+FOREVER = os.path.join(HERE, "..", "item-ids", "forever-loot.txt")
+if os.path.exists(FOREVER):
+    for ln in open(FOREVER, encoding="utf-8"):
+        if ln.startswith("#") or ln.count("|") != 2: continue
+        i, q, n = ln.rstrip("\n").split("|")
+        IDS.setdefault(n.strip().lower(), [int(i), int(q)])
 rows, order = {}, 0
 for f in sorted(os.listdir(os.path.join(HERE, "lists"))):
     key = f[:-4]
