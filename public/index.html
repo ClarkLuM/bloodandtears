@@ -100,6 +100,7 @@ p{margin:0}
 .btn.quiet{color:var(--sec);border-color:var(--b-sub);padding:0 .75rem}
 .btn.sm{height:2rem;padding:0 .75rem}
 .btn.danger{border:0;color:var(--danger);padding:0 .75rem}
+.wk-line{margin:0;padding-top:.625rem;border-top:1px solid var(--sep)}.wk-line a{white-space:nowrap}
 .btn.ghost{border-color:var(--sep);color:var(--sec)}.btn.ghost:hover{border-color:var(--b-def)}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .btn[aria-pressed="true"]{background:var(--accent-subtle);border-color:var(--accent-b);color:var(--accent-text)}
@@ -329,12 +330,12 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .more-h{font-size:.75rem;line-height:1rem;font-weight:600;color:var(--ter);padding:.5rem .625rem 2px}
 @media (max-width:700px){.more-menu{right:auto;left:0}}
 /* Guild totals */
-.totals{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--sep);border:1px solid var(--sep);border-radius:8px;overflow:hidden}
+.totals{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--sep);border:1px solid var(--sep);border-radius:10px;overflow:hidden}
 .total{display:flex;flex-direction:column;gap:2px;padding:.75rem .875rem;background:var(--raised);min-width:0}
 .total b{font-family:var(--display);font-weight:700;font-size:1.5rem;line-height:1.75rem;font-variant-numeric:tabular-nums;color:var(--text)}
 .total span{font-size:.75rem;line-height:1rem;color:var(--sec)}
 .total small{font-size:.75rem;line-height:1rem;color:var(--accent-text);font-variant-numeric:tabular-nums}
-@media (max-width:640px){.totals{grid-template-columns:repeat(3,minmax(0,1fr))}.total{padding:.625rem .75rem}.total b{font-size:1.25rem;line-height:1.5rem}.total span,.total small{font-size:.6875rem;line-height:.875rem}.total:last-child{grid-column:span 2}}
+@media (max-width:640px){.totals{grid-template-columns:repeat(3,minmax(0,1fr))}.total{padding:.625rem .75rem}.total b{font-size:1.25rem;line-height:1.5rem}.total span,.total small{font-size:.6875rem;line-height:.875rem}}
 /* Hall of Firsts */
 .first-row{display:grid;grid-template-columns:6.2em minmax(0,1fr) auto;gap:.5rem;align-items:baseline;padding:.4375rem 0;border-top:1px solid var(--sep);font-size:.8125rem;line-height:1.125rem}
 .first-row:first-child{border-top:0}
@@ -782,7 +783,7 @@ a.r-name:hover{color:var(--accent-text)}
 @media (max-width:640px){.q-chip{height:2.25rem}}
 /* Guild totals as one slim strip, so the list starts higher */
 .totals{display:flex;flex-wrap:wrap;gap:1px}
-.total{flex:1 1 auto;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 .375rem;padding:.4375rem .75rem}
+.total{flex:1 1 auto;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 .375rem;padding:.4375rem .625rem}
 .total b{font-size:1.0625rem;line-height:1.5rem}
 @media (max-width:640px){.totals{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -1rem;border-radius:0;border-left:0;border-right:0}.totals::-webkit-scrollbar{display:none}
   .total{flex:none;padding:.375rem .75rem;white-space:nowrap}.total b{font-size:1rem;line-height:1.375rem}.total:last-child{grid-column:auto}}
@@ -1374,7 +1375,7 @@ function viewRoster(){
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
   const at=(el,n)=>{if(el&&el.style)el.style.setProperty("--o",n);return el};
   return[head,h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(sinceCard(),0),at(claimBanner(),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
-    h("div",{class:"rl-col"},at(spotlight(),7),at(inGameToday(),6),at(weekTeaser(),9),at(guildMakeup(),10),at(siteUse(),12),at(discordBox(),13)))]}
+    h("div",{class:"rl-col"},at(inGameToday(),6),at(spotlight(),7),at(guildMakeup(),10),at(siteUse(),12),at(discordBox(),13)))]}
 
 // Their best equipped item: highest quality first (green and up).
 const bestLoot=m=>Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=2).sort((x,y)=>+y.q-+x.q)[0]||null;
@@ -1504,7 +1505,14 @@ function inGameToday(){
       h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap;min-width:0"},classIcon(m.cls),charLink(m),h("span",{class:"small ter"},String(m.level||1))),
       h("span",{class:"small ter",style:"white-space:nowrap"},ago(seenOf(m))))),list.length>12?h("span",{class:"small ter"},"and "+(list.length-12)+" more"):null)
       :h("p",{class:"empty"},"Nobody's logged off yet today."),
-    h("p",{class:"small ter",style:"margin:0"},"From the armory, which updates when someone logs off."))}
+    h("p",{class:"small ter",style:"margin:0"},"From the armory, which updates when someone logs off."),
+    weekLine())}
+// One line about the week's leaderboard moves, pointing to Records (the full list lives there).
+function weekLine(){const wk=weekMoves(),l=wk?wk.list:[];
+  const n=k=>l.filter(e=>e.kind===k).length,crowns=n("crown"),ups=n("up"),gains=l.filter(e=>e.kind==="gain");
+  const bits=[crowns?crowns+(crowns===1?" new top spot":" new top spots"):"",ups?ups+(ups===1?" big climb":" big climbs"):""].filter(Boolean);
+  const txt=bits.length?bits.join(" and ")+".":gains.length?"":wk?"No big moves yet.":"This fills in after the first day.";
+  return h("p",{class:"small wk-line"},h("b",{},"This week: "),txt,!bits.length&&gains.length?gains[0].parts:null," ",h("a",{href:"#records"},"See Records"))}
 
 /* ---------- Guild totals ---------- */
 // Everyone's numbers added up, so the guild can watch them climb together. Items are what's equipped right now.
@@ -1518,16 +1526,17 @@ function guildNums(){
 function guildTotals(){
   const all=S.members;if(!all.length)return null;
   const v=guildNums();
-  const tiles=[["levels","Levels gained",all.reduce((t,m)=>t+weekGained(m),0)],["blues","Blue items",null,"Equipped right now"],
+  const wkAgo=Date.now()-7*864e5,cur=all.filter(m=>isMine(m)||memberState(m)==="current");v.chars=cur.length;
+  const tiles=[["chars","Characters",cur.filter(m=>Date.parse(m.joined||m.createdAt||"")>=wkAgo).length,"Joined in the last seven days"],["levels","Levels",all.reduce((t,m)=>t+weekGained(m),0)],
     ["epics","Epic items",null,"Equipped right now"],["hk","Honourable kills",all.reduce((t,m)=>t+hkWeekOf(m),0)],["sixty","Level 60s"]];
-  return h("section",{class:"totals","aria-label":"Guild totals"},tiles.map(([k,label,wk,tip])=>{const nx=msNext(k,v[k]);
+  return h("section",{class:"totals","aria-label":"Guild totals"},tiles.map(([k,label,wk,tip,verb])=>{const nx=MS_STEPS[k]?msNext(k,v[k]):null;
     const next=nx?"Next guild milestone: "+fmtN(nx.n)+" ("+fmtN(nx.n-v[k])+" to go)":"";
     // Nobody's got there yet: say so, and point at the Hall of Firsts.
     if(!v[k]&&(k==="epics"||k==="sixty"))return h("a",{class:"total total-open",href:"#records",title:"See the Hall of Firsts",
       onclick:e=>{e.preventDefault();setUi({raceTab:"firsts"},true);location.hash="#records";setTimeout(()=>{const el=document.getElementById("race-h");if(el)el.scrollIntoView({behavior:"smooth",block:"start"})},250)}},
       h("span",{},k==="epics"?"First epic:":"First 60:"),h("b",{},"up for grabs"));
     return h("div",{class:"total",title:[tip,next].filter(Boolean).join(". ")||null},
-      h("b",{},fmtN(v[k])),h("span",{},label),wk?h("small",{},"+"+fmtN(wk)+" this week"):null,
+      h("b",{},fmtN(v[k])),h("span",{},label),wk?h("small",{},"+"+fmtN(wk)+(verb?" "+verb:"")+" this week"):null,
       nx?h("i",{class:"total-next","aria-hidden":"true"},h("s",{style:`width:${Math.round(nx.pct*100)}%`})):null,
       next?h("span",{class:"visually-hidden"},". "+next):null)}))}
 
@@ -2235,13 +2244,6 @@ function raceCard(){
     :h("p",{class:"empty"},tab==="week"&&gearMode?"No new loot this week yet.":tab==="week"?"Nobody's levelled this week yet.":"Nobody has an honourable kill yet. Go gank something."),
     tab==="hk"?h("p",{class:"small ter",style:"margin:0"},"From the armory, so it's only as up to date as the last logout."):null)}
 // The roster's side box: just the week's top three moves, and a way to the rest on Records.
-function weekTeaser(){
-  if(!S.members.length)return null;
-  const wk=weekMoves(),moves=wk?wk.list.slice(0,3):[];
-  const lines=moves.length?h("ul",{class:"wk-list"},moves.map(e=>h("li",{},e.kind==="crown"?h("span",{class:"wk-b crown"},medal(1)):h("span",{class:"wk-b "+e.kind},e.kind==="up"?"▲"+e.n:e.n),h("span",{class:"small"},e.parts))))
-    :h("p",{class:"small ter",style:"margin:0"},wk?"No big moves yet this week.":"This fills in after the first day.");
-  return h("aside",{class:"card","aria-labelledby":"wt-h"},h("h2",{id:"wt-h"},"This Week"),lines,
-    h("a",{class:"small",href:"#records"},"Level race, Firsts and more on Records"))}
 /* ---------- Discord online box ---------- */
 // Uses Discord's public server widget (Server Settings > Widget > Enable Server Widget). No bot or login needed.
 // It shows Discord names, not character names, and leaves out anyone set to invisible.
