@@ -8,14 +8,14 @@ This file describes the site as it is today. The older, dated notes on how each 
 
 | Page | What's on it |
 |---|---|
-| **Roster** | Everyone in the guild. Search, Filters (with quick chips for Tanks, Healers, DPS, Level 60, Seen this week and Mine at the top, folded away until opened; whatever's on shows as removable chips), sort and three views (List, By class, Cards). Each row shows the portrait, name and top title, level, professions, best loot and last seen; opening a row shows the details with their card beside them. The side column has Character of the Day, In Game Today, This Week (the top three moves; the level race, Firsts and honour are on Records) and Guild Makeup, with About the Guild at its foot. On phones the totals strip is one row you can swipe. Below the list is the Guild Feed. |
+| **Roster** | Everyone in the guild. Search, Filters (with quick chips for Tanks, Healers, DPS, Level 60, Seen this week and Mine at the top, folded away until opened; whatever's on shows as removable chips), sort and three views (List, By class, Cards). Each row shows the portrait, the name with at most one mark (You, a gold crown for the Guild Master, or Officer), the top title and class, the level (with a status like On a tear under it), professions, best loot and last seen (blank when unknown); characters not in the guild sit in their own group at the bottom. The search, sort and column titles stay at the top while scrolling on desktop. On phones a row is just name, level and professions; open it for the rest; opening a row shows the details with their card beside them. The side column has Character of the Day, In Game Today, This Week (the top three moves; the level race, Firsts and honour are on Records) and Guild Makeup, with About the Guild at its foot. On phones the totals strip is one row you can swipe. Below the list is the Guild Feed. |
 | **Character page** | Portrait, name and titles, a strip of headline numbers, then gear and stats, the Dungeon Passport, professions (with what they can make: tap a recipe for its reagents and where to get it; a dot shows whether it still gives them skill-ups), their trading card, talents and their Journey. |
 | **Dungeons** | The dungeons grouped like the game's Spelunker achievements (Novice, Experienced, Master), with the two Alliance-side ones (Hall of Thanes, The Stockade) folded away at the bottom. For each: how many are the right level, how many have been, and how many still need it. "You need this" marks the ones your character is the right level for and hasn't done. Open one for the names, Suggest a group, and what drops. |
 | **Raids** (`#raids`, from the switch on Dungeons) | Raid readiness for Barrow Deeps, Hyjal Summit and Onyxia's Lair, every level 60 with their role and gear, and who's between 50 and 59. |
 | **Cards** | Everyone's trading card in sets (Gold foil, Silver, Bronze, Plain), with search and sort, and Card of the Week. "Open page" under a card shows on hover, keyboard focus, or once the card is flipped. |
 | **Professions** | **Who Has What** (one table: a row per profession, everyone in skill order with medals for the top three and the wooden spoon for the lowest), and **Who Can Make It?**: search any crafted item to see who's skilled enough. **Reagents and recipe** on a result opens its reagents, where the recipe comes from and its skill-up colours (from `public/recipe-info.json`, loaded on first open). |
 | **Records** | This Week (Moves, Level race or Gear race, the Hall of Firsts and Honour, on a switch), then **Leaderboards** (kills, level, dungeons and gear on one card with a switch, top five and the wooden spoon, the title holder above), the **Hall of Titles** as a grid of frame tiles (tap one for how it's won, the reign and who's next), When the Guild Plays, and a link to the profession leaderboards on Professions. |
-| **Guild History** (`#history`) | Everything the feed has seen, one fold per day, plus the weekly recap picture for any week. |
+| **Guild History** (`#history`) | The Last Seven Days (the recap's numbers, the top levellers and how much happened), then everything the feed has seen, one fold per day, with a character search and a Show menu (Levels, Loot, Titles and firsts, Joins and leaves, Professions, PvP, Dungeons). The weekly recap picture is there for any week. |
 
 Other things worth knowing about:
 
@@ -69,7 +69,8 @@ Other things worth knowing about:
 |---|---|
 | `public/index.html` | The whole site: layout, styles and code |
 | `public/firebase-config.js` | The Firebase project's config and the App Check key |
-| `public/recipes.json` | The recipe list for Who Can Make It? (built by `tools/recipes/build.py`) |
+| `public/recipes.json`, `public/recipe-info.json` | The recipe list for Who Can Make It?, and each recipe's reagents and source (built by `tools/recipes/build.py`) |
+| `public/dungeon-loot.json` | Dungeon drops for What Drops, passport stamps from loot and item links (built by `tools/dungeon-loot/build.py`; the page loads it separately so it opens faster) |
 | `manifest.webmanifest`, `icon*`, `logo.svg`, `og-gingerbread.png` | The home-screen icon and the link preview |
 | `public/robots.txt` | Keeps the site out of search engines |
 | `functions/index.js` | The server: armory sync, Hall of Firsts, snapshots, opt-out, item lookups, officers |
@@ -100,7 +101,7 @@ These aren't in the code:
 
 ## Changing common things
 
-- **A dungeon's loot:** edit its file in `tools/dungeon-loot/lists/`, then run `python3 tools/dungeon-loot/build.py`.
+- **A dungeon's loot:** edit its file in `tools/dungeon-loot/lists/`, then run `python3 tools/dungeon-loot/build.py` (it writes `public/dungeon-loot.json`). Wowhead IDs for WoW Forever's own drops are in `tools/item-ids/forever-loot.txt`. Recipe vendors are in `tools/recipes/vendors.json`.
 - **A dungeon's level range:** `DUNGEONS` in `public/index.html`.
 - **A recipe:** edit the profession's file in `tools/recipes/lists/`, then run `python3 tools/recipes/build.py`. Wowhead IDs come from `tools/item-ids/ids.json` (classic items) and `tools/item-ids/forever-crafted.txt` (WoW Forever's own new items, from Wowhead's Forever profession pages). Enchants link to Wowhead's spell pages, with spell IDs from `tools/item-ids/forever-enchants.txt`. Learn levels, reagents, skill-up colours and recipe sources come from `tools/recipes/wowhead-forever.json`, saved from Wowhead's WoW Forever profession and recipe pages; `build.py` writes them to `public/recipe-info.json`. A recipe with neither shows as plain text.
 - **The icon or logo:** edit and run `python3 tools/icon/make_icon.py`.

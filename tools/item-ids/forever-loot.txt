@@ -45,3 +45,109 @@
 273045|3|Drape of Shifting Energy
 274603|3|Dreadfrost Saber
 285292|3|Dull Sawblade
+270256|3|Durgen's Crescent Axe
+275009|3|Emblem of Slamming
+270227|3|Ephemeral Choker
+273034|3|Ephemeral Grips
+273804|3|Executioner Mantle
+273843|3|Fallenroot Longbow
+271095|3|Fang of Magmatus
+273037|3|Felbough Arm
+284715|3|First Mate Band
+270231|3|Flamefist Grips
+274604|3|Frosty Blunderbuss
+273038|3|Garb of Fallen Felbark
+273026|3|Garb of Florid Feathers
+274155|3|Geomancer Headdress
+286646|3|Gill's Gills
+276742|3|Girdle of Extracted Answers
+273024|3|Glinteye Slippers
+273297|3|Goblin Hammer
+271098|3|Golemguard Chest
+270228|3|Golemheart Stave
+273029|3|Golemsight Long Gun
+273817|3|Graverobber's Shovel
+273033|3|Gravespike Repeater
+273036|3|Graveweave Bindings
+271208|3|Grip of Fear
+273046|3|Guardian's Dualblade
+273646|3|Half-Eaten Boots
+273809|3|Hamhock's Cleaver
+274601|3|Harpoon of Command
+274615|3|Heart of the Primeval
+274043|3|Irradiated Shield
+270230|3|Kindlegem Girdle
+274614|3|Knucklebone Ring
+271206|3|Leftover Abomination Skin
+273298|3|Lookie's Spyglass
+273035|3|Mana-Warped Chain Shirt
+273042|3|Manascale Treads
+274608|3|Maw of Min'loth
+271204|3|Meathook Slicer
+271213|3|Mirror of Rath'mael
+273820|3|Nightskulker Ring
+274599|3|Oathbound Bracers
+273810|3|Ogre Grips
+273289|3|Ogre Loincloth
+274290|3|Painwalker Buckler
+274291|3|Polished Skullcap
+273052|3|Ponderous Orb
+274613|3|Priestess Cloak
+18311|3|Quel'dorai Channeling Rod
+274161|3|Quillord Mail Leggings
+274160|3|Quilrager Throwing Axe
+273027|3|Raptor's Gaze
+273025|3|Raptorclaw Greaves
+273825|3|Red Wool Cloak
+273048|3|Refractory Scaleguards
+273028|3|Reliquary Mantle
+273811|3|Repurposed Rack
+274996|3|Resistance Breaker Spaulder
+273030|3|Ring of Power Regulation
+274611|3|Robe of the Drowned
+270261|3|Robes of the Disgraced Thane
+274152|3|Roogug's Severed Head
+271207|3|Rotmender's Leggings
+271214|3|Rotmender's Treads
+273031|3|Runemender's Seal
+273023|3|Saltscale Girdle
+273005|3|Satyrskin Cloak
+271216|3|Scepter of the Abandoned
+273003|3|Searing Dagger
+271203|3|Segmented Spider Leg
+276740|3|Sentimental Locket
+274609|3|Serpentbane Crown
+274998|3|Shadowlight Athame
+274042|3|Skullduggery Belt
+273137|3|Skum's Bucket
+273089|3|Slither Cord
+273041|3|Slitherwrap Girdle
+273088|3|Snake Eye Kaleidoscope
+274293|3|Spellsever Crossbow
+273839|3|Spiked Shell Band
+273040|3|Spine of the Devourer
+271097|3|Spiritwraith Drape
+273022|3|Supple Bellyskin Leggings
+273053|3|Tendonscraper Dagger
+274068|3|Thermaplugg Medal of Honor
+274159|3|Thorncursed Grips
+274149|3|Thornweaver Drape
+286649|3|Tidebound Dagger
+273842|3|Treacherous Treads
+270229|3|Treads of the Protector Golem
+272996|3|Trogg Scepter
+280059|3|Tuskblade Halberd
+271210|3|Tuskwrap Belt
+273846|3|Twilight Lord Girdle
+273841|3|Twilight Maul
+273047|3|Unstable Crystalline Shoulderpads
+271218|3|Vileblood Scimitar
+271211|3|Vilewalkers
+273051|3|Violet Sorcerer's Mantle
+273044|3|Violet Sorcerer's Robes
+273043|3|Wand of Mana Concentration
+274612|3|Waterlogged Burial Shroud
+271202|3|Witherbite Bracers
+273643|3|Worgenbane Talisman
+273647|3|Worgpelt Leggings
+276734|3|Wrex's Pinky Ring

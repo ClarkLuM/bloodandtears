@@ -41,6 +41,21 @@ def wh_of(prof, name):
     o = rows.get(name.lower())
     if not o and prof == "Mining" and name.endswith(" Bar"): o = rows.get("smelt " + name[:-4].lower())
     return o
+# Vendors for recipes Wowhead's recipe lists don't name, from each recipe's own Wowhead page (vendors.json:
+# recipe item ID -> [[vendor, zone ID, [Alliance, Horde] reaction]]). Only vendors the Horde can buy from are used.
+VEND_FILE = os.path.join(HERE, "vendors.json")
+VENDORS = json.load(open(VEND_FILE, encoding="utf-8")) if os.path.exists(VEND_FILE) else {}
+ZONES = {"14": "Durotar", "17": "The Barrens", "1637": "Orgrimmar", "1638": "Thunder Bluff", "1497": "Undercity", "85": "Tirisfal Glades",
+         "130": "Silverpine Forest", "215": "Mulgore", "267": "Hillsbrad Foothills", "33": "Stranglethorn Vale", "10": "Duskwood",
+         "400": "Thousand Needles", "405": "Desolace", "406": "Stonetalon Mountains", "440": "Tanaris", "357": "Feralas", "45": "Arathi Highlands",
+         "331": "Ashenvale", "11": "Wetlands", "3": "Badlands", "8": "Swamp of Sorrows", "15": "Dustwallow Marsh", "16": "Azshara",
+         "47": "The Hinterlands", "51": "Searing Gorge", "46": "Burning Steppes", "28": "Western Plaguelands", "139": "Eastern Plaguelands",
+         "361": "Felwood", "490": "Un'Goro Crater", "618": "Winterspring", "1377": "Silithus", "493": "Moonglade", "4": "Blasted Lands"}
+ZONES.update(WH.get("zones", {}))
+def horde_vendors(item_id):
+    vs = [v for v in VENDORS.get(str(item_id), []) if v[2] and v[2][1] is not None and v[2][1] >= 0]
+    vs.sort(key=lambda v: -v[2][1])
+    return [[1, v[0], v[1]] for v in vs[:2]]
 INFO_OUT = os.path.join(HERE, "..", "..", "public", "recipe-info.json")
 info, used_items, used_zones = {}, set(), set()
 out, total = {}, 0
@@ -61,6 +76,7 @@ for f in sorted(os.listdir(os.path.join(HERE, "lists"))):
         row = [name, int(sk), src, 1 if est else 0] + IDS.get(name.lower(), [])  # then Wowhead item ID and quality if known
         if wh:
             ri = wh.get("ri")
+            if ri and not ri[3] and horde_vendors(ri[0]): ri = ri[:3] + [horde_vendors(ri[0])]
             info[NAMES[key] + "|" + name] = [wh["s"], wh.get("c") or [], wh.get("r") or [], wh.get("tc") or 0, wh.get("src") or [],
                                              ri[:3] + [[[t, n, z] for t, n, z in ri[3]]] if ri else None]
             used_items.update(str(r[0]) for r in wh.get("r") or [])
@@ -73,7 +89,7 @@ for f in sorted(os.listdir(os.path.join(HERE, "lists"))):
 json.dump({"source": "metabot.gg WoW Forever profession pages, Nov 2026", "recipes": out}, open(OUT, "w", encoding="utf-8"),
           ensure_ascii=False, separators=(",", ":"))
 json.dump({"recipes": info, "items": {i: WH["items"][i] for i in sorted(used_items) if i in WH["items"]},
-           "zones": {z: WH["zones"][z] for z in sorted(used_zones) if z in WH["zones"]}},
+           "zones": {z: ZONES[z] for z in sorted(used_zones) if z in ZONES}},
           open(INFO_OUT, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
 print(f"{len(info)} recipes with reagents and sources -> public/recipe-info.json ({os.path.getsize(INFO_OUT)//1024} KB)")
 print(f"{sum(len(r) > 4 for rows in out.values() for r in rows)} with Wowhead IDs")

@@ -1,4 +1,4 @@
-"""Builds the "From loot" passport list from lists/*.txt and writes it into public/index.html.
+"""Builds the "From loot" passport list from lists/*.txt and writes it to public/dungeon-loot.json (the page loads it).
 
 Each list is one dungeon's boss drops, one line per item: "Boss | Item name"
 (source: wowtbc.gg/warcraftforever/loot-tables/dungeons/, November 2026).
@@ -11,7 +11,6 @@ Left out on purpose, because owning them doesn't prove you were in that dungeon:
 """
 import json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
-PAGE = os.path.join(HERE, "..", "..", "public", "index.html")
 # File name -> the dungeon's name on the site (DUNGEONS in index.html).
 NAMES = {
  "ragefire-chasm": "Ragefire Chasm", "hall-of-thanes": "Hall of Thanes", "ruins-of-lordaeron": "Ruins of Lordaeron",
@@ -60,12 +59,8 @@ for k, src in rows.items():
     if len({x[0] for x in src}) > 1: skipped["several dungeons"] += 1; continue
     if len({x[1] for x in src}) > 1: skipped["several bosses"] += 1; continue
     d, b, name, o = src[0]; out[k] = [d, b, name, o] + IDS.get(k, [])  # order keeps bosses in list order; then Wowhead ID and quality if known
-js = "const DUNGEON_LOOT=" + json.dumps(dict(sorted(out.items())), ensure_ascii=False, separators=(",", ":")) + ";"
-s = open(PAGE, encoding="utf-8").read()
-a, b = "/* DUNGEON_LOOT:start (built by tools/dungeon-loot/build.py; edit the lists, not this line) */", "/* DUNGEON_LOOT:end */"
-if a not in s: sys.exit("Markers not found in index.html")
-s = s[:s.index(a) + len(a)] + "\n" + js + "\n" + s[s.index(b):]
-open(PAGE, "w", encoding="utf-8").write(s)
+OUT = os.path.join(HERE, "..", "..", "public", "dungeon-loot.json")
+json.dump(dict(sorted(out.items())), open(OUT, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
 per = {}
 for v in out.values(): per[v[0]] = per.get(v[0], 0) + 1
 print(f"{len(out)} items across {len(per)} dungeons ({sum(len(v) > 4 for v in out.values())} with Wowhead IDs); left out: {skipped}")
