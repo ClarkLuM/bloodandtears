@@ -802,6 +802,14 @@ a.r-name:hover{color:var(--accent-text)}
 .total b{font-size:1.0625rem;line-height:1.5rem}
 @media (max-width:640px){.totals{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -1rem;border-radius:0;border-left:0;border-right:0}.totals::-webkit-scrollbar{display:none}
   .total{flex:none;padding:.375rem .75rem;white-space:nowrap}.total b{font-size:1rem;line-height:1.375rem}.total:last-child{grid-column:auto}}
+/* The guild today: one card, its parts split by lines */
+.gt{padding:0;gap:0;overflow:hidden}
+.gt-sec{display:flex;flex-direction:column;gap:.625rem;padding:1rem 1.25rem}
+.gt-sec+.gt-sec{border-top:1px solid var(--sep)}
+.gt-sec h2{font-size:1.125rem;line-height:1.5rem}
+.gt-sec.spot{display:grid;padding:0;gap:0}
+.gt .spot-art{border-radius:0}
+.gt .spot-body{padding:.875rem 1.25rem 1rem}
 /* Character of the day in the side column: picture on top at full width, details underneath */
 .spot{grid-template-columns:minmax(0,1fr)}
 .spot-art{min-height:13.5rem}
@@ -1158,8 +1166,21 @@ let iconSaveT=0;const iconSave=()=>{clearTimeout(iconSaveT);iconSaveT=setTimeout
 // Icons from the armory, by item ID, for anything someone in the guild is wearing.
 function wornIcon(id){for(const m of[...S.members,...S.alts]){for(const g of Object.values(m.gear||{}))if(g&&String(g.id)===String(id)&&(g.iconUrl||g.icon))return g.iconUrl||WH_ICON(g.icon,"small")}return""}
 const iconSrc=id=>{const v=iconMem.get(String(id));return v?(/^https?:/.test(v)?v:WH_ICON(v,"small")):""};
+// Item level and a rough stat total, read from the same tooltip data, so "best loot" can rank items of the same
+// quality. Kept on this device for 30 days (key bt-items).
+const INFO_KEY="bt-items",infoMem=new Map();
+try{const c=JSON.parse(localStorage.getItem(INFO_KEY)||"{}");if(c&&Date.now()-(+c.at||0)<ICON_TTL)for(const[k,v]of Object.entries(c.m||{}))infoMem.set(k,v)}catch(e){}
+let infoSaveT=0;const infoSave=()=>{clearTimeout(infoSaveT);infoSaveT=setTimeout(()=>{try{localStorage.setItem(INFO_KEY,JSON.stringify({at:Date.now(),m:Object.fromEntries(infoMem)}))}catch(e){}},2000)};
+function itemFacts(html){const t=String(html||"").replace(/<!--[^>]*-->/g,"");const lv=/Item Level (\d+)/.exec(t)||/Requires Level (\d+)/.exec(t);
+  let st=0;for(const x of t.matchAll(/\+(\d+) (Strength|Agility|Stamina|Intellect|Spirit|\w+ Resistance)/g))st+=+x[1];
+  const dps=/\(([\d.]+) damage per second\)/.exec(t);if(dps)st+=+dps[1];
+  for(const x of t.matchAll(/(?:Increases|Improves|Restores|Increases damage and healing)[^<]*?by (?:up to )?(\d+)/g))st+=+x[1];
+  return{l:lv?+lv[1]:0,s:Math.round(st)}}
+const infoWait=new Set();let infoT=0;
+function wantInfo(id){const k=String(id);if(infoMem.has(k)||infoWait.has(k)||!(+id>0))return;infoWait.add(k);iconQ.push(k);iconPump()}
 function iconPump(){while(iconRun<4&&iconQ.length){const id=iconQ.shift();iconRun++;
-  tipData(id).then(d=>{iconMem.set(String(id),d&&d.icon?d.icon:"inv_misc_questionmark");iconSave();
+  tipData(id).then(d=>{if(d&&d.tooltip&&!infoMem.has(String(id))){infoMem.set(String(id),itemFacts(d.tooltip));infoSave();if(infoWait.has(String(id))){clearTimeout(infoT);infoT=setTimeout(()=>schedule(),400)}}
+    if(!iconMem.has(String(id))||/questionmark/.test(iconMem.get(String(id))||"")){iconMem.set(String(id),d&&d.icon?d.icon:"inv_misc_questionmark");iconSave()}
     for(const im of document.querySelectorAll(`img.item-ic[data-icon="${id}"]`)){im.src=iconSrc(id);im.removeAttribute("data-icon")}})
     .finally(()=>{iconRun--;iconWait.delete(String(id));iconPump()})}}
 function iconWatch(img){
@@ -1413,10 +1434,17 @@ function viewRoster(){
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
   const at=(el,n)=>{if(el&&el.style)el.style.setProperty("--o",n);return el};
   return[head,h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(sinceCard(),0),at(claimBanner(),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
-    h("div",{class:"rl-col"},at(inGameToday(),6),at(spotlight(),7),at(guildMakeup(),10),at(siteUse(),12),at(discordBox(),13)))]}
+    h("div",{class:"rl-col"},at(guildToday(),6),at(siteUse(),12),at(discordBox(),13)))]}
 
 // Their best equipped item: highest quality first (green and up).
-const bestLoot=m=>Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=2).sort((x,y)=>+y.q-+x.q)[0]||null;
+// Best loot: the rarest quality first (epic, then rare, then uncommon), then the highest item level, then the best stats.
+// Item level and stats come from Wowhead's tooltip data, asked for once per item and kept on the device; until they
+// arrive, items of the same quality keep their slot order.
+function rankGear(m){const l=Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=2);if(!l.length)return l;
+  const top=Math.max(...l.map(g=>+g.q));for(const g of l)if(+g.q===top)wantInfo(g.id);
+  const f=g=>infoMem.get(String(g.id))||{l:0,s:0};
+  return l.sort((x,y)=>(+y.q-+x.q)||(f(y).l-f(x).l)||(f(y).s-f(x).s))}
+const bestLoot=m=>rankGear(m)[0]||null;
 
 /* ---------- Cards ---------- */
 // Everyone's trading card in one place, like flicking through a binder.
@@ -1551,6 +1579,15 @@ function weekLine(){const wk=weekMoves(),l=wk?wk.list:[];
   const bits=[crowns?crowns+(crowns===1?" new top spot":" new top spots"):"",ups?ups+(ups===1?" big climb":" big climbs"):""].filter(Boolean);
   const txt=bits.length?bits.join(" and ")+".":gains.length?"":wk?"No big moves yet.":"This fills in after the first day.";
   return h("p",{class:"small wk-line"},h("b",{},"This week: "),txt,!bits.length&&gains.length?gains[0].parts:null," ",h("a",{href:"#records"},"See Records"))}
+
+/* ---------- The guild today ---------- */
+// The side column as one flowing block: In Game Today (with the week's line), Character of the Day and Guild Makeup
+// (with About the Guild), split by thin lines instead of being separate cards.
+function guildToday(){
+  const secs=[inGameToday(),spotlight(),guildMakeup()].filter(Boolean).map(el=>{
+    const sec=document.createElement("section");for(const a of el.attributes)sec.setAttribute(a.name,a.value);
+    sec.classList.remove("card");sec.classList.add("gt-sec");sec.removeAttribute("style");sec.append(...el.childNodes);return sec});
+  return secs.length?h("aside",{class:"card gt","aria-label":"The guild today"},secs):null}
 
 /* ---------- Guild totals ---------- */
 // Everyone's numbers added up, so the guild can watch them climb together. Items are what's equipped right now.
@@ -1695,7 +1732,7 @@ function spotlight(){
   const m=pool[shift%pool.length];
   const a=m.armory||{},render=charPic(m,"render")||genericFg(m),bg=charPic(m,"bg")||genericBg(m),avatar=charPic(m,"avatar"),cc=CLASSES[m.cls]||"#bfaea9";
   const link=`#char/${m.isAlt?"alts":"members"}/${m.id}`;
-  const best=Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=2).sort((x,y)=>y.q-x.q).slice(0,3);
+  const best=rankGear(m).slice(0,3);
   const art=h("a",{class:"spot-art",href:link,"aria-label":"Open "+nameOf(m),style:bg?`background-image:linear-gradient(180deg,rgb(15 10 9 / .1),rgb(15 10 9 / .55)),url(${bg})`:`background:linear-gradient(160deg,${mix(cc,"#000000",.55)},#0f0a09)`},
     render?fadeImg({class:"r",src:render,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))})
       :h("span",{class:"face",style:`border-color:${cc};color:${cc}`},avatar?h("img",{src:avatar,alt:"",referrerpolicy:"no-referrer"}):nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase()));
