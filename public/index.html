@@ -317,7 +317,9 @@ dialog legend{font-weight:700;font-size:1.0625rem;line-height:1.5rem;padding:0 0
 @media (prefers-reduced-motion:reduce){.hist-day>summary::before{transition:none}}
 .hist-sum{gap:.625rem}.hs-nums{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem}.hs-nums>span{display:flex;flex-direction:column}.hs-nums b{font-size:1.25rem;line-height:1.5rem}
 .hist-tools{display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:center;margin-top:.25rem}
-.hist-q{flex:1 1 14rem}.hist-q input{width:100%;height:2.5rem;box-sizing:border-box;padding:0 .75rem;border-radius:6px;border:1px solid var(--b-def);background:var(--raised);color:var(--text);font:inherit}
+.hist-tools .r-sort select{min-width:9rem}
+@media (max-width:600px){.hist-tools .hist-q,.hist-tools .r-sort{flex:1 1 100%}}
+.hist-q{flex:1 1 14rem}.hist-q input{width:100%;height:2.5rem;box-sizing:border-box;padding:0 .75rem;border-radius:6px;border:1px solid var(--b-def);background:var(--raised);color:var(--text);font:inherit;font-size:1rem}
 .hist-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.75rem;align-items:baseline;padding:.5rem 0;border-top:1px solid var(--sep)}
 /* More menu */
 details.more{position:relative}
@@ -472,7 +474,9 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .mk-about{display:flex;flex-direction:column;padding-top:.75rem;margin-top:.25rem;border-top:1px solid var(--sep)}.mk-about h3{margin:0;font-size:1rem}
 .mk-about>div:not(.spread){border-top:0!important;padding:.375rem 0 0!important}
 .dc-sec{display:flex;flex-direction:column;padding:.5rem 0;border-top:1px solid var(--sep)}.dc-sec>.small:first-child{font-weight:600;color:var(--accent-text)}
-.dg-other{border-top:1px solid var(--sep)}.dg-other>summary{padding:.875rem 1.25rem;cursor:pointer;color:var(--sec);font-size:.875rem}.dg-other>summary:hover{color:var(--text)}
+.dg-other{border-top:1px solid var(--sep)}.dg-other>summary{padding:.875rem 1.25rem;cursor:pointer;color:var(--sec);font-size:.875rem;list-style:none;display:flex;align-items:center;gap:.625rem;min-height:2.75rem;box-sizing:border-box}.dg-other>summary::-webkit-details-marker{display:none}
+.dg-other>summary::before{content:"";flex:none;width:.4375rem;height:.4375rem;border-right:2px solid var(--ter);border-bottom:2px solid var(--ter);transform:rotate(-45deg);transition:transform 150ms cubic-bezier(.23,1,.32,1)}.dg-other[open]>summary::before{transform:rotate(45deg)}
+@media (prefers-reduced-motion:reduce){.dg-other>summary::before{transition:none}}.dg-other>summary:hover{color:var(--text)}
 .total-next{position:absolute;left:0;right:0;bottom:0;height:.1875rem}
 .total-next s{display:block;height:100%;background:var(--lvl);opacity:.6;text-decoration:none;border-radius:0 2px 2px 0}
 /* Feed and history */
@@ -486,20 +490,19 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .dg-list{margin-top:1rem;padding:0;gap:0}.dg-list-head{padding:1.25rem 1.25rem .75rem}
 .dg-ach{margin:.5rem 0 0}.dg-ach b{color:var(--sec)}
 .dg-bands{margin-top:.75rem;overflow-x:auto;max-width:100%}.dg-bands .seg span{color:var(--ter);font-variant-numeric:tabular-nums}
-.dg-cols,.dg-sum{display:grid;grid-template-columns:minmax(0,1fr) 5.5rem 4rem 4.5rem;gap:1rem;align-items:center;padding:0 1.25rem}
+.dg-cols,.dg-sum{display:grid;grid-template-columns:minmax(0,1fr) 5.5rem 4rem 4.5rem 2.25rem;gap:1rem;align-items:center;padding:0 1.25rem}
 .dg-cols{padding-bottom:.375rem;border-bottom:1px solid var(--sep)}.dg-cols span+span,.dg-n{text-align:right}
 .dg-item+.dg-item{border-top:1px solid var(--sep)}
 .dg-sum{min-height:3rem;cursor:pointer}.dg-sum:hover,.dg-item.open .dg-sum{background:var(--subtle)}
 .dg-name{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .625rem;font:inherit;color:inherit;background:none;border:0;padding:.625rem 0;text-align:left;cursor:pointer;min-width:0}
 .dg-name:focus-visible{outline:2px solid var(--accent-text);outline-offset:2px;border-radius:4px}
-.dg-chev{width:.4375rem;height:.4375rem;border-right:2px solid var(--ter);border-bottom:2px solid var(--ter);transform:rotate(-45deg);margin-right:.25rem;align-self:center;transition:transform 150ms ease}
-.dg-item.open .dg-chev{transform:rotate(45deg)}
+.dg-x{justify-self:end}
 .dg-n{font-variant-numeric:tabular-nums;color:var(--sec)}.dg-n b{color:var(--text);font-weight:600}.dg-n.zero,.dg-n.zero b{color:var(--ter);font-weight:400}
 .dg-n-l{display:none}
 .dg-detail{display:flex;flex-direction:column;gap:.75rem;padding:.25rem 1.25rem 1.25rem;background:color-mix(in srgb,var(--subtle) 50%,transparent)}
 .dg-detail>.range-row{border-top:0}
 @media (max-width:600px){.dg-cols{display:none}.dg-sum{grid-template-columns:minmax(0,1fr) auto;row-gap:0;padding-bottom:.5rem}.dg-name{grid-column:1/-1;padding-bottom:.125rem}
-  .dg-n{text-align:left;font-size:.8125rem;padding-left:1.3125rem}.dg-n+.dg-n{padding-left:0;text-align:left}.dg-sum{grid-template-columns:auto auto 1fr;column-gap:1rem}.dg-n-l{display:inline}}
+  .dg-n{text-align:left;font-size:.8125rem;padding-left:0}.dg-n+.dg-n{padding-left:0;text-align:left}.dg-sum{grid-template-columns:auto auto 1fr 2.25rem;column-gap:1rem}.dg-name{grid-column:1/4}.dg-x{grid-column:4;grid-row:1/span 2}.dg-n-l{display:inline}}
 .pf-kind{grid-column:1/-1;font-size:.6875rem;line-height:1rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
 .dg-top{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem}
 .dg-two{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:1rem 2rem}@media (max-width:760px){.dg-two{grid-template-columns:minmax(0,1fr)}}
@@ -689,7 +692,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .r-ficon svg{display:block;width:1rem;height:1rem}
 .r-badge{min-width:1.125rem;height:1.125rem;padding:0 .3125rem;border-radius:9px;background:var(--gold);color:#1a1612;font-size:.75rem;line-height:1.125rem;font-weight:700;text-align:center}
 .r-sort{display:inline-flex;align-items:center;gap:.375rem;font-size:.8125rem}
-.r-sort select{height:2.5rem;font-size:.875rem;padding:0 .625rem}
+.r-sort select{height:2.5rem;font-size:1rem;padding:0 .625rem}
 .r-chips{display:flex;flex-wrap:wrap;gap:.375rem}
 .r-chip{display:inline-flex;align-items:center;gap:.375rem;height:1.75rem;padding:0 .625rem;border-radius:14px;border:1px solid var(--sep);background:var(--subtle);color:var(--text);font:inherit;font-size:.8125rem;cursor:pointer}
 .r-chip span{color:var(--ter);font-size:.6875rem}.r-chip:hover span{color:var(--text)}
@@ -713,12 +716,12 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .r-st{display:block;margin-top:.25rem;font-size:.6875rem;font-weight:600;line-height:.875rem}
 .r-st.st-tear{color:var(--accent-text)}.r-st.st-fresh{color:var(--trim)}.r-st.st-mia{color:var(--ter)}
 .roster-t tr.r-row:hover,.roster-t tr.r-row.open{background:var(--subtle)}
-.r-x,.cm-tog{width:2.25rem;height:2.25rem;border:1px solid var(--sep);border-radius:6px;background:none;padding:0;font-size:0;color:var(--ter);cursor:pointer;display:grid;place-items:center}
-.r-x::before,.cm-tog::before{content:"";width:.4375rem;height:.4375rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin-top:-.25rem;transition:transform 150ms cubic-bezier(.23,1,.32,1)}
-.r-x[aria-expanded="true"]::before,.cm-tog[aria-expanded="true"]::before{transform:rotate(-135deg);margin-top:.25rem}
-.r-x:hover,.cm-tog:hover{color:var(--text);background:var(--overlay);border-color:var(--b-def)}
+.r-x,.cm-tog,.dg-x{width:2.25rem;height:2.25rem;border:1px solid var(--sep);border-radius:6px;background:none;padding:0;font-size:0;color:var(--ter);cursor:pointer;display:grid;place-items:center}
+.r-x::before,.cm-tog::before,.dg-x::before{content:"";width:.4375rem;height:.4375rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin-top:-.25rem;transition:transform 150ms cubic-bezier(.23,1,.32,1)}
+.r-x[aria-expanded="true"]::before,.cm-tog[aria-expanded="true"]::before,.dg-item.open .dg-x::before{transform:rotate(-135deg);margin-top:.25rem}
+.r-x:hover,.cm-tog:hover,.dg-sum:hover .dg-x{color:var(--text);background:var(--overlay);border-color:var(--b-def)}
 .r-x:focus-visible,.cm-tog:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
-@media (prefers-reduced-motion:reduce){.r-x::before,.cm-tog::before{transition:none}}
+@media (prefers-reduced-motion:reduce){.r-x::before,.cm-tog::before,.dg-x::before{transition:none}}
 .roster-t tr.r-more>td{padding:.25rem 1rem 1.125rem;border-top:0;background:var(--subtle)}
 .r-detail{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);gap:1rem 1.5rem}
 .roster-t .item-link{overflow-wrap:normal;word-break:normal}
@@ -2409,7 +2412,7 @@ function rangeBoard(){
   return h("section",{class:"card dg-list","aria-labelledby":"range-h"},h("div",{class:"dg-list-head"},head,h("div",{class:"dg-bands"},bandSeg),
     band!=="All"?h("p",{class:"small ter dg-ach"},(()=>{const g=DG_GROUPS.find(x=>x[0]===band),l=all.filter(x=>bandOf(x)===band).map(x=>rangeOf(x.range));
       return["Legacy achievement: ",h("b",{},g[3])," · levels "+Math.min(...l.map(r=>r[0]))+"–"+Math.max(...l.map(r=>r[1]))]})()):null),
-    h("div",{class:"dg-cols small ter","aria-hidden":"true"},h("span",{},"Dungeon"),h("span",{},"In range"),h("span",{},"Been"),h("span",{title:"High enough for it, and no stamp yet"},"Need it")),
+    h("div",{class:"dg-cols small ter","aria-hidden":"true"},h("span",{},"Dungeon"),h("span",{},"In range"),h("span",{},"Been"),h("span",{title:"High enough for it, and no stamp yet"},"Need it"),h("span",{})),
     opts.map(o=>dgRow(o)),
     other.length?h("details",{class:"dg-other",open:other.some(o=>x&&o.name===x.name)||null},h("summary",{},"Other · Alliance-side ("+other.length+")"),other.map(o=>dgRow(o))):null);
   // Tag only the dungeons one of your characters is the right level for and hasn't done yet.
@@ -2417,10 +2420,11 @@ function rangeBoard(){
       return h("div",{class:"dg-item"+(open?" open":"")},
         h("div",{class:"dg-sum",onclick:e=>{if(!e.target.closest("a,button")){if(!open)openAnim("d:"+o.name);setUi({rangeD:open?"-":o.name},true)}}},
           h("button",{type:"button",class:"dg-name","aria-expanded":String(!!open),onclick:()=>{if(!open)openAnim("d:"+o.name);setUi({rangeD:open?"-":o.name},true)}},
-            h("span",{class:"dg-chev","aria-hidden":"true"}),h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon. Horde can run it, but it's a trek to get to, and it doesn't count toward the Horde Spelunker achievement or give Legacy points."},"Alliance · no Legacy points"):null,mine?h("span",{class:"tag gold"},"You need this"):null),
+            h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon. Horde can run it, but it's a trek to get to, and it doesn't count toward the Horde Spelunker achievement or give Legacy points."},"Alliance · no Legacy points"):null,mine?h("span",{class:"tag gold"},"You need this"):null),
           h("span",{class:"dg-n"+(o.active.length?"":" zero")},h("b",{},String(o.active.length)),h("span",{class:"dg-n-l"}," in range")),
           h("span",{class:"dg-n"+(been?"":" zero")},h("b",{},String(been)),h("span",{class:"dg-n-l"}," been")),
-          h("span",{class:"dg-n"+(o.need.length?"":" zero")},h("b",{},DG_ALLIANCE.includes(o.name)?"—":String(o.need.length)),h("span",{class:"dg-n-l"},DG_ALLIANCE.includes(o.name)?"":" need it"))),
+          h("span",{class:"dg-n"+(o.need.length?"":" zero")},h("b",{},DG_ALLIANCE.includes(o.name)?"—":String(o.need.length)),h("span",{class:"dg-n-l"},DG_ALLIANCE.includes(o.name)?"":" need it")),
+          h("span",{class:"dg-x","aria-hidden":"true"})),
         open?(()=>{const d=rangeDetail(o);if(d&&d.classList)d.className+=anim("d:"+o.name);return d})():null)}}
 // How many current characters have a dungeon stamped (by hand or from loot).
 // The game's Spelunker achievements (legacy points). Master is everything not in the first two.
