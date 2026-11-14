@@ -159,6 +159,7 @@ td .l2{display:block;font-size:.75rem;line-height:1rem;color:var(--ter)}
   tr.alt td{background:transparent}
   td::before{content:attr(data-label);color:var(--ter);font-size:.75rem;flex:none}
   td:first-child::before{content:none}
+  .rd-t td:empty{display:none}
   td>*{text-align:right}
   td:first-child>*{text-align:left}
   /* The roster: two or three tight lines per person instead of a label for every value */
@@ -616,15 +617,16 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .tab-empty{display:none}
 .recap-img{display:block;width:100%;max-height:55vh;object-fit:contain;border-radius:8px;background:#0f0a09;border:1px solid var(--b-sub)}
 .rr{gap:.875rem}
-.rr-sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--b-sub);border-radius:10px;overflow:hidden}
-.rr-stat{display:flex;flex-direction:column;gap:.125rem;padding:.75rem 1rem}.rr-stat+.rr-stat{border-left:1px solid var(--b-sub)}.rr-stat b{font-size:1.5rem;line-height:1.75rem;font-variant-numeric:tabular-nums}
-@media (max-width:600px){.rr-sum{grid-template-columns:repeat(2,minmax(0,1fr))}.rr-stat:nth-child(3){border-left:0}.rr-stat:nth-child(n+3){border-top:1px solid var(--b-sub)}}
+.rr-hero{display:grid;grid-template-columns:minmax(12rem,15rem) minmax(0,1fr);gap:1.25rem;align-items:center}
+@media (max-width:900px){.rr-hero{grid-template-columns:minmax(0,1fr)}}
+.rr-count{display:flex;flex-direction:column;gap:.125rem}
+.rr-eyebrow{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)}
+.rr-count>b{font-size:2.75rem;line-height:3rem;color:var(--gold-hi);font-variant-numeric:tabular-nums}
 .rr-close{display:flex;flex-direction:column;gap:.375rem}
 .rr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.75rem}
 .rr-raid{display:flex;flex-direction:column;gap:.625rem;padding:1rem;border-radius:10px;background:var(--sunken);border:1px solid var(--b-sub)}.rr-raid h3{margin:0}.rr-raid>.tag{align-self:flex-start}
-.rr-raid .track i.max{background:var(--trim)}
 .rr-ok{color:#7fd69a;background:rgb(47 154 70/.16)}:root[data-theme="light"] .rr-ok{color:#1d6a30;background:rgb(35 128 58/.12)}
-.rr-roles{display:flex;flex-direction:column;gap:.5rem}.rr-role{display:grid;grid-template-columns:minmax(0,1fr) auto;row-gap:.25rem;align-items:baseline}.rr-role .track{grid-column:1/-1}.rr-n{font-variant-numeric:tabular-nums}
+.rr-roles{display:flex;flex-direction:column;gap:.5rem}.rr-role{display:grid;grid-template-columns:4rem minmax(0,1fr) 3rem;gap:.5rem;align-items:center}.rr-n{font-variant-numeric:tabular-nums;text-align:right}
 .veil{position:relative;overflow:hidden;background:linear-gradient(90deg,#4d0100,#7a0420 50%,#4d0100);color:#ffe9d6;border-bottom:2px dashed #d69d56}
 .veil-in{position:relative;display:flex;align-items:center;justify-content:center;gap:.625rem;min-height:2.5rem;font-size:.875rem;text-align:center}.veil-in b{color:var(--gold-hi)}
 .veil-x{position:absolute;right:0;top:50%;transform:translateY(-50%);width:2.75rem;height:2.5rem;border:0;background:none;color:#ffe9d6;font-size:1.25rem;cursor:pointer;border-radius:6px}.veil-x:hover{background:rgb(0 0 0/.2)}
@@ -834,9 +836,8 @@ a.r-name:hover{color:var(--accent-text)}
 .dg-tabs a:hover{color:var(--text)}
 .dg-tabs a[aria-current="page"]{background:var(--raised);color:var(--text)}
 .rd-t tr.rd-away td{color:var(--ter)}
-.rd-way{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr));gap:.75rem 1.5rem}
-.rd-way li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.25rem .75rem;align-items:baseline}
-.rd-way .track{grid-column:1/-1}
+.rd-lv{display:inline-flex;align-items:center;gap:.5rem}.rd-lv .track{width:4.5rem}
+.rl-raid{display:flex;flex-direction:column;gap:.5rem;padding-top:.75rem;border-top:1px solid var(--sep);scroll-margin-top:5rem}.rl-raid:first-of-type{border-top:0;padding-top:0}.rl-raid>h3{margin:0}
 /* Calmer sync lines and card back touches */
 .sync-all{display:flex;flex-direction:column;gap:.375rem;margin-top:.375rem}
 .sync-more{min-height:2rem}
@@ -2731,30 +2732,32 @@ function raidGroups(ppl,size,want){let n=0;
   while(n<8){const k=n+1,w={Tank:want.Tank*k,Healer:want.Healer*k,DPS:want.DPS*k},have=fillRoles(ppl,w);
     if(ppl.length<size*k||have.Tank<w.Tank||have.Healer<w.Healer||have.Tank+have.Healer+have.DPS<size*k)break;n=k}
   return n}
+// Loot for a raid comes from dungeon-loot.json under the raid's name, once Wowhead lists it.
+const raidHasLoot=name=>Object.values(DUNGEON_LOOT).some(v=>v[0]===name);
 function raidsCard(){
   const chars=[...S.members,...S.alts].filter(m=>isMine(m)||memberState(m)==="current");
   const sixty=chars.filter(m=>(+m.level||1)>=60),ready=sixty.filter(m=>!isAway(m)),away=sixty.length-ready.length;
-  const close=chars.filter(m=>{const l=+m.level||1;return l>=55&&l<60}).sort((a,b)=>(+b.level)-(+a.level));
-  const gear=ready.flatMap(m=>Object.values(m.gear||{}).filter(g=>g&&g.id)),epics=gear.filter(g=>+g.q>=4).length,blues=gear.filter(g=>+g.q===3).length;
+  const close=chars.filter(m=>{const l=+m.level||1;return l>=55&&l<60}).length;
+  const days=Math.ceil((RAIDS_OPEN-Date.now())/864e5),open=days<=0;
+  const toLoot=name=>{setUi({dgLoot:{...(S.ui.dgLoot||{}),[name]:true}});setTimeout(()=>{const el=document.getElementById("rl-"+name.replace(/\W+/g,"-"));if(el)el.scrollIntoView({behavior:"smooth",block:"start"})},60)};
   const tile=([name,size,want,note])=>{
     const groups=raidGroups(ready,size,want),have=fillRoles(ready,want),short=ROLES.filter(r=>have[r]<want[r]).map(r=>[r,want[r]-have[r]]);
     const missing=Math.max(0,size-ready.length);
     const status=groups?h("span",{class:"tag rr-ok"},groups===1?"1 group ready":groups+" groups ready")
       :h("span",{class:"tag"},"Need "+(short.length?short.map(([r,n])=>n+" "+(r==="DPS"?"DPS":r.toLowerCase()+(n===1?"":"s"))).join(", "):missing+" more"));
+    const loot=raidHasLoot(name)?h("button",{type:"button",class:"btn ghost sm",style:"align-self:flex-start",onclick:()=>toLoot(name)},"Loot table")
+      :!open&&!note?h("span",{class:"small ter"},"Loot table from 9 December"):null;
     return h("div",{class:"rr-raid"},h("div",{class:"spread",style:"align-items:baseline;gap:.25rem .75rem"},h("h3",{},name),h("span",{class:"small ter"},size+" players")),status,
       h("div",{class:"rr-roles"},ROLES.map(r=>{const n=Math.min(have[r],want[r]),pct=Math.round(n/want[r]*100);
-        return h("div",{class:"rr-role"},h("span",{class:"small"},r==="DPS"?"DPS":r+"s"),h("span",{class:"small ter rr-n"},have[r]+" / "+want[r]),
-          h("span",{class:"track","aria-hidden":"true"},h("i",{class:n>=want[r]?"max":"",style:`width:${pct}%`})))})),
-      note?h("p",{class:"small ter",style:"margin:0"},note):null)};
-  return h("section",{class:"card rr","aria-labelledby":"raids-h"},
-    h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"raids-h"},"Raid Readiness"),h("span",{class:"tag info",title:"9 December"},raidCountdown())),
-    h("p",{class:"small ter",style:"margin:0"},"Counts level 60s seen in game in the last two weeks, by role. Anyone who plays two roles fills a gap first."),
-    h("div",{class:"rr-sum"},
-      h("div",{class:"rr-stat"},h("b",{},String(ready.length)),h("span",{class:"small ter"},"level 60s"+(away?" (+"+away+" away)":""))),
-      h("div",{class:"rr-stat"},h("b",{},String(close.length)),h("span",{class:"small ter"},"at 55 to 59")),
-      h("div",{class:"rr-stat"},h("b",{},String(epics)),h("span",{class:"small ter"},"epics on the 60s")),
-      h("div",{class:"rr-stat"},h("b",{},String(blues)),h("span",{class:"small ter"},"blues on the 60s"))),
-    h("div",{class:"rr-grid"},RAIDS.map(tile)))}
+        return h("div",{class:"rr-role"},h("span",{class:"small"},r==="DPS"?"DPS":r+"s"),h("span",{class:"track","aria-hidden":"true"},h("i",{class:n>=want[r]?"max":"",style:`width:${pct}%`})),h("span",{class:"small ter rr-n"},have[r]+" / "+want[r]))})),
+      note?h("p",{class:"small ter",style:"margin:0"},note):null,loot)};
+  const when=new Date(RAIDS_OPEN).toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long",timeZone:"Australia/Perth"});
+  return h("section",{class:"card rr","aria-labelledby":"raids-h"},h("div",{class:"rr-hero"},
+    h("div",{class:"rr-count"},h("span",{class:"rr-eyebrow",id:"raids-h"},open?"Raids are open":"Raids open in"),
+      h("b",{},open?"Now":days===1?"1 day":days+" days"),h("span",{class:"small",style:"color:var(--sec)"},open?"Since "+when:when),
+      h("span",{class:"small ter",style:"margin-top:.375rem"},ready.length+(ready.length===1?" level 60":" level 60s")+(away?" (+"+away+" away)":"")+" · "+close+" at 55 to 59"),
+      h("span",{class:"small ter"},"Counts 60s seen in the last two weeks. Anyone who plays two roles fills a gap first.")),
+    h("div",{class:"rr-grid"},RAIDS.map(tile))))}
 
 // The Raids page: the readiness card, then every level 60 with what they bring, then who's on the way.
 // The Dungeons and Raids pages share one spot in the menu; this switch moves between them.
@@ -2767,23 +2770,29 @@ function viewRaids(){
   const sixty=chars.filter(m=>(+m.level||1)>=60).sort((a,b)=>(ord(a)-ord(b))||(isAway(a)-isAway(b))||nameOf(a).localeCompare(nameOf(b)));
   const close=chars.filter(m=>{const l=+m.level||1;return l>=50&&l<60}).sort((a,b)=>(+b.level)-(+a.level)||nameOf(a).localeCompare(nameOf(b)));
   const who=m=>h("span",{class:"row",style:"gap:.5rem;flex-wrap:nowrap;min-width:0"},classIcon(m.cls),charLink(m),isMine(m)?h("span",{class:"tag gold"},"You"):null);
-  const row=m=>{const g=Object.values(m.gear||{}).filter(x=>x&&x.id),ep=g.filter(x=>+x.q>=4).length,bl=g.filter(x=>+x.q===3).length,a=m.armory||{},also=ROLES.filter(r=>r!==(m.role||"DPS")&&canRole(m,r));
-    return h("tr",{class:isAway(m)?"rd-away":""},
-      h("td",{"data-label":"Character"},who(m)),
-      h("td",{"data-label":"Role"},h("span",{},m.role||"DPS"),also.length?h("span",{class:"l2"},"or "+also.join(", ")):null),
-      h("td",{"data-label":"Gear"},h("span",{},a.ilvl?"Item level "+a.ilvl:g.length?g.length+" of "+GEAR_ALL.length+" slots":"—"),ep||bl?h("span",{class:"l2"},[ep?ep+(ep===1?" epic":" epics"):"",bl?bl+(bl===1?" blue":" blues"):""].filter(Boolean).join(" · ")):null),
-      h("td",{"data-label":"Onyxia amulet"},hasAmulet(m)?h("span",{class:"tag rr-ok"},"Wearing it"):h("span",{class:"ter",title:"The armory only shows worn items, so it may be in their bags."},"Not seen")),
-      h("td",{"data-label":"Last seen"},seenOf(m)?h("span",{style:"white-space:nowrap"},ago(seenOf(m))):h("span",{class:"ter"},"—"),isAway(m)?h("span",{class:"l2"},"Away two weeks or more"):null))};
-  const table=sixty.length?h("div",{class:"tablebox"},h("table",{class:"rd-t"},h("thead",{},h("tr",{},["Character","Role","Gear","Onyxia amulet","Last seen"].map(t=>h("th",{scope:"col"},t)))),h("tbody",{},sixty.map(row))))
-    :h("p",{class:"empty"},"Nobody's level 60 yet. They'll be listed here as they get there.");
-  const way=close.length?h("ol",{class:"rd-way"},close.map(m=>{const lv=+m.level||1;return h("li",{},who(m),h("span",{class:"small ter",style:"white-space:nowrap"},(m.role||"DPS")+" · level "+lv+" · "+(60-lv)+" to go"),
-      h("span",{class:"track","aria-hidden":"true"},h("i",{style:`width:${(lv-50)*10+5}%`})))})):h("p",{class:"empty"},"Nobody's between 50 and 59 right now.");
-  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Raids"),h("p",{class:"sub"},"Who's ready for each raid, what's missing, and who's nearly 60. Raid nights are sorted out in game and on Discord.")),dgTabs("raids")),
+  const role=m=>{const also=ROLES.filter(r=>r!==(m.role||"DPS")&&canRole(m,r));return h("td",{"data-label":"Role"},h("span",{},m.role||"DPS"),also.length?h("span",{class:"l2"},"or "+also.join(", ")):null)};
+  const seen=m=>h("td",{"data-label":"Last seen"},seenOf(m)?h("span",{style:"white-space:nowrap"},ago(seenOf(m))):null,isAway(m)?h("span",{class:"l2"},"Away two weeks or more"):null);
+  const row=m=>{const g=Object.values(m.gear||{}).filter(x=>x&&x.id),ep=g.filter(x=>+x.q>=4).length,bl=g.filter(x=>+x.q===3).length,a=m.armory||{};
+    return h("tr",{class:isAway(m)?"rd-away":""},h("td",{"data-label":"Character"},who(m)),role(m),
+      h("td",{"data-label":"Gear"},a.ilvl?h("span",{},"Item level "+a.ilvl):g.length?h("span",{},g.length+" of "+GEAR_ALL.length+" slots"):null,ep||bl?h("span",{class:"l2"},[ep?ep+(ep===1?" epic":" epics"):"",bl?bl+(bl===1?" blue":" blues"):""].filter(Boolean).join(" · ")):null),
+      h("td",{"data-label":"Onyxia amulet"},hasAmulet(m)?h("span",{class:"tag rr-ok"},"Wearing it"):null),seen(m))};
+  const nearRow=m=>{const lv=+m.level||1;
+    return h("tr",{class:"rd-near"+(isAway(m)?" rd-away":"")},h("td",{"data-label":"Character"},who(m)),role(m),
+      h("td",{"data-label":"Level"},h("span",{class:"rd-lv"},h("span",{},"Level "+lv),h("span",{class:"track","aria-hidden":"true"},h("i",{style:`width:${(lv-50)*10+5}%`}))),h("span",{class:"l2"},(60-lv)+" to go")),
+      h("td",{"data-label":"Onyxia amulet"}),seen(m))};
+  const grp=(t,n)=>h("tr",{class:"r-group"},h("td",{colspan:"5"},h("span",{class:"r-group-in"},t,h("span",{class:"small ter"},String(n)))));
+  const table=sixty.length||close.length?h("div",{class:"tablebox"},h("table",{class:"rd-t"},h("thead",{},h("tr",{},["Character","Role","Gear","Onyxia amulet","Last seen"].map(t=>h("th",{scope:"col"},t)))),
+      h("tbody",{},sixty.length?[grp("Level 60",sixty.length),...sixty.map(row)]:[],close.length?[grp("Nearly there · 50 to 59",close.length),...close.map(nearRow)]:[])))
+    :h("p",{class:"empty"},"Nobody's level 50 or over yet. They'll be listed here as they get there.");
+  const lootRaids=RAIDS.map(r=>r[0]).filter(raidHasLoot);
+  const lootCard=lootRaids.length?h("section",{class:"card","aria-labelledby":"rl-h",style:"gap:.75rem"},h("h2",{id:"rl-h"},"Raid Loot"),
+      lootRaids.map(n=>h("div",{id:"rl-"+n.replace(/\W+/g,"-"),class:"rl-raid"},h("h3",{},n),dungeonLoot(n)))):null;
+  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Raids"),h("p",{class:"sub"},"Who's ready for each raid and what's missing. Raid nights are sorted out in game and on Discord.")),dgTabs("raids")),
     raidsCard(),
-    h("section",{class:"card","aria-labelledby":"rd60-h",style:"gap:.75rem"},h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"rd60-h"},"The Level 60s"),h("span",{class:"small ter"},sixty.length+(sixty.length===1?" character":" characters"))),table,
-      sixty.length?h("p",{class:"small ter",style:"margin:0"},"Onyxia's Lair needs the Drakefire Amulet. The site can only see it when it's worn, so “Not seen” may just mean it's in their bags."):null),
-    raidNights(),
-    h("section",{class:"card","aria-labelledby":"rdway-h",style:"gap:.75rem"},h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"rdway-h"},"On the Way"),h("span",{class:"small ter"},"Levels 50 to 59")),way)]}
+    h("section",{class:"card","aria-labelledby":"rdr-h",style:"gap:.75rem"},h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"rdr-h"},"Who's Ready"),h("span",{class:"small ter"},sixty.length+" at 60 · "+close.length+" on the way")),table,
+      sixty.length?h("p",{class:"small ter",style:"margin:0"},"Onyxia's Lair needs the Drakefire Amulet. The armory only shows worn items, so a blank amulet cell may just mean it's in their bags."):null),
+    lootCard,
+    raidNights()]}
 
 // Raid nights the guild scribe was in: who was there. Newest first.
 function raidNights(){const rs=Object.values((S.scribe&&S.scribe.raids)||{}).filter(r=>r&&r.day).sort((a,b)=>a.day<b.day?1:a.day>b.day?-1:0).slice(0,8);
