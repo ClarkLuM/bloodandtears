@@ -27,33 +27,30 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Alegreya+Sans+SC:wght@500;700&display=swap">
+<link rel="stylesheet" href="ds-tokens.css">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0}
 [hidden]{display:none!important}
 
-/* Obsidian: near-black by default, light on request. Values come from opendesigner/build/css/tokens.css. */
+/* Obsidian: near-black by default, light on request. */
 :root{
-  /* Colours from the guild tabard (Nov 2026): a crimson field, a gingerbread man and bright green trim. Neutrals lean red-brown. */
-  --sunken:#0f0a09;--base:#161010;--raised:#1f1716;--overlay:#281e1d;--subtle:#312625;--sep:#312625;--b-sub:#3c2f2e;--b-def:#4a3a39;--field-b:#8b7b79;
-  --text:#efe6e2;--sec:#bfaea9;--ter:#a6948e;--accent:#a50d2c;--on-accent:#fff3f3;--accent-text:#e0a862;--gold-hi:#f0c58c;--ginger:#d69d56;--accent-hover:#c01836;--link-hover:#f0c58c;--accent-subtle:#301416;--accent-b:#8a1f2c;--focus:#e0a862;
-  --trim:#2f9a46;--trim-deep:#1d5a2a;--wine:#a50d2c;--wine-text:#ef8a96;
-  --info-subtle:#1a2934;--info-text:#5fb4ec;--danger:#ec958b;--bar:#8b7b79;--scrim:rgb(15 10 9 / .72);
-  --q0:#9d9d9d;--q1:#efe6e2;--q2:#1eff00;--q3:#3b9cff;--q4:#b968f5;--q5:#ff8000;--q6:#e6cc80;
-  --gold:#d4a24c;--lvl:#e6bc77;--silver:#c7c7c7;--copper:#b8733d;
+  /* Every colour comes from the design system (ds-tokens.css, built from opendesigner/): the tabard's crimson field,
+     gingerbread gold and bright green trim, with red-brown neutrals. These short names are the site's aliases for them,
+     and they switch with the theme on their own. Change a colour in the system (engine.py set, then build) and copy
+     opendesigner/build/css/tokens.css into public/ds-tokens.css with sh tools/ds-tokens.sh. */
+  --sunken:var(--ds-color-surface-sunken);--base:var(--ds-color-surface-base);--raised:var(--ds-color-surface-raised);--overlay:var(--ds-color-surface-overlay);--subtle:var(--ds-color-bg-neutral-subtle);--sep:var(--ds-color-border-separator);--b-sub:var(--ds-color-border-subtle);--b-def:var(--ds-color-border-default);
+  --field-b:var(--ds-color-border-input);--text:var(--ds-color-text-primary);--sec:var(--ds-color-text-secondary);--ter:var(--ds-color-text-tertiary);--accent:var(--ds-color-bg-action-primary);--on-accent:var(--ds-color-text-on-action);--accent-text:var(--ds-color-text-accent);--gold-hi:var(--ds-color-site-gold-hi);
+  --ginger:var(--ds-color-site-ginger);--accent-hover:var(--ds-color-bg-action-primary-hover);--link-hover:var(--ds-color-site-link-hover);--accent-subtle:var(--ds-color-bg-accent-subtle);--accent-b:var(--ds-color-border-accent);--focus:var(--ds-color-border-focus);--trim:var(--ds-color-site-trim);--trim-deep:var(--ds-color-site-trim-deep);
+  --wine:var(--ds-color-bg-brand);--wine-text:var(--ds-color-site-wine-text);--info-subtle:var(--ds-color-bg-info-subtle);--info-text:var(--ds-color-text-info);--danger:var(--ds-color-text-danger);--bar:var(--ds-color-site-bar);--scrim:var(--ds-color-overlay-scrim);--q0:var(--ds-color-site-q0);
+  --q1:var(--ds-color-site-q1);--q2:var(--ds-color-site-q2);--q3:var(--ds-color-site-q3);--q4:var(--ds-color-site-q4);--q5:var(--ds-color-site-q5);--q6:var(--ds-color-site-q6);--gold:var(--ds-color-site-gold);--lvl:var(--ds-color-site-lvl);
+  --silver:var(--ds-color-site-silver);--copper:var(--ds-color-site-copper);
   --display:"Alegreya Sans SC",Figtree,sans-serif;
   --body:Figtree,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   color-scheme:dark;
 }
-:root[data-theme="light"]{
-  --sunken:#f5efe8;--base:#fbf7f2;--raised:#ffffff;--overlay:#ffffff;--subtle:#f0e8e0;--sep:#e8ded4;--b-sub:#ddd1c6;--b-def:#d2c4b8;--field-b:#8c7b70;
-  --text:#2a1d1a;--sec:#5f514c;--ter:#6f605a;--accent:#9a0a26;--on-accent:#ffffff;--accent-text:#7a4a1c;--gold-hi:#7a5410;--ginger:#8a5a2b;--accent-hover:#7a061d;--link-hover:#5c3712;--accent-subtle:#f8e4e6;--accent-b:#d08a94;--focus:#9a0a26;
-  --trim:#23803a;--trim-deep:#1d6a30;--wine:#9a0a26;--wine-text:#9a0a26;
-  --info-subtle:#dceefb;--info-text:#005c8a;--danger:#933a34;--bar:#8c7b70;--scrim:rgb(42 29 26 / .45);
-  --q0:#6b6b6b;--q1:#262222;--q2:#2a7d12;--q3:#0059b3;--q4:#8a2bc9;--q5:#b35600;--q6:#8a6d1f;--lvl:#7a5f17;
-  color-scheme:light;
-}
+:root[data-theme="light"]{color-scheme:light}
 body{background:var(--base);color:var(--text);font-family:var(--body);font-size:.875rem;line-height:1.25rem;font-variant-numeric:tabular-nums;min-height:100vh}
 a{color:var(--accent-text)}a:hover{color:var(--link-hover)}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}

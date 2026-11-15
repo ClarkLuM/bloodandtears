@@ -217,6 +217,547 @@
       ],
       "inferred": false
     },
+    "dark:color.bg.accent.subtle": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1882,
+          0.0784,
+          0.0863
+        ],
+        "hex": "#301416"
+      },
+      "override": true
+    },
+    "dark:color.bg.action.primary": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6471,
+          0.051,
+          0.1725
+        ],
+        "hex": "#a50d2c"
+      },
+      "override": true
+    },
+    "dark:color.bg.action.primary-hover": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7529,
+          0.0941,
+          0.2118
+        ],
+        "hex": "#c01836"
+      },
+      "override": true
+    },
+    "dark:color.bg.action.primary-pressed": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5412,
+          0.0431,
+          0.1451
+        ],
+        "hex": "#8a0b25"
+      },
+      "override": true
+    },
+    "dark:color.bg.brand": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6471,
+          0.051,
+          0.1725
+        ],
+        "hex": "#a50d2c"
+      },
+      "override": true
+    },
+    "dark:color.bg.info.subtle": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.102,
+          0.1608,
+          0.2039
+        ],
+        "hex": "#1a2934"
+      },
+      "override": true
+    },
+    "dark:color.bg.neutral.subtle": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1922,
+          0.149,
+          0.1451
+        ],
+        "hex": "#312625"
+      },
+      "override": true
+    },
+    "dark:color.border.accent": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5412,
+          0.1216,
+          0.1725
+        ],
+        "hex": "#8a1f2c"
+      },
+      "override": true
+    },
+    "dark:color.border.default": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2902,
+          0.2275,
+          0.2235
+        ],
+        "hex": "#4a3a39"
+      },
+      "override": true
+    },
+    "dark:color.border.focus": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8784,
+          0.6588,
+          0.3843
+        ],
+        "hex": "#e0a862"
+      },
+      "override": true
+    },
+    "dark:color.border.input": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5451,
+          0.4824,
+          0.4745
+        ],
+        "hex": "#8b7b79"
+      },
+      "override": true
+    },
+    "dark:color.border.separator": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1922,
+          0.149,
+          0.1451
+        ],
+        "hex": "#312625"
+      },
+      "override": true
+    },
+    "dark:color.border.subtle": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2353,
+          0.1843,
+          0.1804
+        ],
+        "hex": "#3c2f2e"
+      },
+      "override": true
+    },
+    "dark:color.overlay.scrim": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0588,
+          0.0392,
+          0.0353
+        ],
+        "alpha": 0.72,
+        "hex": "#0f0a09"
+      },
+      "override": true
+    },
+    "dark:color.site.bar": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5451,
+          0.4824,
+          0.4745
+        ],
+        "hex": "#8b7b79"
+      },
+      "override": true
+    },
+    "dark:color.site.copper": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7216,
+          0.451,
+          0.2392
+        ],
+        "hex": "#b8733d"
+      },
+      "override": true
+    },
+    "dark:color.site.ginger": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8392,
+          0.6157,
+          0.3373
+        ],
+        "hex": "#d69d56"
+      },
+      "override": true
+    },
+    "dark:color.site.gold": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8314,
+          0.6353,
+          0.298
+        ],
+        "hex": "#d4a24c"
+      },
+      "override": true
+    },
+    "dark:color.site.gold-hi": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9412,
+          0.7725,
+          0.549
+        ],
+        "hex": "#f0c58c"
+      },
+      "override": true
+    },
+    "dark:color.site.link-hover": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9412,
+          0.7725,
+          0.549
+        ],
+        "hex": "#f0c58c"
+      },
+      "override": true
+    },
+    "dark:color.site.lvl": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.902,
+          0.7373,
+          0.4667
+        ],
+        "hex": "#e6bc77"
+      },
+      "override": true
+    },
+    "dark:color.site.q0": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6157,
+          0.6157,
+          0.6157
+        ],
+        "hex": "#9d9d9d"
+      },
+      "override": true
+    },
+    "dark:color.site.q1": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9373,
+          0.902,
+          0.8863
+        ],
+        "hex": "#efe6e2"
+      },
+      "override": true
+    },
+    "dark:color.site.q2": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1176,
+          1.0,
+          0.0
+        ],
+        "hex": "#1eff00"
+      },
+      "override": true
+    },
+    "dark:color.site.q3": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2314,
+          0.6118,
+          1.0
+        ],
+        "hex": "#3b9cff"
+      },
+      "override": true
+    },
+    "dark:color.site.q4": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7255,
+          0.4078,
+          0.9608
+        ],
+        "hex": "#b968f5"
+      },
+      "override": true
+    },
+    "dark:color.site.q5": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          1.0,
+          0.502,
+          0.0
+        ],
+        "hex": "#ff8000"
+      },
+      "override": true
+    },
+    "dark:color.site.q6": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.902,
+          0.8,
+          0.502
+        ],
+        "hex": "#e6cc80"
+      },
+      "override": true
+    },
+    "dark:color.site.silver": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7804,
+          0.7804,
+          0.7804
+        ],
+        "hex": "#c7c7c7"
+      },
+      "override": true
+    },
+    "dark:color.site.trim": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1843,
+          0.6039,
+          0.2745
+        ],
+        "hex": "#2f9a46"
+      },
+      "override": true
+    },
+    "dark:color.site.trim-deep": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1137,
+          0.3529,
+          0.1647
+        ],
+        "hex": "#1d5a2a"
+      },
+      "override": true
+    },
+    "dark:color.site.wine-text": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9373,
+          0.5412,
+          0.5882
+        ],
+        "hex": "#ef8a96"
+      },
+      "override": true
+    },
+    "dark:color.surface.base": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0863,
+          0.0627,
+          0.0627
+        ],
+        "hex": "#161010"
+      },
+      "override": true
+    },
+    "dark:color.surface.overlay": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1569,
+          0.1176,
+          0.1137
+        ],
+        "hex": "#281e1d"
+      },
+      "override": true
+    },
+    "dark:color.surface.raised": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1216,
+          0.0902,
+          0.0863
+        ],
+        "hex": "#1f1716"
+      },
+      "override": true
+    },
+    "dark:color.surface.sunken": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0588,
+          0.0392,
+          0.0353
+        ],
+        "hex": "#0f0a09"
+      },
+      "override": true
+    },
+    "dark:color.text.accent": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8784,
+          0.6588,
+          0.3843
+        ],
+        "hex": "#e0a862"
+      },
+      "override": true
+    },
+    "dark:color.text.danger": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9255,
+          0.5843,
+          0.5451
+        ],
+        "hex": "#ec958b"
+      },
+      "override": true
+    },
+    "dark:color.text.info": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3725,
+          0.7059,
+          0.9255
+        ],
+        "hex": "#5fb4ec"
+      },
+      "override": true
+    },
+    "dark:color.text.link": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8784,
+          0.6588,
+          0.3843
+        ],
+        "hex": "#e0a862"
+      },
+      "override": true
+    },
+    "dark:color.text.on-action": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          1.0,
+          0.9529,
+          0.9529
+        ],
+        "hex": "#fff3f3"
+      },
+      "override": true
+    },
+    "dark:color.text.on-brand": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          1.0,
+          0.9529,
+          0.9529
+        ],
+        "hex": "#fff3f3"
+      },
+      "override": true
+    },
+    "dark:color.text.primary": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9373,
+          0.902,
+          0.8863
+        ],
+        "hex": "#efe6e2"
+      },
+      "override": true
+    },
+    "dark:color.text.secondary": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.749,
+          0.6824,
+          0.6627
+        ],
+        "hex": "#bfaea9"
+      },
+      "override": true
+    },
+    "dark:color.text.tertiary": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.651,
+          0.5804,
+          0.5569
+        ],
+        "hex": "#a6948e"
+      },
+      "override": true
+    },
     "elevation.darkMode": {
       "value": "lighter-raised-surfaces",
       "dial": "depth",
@@ -322,6 +863,523 @@
         "S-L06-009"
       ],
       "inferred": false
+    },
+    "light:color.bg.accent.subtle": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9725,
+          0.8941,
+          0.902
+        ],
+        "hex": "#f8e4e6"
+      },
+      "override": true
+    },
+    "light:color.bg.action.primary": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6039,
+          0.0392,
+          0.149
+        ],
+        "hex": "#9a0a26"
+      },
+      "override": true
+    },
+    "light:color.bg.action.primary-hover": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4784,
+          0.0235,
+          0.1137
+        ],
+        "hex": "#7a061d"
+      },
+      "override": true
+    },
+    "light:color.bg.brand": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6039,
+          0.0392,
+          0.149
+        ],
+        "hex": "#9a0a26"
+      },
+      "override": true
+    },
+    "light:color.bg.info.subtle": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8627,
+          0.9333,
+          0.9843
+        ],
+        "hex": "#dceefb"
+      },
+      "override": true
+    },
+    "light:color.bg.neutral.subtle": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9412,
+          0.9098,
+          0.8784
+        ],
+        "hex": "#f0e8e0"
+      },
+      "override": true
+    },
+    "light:color.border.accent": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8157,
+          0.5412,
+          0.5804
+        ],
+        "hex": "#d08a94"
+      },
+      "override": true
+    },
+    "light:color.border.default": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8235,
+          0.7686,
+          0.7216
+        ],
+        "hex": "#d2c4b8"
+      },
+      "override": true
+    },
+    "light:color.border.focus": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6039,
+          0.0392,
+          0.149
+        ],
+        "hex": "#9a0a26"
+      },
+      "override": true
+    },
+    "light:color.border.input": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.549,
+          0.4824,
+          0.4392
+        ],
+        "hex": "#8c7b70"
+      },
+      "override": true
+    },
+    "light:color.border.separator": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9098,
+          0.8706,
+          0.8314
+        ],
+        "hex": "#e8ded4"
+      },
+      "override": true
+    },
+    "light:color.border.subtle": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8667,
+          0.8196,
+          0.7765
+        ],
+        "hex": "#ddd1c6"
+      },
+      "override": true
+    },
+    "light:color.overlay.scrim": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1647,
+          0.1137,
+          0.102
+        ],
+        "alpha": 0.45,
+        "hex": "#2a1d1a"
+      },
+      "override": true
+    },
+    "light:color.site.bar": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.549,
+          0.4824,
+          0.4392
+        ],
+        "hex": "#8c7b70"
+      },
+      "override": true
+    },
+    "light:color.site.copper": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7216,
+          0.451,
+          0.2392
+        ],
+        "hex": "#b8733d"
+      },
+      "override": true
+    },
+    "light:color.site.ginger": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5412,
+          0.3529,
+          0.1686
+        ],
+        "hex": "#8a5a2b"
+      },
+      "override": true
+    },
+    "light:color.site.gold": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8314,
+          0.6353,
+          0.298
+        ],
+        "hex": "#d4a24c"
+      },
+      "override": true
+    },
+    "light:color.site.gold-hi": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4784,
+          0.3294,
+          0.0627
+        ],
+        "hex": "#7a5410"
+      },
+      "override": true
+    },
+    "light:color.site.link-hover": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3608,
+          0.2157,
+          0.0706
+        ],
+        "hex": "#5c3712"
+      },
+      "override": true
+    },
+    "light:color.site.lvl": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4784,
+          0.3725,
+          0.0902
+        ],
+        "hex": "#7a5f17"
+      },
+      "override": true
+    },
+    "light:color.site.q0": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4196,
+          0.4196,
+          0.4196
+        ],
+        "hex": "#6b6b6b"
+      },
+      "override": true
+    },
+    "light:color.site.q1": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.149,
+          0.1333,
+          0.1333
+        ],
+        "hex": "#262222"
+      },
+      "override": true
+    },
+    "light:color.site.q2": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1647,
+          0.4902,
+          0.0706
+        ],
+        "hex": "#2a7d12"
+      },
+      "override": true
+    },
+    "light:color.site.q3": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0,
+          0.349,
+          0.702
+        ],
+        "hex": "#0059b3"
+      },
+      "override": true
+    },
+    "light:color.site.q4": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5412,
+          0.1686,
+          0.7882
+        ],
+        "hex": "#8a2bc9"
+      },
+      "override": true
+    },
+    "light:color.site.q5": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.702,
+          0.3373,
+          0.0
+        ],
+        "hex": "#b35600"
+      },
+      "override": true
+    },
+    "light:color.site.q6": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5412,
+          0.4275,
+          0.1216
+        ],
+        "hex": "#8a6d1f"
+      },
+      "override": true
+    },
+    "light:color.site.silver": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7804,
+          0.7804,
+          0.7804
+        ],
+        "hex": "#c7c7c7"
+      },
+      "override": true
+    },
+    "light:color.site.trim": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1373,
+          0.502,
+          0.2275
+        ],
+        "hex": "#23803a"
+      },
+      "override": true
+    },
+    "light:color.site.trim-deep": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1137,
+          0.4157,
+          0.1882
+        ],
+        "hex": "#1d6a30"
+      },
+      "override": true
+    },
+    "light:color.site.wine-text": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6039,
+          0.0392,
+          0.149
+        ],
+        "hex": "#9a0a26"
+      },
+      "override": true
+    },
+    "light:color.surface.base": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9843,
+          0.9686,
+          0.949
+        ],
+        "hex": "#fbf7f2"
+      },
+      "override": true
+    },
+    "light:color.surface.overlay": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "hex": "#ffffff"
+      },
+      "override": true
+    },
+    "light:color.surface.raised": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "hex": "#ffffff"
+      },
+      "override": true
+    },
+    "light:color.surface.sunken": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9608,
+          0.9373,
+          0.9098
+        ],
+        "hex": "#f5efe8"
+      },
+      "override": true
+    },
+    "light:color.text.accent": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4784,
+          0.2902,
+          0.1098
+        ],
+        "hex": "#7a4a1c"
+      },
+      "override": true
+    },
+    "light:color.text.danger": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5765,
+          0.2275,
+          0.2039
+        ],
+        "hex": "#933a34"
+      },
+      "override": true
+    },
+    "light:color.text.info": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0,
+          0.3608,
+          0.5412
+        ],
+        "hex": "#005c8a"
+      },
+      "override": true
+    },
+    "light:color.text.link": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4784,
+          0.2902,
+          0.1098
+        ],
+        "hex": "#7a4a1c"
+      },
+      "override": true
+    },
+    "light:color.text.on-action": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "hex": "#ffffff"
+      },
+      "override": true
+    },
+    "light:color.text.primary": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1647,
+          0.1137,
+          0.102
+        ],
+        "hex": "#2a1d1a"
+      },
+      "override": true
+    },
+    "light:color.text.secondary": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3725,
+          0.3176,
+          0.298
+        ],
+        "hex": "#5f514c"
+      },
+      "override": true
+    },
+    "light:color.text.tertiary": {
+      "value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4353,
+          0.3765,
+          0.3529
+        ],
+        "hex": "#6f605a"
+      },
+      "override": true
     },
     "motion.blur.crossfade": {
       "value": {
@@ -3486,6 +4544,112 @@
     "primitives.tokens.json:motion.spring.sheet",
     "semantic.tokens.json:size.target.min",
     "semantic.tokens.json:size.target.touch",
+    "semantic.color.dark.tokens.json:color.bg.accent.subtle",
+    "semantic.color.dark.tokens.json:color.bg.action.primary",
+    "semantic.color.dark.tokens.json:color.bg.action.primary-hover",
+    "semantic.color.dark.tokens.json:color.bg.action.primary-pressed",
+    "semantic.color.dark.tokens.json:color.bg.brand",
+    "semantic.color.dark.tokens.json:color.bg.info.subtle",
+    "semantic.color.dark.tokens.json:color.bg.neutral.subtle",
+    "semantic.color.dark.tokens.json:color.border.accent",
+    "semantic.color.dark.tokens.json:color.border.default",
+    "semantic.color.dark.tokens.json:color.border.focus",
+    "semantic.color.dark.tokens.json:color.border.input",
+    "semantic.color.dark.tokens.json:color.border.separator",
+    "semantic.color.dark.tokens.json:color.border.subtle",
+    "semantic.color.dark.tokens.json:color.overlay.scrim",
+    "semantic.color.dark.tokens.json:color.site.bar",
+    "semantic.color.light.tokens.json:color.site.bar",
+    "semantic.color.dark.tokens.json:color.site.copper",
+    "semantic.color.light.tokens.json:color.site.copper",
+    "semantic.color.dark.tokens.json:color.site.ginger",
+    "semantic.color.light.tokens.json:color.site.ginger",
+    "semantic.color.dark.tokens.json:color.site.gold",
+    "semantic.color.light.tokens.json:color.site.gold",
+    "semantic.color.dark.tokens.json:color.site.gold-hi",
+    "semantic.color.light.tokens.json:color.site.gold-hi",
+    "semantic.color.dark.tokens.json:color.site.link-hover",
+    "semantic.color.light.tokens.json:color.site.link-hover",
+    "semantic.color.dark.tokens.json:color.site.lvl",
+    "semantic.color.light.tokens.json:color.site.lvl",
+    "semantic.color.dark.tokens.json:color.site.q0",
+    "semantic.color.light.tokens.json:color.site.q0",
+    "semantic.color.dark.tokens.json:color.site.q1",
+    "semantic.color.light.tokens.json:color.site.q1",
+    "semantic.color.dark.tokens.json:color.site.q2",
+    "semantic.color.light.tokens.json:color.site.q2",
+    "semantic.color.dark.tokens.json:color.site.q3",
+    "semantic.color.light.tokens.json:color.site.q3",
+    "semantic.color.dark.tokens.json:color.site.q4",
+    "semantic.color.light.tokens.json:color.site.q4",
+    "semantic.color.dark.tokens.json:color.site.q5",
+    "semantic.color.light.tokens.json:color.site.q5",
+    "semantic.color.dark.tokens.json:color.site.q6",
+    "semantic.color.light.tokens.json:color.site.q6",
+    "semantic.color.dark.tokens.json:color.site.silver",
+    "semantic.color.light.tokens.json:color.site.silver",
+    "semantic.color.dark.tokens.json:color.site.trim",
+    "semantic.color.light.tokens.json:color.site.trim",
+    "semantic.color.dark.tokens.json:color.site.trim-deep",
+    "semantic.color.light.tokens.json:color.site.trim-deep",
+    "semantic.color.dark.tokens.json:color.site.wine-text",
+    "semantic.color.light.tokens.json:color.site.wine-text",
+    "semantic.color.dark.tokens.json:color.surface.base",
+    "semantic.color.dark.tokens.json:color.surface.overlay",
+    "semantic.color.dark.tokens.json:color.surface.raised",
+    "semantic.color.dark.tokens.json:color.surface.sunken",
+    "semantic.color.dark.tokens.json:color.text.accent",
+    "semantic.color.dark.tokens.json:color.text.danger",
+    "semantic.color.dark.tokens.json:color.text.info",
+    "semantic.color.dark.tokens.json:color.text.link",
+    "semantic.color.dark.tokens.json:color.text.on-action",
+    "semantic.color.dark.tokens.json:color.text.on-brand",
+    "semantic.color.dark.tokens.json:color.text.primary",
+    "semantic.color.dark.tokens.json:color.text.secondary",
+    "semantic.color.dark.tokens.json:color.text.tertiary",
+    "semantic.color.light.tokens.json:color.bg.accent.subtle",
+    "semantic.color.light.tokens.json:color.bg.action.primary",
+    "semantic.color.light.tokens.json:color.bg.action.primary-hover",
+    "semantic.color.light.tokens.json:color.bg.brand",
+    "semantic.color.light.tokens.json:color.bg.info.subtle",
+    "semantic.color.light.tokens.json:color.bg.neutral.subtle",
+    "semantic.color.light.tokens.json:color.border.accent",
+    "semantic.color.light.tokens.json:color.border.default",
+    "semantic.color.light.tokens.json:color.border.focus",
+    "semantic.color.light.tokens.json:color.border.input",
+    "semantic.color.light.tokens.json:color.border.separator",
+    "semantic.color.light.tokens.json:color.border.subtle",
+    "semantic.color.light.tokens.json:color.overlay.scrim",
+    "semantic.color.light.tokens.json:color.site.bar",
+    "semantic.color.light.tokens.json:color.site.copper",
+    "semantic.color.light.tokens.json:color.site.ginger",
+    "semantic.color.light.tokens.json:color.site.gold",
+    "semantic.color.light.tokens.json:color.site.gold-hi",
+    "semantic.color.light.tokens.json:color.site.link-hover",
+    "semantic.color.light.tokens.json:color.site.lvl",
+    "semantic.color.light.tokens.json:color.site.q0",
+    "semantic.color.light.tokens.json:color.site.q1",
+    "semantic.color.light.tokens.json:color.site.q2",
+    "semantic.color.light.tokens.json:color.site.q3",
+    "semantic.color.light.tokens.json:color.site.q4",
+    "semantic.color.light.tokens.json:color.site.q5",
+    "semantic.color.light.tokens.json:color.site.q6",
+    "semantic.color.light.tokens.json:color.site.silver",
+    "semantic.color.light.tokens.json:color.site.trim",
+    "semantic.color.light.tokens.json:color.site.trim-deep",
+    "semantic.color.light.tokens.json:color.site.wine-text",
+    "semantic.color.light.tokens.json:color.surface.base",
+    "semantic.color.light.tokens.json:color.surface.overlay",
+    "semantic.color.light.tokens.json:color.surface.raised",
+    "semantic.color.light.tokens.json:color.surface.sunken",
+    "semantic.color.light.tokens.json:color.text.accent",
+    "semantic.color.light.tokens.json:color.text.danger",
+    "semantic.color.light.tokens.json:color.text.info",
+    "semantic.color.light.tokens.json:color.text.link",
+    "semantic.color.light.tokens.json:color.text.on-action",
+    "semantic.color.light.tokens.json:color.text.primary",
+    "semantic.color.light.tokens.json:color.text.secondary",
+    "semantic.color.light.tokens.json:color.text.tertiary",
     "motion.reduced.tokens.json:motion.transition.enter",
     "motion.reduced.tokens.json:motion.transition.exit",
     "motion.reduced.tokens.json:motion.transition.expand"
@@ -3499,6 +4663,6 @@
   ],
   "textScaling": "full",
   "notes": [],
-  "stateHash": "b39e261f412a9871",
+  "stateHash": "817a5c9298f75358",
   "profile": null
 }

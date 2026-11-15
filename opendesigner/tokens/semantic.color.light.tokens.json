@@ -18,20 +18,72 @@
     },
     "surface": {
       "sunken": {
-        "$value": "{color.neutral.light.2}",
-        "$description": "Wells, code blocks, page gutters."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9608,
+            0.9373,
+            0.9098
+          ],
+          "hex": "#f5efe8"
+        },
+        "$description": "Wells, code blocks, page gutters.",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "base": {
-        "$value": "{color.neutral.light.1}",
-        "$description": "The page background."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9843,
+            0.9686,
+            0.949
+          ],
+          "hex": "#fbf7f2"
+        },
+        "$description": "The page background.",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "raised": {
-        "$value": "{color.white}",
-        "$description": "Cards and panels on the page."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "hex": "#ffffff"
+        },
+        "$description": "Cards and panels on the page.",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "overlay": {
-        "$value": "{color.white}",
-        "$description": "Menus, popovers, dialogs; always with elevation.floating or elevation.overlay."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "hex": "#ffffff"
+        },
+        "$description": "Menus, popovers, dialogs; always with elevation.floating or elevation.overlay.",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "nav": {
         "$value": "{color.neutral.light.1}",
@@ -40,16 +92,55 @@
     },
     "text": {
       "primary": {
-        "$value": "{color.neutral.light.12}",
-        "$description": "Body copy, headings, labels (guaranteed >= 7:1 on steps 1-5)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.1647,
+            0.1137,
+            0.102
+          ],
+          "hex": "#2a1d1a"
+        },
+        "$description": "Body copy, headings, labels (guaranteed >= 7:1 on steps 1-5).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "secondary": {
-        "$value": "{color.neutral.light.11}",
-        "$description": "Supporting text (guaranteed >= the text minimum on surfaces and neutral fills 1-4)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.3725,
+            0.3176,
+            0.298
+          ],
+          "hex": "#5f514c"
+        },
+        "$description": "Supporting text (guaranteed >= the text minimum on surfaces and neutral fills 1-4).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "tertiary": {
-        "$value": "{color.neutral.light.10}",
-        "$description": "Captions and placeholders (still meets the text minimum on surfaces 1-4)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.4353,
+            0.3765,
+            0.3529
+          ],
+          "hex": "#6f605a"
+        },
+        "$description": "Captions and placeholders (still meets the text minimum on surfaces 1-4).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "disabled": {
         "$value": "{color.neutral.light.8}",
@@ -60,20 +151,59 @@
         "$description": "Text on color.bg.inverse (tooltips, toasts)."
       },
       "link": {
-        "$value": "{color.accent.light.11}",
-        "$description": "Links. Underline them in running text so color is not the only cue."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.4784,
+            0.2902,
+            0.1098
+          ],
+          "hex": "#7a4a1c"
+        },
+        "$description": "Links. Underline them in running text so color is not the only cue.",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "accent": {
-        "$value": "{color.accent.light.11}",
-        "$description": "Accent text and selected labels."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.4784,
+            0.2902,
+            0.1098
+          ],
+          "hex": "#7a4a1c"
+        },
+        "$description": "Accent text and selected labels.",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "on-accent": {
         "$value": "{color.white}",
         "$description": "Text and icons on color.bg.accent.bold* (auto-picked light or dark, S-L06-094)."
       },
       "on-action": {
-        "$value": "{color.white}",
-        "$description": "Text on the primary action fill."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "hex": "#ffffff"
+        },
+        "$description": "Text on the primary action fill.",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "on-brand": {
         "$value": "{color.white}",
@@ -96,16 +226,42 @@
         "$description": "Text on bg.warning.bold."
       },
       "danger": {
-        "$value": "{color.danger.light.11}",
-        "$description": "Danger text and icons; pair with an icon or label (DC-L01-15)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.5765,
+            0.2275,
+            0.2039
+          ],
+          "hex": "#933a34"
+        },
+        "$description": "Danger text and icons; pair with an icon or label (DC-L01-15).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "on-danger": {
         "$value": "{color.white}",
         "$description": "Text on bg.danger.bold."
       },
       "info": {
-        "$value": "{color.info.light.11}",
-        "$description": "Info text and icons; pair with an icon or label (DC-L01-15)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.0,
+            0.3608,
+            0.5412
+          ],
+          "hex": "#005c8a"
+        },
+        "$description": "Info text and icons; pair with an icon or label (DC-L01-15).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "on-info": {
         "$value": "{color.white}",
@@ -115,8 +271,21 @@
     "bg": {
       "neutral": {
         "subtle": {
-          "$value": "{color.neutral.light.3}",
-          "$description": "Secondary buttons, chips, hovered rows."
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9412,
+              0.9098,
+              0.8784
+            ],
+            "hex": "#f0e8e0"
+          },
+          "$description": "Secondary buttons, chips, hovered rows.",
+          "$extensions": {
+            "opendesigner": {
+              "source": "person"
+            }
+          }
         },
         "subtle-hover": {
           "$value": "{color.neutral.light.4}",
@@ -129,8 +298,21 @@
       },
       "accent": {
         "subtle": {
-          "$value": "{color.accent.light.3}",
-          "$description": "Selected rows, accent badges."
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9725,
+              0.8941,
+              0.902
+            ],
+            "hex": "#f8e4e6"
+          },
+          "$description": "Selected rows, accent badges.",
+          "$extensions": {
+            "opendesigner": {
+              "source": "person"
+            }
+          }
         },
         "subtle-hover": {
           "$value": "{color.accent.light.4}",
@@ -167,12 +349,38 @@
       },
       "action": {
         "primary": {
-          "$value": "{color.accent.light.9}",
-          "$description": "Primary action. One per view (DC-L15-03, L15 P08)."
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.6039,
+              0.0392,
+              0.149
+            ],
+            "hex": "#9a0a26"
+          },
+          "$description": "Primary action. One per view (DC-L15-03, L15 P08).",
+          "$extensions": {
+            "opendesigner": {
+              "source": "person"
+            }
+          }
         },
         "primary-hover": {
-          "$value": "{color.accent.light.10}",
-          "$description": "Hover: one step, at least 1.15:1 from the solid (DC-L01-17)."
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.4784,
+              0.0235,
+              0.1137
+            ],
+            "hex": "#7a061d"
+          },
+          "$description": "Hover: one step, at least 1.15:1 from the solid (DC-L01-17).",
+          "$extensions": {
+            "opendesigner": {
+              "source": "person"
+            }
+          }
         },
         "primary-pressed": {
           "$value": "{color.accent.light.solid-pressed}",
@@ -180,8 +388,21 @@
         }
       },
       "brand": {
-        "$value": "{color.accent.light.9}",
-        "$description": "Brand fill for signature surfaces; carries text.on-brand (brandAnchor rule, DC-L01-09)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6039,
+            0.0392,
+            0.149
+          ],
+          "hex": "#9a0a26"
+        },
+        "$description": "Brand fill for signature surfaces; carries text.on-brand (brandAnchor rule, DC-L01-09).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "success": {
         "subtle": {
@@ -239,8 +460,21 @@
       },
       "info": {
         "subtle": {
-          "$value": "{color.info.light.3}",
-          "$description": "Info banner and badge background."
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.8627,
+              0.9333,
+              0.9843
+            ],
+            "hex": "#dceefb"
+          },
+          "$description": "Info banner and badge background.",
+          "$extensions": {
+            "opendesigner": {
+              "source": "person"
+            }
+          }
         },
         "bold": {
           "$value": "{color.info.light.9}",
@@ -258,32 +492,110 @@
     },
     "border": {
       "subtle": {
-        "$value": "{color.neutral.light.6}",
-        "$description": "Dividers and card edges (decorative)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8667,
+            0.8196,
+            0.7765
+          ],
+          "hex": "#ddd1c6"
+        },
+        "$description": "Dividers and card edges (decorative).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "default": {
-        "$value": "{color.neutral.light.7}",
-        "$description": "Outline buttons and table grids (decorative; the label carries meaning)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8235,
+            0.7686,
+            0.7216
+          ],
+          "hex": "#d2c4b8"
+        },
+        "$description": "Outline buttons and table grids (decorative; the label carries meaning).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "strong": {
         "$value": "{color.neutral.light.8}",
         "$description": "Boundaries that are the only cue: inputs, checkboxes, switches (3:1, WCAG 1.4.11)."
       },
       "input": {
-        "$value": "{color.neutral.light.8}",
-        "$description": "Text field and select borders (3:1, DC-L01-16)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.549,
+            0.4824,
+            0.4392
+          ],
+          "hex": "#8c7b70"
+        },
+        "$description": "Text field and select borders (3:1, DC-L01-16).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "focus": {
-        "$value": "{color.accent.light.9}",
-        "$description": "Focus ring (3:1 against every surface, DC-L04-09)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6039,
+            0.0392,
+            0.149
+          ],
+          "hex": "#9a0a26"
+        },
+        "$description": "Focus ring (3:1 against every surface, DC-L04-09).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "accent": {
-        "$value": "{color.accent.light.8}",
-        "$description": "Selected card or accent outline."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8157,
+            0.5412,
+            0.5804
+          ],
+          "hex": "#d08a94"
+        },
+        "$description": "Selected card or accent outline.",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "separator": {
-        "$value": "{color.neutral.light.4}",
-        "$description": "Hairlines between table rows and list items, lighter than border.subtle; decorative, so never the only cue (DC-L23-05)."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9098,
+            0.8706,
+            0.8314
+          ],
+          "hex": "#e8ded4"
+        },
+        "$description": "Hairlines between table rows and list items, lighter than border.subtle; decorative, so never the only cue (DC-L23-05).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       },
       "success": {
         "$value": "{color.success.light.8}",
@@ -325,14 +637,19 @@
         "$value": {
           "colorSpace": "srgb",
           "components": [
-            0.1529,
-            0.1373,
-            0.1373
+            0.1647,
+            0.1137,
+            0.102
           ],
-          "hex": "#272323",
-          "alpha": 0.45
+          "alpha": 0.45,
+          "hex": "#2a1d1a"
         },
-        "$description": "Modal backdrop (DC-L04-18; Q-depth-06)."
+        "$description": "Modal backdrop (DC-L04-18; Q-depth-06).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       }
     },
     "shadow": {
@@ -374,6 +691,332 @@
           "alpha": 0.1
         },
         "$description": "1px ring for ring-and-shadow depth and dark overlays (#BDBDBD at 12% pattern, DC-L04-12)."
+      }
+    },
+    "site": {
+      "bar": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.549,
+            0.4824,
+            0.4392
+          ],
+          "hex": "#8c7b70"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "copper": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7216,
+            0.451,
+            0.2392
+          ],
+          "hex": "#b8733d"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "ginger": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.5412,
+            0.3529,
+            0.1686
+          ],
+          "hex": "#8a5a2b"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "gold": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8314,
+            0.6353,
+            0.298
+          ],
+          "hex": "#d4a24c"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "gold-hi": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.4784,
+            0.3294,
+            0.0627
+          ],
+          "hex": "#7a5410"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "link-hover": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.3608,
+            0.2157,
+            0.0706
+          ],
+          "hex": "#5c3712"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "lvl": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.4784,
+            0.3725,
+            0.0902
+          ],
+          "hex": "#7a5f17"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "q0": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.4196,
+            0.4196,
+            0.4196
+          ],
+          "hex": "#6b6b6b"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "q1": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.149,
+            0.1333,
+            0.1333
+          ],
+          "hex": "#262222"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "q2": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.1647,
+            0.4902,
+            0.0706
+          ],
+          "hex": "#2a7d12"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "q3": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.0,
+            0.349,
+            0.702
+          ],
+          "hex": "#0059b3"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "q4": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.5412,
+            0.1686,
+            0.7882
+          ],
+          "hex": "#8a2bc9"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "q5": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.702,
+            0.3373,
+            0.0
+          ],
+          "hex": "#b35600"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "q6": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.5412,
+            0.4275,
+            0.1216
+          ],
+          "hex": "#8a6d1f"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "silver": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7804,
+            0.7804,
+            0.7804
+          ],
+          "hex": "#c7c7c7"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "trim": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.1373,
+            0.502,
+            0.2275
+          ],
+          "hex": "#23803a"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "trim-deep": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.1137,
+            0.4157,
+            0.1882
+          ],
+          "hex": "#1d6a30"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
+      },
+      "wine-text": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6039,
+            0.0392,
+            0.149
+          ],
+          "hex": "#9a0a26"
+        },
+        "$type": "color",
+        "$description": "Added by a person (engine.py set).",
+        "$extensions": {
+          "opendesigner": {
+            "source": "person"
+          }
+        }
       }
     }
   }

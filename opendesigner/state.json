@@ -357,7 +357,801 @@
       "value": 16,
       "unit": "px"
     },
-    "content.capitalization": "title-case"
+    "content.capitalization": "title-case",
+    "dark:color.surface.sunken": {
+      "colorSpace": "srgb",
+      "components": [
+        0.0588,
+        0.0392,
+        0.0353
+      ],
+      "hex": "#0f0a09"
+    },
+    "light:color.surface.sunken": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9608,
+        0.9373,
+        0.9098
+      ],
+      "hex": "#f5efe8"
+    },
+    "dark:color.surface.base": {
+      "colorSpace": "srgb",
+      "components": [
+        0.0863,
+        0.0627,
+        0.0627
+      ],
+      "hex": "#161010"
+    },
+    "light:color.surface.base": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9843,
+        0.9686,
+        0.949
+      ],
+      "hex": "#fbf7f2"
+    },
+    "dark:color.surface.raised": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1216,
+        0.0902,
+        0.0863
+      ],
+      "hex": "#1f1716"
+    },
+    "light:color.surface.raised": {
+      "colorSpace": "srgb",
+      "components": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "hex": "#ffffff"
+    },
+    "dark:color.surface.overlay": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1569,
+        0.1176,
+        0.1137
+      ],
+      "hex": "#281e1d"
+    },
+    "light:color.surface.overlay": {
+      "colorSpace": "srgb",
+      "components": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "hex": "#ffffff"
+    },
+    "dark:color.bg.neutral.subtle": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1922,
+        0.149,
+        0.1451
+      ],
+      "hex": "#312625"
+    },
+    "light:color.bg.neutral.subtle": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9412,
+        0.9098,
+        0.8784
+      ],
+      "hex": "#f0e8e0"
+    },
+    "dark:color.border.separator": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1922,
+        0.149,
+        0.1451
+      ],
+      "hex": "#312625"
+    },
+    "light:color.border.separator": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9098,
+        0.8706,
+        0.8314
+      ],
+      "hex": "#e8ded4"
+    },
+    "dark:color.border.subtle": {
+      "colorSpace": "srgb",
+      "components": [
+        0.2353,
+        0.1843,
+        0.1804
+      ],
+      "hex": "#3c2f2e"
+    },
+    "light:color.border.subtle": {
+      "colorSpace": "srgb",
+      "components": [
+        0.8667,
+        0.8196,
+        0.7765
+      ],
+      "hex": "#ddd1c6"
+    },
+    "dark:color.border.default": {
+      "colorSpace": "srgb",
+      "components": [
+        0.2902,
+        0.2275,
+        0.2235
+      ],
+      "hex": "#4a3a39"
+    },
+    "light:color.border.default": {
+      "colorSpace": "srgb",
+      "components": [
+        0.8235,
+        0.7686,
+        0.7216
+      ],
+      "hex": "#d2c4b8"
+    },
+    "dark:color.border.input": {
+      "colorSpace": "srgb",
+      "components": [
+        0.5451,
+        0.4824,
+        0.4745
+      ],
+      "hex": "#8b7b79"
+    },
+    "light:color.border.input": {
+      "colorSpace": "srgb",
+      "components": [
+        0.549,
+        0.4824,
+        0.4392
+      ],
+      "hex": "#8c7b70"
+    },
+    "dark:color.text.primary": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9373,
+        0.902,
+        0.8863
+      ],
+      "hex": "#efe6e2"
+    },
+    "light:color.text.primary": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1647,
+        0.1137,
+        0.102
+      ],
+      "hex": "#2a1d1a"
+    },
+    "dark:color.text.secondary": {
+      "colorSpace": "srgb",
+      "components": [
+        0.749,
+        0.6824,
+        0.6627
+      ],
+      "hex": "#bfaea9"
+    },
+    "light:color.text.secondary": {
+      "colorSpace": "srgb",
+      "components": [
+        0.3725,
+        0.3176,
+        0.298
+      ],
+      "hex": "#5f514c"
+    },
+    "dark:color.text.tertiary": {
+      "colorSpace": "srgb",
+      "components": [
+        0.651,
+        0.5804,
+        0.5569
+      ],
+      "hex": "#a6948e"
+    },
+    "light:color.text.tertiary": {
+      "colorSpace": "srgb",
+      "components": [
+        0.4353,
+        0.3765,
+        0.3529
+      ],
+      "hex": "#6f605a"
+    },
+    "dark:color.bg.action.primary": {
+      "colorSpace": "srgb",
+      "components": [
+        0.6471,
+        0.051,
+        0.1725
+      ],
+      "hex": "#a50d2c"
+    },
+    "light:color.bg.action.primary": {
+      "colorSpace": "srgb",
+      "components": [
+        0.6039,
+        0.0392,
+        0.149
+      ],
+      "hex": "#9a0a26"
+    },
+    "dark:color.text.on-action": {
+      "colorSpace": "srgb",
+      "components": [
+        1.0,
+        0.9529,
+        0.9529
+      ],
+      "hex": "#fff3f3"
+    },
+    "light:color.text.on-action": {
+      "colorSpace": "srgb",
+      "components": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "hex": "#ffffff"
+    },
+    "dark:color.text.accent": {
+      "colorSpace": "srgb",
+      "components": [
+        0.8784,
+        0.6588,
+        0.3843
+      ],
+      "hex": "#e0a862"
+    },
+    "light:color.text.accent": {
+      "colorSpace": "srgb",
+      "components": [
+        0.4784,
+        0.2902,
+        0.1098
+      ],
+      "hex": "#7a4a1c"
+    },
+    "dark:color.bg.action.primary-hover": {
+      "colorSpace": "srgb",
+      "components": [
+        0.7529,
+        0.0941,
+        0.2118
+      ],
+      "hex": "#c01836"
+    },
+    "light:color.bg.action.primary-hover": {
+      "colorSpace": "srgb",
+      "components": [
+        0.4784,
+        0.0235,
+        0.1137
+      ],
+      "hex": "#7a061d"
+    },
+    "dark:color.bg.accent.subtle": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1882,
+        0.0784,
+        0.0863
+      ],
+      "hex": "#301416"
+    },
+    "light:color.bg.accent.subtle": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9725,
+        0.8941,
+        0.902
+      ],
+      "hex": "#f8e4e6"
+    },
+    "dark:color.border.accent": {
+      "colorSpace": "srgb",
+      "components": [
+        0.5412,
+        0.1216,
+        0.1725
+      ],
+      "hex": "#8a1f2c"
+    },
+    "light:color.border.accent": {
+      "colorSpace": "srgb",
+      "components": [
+        0.8157,
+        0.5412,
+        0.5804
+      ],
+      "hex": "#d08a94"
+    },
+    "dark:color.border.focus": {
+      "colorSpace": "srgb",
+      "components": [
+        0.8784,
+        0.6588,
+        0.3843
+      ],
+      "hex": "#e0a862"
+    },
+    "light:color.border.focus": {
+      "colorSpace": "srgb",
+      "components": [
+        0.6039,
+        0.0392,
+        0.149
+      ],
+      "hex": "#9a0a26"
+    },
+    "dark:color.bg.brand": {
+      "colorSpace": "srgb",
+      "components": [
+        0.6471,
+        0.051,
+        0.1725
+      ],
+      "hex": "#a50d2c"
+    },
+    "light:color.bg.brand": {
+      "colorSpace": "srgb",
+      "components": [
+        0.6039,
+        0.0392,
+        0.149
+      ],
+      "hex": "#9a0a26"
+    },
+    "dark:color.bg.info.subtle": {
+      "colorSpace": "srgb",
+      "components": [
+        0.102,
+        0.1608,
+        0.2039
+      ],
+      "hex": "#1a2934"
+    },
+    "light:color.bg.info.subtle": {
+      "colorSpace": "srgb",
+      "components": [
+        0.8627,
+        0.9333,
+        0.9843
+      ],
+      "hex": "#dceefb"
+    },
+    "dark:color.text.info": {
+      "colorSpace": "srgb",
+      "components": [
+        0.3725,
+        0.7059,
+        0.9255
+      ],
+      "hex": "#5fb4ec"
+    },
+    "light:color.text.info": {
+      "colorSpace": "srgb",
+      "components": [
+        0.0,
+        0.3608,
+        0.5412
+      ],
+      "hex": "#005c8a"
+    },
+    "dark:color.text.danger": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9255,
+        0.5843,
+        0.5451
+      ],
+      "hex": "#ec958b"
+    },
+    "light:color.text.danger": {
+      "colorSpace": "srgb",
+      "components": [
+        0.5765,
+        0.2275,
+        0.2039
+      ],
+      "hex": "#933a34"
+    },
+    "dark:color.site.gold-hi": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9412,
+        0.7725,
+        0.549
+      ],
+      "hex": "#f0c58c"
+    },
+    "light:color.site.gold-hi": {
+      "colorSpace": "srgb",
+      "components": [
+        0.4784,
+        0.3294,
+        0.0627
+      ],
+      "hex": "#7a5410"
+    },
+    "dark:color.site.ginger": {
+      "colorSpace": "srgb",
+      "components": [
+        0.8392,
+        0.6157,
+        0.3373
+      ],
+      "hex": "#d69d56"
+    },
+    "light:color.site.ginger": {
+      "colorSpace": "srgb",
+      "components": [
+        0.5412,
+        0.3529,
+        0.1686
+      ],
+      "hex": "#8a5a2b"
+    },
+    "dark:color.site.link-hover": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9412,
+        0.7725,
+        0.549
+      ],
+      "hex": "#f0c58c"
+    },
+    "light:color.site.link-hover": {
+      "colorSpace": "srgb",
+      "components": [
+        0.3608,
+        0.2157,
+        0.0706
+      ],
+      "hex": "#5c3712"
+    },
+    "dark:color.site.trim": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1843,
+        0.6039,
+        0.2745
+      ],
+      "hex": "#2f9a46"
+    },
+    "light:color.site.trim": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1373,
+        0.502,
+        0.2275
+      ],
+      "hex": "#23803a"
+    },
+    "dark:color.site.trim-deep": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1137,
+        0.3529,
+        0.1647
+      ],
+      "hex": "#1d5a2a"
+    },
+    "light:color.site.trim-deep": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1137,
+        0.4157,
+        0.1882
+      ],
+      "hex": "#1d6a30"
+    },
+    "dark:color.site.wine-text": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9373,
+        0.5412,
+        0.5882
+      ],
+      "hex": "#ef8a96"
+    },
+    "light:color.site.wine-text": {
+      "colorSpace": "srgb",
+      "components": [
+        0.6039,
+        0.0392,
+        0.149
+      ],
+      "hex": "#9a0a26"
+    },
+    "dark:color.site.bar": {
+      "colorSpace": "srgb",
+      "components": [
+        0.5451,
+        0.4824,
+        0.4745
+      ],
+      "hex": "#8b7b79"
+    },
+    "light:color.site.bar": {
+      "colorSpace": "srgb",
+      "components": [
+        0.549,
+        0.4824,
+        0.4392
+      ],
+      "hex": "#8c7b70"
+    },
+    "dark:color.site.q0": {
+      "colorSpace": "srgb",
+      "components": [
+        0.6157,
+        0.6157,
+        0.6157
+      ],
+      "hex": "#9d9d9d"
+    },
+    "light:color.site.q0": {
+      "colorSpace": "srgb",
+      "components": [
+        0.4196,
+        0.4196,
+        0.4196
+      ],
+      "hex": "#6b6b6b"
+    },
+    "dark:color.site.q1": {
+      "colorSpace": "srgb",
+      "components": [
+        0.9373,
+        0.902,
+        0.8863
+      ],
+      "hex": "#efe6e2"
+    },
+    "light:color.site.q1": {
+      "colorSpace": "srgb",
+      "components": [
+        0.149,
+        0.1333,
+        0.1333
+      ],
+      "hex": "#262222"
+    },
+    "dark:color.site.q2": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1176,
+        1.0,
+        0.0
+      ],
+      "hex": "#1eff00"
+    },
+    "light:color.site.q2": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1647,
+        0.4902,
+        0.0706
+      ],
+      "hex": "#2a7d12"
+    },
+    "dark:color.site.q3": {
+      "colorSpace": "srgb",
+      "components": [
+        0.2314,
+        0.6118,
+        1.0
+      ],
+      "hex": "#3b9cff"
+    },
+    "light:color.site.q3": {
+      "colorSpace": "srgb",
+      "components": [
+        0.0,
+        0.349,
+        0.702
+      ],
+      "hex": "#0059b3"
+    },
+    "dark:color.site.q4": {
+      "colorSpace": "srgb",
+      "components": [
+        0.7255,
+        0.4078,
+        0.9608
+      ],
+      "hex": "#b968f5"
+    },
+    "light:color.site.q4": {
+      "colorSpace": "srgb",
+      "components": [
+        0.5412,
+        0.1686,
+        0.7882
+      ],
+      "hex": "#8a2bc9"
+    },
+    "dark:color.site.q5": {
+      "colorSpace": "srgb",
+      "components": [
+        1.0,
+        0.502,
+        0.0
+      ],
+      "hex": "#ff8000"
+    },
+    "light:color.site.q5": {
+      "colorSpace": "srgb",
+      "components": [
+        0.702,
+        0.3373,
+        0.0
+      ],
+      "hex": "#b35600"
+    },
+    "dark:color.site.q6": {
+      "colorSpace": "srgb",
+      "components": [
+        0.902,
+        0.8,
+        0.502
+      ],
+      "hex": "#e6cc80"
+    },
+    "light:color.site.q6": {
+      "colorSpace": "srgb",
+      "components": [
+        0.5412,
+        0.4275,
+        0.1216
+      ],
+      "hex": "#8a6d1f"
+    },
+    "dark:color.site.gold": {
+      "colorSpace": "srgb",
+      "components": [
+        0.8314,
+        0.6353,
+        0.298
+      ],
+      "hex": "#d4a24c"
+    },
+    "light:color.site.gold": {
+      "colorSpace": "srgb",
+      "components": [
+        0.8314,
+        0.6353,
+        0.298
+      ],
+      "hex": "#d4a24c"
+    },
+    "dark:color.site.lvl": {
+      "colorSpace": "srgb",
+      "components": [
+        0.902,
+        0.7373,
+        0.4667
+      ],
+      "hex": "#e6bc77"
+    },
+    "light:color.site.lvl": {
+      "colorSpace": "srgb",
+      "components": [
+        0.4784,
+        0.3725,
+        0.0902
+      ],
+      "hex": "#7a5f17"
+    },
+    "dark:color.site.silver": {
+      "colorSpace": "srgb",
+      "components": [
+        0.7804,
+        0.7804,
+        0.7804
+      ],
+      "hex": "#c7c7c7"
+    },
+    "light:color.site.silver": {
+      "colorSpace": "srgb",
+      "components": [
+        0.7804,
+        0.7804,
+        0.7804
+      ],
+      "hex": "#c7c7c7"
+    },
+    "dark:color.site.copper": {
+      "colorSpace": "srgb",
+      "components": [
+        0.7216,
+        0.451,
+        0.2392
+      ],
+      "hex": "#b8733d"
+    },
+    "light:color.site.copper": {
+      "colorSpace": "srgb",
+      "components": [
+        0.7216,
+        0.451,
+        0.2392
+      ],
+      "hex": "#b8733d"
+    },
+    "dark:color.text.link": {
+      "colorSpace": "srgb",
+      "components": [
+        0.8784,
+        0.6588,
+        0.3843
+      ],
+      "hex": "#e0a862"
+    },
+    "light:color.text.link": {
+      "colorSpace": "srgb",
+      "components": [
+        0.4784,
+        0.2902,
+        0.1098
+      ],
+      "hex": "#7a4a1c"
+    },
+    "dark:color.overlay.scrim": {
+      "colorSpace": "srgb",
+      "components": [
+        0.0588,
+        0.0392,
+        0.0353
+      ],
+      "alpha": 0.72,
+      "hex": "#0f0a09"
+    },
+    "light:color.overlay.scrim": {
+      "colorSpace": "srgb",
+      "components": [
+        0.1647,
+        0.1137,
+        0.102
+      ],
+      "alpha": 0.45,
+      "hex": "#2a1d1a"
+    },
+    "dark:color.bg.action.primary-pressed": {
+      "colorSpace": "srgb",
+      "components": [
+        0.5412,
+        0.0431,
+        0.1451
+      ],
+      "hex": "#8a0b25"
+    },
+    "dark:color.text.on-brand": {
+      "colorSpace": "srgb",
+      "components": [
+        1.0,
+        0.9529,
+        0.9529
+      ],
+      "hex": "#fff3f3"
+    }
   },
   "answers": {
     "Q-plat-01": {
@@ -592,7 +1386,7 @@
   },
   "research": {},
   "hashes": {
-    "DESIGN.md": "28c5c7e2977537d1",
+    "DESIGN.md": "13bc072292919f4d",
     "PRODUCT.md": "63b5836c6b379c84"
   },
   "exports": {

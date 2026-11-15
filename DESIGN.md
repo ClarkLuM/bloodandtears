@@ -3,10 +3,10 @@ version: alpha
 name: "Blood and Tears"
 description: "a roster, dungeons, professions and trading-card site for Blood and Tears, a Horde guild on WoW Forever"
 colors:
-  primary: "#a50d2c"
+  primary: "#9a0a26"
   on-primary: "#ffffff"
-  surface: "#fefcfc"
-  on-surface: "#272323"
+  surface: "#fbf7f2"
+  on-surface: "#2a1d1a"
   error: "#d93834"
 typography:
   body-md: { fontFamily: "Figtree", fontSize: 14px, lineHeight: 20px }
@@ -145,7 +145,7 @@ Designers: primary or brand accent · Code: `color.bg.accent`
 
 | Fill | Base | Hover | Pressed |
 |---|---|---|---|
-| `color.bg.action.primary` | `#a50d2c` | `#930024` (1.19:1) | `#85001f` (1.34:1) |
+| `color.bg.action.primary` | `#9a0a26` | `#7a061d` (1.31:1) | `#85001f` (1.21:1) |
 | `color.bg.accent.bold` | `#a50d2c` | `#930024` (1.19:1) | `#85001f` (1.34:1) |
 
 **Semantic roles** (use these, never the ramps):
@@ -155,13 +155,13 @@ Designers: primary or brand accent · Code: `color.bg.accent`
 | `color.bg.accent.bold` | `#a50d2c` | `#e84e5a` | Solid accent fill. |
 | `color.bg.accent.bold-hover` | `#930024` | `#f85c67` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
 | `color.bg.accent.bold-pressed` | `#85001f` | `#ff6b73` | Pressed: at least 1.3:1 from the solid. |
-| `color.bg.accent.subtle` | `#ffe6e5` | `#3c2020` | Selected rows, accent badges. |
+| `color.bg.accent.subtle` | `#f8e4e6` | `#301416` | Selected rows, accent badges. |
 | `color.bg.accent.subtle-hover` | `#ffdbda` | `#4d2324` | Hover on accent subtle fills. |
 | `color.bg.accent.subtle-pressed` | `#ffcfce` | `#5e2629` | Pressed accent subtle fills. |
-| `color.bg.action.primary` | `#a50d2c` | `#e84e5a` | Primary action. One per view (DC-L15-03, L15 P08). |
-| `color.bg.action.primary-hover` | `#930024` | `#f85c67` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
-| `color.bg.action.primary-pressed` | `#85001f` | `#ff6b73` | Pressed: at least 1.3:1 from the solid. |
-| `color.bg.brand` | `#a50d2c` | `#e84e5a` | Brand fill for signature surfaces; carries text.on-brand (brandAnchor rule, DC-L01-09). |
+| `color.bg.action.primary` | `#9a0a26` | `#a50d2c` | Primary action. One per view (DC-L15-03, L15 P08). |
+| `color.bg.action.primary-hover` | `#7a061d` | `#c01836` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
+| `color.bg.action.primary-pressed` | `#85001f` | `#8a0b25` | Pressed: at least 1.3:1 from the solid. |
+| `color.bg.brand` | `#9a0a26` | `#a50d2c` | Brand fill for signature surfaces; carries text.on-brand (brandAnchor rule, DC-L01-09). |
 | `color.bg.danger.bold` | `#d93834` | `#db5c52` | Danger solid fill. |
 | `color.bg.danger.bold-hover` | `#c72f2c` | `#ea6a5f` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
 | `color.bg.danger.bold-pressed` | `#bc2323` | `#f57468` | Pressed: at least 1.3:1 from the solid. |
@@ -171,9 +171,9 @@ Designers: primary or brand accent · Code: `color.bg.accent`
 | `color.bg.info.bold` | `#007cb7` | `#008bcd` | Info solid fill. |
 | `color.bg.info.bold-hover` | `#0070a6` | `#0099e0` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
 | `color.bg.info.bold-pressed` | `#006799` | `#00a3ee` | Pressed: at least 1.3:1 from the solid. |
-| `color.bg.info.subtle` | `#d9efff` | `#062a40` | Info banner and badge background. |
+| `color.bg.info.subtle` | `#dceefb` | `#1a2934` | Info banner and badge background. |
 | `color.bg.inverse` | `#272323` | `#ede8e8` | Tooltips and toasts: the inverted surface. |
-| `color.bg.neutral.subtle` | `#eeebea` | `#3a3535` | Secondary buttons, chips, hovered rows. |
+| `color.bg.neutral.subtle` | `#f0e8e0` | `#312625` | Secondary buttons, chips, hovered rows. |
 | `color.bg.neutral.subtle-hover` | `#e6e2e2` | `#433e3e` | Hover: +1 step (DC-L01-17). |
 | `color.bg.neutral.subtle-pressed` | `#dfd9d9` | `#4d4747` | Pressed or selected: +2 steps (DC-L01-17). |
 | `color.bg.success.bold` | `#00883d` | `#009845` | Success solid fill. |
@@ -184,44 +184,44 @@ Designers: primary or brand accent · Code: `color.bg.accent`
 | `color.bg.warning.bold-hover` | `#dda331` | `#f7c56e` | Hover: one step, at least 1.15:1 from the solid (DC-L01-17). |
 | `color.bg.warning.bold-pressed` | `#d29921` | `#ffd388` | Pressed: at least 1.3:1 from the solid. |
 | `color.bg.warning.subtle` | `#f5ead9` | `#2f2618` | Warning banner and badge background. |
-| `color.border.accent` | `#d46367` | `#da565e` | Selected card or accent outline. |
+| `color.border.accent` | `#d08a94` | `#8a1f2c` | Selected card or accent outline. |
 | `color.border.danger` | `#d76258` | `#ce6157` | Danger boundary, for example an invalid field (3:1). |
-| `color.border.default` | `#cfc8c8` | `#4d4747` | Outline buttons and table grids (decorative; the label carries meaning). |
-| `color.border.focus` | `#a50d2c` | `#ff8a8c` | Focus ring (3:1 against every surface, DC-L04-09). |
+| `color.border.default` | `#d2c4b8` | `#4a3a39` | Outline buttons and table grids (decorative; the label carries meaning). |
+| `color.border.focus` | `#9a0a26` | `#e0a862` | Focus ring (3:1 against every surface, DC-L04-09). |
 | `color.border.info` | `#008ed1` | `#0089c9` | Info boundary, for example an invalid field (3:1). |
-| `color.border.input` | `#8c8585` | `#867e7e` | Text field and select borders (3:1, DC-L01-16). |
-| `color.border.separator` | `#e6e2e2` | `#3a3535` | Hairlines between table rows and list items, lighter than border.subtle; decorative, so never the only cue (DC-L23-05). |
+| `color.border.input` | `#8c7b70` | `#8b7b79` | Text field and select borders (3:1, DC-L01-16). |
+| `color.border.separator` | `#e8ded4` | `#312625` | Hairlines between table rows and list items, lighter than border.subtle; decorative, so never the only cue (DC-L23-05). |
 | `color.border.strong` | `#8c8585` | `#867e7e` | Boundaries that are the only cue: inputs, checkboxes, switches (3:1, WCAG 1.4.11). |
-| `color.border.subtle` | `#d7d0d0` | `#433e3e` | Dividers and card edges (decorative). |
+| `color.border.subtle` | `#ddd1c6` | `#3c2f2e` | Dividers and card edges (decorative). |
 | `color.border.success` | `#089a47` | `#199547` | Success boundary, for example an invalid field (3:1). |
 | `color.border.warning` | `#aa7f2c` | `#a47b2f` | Warning boundary, for example an invalid field (3:1). |
 | `color.icon.accent` | `#880020` | `#ff8a8c` | Selected and interactive icons. |
 | `color.icon.default` | `#5c5555` | `#b1aaa9` | Icons beside text; same color as secondary text (DC-L05-08). |
 | `color.icon.on-accent` | `#ffffff` | `#161515` | Icons on solid accent fills. |
 | `color.icon.subtle` | `#6a6262` | `#9c9494` | Decorative icons. |
-| `color.overlay.scrim` | `#272323 @0.45` | `#000000` | Modal backdrop (DC-L04-18; Q-depth-06). |
-| `color.surface.base` | `#fefcfc` | `#1e1c1c` | The page background. |
+| `color.overlay.scrim` | `#2a1d1a @0.45` | `#0f0a09` | Modal backdrop (DC-L04-18; Q-depth-06). |
+| `color.surface.base` | `#fbf7f2` | `#161010` | The page background. |
 | `color.surface.nav` | `#fefcfc` | `#1e1c1c` | Navigation on the page background. |
-| `color.surface.overlay` | `#ffffff` | `#302d2d` | Menus, popovers, dialogs; always with elevation.floating or elevation.overlay. |
-| `color.surface.raised` | `#ffffff` | `#272424` | Cards and panels on the page. |
-| `color.surface.sunken` | `#f6f3f3` | `#161515` | Wells, code blocks, page gutters. |
-| `color.text.accent` | `#880020` | `#ff8a8c` | Accent text and selected labels. |
-| `color.text.danger` | `#a82321` | `#ff8c80` | Danger text and icons; pair with an icon or label (DC-L01-15). |
+| `color.surface.overlay` | `#ffffff` | `#281e1d` | Menus, popovers, dialogs; always with elevation.floating or elevation.overlay. |
+| `color.surface.raised` | `#ffffff` | `#1f1716` | Cards and panels on the page. |
+| `color.surface.sunken` | `#f5efe8` | `#0f0a09` | Wells, code blocks, page gutters. |
+| `color.text.accent` | `#7a4a1c` | `#e0a862` | Accent text and selected labels. |
+| `color.text.danger` | `#933a34` | `#ec958b` | Danger text and icons; pair with an icon or label (DC-L01-15). |
 | `color.text.disabled` | `#8c8585` | `#867e7e` | Disabled labels; exempt from contrast minimums (WCAG 1.4.3 exception). |
-| `color.text.info` | `#005c8a` | `#3ab6ff` | Info text and icons; pair with an icon or label (DC-L01-15). |
+| `color.text.info` | `#005c8a` | `#5fb4ec` | Info text and icons; pair with an icon or label (DC-L01-15). |
 | `color.text.inverse` | `#ffffff` | `#161515` | Text on color.bg.inverse (tooltips, toasts). |
-| `color.text.link` | `#880020` | `#ff8a8c` | Links. Underline them in running text so color is not the only cue. |
+| `color.text.link` | `#7a4a1c` | `#e0a862` | Links. Underline them in running text so color is not the only cue. |
 | `color.text.on-accent` | `#ffffff` | `#161515` | Text and icons on color.bg.accent.bold* (auto-picked light or dark, S-L06-094). |
-| `color.text.on-action` | `#ffffff` | `#161515` | Text on the primary action fill. |
-| `color.text.on-brand` | `#ffffff` | `#161515` | Text on color.bg.brand. |
+| `color.text.on-action` | `#ffffff` | `#fff3f3` | Text on the primary action fill. |
+| `color.text.on-brand` | `#ffffff` | `#fff3f3` | Text on color.bg.brand. |
 | `color.text.on-danger` | `#ffffff` | `#161515` | Text on bg.danger.bold. |
 | `color.text.on-info` | `#ffffff` | `#161515` | Text on bg.info.bold. |
 | `color.text.on-success` | `#ffffff` | `#161515` | Text on bg.success.bold. |
 | `color.text.on-warning` | `#272323` | `#161515` | Text on bg.warning.bold. |
-| `color.text.primary` | `#272323` | `#ede8e8` | Body copy, headings, labels (guaranteed >= 7:1 on steps 1-5). |
-| `color.text.secondary` | `#5c5555` | `#b1aaa9` | Supporting text (guaranteed >= the text minimum on surfaces and neutral fills 1-4). |
+| `color.text.primary` | `#2a1d1a` | `#efe6e2` | Body copy, headings, labels (guaranteed >= 7:1 on steps 1-5). |
+| `color.text.secondary` | `#5f514c` | `#bfaea9` | Supporting text (guaranteed >= the text minimum on surfaces and neutral fills 1-4). |
 | `color.text.success` | `#00652c` | `#47c26c` | Success text and icons; pair with an icon or label (DC-L01-15). |
-| `color.text.tertiary` | `#6a6262` | `#9c9494` | Captions and placeholders (still meets the text minimum on surfaces 1-4). |
+| `color.text.tertiary` | `#6f605a` | `#a6948e` | Captions and placeholders (still meets the text minimum on surfaces 1-4). |
 | `color.text.warning` | `#845d00` | `#fecf7f` | Warning text and icons; pair with an icon or label (DC-L01-15). |
 
 **Use / avoid.**
@@ -501,7 +501,7 @@ Designers: guardrails and design linting · Code: `engine.py validate, engine.py
 - Don't use motion as the only signal, or flash more than three times a second.
 - Don't copy another brand's identity from a reference (colors, typeface, logo, imagery, copy).
 
-**Current validation findings:** none (errors 0, warnings 0).
+**Current validation findings:** warn: dark: color.bg.action.primary (#a50d2c) on color.surface.base (#161010) is 2.41:1, needs 3.0:1, warn: dark: color.bg.action.primary (#a50d2c) on color.surface.raised (#1f1716) is 2.26:1, needs 3.0:1, warn: in light mode, action primary pressed background (#85001f) is only 1.21:1 from action primary background (#9a0a26); people may not see the pressed state. 1.3:1 or more is needed, warn: in dark mode, action primary pressed background (#8a0b25) is only 1.25:1 from action primary background (#a50d2c); people may not see the pressed state. 1.3:1 or more is needed
 
 **Waivers:** none.
 
@@ -731,7 +731,7 @@ Decisions: D-0003 (answers.Q-plat-01).
 
 ## Decisions
 
-**93 decisions so far.** Each one says who set it and why.
+**181 decisions so far.** Each one says who set it and why.
 Designers: decision history with reasons · Code: `opendesigner/decisions.md`
 
 <details><summary>More</summary>
@@ -768,20 +768,20 @@ Your own decisions first (the newest value per path), then your changes to stand
 | D-0089 | `context.product` | "a roster, dungeons, professions and trading-card site for Blood and Tears, a Horde guild on WoW Forever" | chosen | group posting was cut; the menu is Roster, Dungeons, Cards and Professions |
 | D-0092 | `raw.brandColor` | "#a50d2c" | chosen | Final tabard and in-game logo (owner's screenshots, 12 Nov): crimson field, gingerbread man, bright green trim, bronze rim. |
 | D-0093 | `raw.neutralBase` | "#161010" | chosen | Neutrals lean red-brown to sit with the crimson tabard. |
-| D-0054 | standards | remove PRJ-03 (project standard) | chosen | replaced: Looking for Group now has a site-level Join (notice board), the person's choice |
-| D-0055 | standards | remove PRJ-07 (project standard) | chosen | superseded by PRJ-09 (wording without 'in game') |
-| D-0056 | standards | remove PRJ-12 (project standard) | chosen | superseded by PRJ-13 (viewer's own time, no switch) |
-| D-0061 | standards | remove PRJ-13 (project standard) | chosen | replaced by the time zone picker rule |
-| D-0063 | standards | remove PRJ-18 (project standard) | chosen | replaced: abbreviation picker with a daylight saving tick box |
-| D-0068 | standards | remove PRJ-10 (project standard) | chosen | Availability was cut from the site |
-| D-0069 | standards | remove PRJ-09 (project standard) | chosen | Guild renamed to Blood and Tears |
-| D-0071 | standards | remove PRJ-15 (project standard) | chosen | Availability and Discord posting are gone from Looking for Group |
-| D-0073 | standards | remove PRJ-19 (project standard) | chosen | Availability rows are gone; time zones now only affect group times |
-| D-0075 | standards | remove PRJ-01 (project standard) | chosen | the person asked for more fun and flavour (game slang, Ding, card flavour text) |
-| D-0080 | standards | remove PRJ-21 (project standard) | chosen | group posting was cut: groups happen in game and on Discord |
-| D-0083 | standards | remove PRJ-06 (project standard) | chosen | Remove all the useless stuff then please (the goals card was cut earlier) |
+| D-0094 | `dark:color.surface.sunken` | {"colorSpace": "srgb", "components": [0.0588, 0.0392, 0.0353], "hex": "#0f0a09"} | chosen | the site's own --sunken: the system now holds the site's exact colours so it can drive the pages |
+| D-0095 | `light:color.surface.sunken` | {"colorSpace": "srgb", "components": [0.9608, 0.9373, 0.9098], "hex": "#f5efe8"} | chosen | the site's own --sunken: the system now holds the site's exact colours so it can drive the pages |
+| D-0096 | `dark:color.surface.base` | {"colorSpace": "srgb", "components": [0.0863, 0.0627, 0.0627], "hex": "#161010"} | chosen | the site's own --base: the system now holds the site's exact colours so it can drive the pages |
+| D-0097 | `light:color.surface.base` | {"colorSpace": "srgb", "components": [0.9843, 0.9686, 0.949], "hex": "#fbf7f2"} | chosen | the site's own --base: the system now holds the site's exact colours so it can drive the pages |
+| D-0098 | `dark:color.surface.raised` | {"colorSpace": "srgb", "components": [0.1216, 0.0902, 0.0863], "hex": "#1f1716"} | chosen | the site's own --raised: the system now holds the site's exact colours so it can drive the pages |
+| D-0099 | `light:color.surface.raised` | {"colorSpace": "srgb", "components": [1.0, 1.0, 1.0], "hex": "#ffffff"} | chosen | the site's own --raised: the system now holds the site's exact colours so it can drive the pages |
+| D-0100 | `dark:color.surface.overlay` | {"colorSpace": "srgb", "components": [0.1569, 0.1176, 0.1137], "hex": "#281e1d"} | chosen | the site's own --overlay: the system now holds the site's exact colours so it can drive the pages |
+| D-0101 | `light:color.surface.overlay` | {"colorSpace": "srgb", "components": [1.0, 1.0, 1.0], "hex": "#ffffff"} | chosen | the site's own --overlay: the system now holds the site's exact colours so it can drive the pages |
+| D-0102 | `dark:color.bg.neutral.subtle` | {"colorSpace": "srgb", "components": [0.1922, 0.149, 0.1451], "hex": "#312625"} | chosen | the site's own --subtle: the system now holds the site's exact colours so it can drive the pages |
+| D-0103 | `light:color.bg.neutral.subtle` | {"colorSpace": "srgb", "components": [0.9412, 0.9098, 0.8784], "hex": "#f0e8e0"} | chosen | the site's own --subtle: the system now holds the site's exact colours so it can drive the pages |
+| D-0104 | `dark:color.border.separator` | {"colorSpace": "srgb", "components": [0.1922, 0.149, 0.1451], "hex": "#312625"} | chosen | the site's own --sep: the system now holds the site's exact colours so it can drive the pages |
+| D-0105 | `light:color.border.separator` | {"colorSpace": "srgb", "components": [0.9098, 0.8706, 0.8314], "hex": "#e8ded4"} | chosen | the site's own --sep: the system now holds the site's exact colours so it can drive the pages |
 
-31 more in the full log.
+119 more in the full log.
 
 </details>
 
@@ -863,7 +863,7 @@ What changed on the site and the choices behind it, kept by hand.
 - Answers taken on assumption or delegated: answers.Q-plat-01 (assumed), answers.Q-scope-07 (assumed), context.market.competitors (delegated), context.purpose (assumed)
 - Waivers: none.
 - Licence risks: Alegreya Sans SC: confirm the web licence (record it with engine.py set raw.fontLicence).
-- Validation: 0 errors, 0 warnings.
+- Validation: 0 errors, 4 warnings.
 
 ## For Agents
 

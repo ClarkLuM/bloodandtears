@@ -147,3 +147,7 @@ Version 0.7.0 adds up **time in each zone**: at each read, every guildie online 
 
 - **Discord posting** (webhooks and the daily digest) is switched off with `DISCORD_ON = false` in `functions/index.js`. The code is still there and does nothing. `docs/HISTORY.md` has the steps to turn it back on.
 - **Removed:** the empty offline worker (`sw.js`; the page now lets go of old copies), group posts, events, trade orders, wishlists, notes, hand-edited gear and professions, achievements, the Discord slash commands, Rivals, and the card games (Card Duels, Draft Duel, Guess the Guildie; old links open Cards). Old data from these can be cleared with **Check for old data**.
+
+## The design system drives the colours
+
+Every colour on the site comes from the design system in `opendesigner/` (OpenDesigner). The site loads `public/ds-tokens.css`, and the short names in `index.html` (`--raised`, `--accent`, `--ginger`…) are aliases for its tokens, switching with the theme on their own. To change a colour: `python3 <opendesigner>/scripts/engine.py set overrides.dark:color.surface.raised '"#..."' --why "..."` (and `light:` for the light theme), then `engine.py build`, then `sh tools/ds-tokens.sh`, then deploy. Site-only colours (gold, ginger, trim, item qualities) are `color.site.*` tokens.

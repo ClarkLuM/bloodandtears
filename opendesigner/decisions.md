@@ -764,3 +764,373 @@ Append-only, ADR-style (spec 7.9): one entry per decision, newest last. A later 
 - set_by: chosen · locked: no · date: 2026-11-12 · supersedes: D-0091 · source_ref: none
 - reason: Neutrals lean red-brown to sit with the crimson tabard.
 - previous value: "#161012"
+
+## D-0094 · overrides.dark:color.surface.sunken = {"colorSpace": "srgb", "components": [0.0588, 0.0392, 0.0353], "hex": "#0f0a09"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --sunken: the system now holds the site's exact colours so it can drive the pages
+
+## D-0095 · overrides.light:color.surface.sunken = {"colorSpace": "srgb", "components": [0.9608, 0.9373, 0.9098], "hex": "#f5efe8"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --sunken: the system now holds the site's exact colours so it can drive the pages
+
+## D-0096 · overrides.dark:color.surface.base = {"colorSpace": "srgb", "components": [0.0863, 0.0627, 0.0627], "hex": "#161010"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --base: the system now holds the site's exact colours so it can drive the pages
+
+## D-0097 · overrides.light:color.surface.base = {"colorSpace": "srgb", "components": [0.9843, 0.9686, 0.949], "hex": "#fbf7f2"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --base: the system now holds the site's exact colours so it can drive the pages
+
+## D-0098 · overrides.dark:color.surface.raised = {"colorSpace": "srgb", "components": [0.1216, 0.0902, 0.0863], "hex": "#1f1716"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --raised: the system now holds the site's exact colours so it can drive the pages
+
+## D-0099 · overrides.light:color.surface.raised = {"colorSpace": "srgb", "components": [1.0, 1.0, 1.0], "hex": "#ffffff"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --raised: the system now holds the site's exact colours so it can drive the pages
+
+## D-0100 · overrides.dark:color.surface.overlay = {"colorSpace": "srgb", "components": [0.1569, 0.1176, 0.1137], "hex": "#281e1d"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --overlay: the system now holds the site's exact colours so it can drive the pages
+
+## D-0101 · overrides.light:color.surface.overlay = {"colorSpace": "srgb", "components": [1.0, 1.0, 1.0], "hex": "#ffffff"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --overlay: the system now holds the site's exact colours so it can drive the pages
+
+## D-0102 · overrides.dark:color.bg.neutral.subtle = {"colorSpace": "srgb", "components": [0.1922, 0.149, 0.1451], "hex": "#312625"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --subtle: the system now holds the site's exact colours so it can drive the pages
+
+## D-0103 · overrides.light:color.bg.neutral.subtle = {"colorSpace": "srgb", "components": [0.9412, 0.9098, 0.8784], "hex": "#f0e8e0"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --subtle: the system now holds the site's exact colours so it can drive the pages
+
+## D-0104 · overrides.dark:color.border.separator = {"colorSpace": "srgb", "components": [0.1922, 0.149, 0.1451], "hex": "#312625"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --sep: the system now holds the site's exact colours so it can drive the pages
+
+## D-0105 · overrides.light:color.border.separator = {"colorSpace": "srgb", "components": [0.9098, 0.8706, 0.8314], "hex": "#e8ded4"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --sep: the system now holds the site's exact colours so it can drive the pages
+
+## D-0106 · overrides.dark:color.border.subtle = {"colorSpace": "srgb", "components": [0.2353, 0.1843, 0.1804], "hex": "#3c2f2e"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --b-sub: the system now holds the site's exact colours so it can drive the pages
+
+## D-0107 · overrides.light:color.border.subtle = {"colorSpace": "srgb", "components": [0.8667, 0.8196, 0.7765], "hex": "#ddd1c6"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --b-sub: the system now holds the site's exact colours so it can drive the pages
+
+## D-0108 · overrides.dark:color.border.default = {"colorSpace": "srgb", "components": [0.2902, 0.2275, 0.2235], "hex": "#4a3a39"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --b-def: the system now holds the site's exact colours so it can drive the pages
+
+## D-0109 · overrides.light:color.border.default = {"colorSpace": "srgb", "components": [0.8235, 0.7686, 0.7216], "hex": "#d2c4b8"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --b-def: the system now holds the site's exact colours so it can drive the pages
+
+## D-0110 · overrides.dark:color.border.input = {"colorSpace": "srgb", "components": [0.5451, 0.4824, 0.4745], "hex": "#8b7b79"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --field-b: the system now holds the site's exact colours so it can drive the pages
+
+## D-0111 · overrides.light:color.border.input = {"colorSpace": "srgb", "components": [0.549, 0.4824, 0.4392], "hex": "#8c7b70"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --field-b: the system now holds the site's exact colours so it can drive the pages
+
+## D-0112 · overrides.dark:color.text.primary = {"colorSpace": "srgb", "components": [0.9373, 0.902, 0.8863], "hex": "#efe6e2"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --text: the system now holds the site's exact colours so it can drive the pages
+
+## D-0113 · overrides.light:color.text.primary = {"colorSpace": "srgb", "components": [0.1647, 0.1137, 0.102], "hex": "#2a1d1a"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --text: the system now holds the site's exact colours so it can drive the pages
+
+## D-0114 · overrides.dark:color.text.secondary = {"colorSpace": "srgb", "components": [0.749, 0.6824, 0.6627], "hex": "#bfaea9"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --sec: the system now holds the site's exact colours so it can drive the pages
+
+## D-0115 · overrides.light:color.text.secondary = {"colorSpace": "srgb", "components": [0.3725, 0.3176, 0.298], "hex": "#5f514c"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --sec: the system now holds the site's exact colours so it can drive the pages
+
+## D-0116 · overrides.dark:color.text.tertiary = {"colorSpace": "srgb", "components": [0.651, 0.5804, 0.5569], "hex": "#a6948e"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --ter: the system now holds the site's exact colours so it can drive the pages
+
+## D-0117 · overrides.light:color.text.tertiary = {"colorSpace": "srgb", "components": [0.4353, 0.3765, 0.3529], "hex": "#6f605a"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --ter: the system now holds the site's exact colours so it can drive the pages
+
+## D-0118 · overrides.dark:color.bg.action.primary = {"colorSpace": "srgb", "components": [0.6471, 0.051, 0.1725], "hex": "#a50d2c"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent: the system now holds the site's exact colours so it can drive the pages
+
+## D-0119 · overrides.light:color.bg.action.primary = {"colorSpace": "srgb", "components": [0.6039, 0.0392, 0.149], "hex": "#9a0a26"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent: the system now holds the site's exact colours so it can drive the pages
+
+## D-0120 · overrides.dark:color.text.on-action = {"colorSpace": "srgb", "components": [1.0, 0.9529, 0.9529], "hex": "#fff3f3"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --on-accent: the system now holds the site's exact colours so it can drive the pages
+
+## D-0121 · overrides.light:color.text.on-action = {"colorSpace": "srgb", "components": [1.0, 1.0, 1.0], "hex": "#ffffff"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --on-accent: the system now holds the site's exact colours so it can drive the pages
+
+## D-0122 · overrides.dark:color.text.accent = {"colorSpace": "srgb", "components": [0.8784, 0.6588, 0.3843], "hex": "#e0a862"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent-text: the system now holds the site's exact colours so it can drive the pages
+
+## D-0123 · overrides.light:color.text.accent = {"colorSpace": "srgb", "components": [0.4784, 0.2902, 0.1098], "hex": "#7a4a1c"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent-text: the system now holds the site's exact colours so it can drive the pages
+
+## D-0124 · overrides.dark:color.bg.action.primary-hover = {"colorSpace": "srgb", "components": [0.7529, 0.0941, 0.2118], "hex": "#c01836"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent-hover: the system now holds the site's exact colours so it can drive the pages
+
+## D-0125 · overrides.light:color.bg.action.primary-hover = {"colorSpace": "srgb", "components": [0.4784, 0.0235, 0.1137], "hex": "#7a061d"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent-hover: the system now holds the site's exact colours so it can drive the pages
+
+## D-0126 · overrides.dark:color.bg.accent.subtle = {"colorSpace": "srgb", "components": [0.1882, 0.0784, 0.0863], "hex": "#301416"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent-subtle: the system now holds the site's exact colours so it can drive the pages
+
+## D-0127 · overrides.light:color.bg.accent.subtle = {"colorSpace": "srgb", "components": [0.9725, 0.8941, 0.902], "hex": "#f8e4e6"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent-subtle: the system now holds the site's exact colours so it can drive the pages
+
+## D-0128 · overrides.dark:color.border.accent = {"colorSpace": "srgb", "components": [0.5412, 0.1216, 0.1725], "hex": "#8a1f2c"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent-b: the system now holds the site's exact colours so it can drive the pages
+
+## D-0129 · overrides.light:color.border.accent = {"colorSpace": "srgb", "components": [0.8157, 0.5412, 0.5804], "hex": "#d08a94"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent-b: the system now holds the site's exact colours so it can drive the pages
+
+## D-0130 · overrides.dark:color.border.focus = {"colorSpace": "srgb", "components": [0.8784, 0.6588, 0.3843], "hex": "#e0a862"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --focus: the system now holds the site's exact colours so it can drive the pages
+
+## D-0131 · overrides.light:color.border.focus = {"colorSpace": "srgb", "components": [0.6039, 0.0392, 0.149], "hex": "#9a0a26"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --focus: the system now holds the site's exact colours so it can drive the pages
+
+## D-0132 · overrides.dark:color.bg.brand = {"colorSpace": "srgb", "components": [0.6471, 0.051, 0.1725], "hex": "#a50d2c"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --wine: the system now holds the site's exact colours so it can drive the pages
+
+## D-0133 · overrides.light:color.bg.brand = {"colorSpace": "srgb", "components": [0.6039, 0.0392, 0.149], "hex": "#9a0a26"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --wine: the system now holds the site's exact colours so it can drive the pages
+
+## D-0134 · overrides.dark:color.bg.info.subtle = {"colorSpace": "srgb", "components": [0.102, 0.1608, 0.2039], "hex": "#1a2934"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --info-subtle: the system now holds the site's exact colours so it can drive the pages
+
+## D-0135 · overrides.light:color.bg.info.subtle = {"colorSpace": "srgb", "components": [0.8627, 0.9333, 0.9843], "hex": "#dceefb"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --info-subtle: the system now holds the site's exact colours so it can drive the pages
+
+## D-0136 · overrides.dark:color.text.info = {"colorSpace": "srgb", "components": [0.3725, 0.7059, 0.9255], "hex": "#5fb4ec"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --info-text: the system now holds the site's exact colours so it can drive the pages
+
+## D-0137 · overrides.light:color.text.info = {"colorSpace": "srgb", "components": [0.0, 0.3608, 0.5412], "hex": "#005c8a"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --info-text: the system now holds the site's exact colours so it can drive the pages
+
+## D-0138 · overrides.dark:color.text.danger = {"colorSpace": "srgb", "components": [0.9255, 0.5843, 0.5451], "hex": "#ec958b"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --danger: the system now holds the site's exact colours so it can drive the pages
+
+## D-0139 · overrides.light:color.text.danger = {"colorSpace": "srgb", "components": [0.5765, 0.2275, 0.2039], "hex": "#933a34"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --danger: the system now holds the site's exact colours so it can drive the pages
+
+## D-0140 · overrides.dark:color.site.gold-hi = {"colorSpace": "srgb", "components": [0.9412, 0.7725, 0.549], "hex": "#f0c58c"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --gold-hi: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#f0c58c"; the other theme modes start with the same value (names match across modes)
+
+## D-0141 · overrides.light:color.site.gold-hi = {"colorSpace": "srgb", "components": [0.4784, 0.3294, 0.0627], "hex": "#7a5410"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --gold-hi: the system now holds the site's exact colours so it can drive the pages
+
+## D-0142 · overrides.dark:color.site.ginger = {"colorSpace": "srgb", "components": [0.8392, 0.6157, 0.3373], "hex": "#d69d56"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --ginger: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#d69d56"; the other theme modes start with the same value (names match across modes)
+
+## D-0143 · overrides.light:color.site.ginger = {"colorSpace": "srgb", "components": [0.5412, 0.3529, 0.1686], "hex": "#8a5a2b"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --ginger: the system now holds the site's exact colours so it can drive the pages
+
+## D-0144 · overrides.dark:color.site.link-hover = {"colorSpace": "srgb", "components": [0.9412, 0.7725, 0.549], "hex": "#f0c58c"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --link-hover: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#f0c58c"; the other theme modes start with the same value (names match across modes)
+
+## D-0145 · overrides.light:color.site.link-hover = {"colorSpace": "srgb", "components": [0.3608, 0.2157, 0.0706], "hex": "#5c3712"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --link-hover: the system now holds the site's exact colours so it can drive the pages
+
+## D-0146 · overrides.dark:color.site.trim = {"colorSpace": "srgb", "components": [0.1843, 0.6039, 0.2745], "hex": "#2f9a46"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --trim: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#2f9a46"; the other theme modes start with the same value (names match across modes)
+
+## D-0147 · overrides.light:color.site.trim = {"colorSpace": "srgb", "components": [0.1373, 0.502, 0.2275], "hex": "#23803a"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --trim: the system now holds the site's exact colours so it can drive the pages
+
+## D-0148 · overrides.dark:color.site.trim-deep = {"colorSpace": "srgb", "components": [0.1137, 0.3529, 0.1647], "hex": "#1d5a2a"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --trim-deep: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#1d5a2a"; the other theme modes start with the same value (names match across modes)
+
+## D-0149 · overrides.light:color.site.trim-deep = {"colorSpace": "srgb", "components": [0.1137, 0.4157, 0.1882], "hex": "#1d6a30"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --trim-deep: the system now holds the site's exact colours so it can drive the pages
+
+## D-0150 · overrides.dark:color.site.wine-text = {"colorSpace": "srgb", "components": [0.9373, 0.5412, 0.5882], "hex": "#ef8a96"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --wine-text: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#ef8a96"; the other theme modes start with the same value (names match across modes)
+
+## D-0151 · overrides.light:color.site.wine-text = {"colorSpace": "srgb", "components": [0.6039, 0.0392, 0.149], "hex": "#9a0a26"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --wine-text: the system now holds the site's exact colours so it can drive the pages
+
+## D-0152 · overrides.dark:color.site.bar = {"colorSpace": "srgb", "components": [0.5451, 0.4824, 0.4745], "hex": "#8b7b79"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --bar: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#8b7b79"; the other theme modes start with the same value (names match across modes)
+
+## D-0153 · overrides.light:color.site.bar = {"colorSpace": "srgb", "components": [0.549, 0.4824, 0.4392], "hex": "#8c7b70"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --bar: the system now holds the site's exact colours so it can drive the pages
+
+## D-0154 · overrides.dark:color.site.q0 = {"colorSpace": "srgb", "components": [0.6157, 0.6157, 0.6157], "hex": "#9d9d9d"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q0: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#9d9d9d"; the other theme modes start with the same value (names match across modes)
+
+## D-0155 · overrides.light:color.site.q0 = {"colorSpace": "srgb", "components": [0.4196, 0.4196, 0.4196], "hex": "#6b6b6b"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q0: the system now holds the site's exact colours so it can drive the pages
+
+## D-0156 · overrides.dark:color.site.q1 = {"colorSpace": "srgb", "components": [0.9373, 0.902, 0.8863], "hex": "#efe6e2"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q1: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#efe6e2"; the other theme modes start with the same value (names match across modes)
+
+## D-0157 · overrides.light:color.site.q1 = {"colorSpace": "srgb", "components": [0.149, 0.1333, 0.1333], "hex": "#262222"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q1: the system now holds the site's exact colours so it can drive the pages
+
+## D-0158 · overrides.dark:color.site.q2 = {"colorSpace": "srgb", "components": [0.1176, 1.0, 0.0], "hex": "#1eff00"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q2: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#1eff00"; the other theme modes start with the same value (names match across modes)
+
+## D-0159 · overrides.light:color.site.q2 = {"colorSpace": "srgb", "components": [0.1647, 0.4902, 0.0706], "hex": "#2a7d12"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q2: the system now holds the site's exact colours so it can drive the pages
+
+## D-0160 · overrides.dark:color.site.q3 = {"colorSpace": "srgb", "components": [0.2314, 0.6118, 1.0], "hex": "#3b9cff"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q3: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#3b9cff"; the other theme modes start with the same value (names match across modes)
+
+## D-0161 · overrides.light:color.site.q3 = {"colorSpace": "srgb", "components": [0.0, 0.349, 0.702], "hex": "#0059b3"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q3: the system now holds the site's exact colours so it can drive the pages
+
+## D-0162 · overrides.dark:color.site.q4 = {"colorSpace": "srgb", "components": [0.7255, 0.4078, 0.9608], "hex": "#b968f5"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q4: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#b968f5"; the other theme modes start with the same value (names match across modes)
+
+## D-0163 · overrides.light:color.site.q4 = {"colorSpace": "srgb", "components": [0.5412, 0.1686, 0.7882], "hex": "#8a2bc9"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q4: the system now holds the site's exact colours so it can drive the pages
+
+## D-0164 · overrides.dark:color.site.q5 = {"colorSpace": "srgb", "components": [1.0, 0.502, 0.0], "hex": "#ff8000"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q5: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#ff8000"; the other theme modes start with the same value (names match across modes)
+
+## D-0165 · overrides.light:color.site.q5 = {"colorSpace": "srgb", "components": [0.702, 0.3373, 0.0], "hex": "#b35600"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q5: the system now holds the site's exact colours so it can drive the pages
+
+## D-0166 · overrides.dark:color.site.q6 = {"colorSpace": "srgb", "components": [0.902, 0.8, 0.502], "hex": "#e6cc80"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q6: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#e6cc80"; the other theme modes start with the same value (names match across modes)
+
+## D-0167 · overrides.light:color.site.q6 = {"colorSpace": "srgb", "components": [0.5412, 0.4275, 0.1216], "hex": "#8a6d1f"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --q6: the system now holds the site's exact colours so it can drive the pages
+
+## D-0168 · overrides.dark:color.site.gold = {"colorSpace": "srgb", "components": [0.8314, 0.6353, 0.298], "hex": "#d4a24c"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --gold: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#d4a24c"; the other theme modes start with the same value (names match across modes)
+
+## D-0169 · overrides.light:color.site.gold = {"colorSpace": "srgb", "components": [0.8314, 0.6353, 0.298], "hex": "#d4a24c"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --gold: the system now holds the site's exact colours so it can drive the pages
+
+## D-0170 · overrides.dark:color.site.lvl = {"colorSpace": "srgb", "components": [0.902, 0.7373, 0.4667], "hex": "#e6bc77"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --lvl: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#e6bc77"; the other theme modes start with the same value (names match across modes)
+
+## D-0171 · overrides.light:color.site.lvl = {"colorSpace": "srgb", "components": [0.4784, 0.3725, 0.0902], "hex": "#7a5f17"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --lvl: the system now holds the site's exact colours so it can drive the pages
+
+## D-0172 · overrides.dark:color.site.silver = {"colorSpace": "srgb", "components": [0.7804, 0.7804, 0.7804], "hex": "#c7c7c7"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --silver: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#c7c7c7"; the other theme modes start with the same value (names match across modes)
+
+## D-0173 · overrides.light:color.site.silver = {"colorSpace": "srgb", "components": [0.7804, 0.7804, 0.7804], "hex": "#c7c7c7"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --silver: the system now holds the site's exact colours so it can drive the pages
+
+## D-0174 · overrides.dark:color.site.copper = {"colorSpace": "srgb", "components": [0.7216, 0.451, 0.2392], "hex": "#b8733d"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --copper: the system now holds the site's exact colours so it can drive the pages
+- new token: dark gets "#b8733d"; the other theme modes start with the same value (names match across modes)
+
+## D-0175 · overrides.light:color.site.copper = {"colorSpace": "srgb", "components": [0.7216, 0.451, 0.2392], "hex": "#b8733d"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --copper: the system now holds the site's exact colours so it can drive the pages
+
+## D-0176 · overrides.dark:color.text.link = {"colorSpace": "srgb", "components": [0.8784, 0.6588, 0.3843], "hex": "#e0a862"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent-text: the system now holds the site's exact colours so it can drive the pages
+
+## D-0177 · overrides.light:color.text.link = {"colorSpace": "srgb", "components": [0.4784, 0.2902, 0.1098], "hex": "#7a4a1c"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --accent-text: the system now holds the site's exact colours so it can drive the pages
+
+## D-0178 · overrides.dark:color.overlay.scrim = {"colorSpace": "srgb", "components": [0.0588, 0.0392, 0.0353], "alpha": 0.72, "hex": "#0f0a09"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --scrim
+
+## D-0179 · overrides.light:color.overlay.scrim = {"colorSpace": "srgb", "components": [0.1647, 0.1137, 0.102], "alpha": 0.45, "hex": "#2a1d1a"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: the site's own --scrim
+
+## D-0180 · overrides.dark:color.bg.action.primary-pressed = {"colorSpace": "srgb", "components": [0.5412, 0.0431, 0.1451], "hex": "#8a0b25"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: pressed crimson button: a step darker than --accent, so its light text stays readable
+
+## D-0181 · overrides.dark:color.text.on-brand = {"colorSpace": "srgb", "components": [1.0, 0.9529, 0.9529], "hex": "#fff3f3"}
+- set_by: chosen · locked: no · date: 2026-11-16 · supersedes: none · source_ref: none
+- reason: light text on the crimson brand fill, like the site's buttons
