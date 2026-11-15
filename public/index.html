@@ -442,7 +442,8 @@ button.pass-st{cursor:pointer}button.pass-st:hover .pass-seal{border-color:var(-
   .lg-card.foil.cr-shine::after{animation:none}}
 @keyframes rmFade{from{opacity:0}to{opacity:1}}@keyframes rmFadeOut{to{opacity:0}}
 nav.bottom{display:none}
-.theme-btn{gap:.375rem}.theme-ic{font-size:.9375rem;line-height:1}
+.theme-btn{gap:.375rem}.theme-ic{font-size:.9375rem;line-height:1;display:inline-block;width:1em;text-align:center}
+.theme-l{display:inline-grid}.theme-l>span{grid-area:1/1}.theme-l>.off{visibility:hidden}
 @media (max-width:700px){.theme-l{display:none}.theme-btn{min-width:2.5rem;padding-inline:.625rem}header.top .wrap{flex-wrap:nowrap}.hdr-tools{flex:none}}
 .char-tabs{display:none}
 .claim-banner{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 1.25rem;border-color:var(--accent-b)}
@@ -1275,7 +1276,9 @@ function header(page){
       h("button",{class:"btn quiet srch-btn",type:"button",onclick:openSearch,"aria-label":"Search the site",title:"Search (press /)"},
         srchIcon(),h("span",{class:"srch-l"},"Search"),h("kbd",{class:"srch-k"},"/")),
       h("button",{class:"btn quiet theme-btn",onclick:toggleTheme,"aria-label":isDark()?"Light mode":"Dark mode",title:isDark()?"Light mode":"Dark mode"},
-        h("span",{class:"theme-ic","aria-hidden":"true"},isDark()?"\u2600":"\u263E"),h("span",{class:"theme-l"},isDark()?"Light mode":"Dark mode")),
+        h("span",{class:"theme-ic","aria-hidden":"true"},isDark()?"\u2600":"\u263E"),
+        // Both labels take the same cell, the unused one hidden, so the button keeps one width and the header doesn't shift.
+        h("span",{class:"theme-l","aria-hidden":"true"},h("span",{class:isDark()?"":"off"},"Light mode"),h("span",{class:isDark()?"off":""},"Dark mode"))),
       (dc||S.widget&&S.widget.instant_invite)?h("a",{class:"btn quiet",href:dc||S.widget.instant_invite,target:"_blank",rel:"noopener"},"Discord",S.widget?h("span",{style:"display:inline-flex;align-items:center;gap:.25rem;font-weight:400"},h("i",{class:"dot",style:"width:.5rem;height:.5rem;background:#3ba55d"}),S.widget.presence_count||0):null):null,
     )))}
 
