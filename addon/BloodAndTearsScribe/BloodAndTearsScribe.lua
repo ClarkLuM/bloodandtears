@@ -1,7 +1,8 @@
 -- Blood and Tears Scribe
 -- While you play, this reads the in-game guild list every five minutes and notes, for each member: their level (and when
 -- it went up), rank,
--- when they were last online, which days they were on, and the last zone they were seen in. It also notes how many
+-- when they were last online, which days they were on, and the last zone they were seen in. It adds up how long
+-- guildies spend in each zone (for the site's zone map). It also notes how many
 -- guildies are online each hour, joins and leaves, who was in your group inside a dungeon or raid, every boss your
 -- group kills there and the good loot it gets, and the
 -- recipes your own characters know (when you open a profession window).
@@ -14,7 +15,7 @@
 -- boss kill or a rare-or-better drop (/scribe quiet turns those off). /scribe shows a summary.
 
 local ADDON = ...
-local VERSION = 6
+local VERSION = 7
 local DAYS_KEPT = 60          -- days of "seen" days kept per member
 local HOURS_KEPT = 42         -- days of hourly online counts kept
 local EVENTS_KEPT = 200       -- joins and leaves
@@ -22,6 +23,7 @@ local RAIDS_KEPT = 60
 local RUNS_KEPT = 120         -- dungeon runs (who was in your group inside a dungeon, per dungeon per day)
 local KILLS_KEPT = 300        -- boss kills in dungeons and raids
 local LOOT_KEPT = 300         -- uncommon-or-better loot your group received inside dungeons and raids
+local ZONE_DAYS_KEPT = 42    -- days of minutes-per-zone kept
 local PERTH = 8 * 3600        -- the guild's day runs on Perth time
 
 local f = CreateFrame("Frame")
@@ -45,6 +47,8 @@ local function init()
   db.kills = db.kills or {}
   db.loot = db.loot or {}
   db.lastHours = db.lastHours or {}
+  db.zones = db.zones or {}
+  db.zoneSeen = db.zoneSeen or {}
 end
 
 local function note(who, what)
@@ -62,6 +66,8 @@ local function prune()
   end
   for h in pairs(db.hours) do if h < hourCut then db.hours[h] = nil end end
   for h in pairs(db.lastHours) do if h < hourCut then db.lastHours[h] = nil end end
+  local zoneCut = dayOf(now() - ZONE_DAYS_KEPT * 86400)
+  for d in pairs(db.zones) do if d < zoneCut then db.zones[d] = nil end end
   local keys = {}
   for k in pairs(db.raids) do keys[#keys + 1] = k end
   table.sort(keys)
@@ -123,7 +129,21 @@ local function readRoster()
         m.last = t
         m.zone = zone
         m.days[today] = true
-      elseif GetGuildRosterLastOnline then
+        -- Time in each zone: the minutes since this guildie was last seen online, counted against the zone they're in now.
+        -- The first sighting of a session counts as one five-minute read; a long gap (the scribe was offline) counts the same.
+        if zone and zone ~= "" then
+          local since = db.zoneSeen[name] and (t - db.zoneSeen[name]) or 300
+          if since > 600 or since < 0 then since = 300 end
+          local zd = db.zones[today] or {}
+          db.zones[today] = zd
+          zd[zone] = zd[zone] or {}
+          zd[zone][name] = math.floor(((zd[zone][name] or 0) + since / 60) * 10 + 0.5) / 10
+        end
+        db.zoneSeen[name] = t
+      else
+        db.zoneSeen[name] = nil
+      end
+      if not isOnline and GetGuildRosterLastOnline then
         local y, mo, d, h = GetGuildRosterLastOnline(i)
         if y then
           local last = t - (((y or 0) * 365 + (mo or 0) * 30 + (d or 0)) * 86400 + (h or 0) * 3600)
@@ -364,6 +384,18 @@ SlashCmdList.BTSCRIBE = function(arg)
   for k in pairs(db.runs) do if k:sub(1, 10) == today then runs = runs + 1 end end
   for _, l in ipairs(db.loot) do if dayOf(l.t) == today then loot = loot + 1 end end
   print((TAG .. "%d guildies on the list, %d seen today, %d of your professions noted."):format(n, seen, profs))
+  local zt, zn = {}, 0
+  for zone, who in pairs(db.zones[today] or {}) do
+    local s = 0
+    for _, mins in pairs(who) do s = s + mins end
+    zt[#zt + 1] = { zone, s }; zn = zn + 1
+  end
+  table.sort(zt, function(a, b) return a[2] > b[2] end)
+  if zn > 0 then
+    local top = {}
+    for i = 1, math.min(3, #zt) do top[#top + 1] = ("%s %s"):format(zt[i][1], zt[i][2] >= 60 and (math.floor(zt[i][2] / 6 + 0.5) / 10 .. "h") or (math.floor(zt[i][2] + 0.5) .. "m")) end
+    print("  Busiest zones today: " .. table.concat(top, ", ") .. ".")
+  end
   print(("  Today: %d %s, %d %s, %d good %s."):format(runs, runs == 1 and "dungeon" or "dungeons", kills, kills == 1 and "boss" or "bosses", loot, loot == 1 and "drop" or "drops"))
   if #recent > 0 then
     local last = {}

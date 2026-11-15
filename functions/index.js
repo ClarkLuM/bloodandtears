@@ -939,6 +939,36 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
     runs[k] = { day: r.day, zone: short(r.zone, 60), ids: [...new Set([...((old && old.ids) || []), ...ids])] };
   }
   for (const k of Object.keys(runs).sort().slice(0, -200)) delete runs[k];
+  // Time in each zone (scribe 0.7+): minutes per guildie per zone per day, for the Records map. Stored by character id;
+  // guildies the site doesn't know are added up under "_". The addon keeps adding to today's numbers, so re-uploads take
+  // the larger figure instead of adding. Days over two months old are folded into zonesOld (all-time totals); uploads
+  // only touch the last 45 days, so a folded day is never counted twice.
+  const zones = { ...(cur.zones || {}) }, zonesOld = { ...(cur.zonesOld || {}) };
+  const dayAgo = n => new Date(Date.now() + 8 * 36e5 - n * 864e5).toISOString().slice(0, 10);
+  const zoneTake = dayAgo(45), zoneFold = dayAgo(60);
+  let zoneDays = 0;
+  for (const [day, zs] of Object.entries(sv.zones || {})) {
+    if (!isDay(day) || day < zoneTake || !zs || typeof zs !== "object") continue;
+    const into = { ...(zones[day] || {}) }; let any = false;
+    for (const [zone, ppl] of Object.entries(zs).slice(0, 200)) {
+      const zn = short(zone, 60); if (!zn || !ppl || typeof ppl !== "object") continue;
+      const got = {};
+      for (const [n, mins] of Object.entries(ppl)) {
+        const v = Math.min(1440, +mins || 0); if (!(v > 0) || opt[keyOf(n)]) continue;
+        const hit = who(n), k = hit ? hit.id : "_"; got[k] = (got[k] || 0) + v;
+      }
+      if (!Object.keys(got).length) continue;
+      const was = { ...(into[zn] || {}) };
+      for (const [k, v] of Object.entries(got)) was[k] = Math.round(Math.max(+was[k] || 0, v) * 10) / 10;
+      into[zn] = was; any = true;
+    }
+    if (any) { zones[day] = into; zoneDays++; }
+  }
+  for (const day of Object.keys(zones)) if (day < zoneFold) {
+    for (const [zone, ppl] of Object.entries(zones[day] || {})) { const o = { ...(zonesOld[zone] || {}) };
+      for (const [k, v] of Object.entries(ppl || {})) o[k] = Math.round(((+o[k] || 0) + (+v || 0)) * 10) / 10; zonesOld[zone] = o; }
+    delete zones[day];
+  }
   const kills = Array.isArray(cur.kills) ? cur.kills.slice() : [], seenK = new Set(kills.map(x => x.at + "|" + x.boss));
   for (const x of Array.isArray(sv.kills) ? sv.kills : Object.values(sv.kills || {})) {
     if (!x || !x.boss) continue; const at = iso(x.t), boss = short(x.boss, 60), sig = at + "|" + boss;
@@ -976,11 +1006,11 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
     for (const [p, v] of Object.entries(profs)) { const list = Array.isArray(v && v.list) ? v.list : []; if (list.length) rec[short(p, 40)] = { at: iso(v.at) || new Date().toISOString(), list: list.map(x => short(x, 80)).slice(0, 800) }; }
     if (Object.keys(rec).length) { await db().doc(`${hit.coll}/${hit.id}`).set({ recipes: rec }, { merge: true }); recipeChars++; }
   }
-  await ref.set({ members, days, hours, raids, runs, kills: kills.slice(-300), loot: loot.slice(-300), events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short((sv.by && listed.filter(n => keyOf(n).startsWith(keyOf(sv.by) + " ")).length === 1 ? listed.find(n => keyOf(n).startsWith(keyOf(sv.by) + " ")) : sv.by), 40), up: new Date().toISOString() });
+  await ref.set({ members, days, hours, raids, runs, zones, zonesOld, kills: kills.slice(-300), loot: loot.slice(-300), events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short((sv.by && listed.filter(n => keyOf(n).startsWith(keyOf(sv.by) + " ")).length === 1 ? listed.find(n => keyOf(n).startsWith(keyOf(sv.by) + " ")) : sv.by), 40), up: new Date().toISOString() });
   await saveStreaks().catch(err => logger.warn("streaks", err.message));
   if (levelled.length) await updateFirsts().catch(err => logger.warn("firsts", err.message));
   return { matched, unknown: unknown.slice(0, 20), unknownN: unknown.length, raids: Object.keys(sv.raids || {}).length, recipeChars, levelled: levelled.slice(0, 20),
-    runs: Object.keys(sv.runs || {}).length, kills: (Array.isArray(sv.kills) ? sv.kills : Object.values(sv.kills || {})).length };
+    runs: Object.keys(sv.runs || {}).length, zoneDays, kills: (Array.isArray(sv.kills) ? sv.kills : Object.values(sv.kills || {})).length };
 });
 async function syncAll() {
   let n = 0, changed = 0; const missing = [];
