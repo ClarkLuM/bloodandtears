@@ -785,6 +785,9 @@ Your own decisions first (the newest value per path), then your changes to stand
 
 </details>
 
+<!-- od:keep -->
+What changed on the site and the choices behind it, kept by hand.
+
 - 12 Nov: privacy pass. Kept out of search engines (robots.txt, noindex meta and header), security headers, a footer privacy note, an officer-only old-data clean-up (`privacyCleanup`), officer-only manual adding (rules and UI), and an App Check hook switched on by `APP_CHECK_SITE_KEY`. Footer link class is `.foot-link` (`.linkish` already means name links).
 
 - 12 Nov: roster and card refresh. Roster rows are face, class-coloured name plus top title, level bar, profession pills, loot, last seen (6 columns; desktop column rules live in `@container (min-width:640.02px)`, phone grid is name/level, professions/seen, loot). Quick chips (`.q-chip`) drive `role`, `rLv`, `rSeen`, `rMine`. Totals are a slim strip; the spotlight moved to the side column. Card art is full-width (12rem) with `.lg-hd` over its foot, stamps top left, `.lg-lv` badge top right; `cardPng` mirrors it.
@@ -813,6 +816,43 @@ Your own decisions first (the newest value per path), then your changes to stand
 - 16 Nov: The week in motion: under the Activity map, a round crimson play button and seven day buttons (last seven days), each with a crimson bar for how busy it was. A day shows only that day, with a caption on the map (day in gold, the two busiest zones); play steps through them about a second each and ends on the whole span.
 - 16 Nov: Anniversaries: a month, three months, six months and a year (and on) in the guild appear in Guild History, with a cake by the name on the Roster that day; the guild's birthday (4 Nov, WoW Forever's launch) gets a banner on the Roster with a crimson glow, and guild firsts come back as "A year ago today".
 - 16 Nov: What's new: a sparkle button in the header (icon only, so the theme button went icon-only too to keep the header on one line) with a crimson dot when there's something newer than this browser has seen; it opens a dated list with gold NEW tags and a Got it button. Neck-and-neck races are down to one at a time (the biggest).
+- 16 Nov: design check of the parts added since 12 Nov. Recorded here as choices: the map's five heat steps (`--zm-1`…`--zm-5`, dark #4a1a1f, #6e1a25, #8f1530, #b3123a, #cf2846; light #f2cfc9, #e6a3a3, #cf6470, #b02a40, #8a0d25) are the site's sequential palette for "how much"; unvisited land is `--zm-land`; gold (`--zm-city`) marks capitals and dungeon entrances. Ginger (`--ginger`) is for headline numbers (totals, levelling stats); `--accent-text` gold for lines and links. Fixed: the browser bar colour follows the chosen theme (both theme-color tags), small filter menus get 16px text on touch screens so phones don't zoom in, and hairline gaps are in rem.
+
+### Consistency rules (tidy-up, Nov 2026)
+- Headings: page titles 32px, card and section headings 20px, sub-headings (History days, groups inside a card) 16px in Figtree.
+- Spacing: 12px between the parts of a card, 8px between rows of a list.
+- Corners: 6px for small things (tags, buttons, inputs, arrows), 10px for cards, tiles, panels and tables, pills only for filter chips.
+- Gold: `--accent-text` for text and links, `--gold-hi` for "the best" (titles, the crown, maxed bars). Both have light-mode values; never type a gold hex into a rule.
+- Tags are labels: outlined, 6px corners, weight 600. Filled chips are for values (a skill and its number).
+- Anything that shows more or opens a list is a small ghost button (`btn ghost sm`), with a faint border so it reads as tappable. Underlined text is only for links to another page.
+- Every row that opens has the same arrow button (`.r-x` / `.cm-tog`): 36px, bordered, right when closed, down when open; 44px on phones.
+- Bars (`.track`) are 6px, no border, gold fill, brighter gold when maxed.
+- Every input and menu: 6px corners, 16px text (stops phones zooming in).
+
+### Item icons (Nov 2026)
+- Every item link (`qLink`) starts with its 18px icon (`.item-ic`: 1.125em square, 3px corners, a faint ring in the item's quality colour).
+- Icons for worn items come from the armory (Blizzard's image server). Anything else asks Wowhead's tooltip data for the icon name when the link scrolls into view, four at a time, and keeps the answer on that device for 30 days (`localStorage` key `bt-icons`). Links inside closed folds aren't asked about until opened.
+- Until an icon arrives, a blank square of the same size holds its place, so nothing shifts. If Wowhead has no icon, the question-mark icon stands in.
+
+### Grouped feed lines (Nov 2026)
+- In the Guild Feed and each Guild History day, a run of the same kind of moment for one character, each within three hours of the last, is one line: "looted [a], [b], [c] and 2 more", "dinged 32 to 34", "cleared A and B", "trained x, y and z". The line takes the newest time. History's "N things" still counts every moment.
+
+### Character sheet gear (Nov 2026)
+- The Gear card is a character sheet: left-hand slots (Head to Wrist) with the item name to their left, right-hand slots (Hands to Trinket) with the name to their right, the character picture between. Names use the in-game quality colours whatever the theme (the sheet is always dark). Empty slots say the slot and "Empty".
+- The weapons sit touching (2px apart) under the character, as in game, with their names on one line beneath.
+- A summary line above: the armory's item level when it has one, then epics, blues, greens and empty slots. The armory has no item level per item.
+- Stats sit underneath at full width, in as many columns as fit. Under 560px of card width the picture goes on top and the slots become two columns, names to the right, wrapping.
+
+### Audit fixes (15 Nov 2026)
+- Text sizes outside the trading cards come from one scale: 11px (short uppercase labels only), 12px (meta: counts, footers, captions), 14px (body, table cells, chips, tags), 16px (sub-headings, inputs and menus), 20px (sections), 32px (page titles). Display numbers (totals, the raid countdown, a character's name on its feature) keep their own size.
+- Every menu and search box is 16px text, including the Sort and filter menus (`.r-sort select`).
+- Every fold uses one of two arrows: rows that open (roster, profession table, dungeon rows) end with the 36px bordered arrow button; small folds inside a card (History days, What Drops, Can make, Alliance-side, By class, Change the flavour text) open with the small turning chevron at their start. No browser triangles.
+- Folds and tabs are at least 28px tall; the trading card's flip tabs keep their look but get a bigger invisible hit area.
+
+### Tablet and trends (15 Nov 2026)
+- When the roster table is 641 to 780px wide (tablets, small laptops with the side column), Best loot hides so names have room; it still shows when a row opens.
+- Totals: on wide screens, five figures side by side, each with its label, "this week" and, where there's a day-by-day history, 14 thin bars (levels gained per day, characters joined per day; today on the right in the brighter gold). Three then two on tablets; the swipe row without bars on phones. Honourable kills have no daily history (the armory gives weekly totals), so no bars.
+<!-- /od:keep -->
 
 ## Open Items
 
@@ -847,38 +887,3 @@ Your own decisions first (the newest value per path), then your changes to stand
 | Elevation | `shadow-raised`, `shadow-floating`, `shadow-overlay` |
 | Type | `text-body-md`, `text-label-lg`, `text-title-md`, `text-headline-md` |
 | Motion | `transition-feedback`, `ease-enter`, `ease-exit`, `ease-hover` |
-
-## Consistency rules (tidy-up, Nov 2026)
-- Headings: page titles 32px, card and section headings 20px, sub-headings (History days, groups inside a card) 16px in Figtree.
-- Spacing: 12px between the parts of a card, 8px between rows of a list.
-- Corners: 6px for small things (tags, buttons, inputs, arrows), 10px for cards, tiles, panels and tables, pills only for filter chips.
-- Gold: `--accent-text` for text and links, `--gold-hi` for "the best" (titles, the crown, maxed bars). Both have light-mode values; never type a gold hex into a rule.
-- Tags are labels: outlined, 6px corners, weight 600. Filled chips are for values (a skill and its number).
-- Anything that shows more or opens a list is a small ghost button (`btn ghost sm`), with a faint border so it reads as tappable. Underlined text is only for links to another page.
-- Every row that opens has the same arrow button (`.r-x` / `.cm-tog`): 36px, bordered, right when closed, down when open; 44px on phones.
-- Bars (`.track`) are 6px, no border, gold fill, brighter gold when maxed.
-- Every input and menu: 6px corners, 16px text (stops phones zooming in).
-
-## Item icons (Nov 2026)
-- Every item link (`qLink`) starts with its 18px icon (`.item-ic`: 1.125em square, 3px corners, a faint ring in the item's quality colour).
-- Icons for worn items come from the armory (Blizzard's image server). Anything else asks Wowhead's tooltip data for the icon name when the link scrolls into view, four at a time, and keeps the answer on that device for 30 days (`localStorage` key `bt-icons`). Links inside closed folds aren't asked about until opened.
-- Until an icon arrives, a blank square of the same size holds its place, so nothing shifts. If Wowhead has no icon, the question-mark icon stands in.
-
-## Grouped feed lines (Nov 2026)
-- In the Guild Feed and each Guild History day, a run of the same kind of moment for one character, each within three hours of the last, is one line: "looted [a], [b], [c] and 2 more", "dinged 32 to 34", "cleared A and B", "trained x, y and z". The line takes the newest time. History's "N things" still counts every moment.
-
-## Character sheet gear (Nov 2026)
-- The Gear card is a character sheet: left-hand slots (Head to Wrist) with the item name to their left, right-hand slots (Hands to Trinket) with the name to their right, the character picture between. Names use the in-game quality colours whatever the theme (the sheet is always dark). Empty slots say the slot and "Empty".
-- The weapons sit touching (2px apart) under the character, as in game, with their names on one line beneath.
-- A summary line above: the armory's item level when it has one, then epics, blues, greens and empty slots. The armory has no item level per item.
-- Stats sit underneath at full width, in as many columns as fit. Under 560px of card width the picture goes on top and the slots become two columns, names to the right, wrapping.
-
-## Audit fixes (15 Nov 2026)
-- Text sizes outside the trading cards come from one scale: 11px (short uppercase labels only), 12px (meta: counts, footers, captions), 14px (body, table cells, chips, tags), 16px (sub-headings, inputs and menus), 20px (sections), 32px (page titles). Display numbers (totals, the raid countdown, a character's name on its feature) keep their own size.
-- Every menu and search box is 16px text, including the Sort and filter menus (`.r-sort select`).
-- Every fold uses one of two arrows: rows that open (roster, profession table, dungeon rows) end with the 36px bordered arrow button; small folds inside a card (History days, What Drops, Can make, Alliance-side, By class, Change the flavour text) open with the small turning chevron at their start. No browser triangles.
-- Folds and tabs are at least 28px tall; the trading card's flip tabs keep their look but get a bigger invisible hit area.
-
-## Tablet and trends (15 Nov 2026)
-- When the roster table is 641 to 780px wide (tablets, small laptops with the side column), Best loot hides so names have room; it still shows when a row opens.
-- Totals: on wide screens, five figures side by side, each with its label, "this week" and, where there's a day-by-day history, 14 thin bars (levels gained per day, characters joined per day; today on the right in the brighter gold). Three then two on tablets; the swipe row without bars on phones. Honourable kills have no daily history (the armory gives weekly totals), so no bars.
