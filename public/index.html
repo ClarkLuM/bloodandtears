@@ -72,7 +72,11 @@ nav.main a[aria-current="page"]{color:var(--text);background:var(--accent-subtle
 .hdr-tools{display:flex;align-items:center;gap:.375rem}
 .hdr-tools .btn{height:2rem;padding:0 .625rem;font-size:.875rem}
 @media (max-width:1320px){.brand span{display:none}}
-@media (max-width:1000px){
+/* Wide: the "Horde · WoW Forever" line sits under the name, so brand, menu and tools stay on one row */
+@media (min-width:1321px){.brand{display:grid;grid-template-columns:auto auto;column-gap:.75rem;row-gap:0;align-items:center}.brand-logo{grid-row:1/3}.brand b{line-height:1.625rem}.brand span{line-height:1rem}}
+/* The tools always stay on the right of the first row */
+.hdr-tools{margin-left:auto}
+@media (max-width:1120px){
   header.top .wrap{padding-bottom:0}
   nav.main{order:3;width:100%;flex-wrap:nowrap;overflow-x:auto;margin:0 -.75rem;padding:0 .75rem .5rem;scrollbar-width:none}
   nav.main a{white-space:nowrap}
@@ -630,7 +634,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .title-tag:hover{text-decoration:underline}
 .title-ic{width:.625rem;height:.625rem;background:currentColor;clip-path:polygon(0 100%,0 25%,25% 55%,50% 0,75% 55%,100% 25%,100% 100%)}
 @media (max-width:360px){nav.bottom a{font-size:.6875rem;letter-spacing:-.01em}.brand b{font-size:1.25rem;line-height:1.5rem}.brand-logo{width:2rem;height:2rem}}
-@media (max-width:480px){.brand{gap:.5rem;min-width:0}.brand b{font-size:1.25rem;line-height:1.5rem;white-space:nowrap}.brand-logo{width:2.25rem;height:2.25rem}}
+@media (max-width:480px){.brand{gap:.5rem;min-width:0}.brand b{font-size:1.0625rem;line-height:1.5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.hdr-tools{gap:.25rem}.hdr-tools .btn{padding:0 .5rem}header.top .wrap{column-gap:.5rem}.brand-logo{width:2.25rem;height:2.25rem}}
 @media (max-width:360px){.brand{gap:.375rem}.brand b{font-size:.9375rem}.brand-logo{width:1.875rem;height:1.875rem}}
 .tab-empty{display:none}
 .recap-img{display:block;width:100%;max-height:55vh;object-fit:contain;border-radius:8px;background:#0f0a09;border:1px solid var(--b-sub)}
