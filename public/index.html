@@ -896,8 +896,9 @@ a.r-name:hover{color:var(--accent-text)}
 .mk-more>summary::before,.flav-edit>summary::before{content:"";flex:none;width:.4375rem;height:.4375rem;border-right:2px solid var(--ter);border-bottom:2px solid var(--ter);transform:rotate(-45deg);transition:transform 150ms cubic-bezier(.23,1,.32,1)}
 .mk-more[open]>summary::before,.flav-edit[open]>summary::before{transform:rotate(45deg)}
 @media (prefers-reduced-motion:reduce){.mk-more>summary::before,.flav-edit>summary::before{transition:none}}
-/* The card's flip tabs are small on scaled-down cards: a bigger invisible hit area, the look unchanged */
-.lg-tab::after{content:"";position:absolute;inset:-.375rem 0}
+/* The card's flip tabs are small on scaled-down cards: a bigger invisible hit area, the look unchanged.
+   The tab must be positioned, or the hit area would cover the whole card and swallow every click on it. */
+.lg-tab{position:relative}.lg-tab::after{content:"";position:absolute;inset:-.375rem 0}
 .lg-tab{line-height:1.625rem;font-size:.6875rem}
 .lg-lv.lg-lv-b{position:static;flex:none;width:1.875rem;height:1.875rem;font-size:.8125rem;align-self:center}
 /* Signature move on the card */
