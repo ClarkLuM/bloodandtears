@@ -1948,9 +1948,23 @@ function passportOf(m){
   for(const g of Array.isArray(m.goals)?m.goals:[])if(g&&g.done)add(g.t,g.doneAt||g.at);
   for(const j of Array.isArray(m.journey)?m.journey:[]){const t=String(j.t||"");if(/^Finished /.test(t))add(t.slice(9),j.at)}
   const c=m.cleared&&typeof m.cleared==="object"?m.cleared:{};for(const t of Object.keys(c))if(c[t])add(t,c[t]);
+  for(const[t,at]of scribeStamps(m))add(t,at);
   const loot=lootStampsOf(m);
   return DUNGEONS.filter(d=>got.has(d[0])||loot.has(d[0])).map(d=>got.has(d[0])?{name:d[0],range:d[1],abbr:dungAbbr(d[0]),at:got.get(d[0])}
     :{name:d[0],range:d[1],abbr:dungAbbr(d[0]),at:loot.get(d[0]).at,via:"loot",item:loot.get(d[0]).item,boss:loot.get(d[0]).boss,itemRef:loot.get(d[0]).ref})}
+// Dungeons the guild scribe saw each character in: a group run inside the dungeon, a boss kill or loot there.
+// The game names some dungeons differently ("Scarlet Monastery" for every wing), so a kill or an item settles which.
+const dgNorm=x=>String(x||"").toLowerCase().replace(/^the /,"").trim();
+let bossDgMap=null,bossDgN=-1;
+function dgName(zone,boss,item){const z=dgNorm(zone),d=DUNGEONS.find(x=>dgNorm(x[0])===z);if(d)return d[0];
+  const n=Object.keys(DUNGEON_LOOT).length;if(n!==bossDgN){bossDgMap=new Map();for(const v of Object.values(DUNGEON_LOOT))bossDgMap.set(String(v[1]).toLowerCase(),v[0]);bossDgN=n}
+  if(boss&&bossDgMap.has(String(boss).toLowerCase()))return bossDgMap.get(String(boss).toLowerCase());
+  const v=item&&DUNGEON_LOOT[String(item).toLowerCase()];return v?v[0]:null}
+function scribeStamps(m){const sc=S.scribe||{},out=[];
+  for(const r of Object.values(sc.runs||{}))if((r.ids||[]).includes(m.id)){const d=dgName(r.zone);if(d)out.push([d,r.day+"T12:00:00+08:00"])}
+  for(const k of Array.isArray(sc.kills)?sc.kills:[])if((k.ids||[]).includes(m.id)){const d=dgName(k.zone,k.boss);if(d)out.push([d,k.at])}
+  for(const l of Array.isArray(sc.loot)?sc.loot:[])if(l.id===m.id){const d=dgName(l.zone,null,l.item&&l.item.name);if(d)out.push([d,l.at])}
+  return out}
 // Dungeons worked out from loot: gear they're wearing now, plus items the Journey saw them equip or loot.
 function lootStampsOf(m){const out=new Map(),see=(name,at)=>{const hit=DUNGEON_LOOT[String(name||"").trim().toLowerCase()];if(!hit)return;
     const[d,boss,,,id,q]=hit,prev=out.get(d);if(!prev||(at&&(!prev.at||at<prev.at)))out.set(d,{item:String(name).trim(),boss,at:at||"",ref:id?{id,q}:null})};
@@ -2128,6 +2142,18 @@ function feedItems(){
   // Each line has a kind, so Guild History can filter: level, loot, title, guild (joins and leaves), prof, pvp, dungeon, other.
   const out=[],push=(at,parts,k="other",m=null,bit)=>{const t=Date.parse(at||"");if(t)out.push({t,parts,k,who:m?nameOf(m).toLowerCase():"",m,bit})};
   const who=feedWho;
+  // Boss kills the guild scribe saw: one line per group per dungeon per day, naming the bosses in the order they fell.
+  const sc=S.scribe||{},kb=new Map();
+  for(const k of Array.isArray(sc.kills)?sc.kills:[]){const day=String(k.at).slice(0,10),key=day+"|"+k.zone+"|"+[...(k.ids||[])].sort().join(",");
+    const g=kb.get(key)||kb.set(key,{at:k.at,zone:k.zone,ids:k.ids||[],bosses:[]}).get(key);g.bosses.push(k.boss);if(k.at>g.at)g.at=k.at}
+  for(const g of kb.values()){const ms=g.ids.map(memberById).filter(Boolean);if(!ms.length)continue;
+    const shown=ms.slice(0,3),more=ms.length-shown.length,names=shown.flatMap((x,i)=>[i?(i===shown.length-1&&!more?" and ":", "):"",who(x)]);
+    const bl=g.bosses.length>3?[...g.bosses.slice(0,2),(g.bosses.length-2)+" more"]:g.bosses;
+    push(g.at,[...names,more?" and "+more+" more":""," killed ",...bl.flatMap((b,i)=>[i?(i===bl.length-1?" and ":", "):"",h("b",{},b)])," in "+(dgName(g.zone,g.bosses[0])||g.zone)],"dungeon",ms[0])}
+  // Loot the scribe saw drop in dungeons and raids, unless the armory already put the same item in their history.
+  for(const l of Array.isArray(sc.loot)?sc.loot:[]){const m=memberById(l.id);if(!m||!l.item)continue;
+    const nm=String(l.item.name||""),dup=(Array.isArray(m.journey)?m.journey:[]).some(j=>{const x=/^(?:Equipped|Got) (.+)$/.exec(String(j.t||""));return x&&x[1].toLowerCase()===nm.toLowerCase()});
+    if(dup)continue;const r=itemRef(nm,{id:l.item.id,q:l.item.q});push(l.at,[who(m)," looted ",r],"loot",m,r)}
   // Joins and leaves the guild scribe noticed in game.
   for(const e of (S.scribe&&S.scribe.events)||[]){const m=e.id&&memberById(e.id);
     push(e.at,[m?who(m):h("b",{},e.name||"Someone"),e.what==="joined"?" joined the guild in game":e.what==="removed"?" was removed from the guild":" left the guild"],"guild",m||{char:e.name||""})}
@@ -3139,7 +3165,7 @@ function scribeLine(){const sc=S.scribe;
       if(/SlashCmdList|local ADDON|CreateFrame\(/.test(text)||!/^\s*BloodAndTearsScribeDB\s*=\s*\{/m.test(text)){toast(/SlashCmdList|local ADDON|CreateFrame\(/.test(text)?"That's the addon itself, not its notes. Upload the one in WTF\\Account\\<account>\\SavedVariables instead.":"That isn't the scribe file. Look in WTF\\Account\\<account>\\SavedVariables.");return}
       toast("Reading the scribe file…");
       try{const r=await httpsCallable(fns,"scribeUpload")({text}),d=r.data||{};
-        toast("Scribe file read: "+d.matched+(d.matched===1?" guildie":" guildies")+" matched"+(d.recipeChars?", recipes for "+d.recipeChars+(d.recipeChars===1?" character":" characters"):"")+(d.levelled&&d.levelled.length?". Levels updated: "+d.levelled.join(", "):"")+(d.unknownN?". Not on the site yet: "+d.unknown.join(", ")+(d.unknownN>d.unknown.length?" and more":""):"")+".")}
+        toast("Scribe file read: "+d.matched+(d.matched===1?" guildie":" guildies")+" matched"+(d.recipeChars?", recipes for "+d.recipeChars+(d.recipeChars===1?" character":" characters"):"")+(d.levelled&&d.levelled.length?". Levels updated: "+d.levelled.join(", "):"")+(d.kills?", "+d.kills+(d.kills===1?" boss kill":" boss kills"):"")+(d.runs?", "+d.runs+(d.runs===1?" dungeon run":" dungeon runs"):"")+(d.unknownN?". Not on the site yet: "+d.unknown.join(", ")+(d.unknownN>d.unknown.length?" and more":""):"")+".")}
       catch(err){toast(err&&err.message?err.message.replace(/^.*?: /,""):"Couldn't read that file.")}}});
     return[inp,h("label",{for:"scribe-file",class:"btn sm",title:"In your WoW folder: _forever_\WTF\Account\<account>\SavedVariables\BloodAndTearsScribe.lua"},"Upload the scribe file")]})():null;
   return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):isOfficer()?h("span",{},"No guild scribe file yet"):null,up)}

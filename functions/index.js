@@ -916,13 +916,44 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
   const hourCut = new Date(Date.now() + 8 * 36e5 - 42 * 864e5).toISOString().slice(0, 13).replace("T", " ");
   for (const [h, n] of Object.entries(sv.hours || {})) if (isHour(h) && +n >= 0 && +n < 1000 && h >= hourCut) hours[h] = Math.max(+hours[h] || 0, +n);
   for (const h of Object.keys(hours)) if (h < hourCut) delete hours[h];
+  // Names from the group and loot messages: in Forever the game often gives only the first part of a two-part name
+  // ("Fashion" for Fashion Cop), so match it to the one guild list name that starts with it.
+  const guildList = Object.keys(sv.members || {});
+  const who = n => { if (!n || opt[keyOf(n)]) return null; const hit = byName.get(keyOf(n)); if (hit) return hit;
+    const full = guildList.filter(x => keyOf(x).startsWith(keyOf(n) + " ")); return full.length === 1 && !opt[keyOf(full[0])] ? byName.get(keyOf(full[0])) || null : null; };
+  const idsOf = w => [...new Set(Object.keys(w || {}).map(who).filter(Boolean).map(x => x.id))];
   for (const [key, r] of Object.entries(sv.raids || {})) {
     if (!r || !isDay(r.day)) continue;
-    const ids = Object.keys(r.who || {}).map(n => !opt[keyOf(n)] && byName.get(keyOf(n))).filter(Boolean).map(x => x.id);
+    const ids = idsOf(r.who);
     const k = short(r.day + " " + short(r.zone, 60), 80), old = raids[k];
     raids[k] = { day: r.day, zone: short(r.zone, 60) || "Raid", ids: [...new Set([...((old && old.ids) || []), ...ids])] };
   }
   for (const k of Object.keys(raids).sort().slice(0, -60)) delete raids[k];
+  // Dungeon runs (who was in the group inside a dungeon, per dungeon per day), boss kills and good loot inside
+  // dungeons and raids. The site turns them into Dungeon Passport stamps, feed lines and loot.
+  const runs = { ...(cur.runs || {}) };
+  for (const r of Object.values(sv.runs || {})) {
+    if (!r || !isDay(r.day) || !r.zone) continue;
+    const ids = idsOf(r.who); if (!ids.length) continue;
+    const k = short(r.day + " " + short(r.zone, 60), 80), old = runs[k];
+    runs[k] = { day: r.day, zone: short(r.zone, 60), ids: [...new Set([...((old && old.ids) || []), ...ids])] };
+  }
+  for (const k of Object.keys(runs).sort().slice(0, -200)) delete runs[k];
+  const kills = Array.isArray(cur.kills) ? cur.kills.slice() : [], seenK = new Set(kills.map(x => x.at + "|" + x.boss));
+  for (const x of Array.isArray(sv.kills) ? sv.kills : Object.values(sv.kills || {})) {
+    if (!x || !x.boss) continue; const at = iso(x.t), boss = short(x.boss, 60), sig = at + "|" + boss;
+    if (!at || seenK.has(sig)) continue; seenK.add(sig);
+    const ids = idsOf(x.who); if (ids.length) kills.push({ at, boss, zone: short(x.zone, 60), ids });
+  }
+  kills.sort((a, b) => (a.at < b.at ? -1 : 1));
+  const loot = Array.isArray(cur.loot) ? cur.loot.slice() : [], seenL = new Set(loot.map(x => x.at + "|" + x.id + "|" + x.item.id));
+  for (const x of Array.isArray(sv.loot) ? sv.loot : Object.values(sv.loot || {})) {
+    if (!x || !x.name || !(+x.id > 0) || !(+x.q >= 2)) continue;
+    const hit = who(x.who), at = iso(x.t); if (!hit || !at) continue;
+    const sig = at + "|" + hit.id + "|" + String(x.id); if (seenL.has(sig)) continue; seenL.add(sig);
+    loot.push({ at, id: hit.id, item: { id: String(+x.id), q: Math.min(7, +x.q), name: short(x.name, 120) }, zone: short(x.zone, 60) });
+  }
+  loot.sort((a, b) => (a.at < b.at ? -1 : 1));
   // Joins and leaves for the feed, without repeats.
   const events = Array.isArray(cur.events) ? cur.events.slice() : [], seenE = new Set(events.map(e => e.at + "|" + e.what + "|" + keyOf(e.name)));
   for (const e of Array.isArray(sv.events) ? sv.events : []) {
@@ -945,10 +976,11 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
     for (const [p, v] of Object.entries(profs)) { const list = Array.isArray(v && v.list) ? v.list : []; if (list.length) rec[short(p, 40)] = { at: iso(v.at) || new Date().toISOString(), list: list.map(x => short(x, 80)).slice(0, 800) }; }
     if (Object.keys(rec).length) { await db().doc(`${hit.coll}/${hit.id}`).set({ recipes: rec }, { merge: true }); recipeChars++; }
   }
-  await ref.set({ members, days, hours, raids, events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short((sv.by && listed.filter(n => keyOf(n).startsWith(keyOf(sv.by) + " ")).length === 1 ? listed.find(n => keyOf(n).startsWith(keyOf(sv.by) + " ")) : sv.by), 40), up: new Date().toISOString() });
+  await ref.set({ members, days, hours, raids, runs, kills: kills.slice(-300), loot: loot.slice(-300), events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short((sv.by && listed.filter(n => keyOf(n).startsWith(keyOf(sv.by) + " ")).length === 1 ? listed.find(n => keyOf(n).startsWith(keyOf(sv.by) + " ")) : sv.by), 40), up: new Date().toISOString() });
   await saveStreaks().catch(err => logger.warn("streaks", err.message));
   if (levelled.length) await updateFirsts().catch(err => logger.warn("firsts", err.message));
-  return { matched, unknown: unknown.slice(0, 20), unknownN: unknown.length, raids: Object.keys(sv.raids || {}).length, recipeChars, levelled: levelled.slice(0, 20) };
+  return { matched, unknown: unknown.slice(0, 20), unknownN: unknown.length, raids: Object.keys(sv.raids || {}).length, recipeChars, levelled: levelled.slice(0, 20),
+    runs: Object.keys(sv.runs || {}).length, kills: (Array.isArray(sv.kills) ? sv.kills : Object.values(sv.kills || {})).length };
 });
 async function syncAll() {
   let n = 0, changed = 0; const missing = [];

@@ -2,7 +2,8 @@
 -- While you play, this reads the in-game guild list every five minutes and notes, for each member: their level (and when
 -- it went up), rank,
 -- when they were last online, which days they were on, and the last zone they were seen in. It also notes how many
--- guildies are online each hour, joins and leaves, who was in your raid group inside a raid, and the
+-- guildies are online each hour, joins and leaves, who was in your group inside a dungeon or raid, every boss your
+-- group kills there and the good loot it gets, and the
 -- recipes your own characters know (when you open a profession window).
 --
 -- Everything is kept in BloodAndTearsScribeDB. The game saves it to
@@ -12,11 +13,14 @@
 -- The addon never sends anything anywhere, reads nothing during combat and draws nothing on screen. /scribe shows a summary.
 
 local ADDON = ...
-local VERSION = 3
+local VERSION = 4
 local DAYS_KEPT = 60          -- days of "seen" days kept per member
 local HOURS_KEPT = 42         -- days of hourly online counts kept
 local EVENTS_KEPT = 200       -- joins and leaves
 local RAIDS_KEPT = 60
+local RUNS_KEPT = 120         -- dungeon runs (who was in your group inside a dungeon, per dungeon per day)
+local KILLS_KEPT = 300        -- boss kills in dungeons and raids
+local LOOT_KEPT = 300         -- uncommon-or-better loot your group received inside dungeons and raids
 local PERTH = 8 * 3600        -- the guild's day runs on Perth time
 
 local f = CreateFrame("Frame")
@@ -36,6 +40,9 @@ local function init()
   db.raids = db.raids or {}
   db.hours = db.hours or {}
   db.recipes = db.recipes or {}
+  db.runs = db.runs or {}
+  db.kills = db.kills or {}
+  db.loot = db.loot or {}
 end
 
 local function note(who, what)
@@ -56,6 +63,12 @@ local function prune()
   for k in pairs(db.raids) do keys[#keys + 1] = k end
   table.sort(keys)
   for i = 1, #keys - RAIDS_KEPT do db.raids[keys[i]] = nil end
+  local rk = {}
+  for k in pairs(db.runs) do rk[#rk + 1] = k end
+  table.sort(rk)
+  for i = 1, #rk - RUNS_KEPT do db.runs[rk[i]] = nil end
+  while #db.kills > KILLS_KEPT do table.remove(db.kills, 1) end
+  while #db.loot > LOOT_KEPT do table.remove(db.loot, 1) end
 end
 
 -- The game only lists offline guildies when "Show Offline Members" is ticked in the guild window. Without it the
@@ -141,12 +154,73 @@ local function readRaid()
   db.raids[key] = r
 end
 
--- "X has joined the guild." and friends, using the game's own wording so it works in any language.
+-- Turns the game's own message (in whatever language it's running) into a pattern to read names and items from.
 local function pattern(s)
   if not s then return nil end
-  local p = s:gsub("([%.%(%)%-%+%*%?%[%]%^%$])", "%%%1"):gsub("%%s", "(.+)")
+  local p = s:gsub("([%.%(%)%-%+%*%?%[%]%^%$])", "%%%1"):gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
   return "^" .. p .. "$"
 end
+
+-- Dungeons: who was in your group inside a dungeon (once per dungeon per day), every boss your group kills, and the
+-- uncommon-or-better loot your group gets there. The site turns these into Dungeon Passport stamps for everyone who
+-- was there, a line in the Guild Feed for each kill, and loot lines. Only your own group is visible to the addon.
+local function groupNames()
+  local out, me = {}, UnitName("player")
+  if me then out[short(me)] = true end
+  if IsInRaid and IsInRaid() then
+    for i = 1, (GetNumGroupMembers and GetNumGroupMembers() or 0) do local n = GetRaidRosterInfo(i); if n then out[short(n)] = true end end
+  else
+    for i = 1, 4 do local n = UnitName("party" .. i); if n then out[short(n)] = true end end
+  end
+  return out
+end
+local function inInstance()
+  local name, instanceType = GetInstanceInfo()
+  if instanceType == "party" or instanceType == "raid" then return name, instanceType end
+end
+local function readRun()
+  if not db then return end
+  local zone, kind = inInstance()
+  if kind ~= "party" or not zone then return end
+  local key = dayOf(now()) .. " " .. zone
+  local r = db.runs[key] or { zone = zone, day = dayOf(now()), who = {} }
+  for n in pairs(groupNames()) do r.who[n] = true end
+  db.runs[key] = r
+end
+local function bossKilled(boss, success)
+  if not db or success ~= 1 or not boss then return end
+  local zone = inInstance() or GetRealZoneText()
+  table.insert(db.kills, { t = now(), zone = zone, boss = boss, who = groupNames() })
+  readRun()
+  prune()
+end
+local QCOL = { ["9d9d9d"] = 0, ffffff = 1, ["1eff00"] = 2, ["0070dd"] = 3, a335ee = 4, ff8000 = 5, e6cc80 = 6 }
+local LOOT_OTHER, LOOT_OTHER_N = pattern(LOOT_ITEM), pattern(LOOT_ITEM_MULTIPLE)
+local LOOT_ME, LOOT_ME_N = pattern(LOOT_ITEM_SELF), pattern(LOOT_ITEM_SELF_MULTIPLE)
+local function lootSeen(msg)
+  if not db or not msg then return end
+  local zone = inInstance()
+  if not zone then return end
+  local who, link
+  if LOOT_ME_N then link = msg:match(LOOT_ME_N) end
+  if not link and LOOT_ME then link = msg:match(LOOT_ME) end
+  if link then who = UnitName("player")
+  else
+    if LOOT_OTHER_N then who, link = msg:match(LOOT_OTHER_N) end
+    if not link and LOOT_OTHER then who, link = msg:match(LOOT_OTHER) end
+  end
+  if not who or not link then return end
+  local id = tonumber(link:match("item:(%d+)"))
+  local name = link:match("%[(.-)%]")
+  local col = link:match("|c%x%x(%x%x%x%x%x%x)")
+  local q = col and QCOL[col:lower()]
+  if not q and GetItemInfo then q = select(3, GetItemInfo(link)) end
+  if not id or not name or not q or q < 2 then return end
+  table.insert(db.loot, { t = now(), who = short(who), id = id, q = q, name = name, zone = zone })
+  prune()
+end
+
+-- "X has joined the guild." and friends, using the game's own wording so it works in any language.
 local JOIN, LEAVE, REMOVED = pattern(ERR_GUILD_JOIN_S), pattern(ERR_GUILD_LEAVE_S), pattern(ERR_GUILD_REMOVE_SS)
 local function system(msg)
   if not db or not msg then return end
@@ -206,7 +280,7 @@ local function readRecipes()
   db.recipes[me][prof] = { at = now(), list = names }
 end
 
-f:SetScript("OnEvent", function(_, event, a1)
+f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4, a5)
   if event == "ADDON_LOADED" and a1 == ADDON then
     init()
   elseif event == "PLAYER_LOGIN" then
@@ -215,8 +289,13 @@ f:SetScript("OnEvent", function(_, event, a1)
     C_Timer.NewTicker(300, askRoster)
   elseif event == "GUILD_ROSTER_UPDATE" then
     readRoster()
-  elseif event == "GROUP_ROSTER_UPDATE" or event == "ZONE_CHANGED_NEW_AREA" then
+  elseif event == "GROUP_ROSTER_UPDATE" or event == "ZONE_CHANGED_NEW_AREA" or event == "PLAYER_ENTERING_WORLD" then
     readRaid()
+    pcall(readRun)
+  elseif event == "ENCOUNTER_END" then
+    pcall(bossKilled, a2, a5)
+  elseif event == "CHAT_MSG_LOOT" then
+    pcall(lootSeen, a1)
   elseif event == "CHAT_MSG_SYSTEM" then
     system(a1)
   elseif event == "TRADE_SKILL_SHOW" or event == "TRADE_SKILL_LIST_UPDATE" or event == "TRADE_SKILL_UPDATE" then
@@ -228,7 +307,7 @@ f:SetScript("OnEvent", function(_, event, a1)
   end
 end)
 for _, e in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "GUILD_ROSTER_UPDATE", "GROUP_ROSTER_UPDATE", "ZONE_CHANGED_NEW_AREA",
-  "CHAT_MSG_SYSTEM", "TRADE_SKILL_SHOW", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_UPDATE", "PLAYER_REGEN_ENABLED", "PLAYER_LEVEL_UP" }) do
+  "CHAT_MSG_SYSTEM", "TRADE_SKILL_SHOW", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_UPDATE", "PLAYER_REGEN_ENABLED", "PLAYER_LEVEL_UP", "PLAYER_ENTERING_WORLD", "ENCOUNTER_END", "CHAT_MSG_LOOT" }) do
   pcall(f.RegisterEvent, f, e)
 end
 
