@@ -985,7 +985,10 @@ a.r-name:hover{color:var(--accent-text)}
 .zm-nm{display:flex;align-items:center;gap:.5rem;min-width:0;flex-wrap:wrap}
 .zm-detail{margin:0;border-left:2px solid var(--accent-text);padding:.125rem 0 .125rem .75rem;display:flex;flex-direction:column;gap:.375rem}
 .zm-dg path{cursor:pointer;fill:var(--zm-city);stroke:var(--zm-halo);stroke-width:1.6;stroke-linejoin:round}
+.zm-dg.badge.off path{fill:var(--zm-halo);opacity:.9}
+.zm-dg.off path{fill:var(--zm-land);stroke:var(--zm-city);stroke-width:1.2;opacity:.6}.zm-dg.off:hover path{opacity:1}
 .zm-dg:hover path{fill:var(--gold-hi)}.zm-dg.sel path{stroke:var(--gold-hi);stroke-width:2.6}
+.zm-dgi.off{background:transparent;border-color:var(--zm-city);opacity:.7}
 .zm-dgi{display:inline-block;width:.625rem;height:.625rem;transform:rotate(45deg);background:var(--zm-city);border:1px solid var(--zm-halo);flex:none}
 .zm-sea-t{font:italic 600 11px Figtree,system-ui,sans-serif;letter-spacing:.3em;text-anchor:middle;fill:var(--zm-shore);opacity:.45;pointer-events:none}
 .zm-sea-t.big{font-size:13px;letter-spacing:.25em}
@@ -1336,7 +1339,8 @@ function header(page){
     )))}
 
 /* ---------- One search for the whole site ---------- */
-// The Search button in the header (or "/" anywhere) finds characters, recipes, dungeon drops, dungeons and pages, and goes
+// The Search button in the header (or "/" anywhere) finds characters, zones and capitals, dungeons and raids, recipes,
+// dungeon drops and pages, and goes
 // straight there. Recipes are loaded the first time it opens.
 const srchIcon=()=>{const x=h("span",{class:"srch-ic","aria-hidden":"true"});x.innerHTML='<svg viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m13 13 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';return x};
 const SRCH_PAGES=[["Roster","#roster"],["Dungeons","#lfg"],["Raids","#raids"],["Cards","#cards"],["Professions","#professions"],["Records","#records"],["Activity","#activity"],["Guild History","#history"]];
@@ -1345,18 +1349,25 @@ function searchIndex(){
   for(const m of [...S.members,...S.alts])if(isMine(m)||memberState(m)!=="former")
     out.push({t:"Character",l:nameOf(m),sub:"Level "+(m.level||1)+" · "+([m.race,m.cls].filter(Boolean).join(" ")||"Unknown class"),cc:CLASSES[m.cls],go:go(`#char/${m.isAlt?"alts":"members"}/${m.id}`)});
   for(const[n,r]of DUNGEONS)out.push({t:"Dungeon",l:n,sub:"Levels "+r,go:go("#lfg",{rangeD:n,dgGroup:"All"})});
+  for(const[n,size]of RAIDS)out.push({t:"Raid",l:n,sub:size+"-player raid",go:go("#raids")});
+  // Zones and capitals from the Activity map (loaded the first time search opens): each opens the map with it picked.
+  if(ZMAPS){const wk=S.scribe?zoneTotals("week"):new Map(),CN={kalimdor:"Kalimdor",ek:"Eastern Kingdoms",zephras:"Between the continents"};
+    const view=c=>S.ui.zmCont==="world"||(!S.ui.zmCont&&window.innerWidth>=700)||c==="zephras"?"world":c;
+    for(const c of["kalimdor","ek","zephras"]){const C=ZMAPS[c];if(!C)continue;
+      for(const[n,z]of[...Object.entries(C.zones),...Object.entries(C.cities).map(([n])=>[n,{city:1}])]){const hit=wk.get(zKey(n));
+        out.push({t:z.city?"City":"Zone",l:n,sub:CN[c]+(z.closed?" · closed":hit?" · "+zHours(hit.min)+" this week":""),go:go("#activity",{zmSel:n,zmCont:view(c),zmRange:"week"})})}}}
   for(const v of Object.values(DUNGEON_LOOT))out.push({t:"Drop",l:v[2],sub:v[0]+" · "+v[1],q:v[5],go:go("#lfg",{rangeD:v[0],dgGroup:"All",dgLoot:{...(S.ui.dgLoot||{}),[v[0]]:true}})});
   for(const[p,rows]of Object.entries(S.recipes||{}))for(const x of rows)out.push({t:"Recipe",l:x[0],sub:p+" · "+(x[3]?"about ":"")+x[1],q:x[5],go:go("#professions",{pq:x[0]})});
   for(const[l,hash]of SRCH_PAGES)out.push({t:"Page",l,sub:"Go to "+l,go:go(hash)});
   return out}
 function searchFind(idx,q){const w=q.toLowerCase().split(/\s+/).filter(Boolean);if(!w.length)return[];
-  const order={Character:0,Page:1,Dungeon:2,Recipe:3,Drop:4},seen=new Set();
+  const order={Character:0,Page:1,City:2,Zone:2,Dungeon:3,Raid:3,Recipe:4,Drop:5},seen=new Set();
   return idx.filter(x=>{const l=x.l.toLowerCase();return w.every(y=>l.includes(y))}).map(x=>{const l=x.l.toLowerCase();return[x,(l===w.join(" ")?0:l.startsWith(w[0])?1:2)*10+order[x.t]]})
     .sort((a,b)=>a[1]-b[1]||a[0].l.localeCompare(b[0].l)).map(x=>x[0]).filter(x=>{const k=x.t+"|"+x.l;if(seen.has(k))return false;seen.add(k);return true}).slice(0,12)}
 function openSearch(){
-  const dlg=$("#dlg"),f=$("#dlgForm");if(dlg.open)return;loadRecipes();
+  const dlg=$("#dlg"),f=$("#dlgForm");if(dlg.open)return;loadRecipes();loadZoneMaps();
   let idx=searchIndex(),hits=[],cur=0;
-  const inp=h("input",{type:"search",id:"srch-in",class:"srch-in",placeholder:"Characters, recipes, drops, dungeons…",autocomplete:"off",spellcheck:"false",
+  const inp=h("input",{type:"search",id:"srch-in",class:"srch-in",placeholder:"Characters, zones, dungeons, recipes, drops…",autocomplete:"off",spellcheck:"false",
     role:"combobox","aria-expanded":"false","aria-controls":"srch-list","aria-autocomplete":"list","aria-label":"Search the site"});
   const list=h("ul",{id:"srch-list",class:"srch-list",role:"listbox","aria-label":"Results"}),hint=h("p",{class:"small ter srch-hint"},"Type a name. Arrow keys to move, Enter to go.");
   const pick=x=>{dlg.close();x.go()};
@@ -1369,7 +1380,7 @@ function openSearch(){
   inp.addEventListener("keydown",e=>{if(e.key==="ArrowDown"){e.preventDefault();cur=Math.min(hits.length-1,cur+1);draw();document.getElementById("srch-o"+cur)?.scrollIntoView({block:"nearest"})}
     else if(e.key==="ArrowUp"){e.preventDefault();cur=Math.max(0,cur-1);draw();document.getElementById("srch-o"+cur)?.scrollIntoView({block:"nearest"})}
     else if(e.key==="Enter"){e.preventDefault();if(hits[cur])pick(hits[cur])}});
-  const wait=setInterval(()=>{if(!dlg.open){clearInterval(wait);return}if(recipesState==="ok"&&!idx.some(x=>x.t==="Recipe")){idx=searchIndex();draw()}},300);
+  const wait=setInterval(()=>{if(!dlg.open){clearInterval(wait);return}if((recipesState==="ok"&&!idx.some(x=>x.t==="Recipe"))||(ZMAPS&&!idx.some(x=>x.t==="Zone"))){idx=searchIndex();draw()}},300);
   f.replaceChildren(h("div",{class:"srch"},h("label",{class:"srch-box"},srchIcon(),inp),hint,list));
   f.onsubmit=e=>e.preventDefault();dlg.classList.add("srch-dlg");dlg.addEventListener("close",()=>dlg.classList.remove("srch-dlg"),{once:true});
   dlg.showModal();inp.focus();draw()}
@@ -2891,9 +2902,10 @@ function zoneMapSvg(view,tot,sel){const W=ZMAPS.world||{w:860,h:660,ek:[470,10]}
     let cities="";for(const[n,[x,y,side]]of Object.entries(C.cities)){const v=hrs.get(n)||0,e=xmlEsc(n);
       const tx=side==="r"?`x="${x+8}" y="${y+3}" style="text-anchor:start"`:`x="${x}" y="${y-8}"`;
       cities+=`<g data-z="${e}"><circle cx="${x}" cy="${y}" r="5" class="zm-c${n===sel?" sel":""}"><title>${e}${v?": "+zHours(v):""}</title></circle><text ${tx} class="zm-t c">${e}${v?" · "+zHours(v):""}</text></g>`}
-    // Entrance pins for the dungeons and raids guildies were in (only the visited ones, so the map stays clean).
-    let pins="";for(const[n,[x,y]]of Object.entries(C.dg||{})){const v=dgHrs.get(zKey(n))||0;if(!v)continue;const e=xmlEsc(n);
-      pins+=`<g data-z="${e}" class="zm-dg${n===sel?" sel":""}"><path d="M${x} ${y-6}L${x+6} ${y}L${x} ${y+6}L${x-6} ${y}Z"><title>${e}: ${zHours(v)}</title></path></g>`}
+    // Every dungeon and raid entrance as a faint diamond, filled gold where guildies were in this span.
+    // An entrance inside a capital (Ragefire Chasm in Orgrimmar) is a small badge on the city's dot.
+    let pins="";for(const[n,[x,y,inCity]]of Object.entries(C.dg||{})){const v=dgHrs.get(zKey(n))||0,e=xmlEsc(n),d=dgOf(n),lv=d?dgLevels(d):"",r=inCity?4:6;
+      pins+=`<g data-z="${e}" class="zm-dg${v?"":" off"}${inCity?" badge":""}${n===sel?" sel":""}"><path d="M${x} ${y-r}L${x+r} ${y}L${x} ${y+r}L${x-r} ${y}Z"><title>${e}${lv?" ("+lv+")":""}${v?": "+zHours(v):""}</title></path></g>`}
     cities+=pins;
     defs+=`<clipPath id="${id}-l"><path d="${C.land}"/></clipPath>`;
     body+=`<g${tf}><path d="${C.land}" fill="none" stroke="var(--zm-glow)" stroke-width="16" stroke-linejoin="round" opacity=".35" filter="url(#${u}-b)"/>
@@ -2954,7 +2966,7 @@ function wherePlays(){const sc=S.scribe;if(!sc)return null;
   const detail=selRow?h("div",{class:"zm-detail"},
       h("div",{class:"spread"},h("b",{},nameOf2(selRow)),h("span",{class:"small ter"},zHours(selRow.min)+(selRow.dg?" · "+dgLevels(selRow.dg):""))),whoLine(selRow,12)):
     sel?h("p",{class:"small ter zm-detail"},sel+": nobody noted there "+(range==="week"?"this week":range==="month"?"in the last 4 weeks":"yet")+"."):null;
-  const key=h("div",{class:"zm-key"},"Less",[1,2,3,4,5].map(i=>h("i",{style:`background:var(--zm-${i})`})),"More",h("span",{class:"zm-dgi","aria-hidden":"true",style:"margin-left:.75rem"}),"Dungeon or raid entrance");
+  const key=h("div",{class:"zm-key"},"Less",[1,2,3,4,5].map(i=>h("i",{style:`background:var(--zm-${i})`})),"More",h("span",{class:"zm-dgi","aria-hidden":"true",style:"margin-left:.75rem"}),"Dungeon or raid guildies were in",h("span",{class:"zm-dgi off","aria-hidden":"true",style:"margin-left:.5rem"}),"Not visited");
   return h("section",{class:"card","aria-labelledby":"zm-h",style:"gap:.75rem"},head,
     h("div",{class:"zm"+(cont==="world"?" world":"")},h("div",{style:"display:flex;flex-direction:column;gap:.5rem;min-width:0"},
         seg("Map",[["world","World"],["kalimdor","Kalimdor"],["ek","Eastern Kingdoms"]],cont,k=>setUi({zmCont:k},true)),map,

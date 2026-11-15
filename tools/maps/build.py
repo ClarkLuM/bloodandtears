@@ -36,7 +36,7 @@ def cont(c):
         if o.get("lines"):zones[k]["l"]=o["lines"]
         if o.get("fs"):zones[k]["f"]=o["fs"]
         if k in c["closed"]:zones[k]["closed"]=1
-    return {"land":land,"lakes":lakes,"zones":zones,"dg":{k:T(c,v) for k,v in c.get("dg",{}).items()},"cities":{k:list(T(c,v[:2]))+([v[2]] if len(v)>2 else []) for k,v in c["cities"].items()}}
+    return {"land":land,"lakes":lakes,"zones":zones,"dg":{k:(list(T(c,v)) if not isinstance(v,str) else [round(T(c,c["cities"][v][:2])[0]+4.5,1),round(T(c,c["cities"][v][:2])[1]+4.5,1),"in"]) for k,v in c.get("dg",{}).items()},"cities":{k:list(T(c,v[:2]))+([v[2]] if len(v)>2 else []) for k,v in c["cities"].items()}}
 out={"w":400,"h":650,"kalimdor":cont(KAL),"ek":cont(EK),"zephras":cont(ZEP),"world":WORLD}
 import os
 json.dump(out,open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","..","public","azeroth.json"),"w"),separators=(",",":"))

@@ -39,10 +39,12 @@ KAL=dict(
   "Desolace":(62,462),"Shen'dralas":(109,512,{"lines":["Shen'","dralas"],"fs":7}),"Dustwallow Marsh":(278,598),"Feralas":(82,598),"Thousand Needles":(236,634),"Un'Goro Crater":(190,708),
   "Silithus":(88,742),"Tanaris":(268,748)},
  cities={"Orgrimmar":(300,354,"r"),"Thunder Bluff":(156,478)},
- # Dungeon and raid entrances, roughly where they are in game (one pin per entrance).
- dg={"Ragefire Chasm":(290,372),"Wailing Caverns":(206,446),"Razorfen Kraul":(200,592),"Razorfen Downs":(232,606),"Blackfathom Deeps":(112,284),
-  "Maraudon":(58,498),"Zul'Farrak":(252,694),"Dire Maul":(98,586),"Onyxia's Lair":(270,606),"Ahn'Qiraj":(82,800),"Hyjal Summit":(244,226),
-  "Alcaz Island Prison":(318,532),"Shaper's Terrace":(182,742)},
+ # Dungeon and raid entrances, roughly where they are in game (one pin per entrance). A city name instead of a
+ # point means the entrance is inside that capital: it's drawn as a small badge on the city's dot.
+ dg={"Ragefire Chasm":"Orgrimmar","Wailing Caverns":(206,446),"Razorfen Kraul":(200,592),"Razorfen Downs":(232,606),"Blackfathom Deeps":(112,284),
+  "Maraudon":(58,498),"Zul'Farrak":(252,694),"Dire Maul":(122,580),"Onyxia's Lair":(286,613),"Ahn'Qiraj":(82,800),"Hyjal Summit":(244,226),
+  "Alcaz Island Prison":(318,532),"Shaper's Terrace":(182,742),
+  "Blackmaw Hold":(312,244),"Barrow Deeps":(276,218)},
  closed=[])
 EK=dict(
  scale=.74,ox=40,oy=10,
@@ -79,14 +81,14 @@ EK=dict(
  },
  lab={"Quel'Thalas":(362,58),"Tirisfal Glades":(70,170),"Western Plaguelands":(196,84),"Eastern Plaguelands":(300,160),"Silverpine Forest":(74,252,{"fs":7.5}),
   "Gilneas":(55,318),"Alterac Mountains":(168,232),"Hillsbrad Foothills":(148,283),"The Hinterlands":(268,238),"Arathi Highlands":(246,316),
-  "Wetlands":(250,392),"Dun Morogh":(128,472),"Loch Modan":(300,496),"Badlands":(281,527),"Riverglades":(398,566),"Searing Gorge":(204,557),
-  "Burning Steppes":(212,586),"Elwynn Forest":(150,620),"Westfall":(72,675),"Redridge Mountains":(250,622),"Duskwood":(148,675),"Deadwind Pass":(206,690,{"fs":7}),
-  "Swamp of Sorrows":(268,660,{"lines":["Swamp of","Sorrows"]}),"Blasted Lands":(252,730),"Stranglethorn Vale":(168,760)},
+  "Wetlands":(250,392),"Dun Morogh":(128,472),"Loch Modan":(300,496),"Badlands":(281,527),"Riverglades":(398,566),"Searing Gorge":(204,552),
+  "Burning Steppes":(222,589),"Elwynn Forest":(150,620),"Westfall":(72,675),"Redridge Mountains":(250,622),"Duskwood":(148,675),"Deadwind Pass":(206,690,{"fs":7}),
+  "Swamp of Sorrows":(252,660,{"lines":["Swamp of","Sorrows"]}),"Blasted Lands":(252,730),"Stranglethorn Vale":(168,760)},
  cities={"Undercity":(146,182)},
- dg={"Shadowfang Keep":(84,262),"Scarlet Monastery":(166,146),"Ruins of Lordaeron":(122,180),"City of Dalaran":(142,240),"Scholomance":(212,196),
-  "Stratholme":(292,132),"Naxxramas":(338,170),"Gnomeregan":(92,468),"The Deadmines":(62,700),"The Stockade":(88,600),"Excavation Site: Wetlands":(232,384),
-  "Uldaman":(268,506),"Blackrock Mountain":(204,568),"Sunken Temple":(292,676),"Zul'Gurub":(206,728),
-  "The Drowned City":(84,744),"Krol'Dok Stronghold":(324,516)},
+ dg={"Shadowfang Keep":(84,262),"Scarlet Monastery":(166,146),"Ruins of Lordaeron":"Undercity","City of Dalaran":(132,247),"Scholomance":(212,196),
+  "Stratholme":(292,132),"Naxxramas":(338,170),"Gnomeregan":(84,474),"The Deadmines":(62,700),"The Stockade":(88,600),"Excavation Site: Wetlands":(200,380),
+  "Uldaman":(268,506),"Blackrock Mountain":(204,568),"Sunken Temple":(296,679),"Zul'Gurub":(196,726),
+  "The Drowned City":(84,744),"Krol'Dok Stronghold":(324,516),"Hall of Thanes":(176,468)},
  closed=["Quel'Thalas","Gilneas"])
 SHORT={"Stonetalon Mountains":"Stonetalon","Dustwallow Marsh":"Dustwallow","Un'Goro Crater":"Un'Goro","Western Plaguelands":"W. Plaguelands","Eastern Plaguelands":"E. Plaguelands",
  "Silverpine Forest":"Silverpine","Alterac Mountains":"Alterac","Hillsbrad Foothills":"Hillsbrad","The Hinterlands":"Hinterlands","Arathi Highlands":"Arathi","Elwynn Forest":"Elwynn",
