@@ -10,10 +10,11 @@
 --   World of Warcraft\_forever_\WTF\Account\<ACCOUNT>\SavedVariables\BloodAndTearsScribe.lua
 -- when you log out or type /reload. Upload THAT file on the site (Roster > Details > Upload the scribe file),
 -- not this one: this is the addon itself. The notes file starts with "BloodAndTearsScribeDB = {".
--- The addon never sends anything anywhere, reads nothing during combat and draws nothing on screen. /scribe shows a summary.
+-- The addon never sends anything anywhere and draws nothing on screen; it puts a short line in your chat when it notes a
+-- boss kill or a rare-or-better drop (/scribe quiet turns those off). /scribe shows a summary.
 
 local ADDON = ...
-local VERSION = 4
+local VERSION = 5
 local DAYS_KEPT = 60          -- days of "seen" days kept per member
 local HOURS_KEPT = 42         -- days of hourly online counts kept
 local EVENTS_KEPT = 200       -- joins and leaves
@@ -187,12 +188,29 @@ local function readRun()
   for n in pairs(groupNames()) do r.who[n] = true end
   db.runs[key] = r
 end
+-- A line in your chat when the scribe notes something, so you know it's working. "/scribe quiet" turns them off.
+local TAG = "|cffe0a862Blood and Tears Scribe|r: "
+local function say(msg) if db and not db.quiet then print(TAG .. msg) end end
+local function guildiesIn(who)
+  local n = 0
+  for name in pairs(who) do
+    if db.members[name] then n = n + 1
+    else for full in pairs(db.members) do if full:sub(1, #name + 1) == name .. " " then n = n + 1; break end end end
+  end
+  return n
+end
 local function bossKilled(boss, success)
   if not db or success ~= 1 or not boss then return end
   local zone = inInstance() or GetRealZoneText()
-  table.insert(db.kills, { t = now(), zone = zone, boss = boss, who = groupNames() })
+  local who = groupNames()
+  table.insert(db.kills, { t = now(), zone = zone, boss = boss, who = who })
   readRun()
   prune()
+  local today, n = dayOf(now()), 0
+  for _, k in ipairs(db.kills) do if dayOf(k.t) == today and k.zone == zone then n = n + 1 end end
+  local g = guildiesIn(who)
+  say(("noted %s in %s (%d %s today), with %d %s in the group."):format(boss, zone or "?", n, n == 1 and "boss" or "bosses",
+    g, g == 1 and "guildie" or "guildies"))
 end
 local QCOL = { ["9d9d9d"] = 0, ffffff = 1, ["1eff00"] = 2, ["0070dd"] = 3, a335ee = 4, ff8000 = 5, e6cc80 = 6 }
 local LOOT_OTHER, LOOT_OTHER_N = pattern(LOOT_ITEM), pattern(LOOT_ITEM_MULTIPLE)
@@ -218,6 +236,7 @@ local function lootSeen(msg)
   if not id or not name or not q or q < 2 then return end
   table.insert(db.loot, { t = now(), who = short(who), id = id, q = q, name = name, zone = zone })
   prune()
+  if q >= 3 then say(("noted %s for %s."):format(link, short(who))) end
 end
 
 -- "X has joined the guild." and friends, using the game's own wording so it works in any language.
@@ -312,13 +331,31 @@ for _, e in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "GUILD_ROSTER_UPDATE", "GRO
 end
 
 SLASH_BTSCRIBE1 = "/scribe"
-SlashCmdList.BTSCRIBE = function()
+SlashCmdList.BTSCRIBE = function(arg)
   if not db then return end
+  arg = (arg or ""):lower():gsub("^%s+", ""):gsub("%s+$", "")
+  if arg == "quiet" or arg == "loud" then
+    db.quiet = arg == "quiet"
+    print(TAG .. (db.quiet and "won't mention what it notes. /scribe loud to turn the messages back on." or "will mention boss kills and good loot as it notes them."))
+    return
+  end
   local n, seen, today, profs = 0, 0, dayOf(now()), 0
   for _, m in pairs(db.members) do
     if not m.gone then n = n + 1 end
     if m.days and m.days[today] then seen = seen + 1 end
   end
   for _, p in pairs(db.recipes[UnitName("player")] or {}) do profs = profs + 1 end
-  print(("|cffe0a862Blood and Tears Scribe|r: %d guildies on the list, %d seen today, %d of your professions noted. /reload or log out, then upload the file on the site."):format(n, seen, profs))
+  local kills, runs, loot, recent = 0, 0, 0, {}
+  for _, k in ipairs(db.kills) do if dayOf(k.t) == today then kills = kills + 1; recent[#recent + 1] = k.boss end end
+  for k in pairs(db.runs) do if k:sub(1, 10) == today then runs = runs + 1 end end
+  for _, l in ipairs(db.loot) do if dayOf(l.t) == today then loot = loot + 1 end end
+  print((TAG .. "%d guildies on the list, %d seen today, %d of your professions noted."):format(n, seen, profs))
+  print(("  Today: %d %s, %d %s, %d good %s."):format(runs, runs == 1 and "dungeon" or "dungeons", kills, kills == 1 and "boss" or "bosses", loot, loot == 1 and "drop" or "drops"))
+  if #recent > 0 then
+    local last = {}
+    for i = math.max(1, #recent - 4), #recent do last[#last + 1] = recent[i] end
+    print("  Latest bosses: " .. table.concat(last, ", ") .. ".")
+  end
+  print(("  %d %s and %d %s waiting in the file. /reload or log out, then upload it on the site. %s"):format(#db.kills, #db.kills == 1 and "boss" or "bosses",
+    #db.loot, #db.loot == 1 and "drop" or "drops", db.quiet and "(/scribe loud for kill messages)" or "(/scribe quiet to hush the kill messages)"))
 end

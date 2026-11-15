@@ -121,7 +121,7 @@ These aren't in the code:
 - who was in the raid group inside a raid
 - the recipes the uploader's own characters know (read when a profession window is opened)
 
-It sends nothing anywhere, reads nothing in combat and draws nothing on screen. `/scribe` in game shows a summary.
+It sends nothing anywhere and draws nothing on screen. From version 0.5.0 it puts a short line in your chat when it notes a boss kill ("noted Baron Silverlaine in Shadowfang Keep (2 bosses today), with 4 guildies in the group.") or a rare-or-better drop; `/scribe quiet` turns those off and `/scribe loud` back on. `/scribe` shows a summary: guildies on the list, today's dungeons, bosses and good drops, the latest bosses, and how many are waiting in the file to upload.
 
 Version 0.2.0 (15 Nov 2026) reads offline guildies too. The game's guild list only includes them when "Show Offline Members" is ticked, so the scribe ticks it while it reads and puts the setting back straight after; a list read without them no longer marks the offline guildies as gone. Version 0.3.0 also notes when each guildie's level goes up (to within its five-minute read while the uploader is online; your own characters exactly, when you ding). On upload, any character the scribe has at a higher level than the site gets "Reached level N" added to their history, timed from when the scribe saw it (or the upload, if it has no time), and the Hall of Firsts is worked out again straight away. The armory only ever raises a level, so it doesn't log the same ding twice when it catches up.
 
