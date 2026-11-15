@@ -1,7 +1,7 @@
 # Builds public/azeroth.json from geo.py: python tools/maps/build.py
 import json,math,hashlib,sys,os
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
-from geo import KAL,EK,SHORT
+from geo import KAL,EK,ZEP,WORLD,SHORT
 def rnd(*k):return int.from_bytes(hashlib.md5(repr(k).encode()).digest()[:4],"big")/2**32-.5
 def frac(p,q,amp,depth,key):
     if depth==0:return []
@@ -12,7 +12,7 @@ def frac(p,q,amp,depth,key):
 def edge(p,q,amp,depth):
     a,b=(p,q) if p<q else (q,p)
     pts=frac(a,b,amp,depth,(a,b));return pts if (a,b)==(p,q) else pts[::-1]
-SEA=lambda p:p[0]<=4 or p[0]>=410 or p[1]<=8 or p[1]>=660 or p in SEAPTS
+SEA=lambda p:p in SEAPTS
 SEAPTS=set()
 def ring(L,amp,depth):
     L=[tuple(p) for p in L];out=[]
@@ -34,7 +34,7 @@ def cont(c):
         zones[k]={"d":ring(tr(L),.2,3),"x":x,"y":y,"r":lab[2] if len(lab)>2 else 0,"s":SHORT.get(k,k)}
         if k in c["closed"]:zones[k]["closed"]=1
     return {"land":land,"lakes":lakes,"zones":zones,"cities":{k:T(c,v) for k,v in c["cities"].items()}}
-out={"w":400,"h":650,"kalimdor":cont(KAL),"ek":cont(EK)}
+out={"w":400,"h":650,"kalimdor":cont(KAL),"ek":cont(EK),"zephras":cont(ZEP),"world":WORLD}
 import os
 json.dump(out,open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","..","public","azeroth.json"),"w"),separators=(",",":"))
 print(len(json.dumps(out,separators=(",",":"))))

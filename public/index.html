@@ -585,14 +585,18 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .spoon-tag{white-space:nowrap}
 .rec-more{align-self:flex-start;margin:.25rem 0 0 -.75rem}
 .rec-top{display:grid;grid-template-columns:minmax(0,27rem) minmax(0,1fr);gap:.75rem;align-items:start}
-@media (max-width:960px){.rec-top{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:960px){.rec-top,.rec-a{grid-template-columns:minmax(0,1fr)}}
 .lb{gap:.625rem}.lb .seg{width:100%}.lb .seg button{flex:1}.lb-title{margin:0;padding:.4375rem .625rem;background:var(--sunken);border:1px solid var(--sep);border-radius:8px;color:var(--sec)}
 .lb-title b{color:var(--accent-text)}
 .rec-link{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.25rem 1rem;text-decoration:none;color:inherit}
 .rec-link:hover{border-color:var(--b-def)}.rec-link-go{color:var(--accent-text);font-size:.875rem}
-.hot-tiles{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
-@media (max-width:1100px) and (min-width:961px){.hot-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:600px){.hot-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.hot-tiles{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem}
+@media (max-width:1100px){.hot-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.hot-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Records: This Week beside the leaderboards, the Hall of Titles full width, the two links side by side */
+.rec-a{grid-template-columns:minmax(0,1fr) minmax(0,27rem);align-items:stretch}
+.rec-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+@media (max-width:760px){.rec-links{grid-template-columns:minmax(0,1fr)}}
 .hot-tile{background:var(--sunken);border:1px solid var(--sep);border-radius:9px;min-width:0}
 .hot-tile.open{grid-column:1/-1;border-color:var(--accent-b)}.hot-tile.me{border-color:color-mix(in srgb,var(--accent) 55%,var(--sep))}
 .hot-btn{display:flex;align-items:center;gap:.5625rem;width:100%;padding:.5rem .5625rem;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer;border-radius:9px;min-height:2.75rem}
@@ -972,7 +976,13 @@ a.r-name:hover{color:var(--accent-text)}
 .zm-who{display:flex;flex-wrap:wrap;gap:.375rem .75rem}
 .zm-key{display:flex;align-items:center;gap:.25rem;font-size:.75rem;color:var(--ter)}
 .zm-key i{width:1.25rem;height:.625rem;border-radius:2px;display:inline-block;border:1px solid var(--sep)}
-@media (max-width:900px){.zm{grid-template-columns:minmax(0,1fr)}.zm-map{max-width:30rem;margin:0 auto;width:100%}}
+@media (max-width:900px){.zm{grid-template-columns:minmax(0,1fr)}.zm:not(.world) .zm-map{max-width:30rem;margin:0 auto;width:100%}}
+.zm.world{grid-template-columns:minmax(0,1fr)}
+.zm.world .zm-side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
+.zm.world .zm-side>*{grid-column:2}.zm.world .zm-side>.card{grid-column:1;grid-row:1/span 4}
+@media (max-width:760px){.zm.world .zm-side{display:flex}}
+.zm-sea-t{font:italic 600 11px Figtree,system-ui,sans-serif;letter-spacing:.3em;text-anchor:middle;fill:var(--zm-shore);opacity:.45;pointer-events:none}
+.zm-sea-t.big{font-size:13px;letter-spacing:.25em}
 /* Guild scribe: when the guild plays, raid nights, recipes known */
 .wwp{display:grid;grid-template-columns:2.25rem repeat(24,minmax(0,1fr));gap:2px;align-items:center}
 .wwp-h{font-size:.625rem;line-height:.875rem;color:var(--ter);white-space:nowrap;overflow:visible}
@@ -2764,7 +2774,7 @@ function recBoards(){
 // Hall of Titles: a grid of frame tiles, one per title. Tap one for how it's won, its frame, the reign and who's next.
 // Professions and classes show only the held titles until "Show every title".
 function hallOfTitles(){
-  const l=titleList(),all=S.ui.hotAll,groups=["Guild","Professions","Classes"],cur=S.ui.hotOpen;
+  const l=titleList(),groups=["Guild","Professions","Classes"],cur=S.ui.hotOpen;
   const first=m=>String(nameOf(m)).split(" ")[0];
   const tile=x=>{const fr=frameFor(x.k),rg=x.holder?reignOf(x.k,x.holder[0].id):null,open=cur===x.k;
     const sw=fr?h("span",{class:"hot-fr",style:`background:linear-gradient(135deg,${fr.f[0]},${fr.f[1]} 35%,${fr.f[2]} 55%,${fr.f[3]})`,"aria-hidden":"true"}):h("span",{class:"hot-fr none","aria-hidden":"true"});
@@ -2779,12 +2789,10 @@ function hallOfTitles(){
       h("button",{type:"button",class:"hot-btn","aria-expanded":String(open),onclick:()=>{if(!open)openAnim("t:"+x.k);setUi({hotOpen:open?null:x.k})}},sw,
         h("span",{class:"hot-txt"},h("b",{},x.t),h("span",{},short))),more)};
   const lists=groups.map(g=>[g,l.filter(x=>x.group===g)]).filter(x=>x[1].length);
-  const held=l.filter(x=>x.holder).length,hidden=l.filter(x=>x.group!=="Guild"&&!x.holder).length;
+  const held=l.filter(x=>x.holder).length;
   return h("section",{class:"card hot","aria-labelledby":"hot-h"},
     h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"hot-h"},"Hall of Titles"),h("span",{class:"small ter"},held+" of "+l.length+" held")),
-    lists.map(([g,xs])=>{const shown=all||g==="Guild"?xs:xs.filter(x=>x.holder);
-      return shown.length?h("div",{class:"hot-g"},h("h3",{class:"pf-kind"},g),h("ul",{class:"hot-tiles"},shown.map(tile))):null}),
-    hidden||all?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(!!all),onclick:()=>setUi({hotAll:!all},true)},all?"Show held titles only":"Show every title"):null)}
+    lists.map(([g,xs])=>h("div",{class:"hot-g"},h("h3",{class:"pf-kind"},g),h("ul",{class:"hot-tiles"},xs.map(tile)))))}
 // Activity: when and where the guild plays, from the guild scribe (the in-game addon an officer uploads).
 function viewActivity(){
   const any=S.scribe&&(Object.keys(S.scribe.hours||{}).length||Object.keys(S.scribe.zones||{}).length||Object.keys(S.scribe.zonesOld||{}).length);
@@ -2794,10 +2802,10 @@ function viewActivity(){
     any?null:h("section",{class:"card",style:"gap:.5rem"},h("h2",{},"Nothing noted yet"),h("p",{class:"small ter",style:"margin:0"},"This page fills in from the guild scribe, an in-game addon an officer runs. Once its notes are uploaded, the busiest hours and a map of the zones show here."))]}
 function viewRecords(){
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs."))),
-    raceCard(),
-    h("div",{class:"rec-top"},recBoards(),hallOfTitles()),
-    S.scribe?h("a",{class:"card rec-link",href:"#activity"},h("span",{},h("b",{},"When and where the guild plays"),h("span",{class:"small ter"}," · the busiest hours and a map of the zones")),h("span",{class:"rec-link-go"},"On the Activity page →")):null,
-    h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →")),
+    h("div",{class:"rec-top rec-a"},raceCard(),recBoards()),
+    hallOfTitles(),
+    h("div",{class:"rec-links"},S.scribe?h("a",{class:"card rec-link",href:"#activity"},h("span",{},h("b",{},"When and where the guild plays"),h("span",{class:"small ter"}," · the busiest hours and a map of the zones")),h("span",{class:"rec-link-go"},"On the Activity page →")):null,
+    h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →"))),
     h("p",{class:"small ter"},"Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
 // When the guild plays: how many guildies are online by day of the week and hour (Perth), from the guild scribe's
 // five-minute checks. It only knows hours when the scribe was online, so blank cells are "not watched", not "empty".
@@ -2836,42 +2844,54 @@ function zoneTotals(range){const sc=S.scribe||{},tot=new Map(),back=n=>new Date(
   return tot}
 // Which map and drawn zone a scribe zone name belongs to.
 function zonePlace(name){if(!ZMAPS)return null;const k=zKey(name),a=ZONE_ALIAS[k]?zKey(ZONE_ALIAS[k]):k;
-  for(const c of["kalimdor","ek"]){const C=ZMAPS[c];for(const z of Object.keys(C.zones))if(zKey(z)===a)return{c,zone:z};for(const z of Object.keys(C.cities))if(zKey(z)===a)return{c,city:z}}
+  for(const c of["kalimdor","ek","zephras"]){const C=ZMAPS[c];if(!C)continue;for(const z of Object.keys(C.zones))if(zKey(z)===a)return{c,zone:z};for(const z of Object.keys(C.cities))if(zKey(z)===a)return{c,city:z}}
   return null}
-function zoneMapSvg(cont,tot,sel){const C=ZMAPS[cont],u="zm"+cont;
-  const hrs=new Map();for(const z of tot.values()){const p=zonePlace(z.name);if(p&&p.c===cont){const n=p.zone||p.city;hrs.set(n,(hrs.get(n)||0)+z.min)}}
-  const max=Math.max(1,...[...hrs.entries()].filter(([n])=>!C.cities[n]).map(x=>x[1])),lvl=n=>{const v=hrs.get(n)||0;return v?Math.max(1,Math.min(5,Math.ceil(v/max*5))):0};
-  let zones="",labels="",closed="",selPath="";
-  for(const[n,z]of Object.entries(C.zones)){const l=lvl(n),v=hrs.get(n)||0,e=xmlEsc(n);
-    zones+=`<path d="${z.d}" class="zm-z l${l}" data-z="${e}"><title>${e}${z.closed?" (closed)":v?": "+zHours(v):""}</title></path>`;
-    if(z.closed)closed+=`<path d="${z.d}" fill="url(#${u}-x)"/>`;
-    if(n===sel)selPath=`<path d="${z.d}" class="zm-sel"/>`;
-    const rot=z.r?` transform="rotate(${z.r} ${z.x} ${z.y})"`:"",cls="zm-t"+(l?" on":"")+(l>=3?" hot":"");
-    labels+=`<text x="${z.x}" y="${z.y}"${rot} class="${cls}">${xmlEsc(z.s)}</text>`;
-    if(z.closed)labels+=`<text x="${z.x}" y="${z.y+9}" class="zm-t x">closed</text>`;
-    else if(v&&!z.r)labels+=`<text x="${z.x}" y="${z.y+10}" class="zm-t h${l>=3?" hot":""}">${zHours(v)}</text>`}
-  let cities="";for(const[n,[x,y]]of Object.entries(C.cities)){const v=hrs.get(n)||0,e=xmlEsc(n);
-    cities+=`<g data-z="${e}"><circle cx="${x}" cy="${y}" r="5" class="zm-c${n===sel?" sel":""}"><title>${e}${v?": "+zHours(v):""}</title></circle><text x="${x}" y="${y-8}" class="zm-t c">${e}${v?" · "+zHours(v):""}</text></g>`}
-  const top=[...hrs.entries()].sort((a,b)=>b[1]-a[1])[0];
-  const label=(cont==="ek"?"Eastern Kingdoms":"Kalimdor")+" map of where the guild played"+(top?". Busiest: "+top[0]+", "+zHours(top[1])+".":".");
-  return `<svg viewBox="0 0 ${ZMAPS.w} ${ZMAPS.h}" class="zm-svg" role="img" aria-label="${xmlEsc(label)}"><defs>
-<clipPath id="${u}-l"><path d="${C.land}"/></clipPath>
+// Draws one continent ("kalimdor", "ek") or the whole world, the way the game's world map lays it out: Kalimdor on the
+// left, the Eastern Kingdoms on the right, Zephras Isle and the Maelstrom in the sea between.
+function zoneMapSvg(view,tot,sel){const W=ZMAPS.world||{w:860,h:660,ek:[470,10]};
+  const parts=view==="world"?[["kalimdor",0,0],["ek",W.ek[0],W.ek[1]],["zephras",0,0]]:[[view,0,0]];
+  const hrs=new Map();for(const z of tot.values()){const p=zonePlace(z.name);if(p&&parts.some(x=>x[0]===p.c)){const n=p.zone||p.city;hrs.set(n,(hrs.get(n)||0)+z.min)}}
+  const isCity=n=>parts.some(([c])=>ZMAPS[c]&&ZMAPS[c].cities[n]);
+  const max=Math.max(1,...[...hrs.entries()].filter(([n])=>!isCity(n)).map(x=>x[1])),lvl=n=>{const v=hrs.get(n)||0;return v?Math.max(1,Math.min(5,Math.ceil(v/max*5))):0};
+  const u="zm"+view,world=view==="world";
+  let defs="",body="",top="";
+  for(const[c,dx,dy]of parts){const C=ZMAPS[c];if(!C)continue;const id=u+c,tf=dx||dy?` transform="translate(${dx} ${dy})"`:"";
+    let zones="",labels="",closed="",selPath="";
+    for(const[n,z]of Object.entries(C.zones)){const l=lvl(n),v=hrs.get(n)||0,e=xmlEsc(n);
+      zones+=`<path d="${z.d}" class="zm-z l${l}" data-z="${e}"><title>${e}${z.closed?" (closed)":v?": "+zHours(v):""}</title></path>`;
+      if(z.closed)closed+=`<path d="${z.d}" fill="url(#${u}-x)"/>`;
+      if(n===sel)selPath=`<path d="${z.d}" class="zm-sel"/>`;
+      const rot=z.r?` transform="rotate(${z.r} ${z.x} ${z.y})"`:"",cls="zm-t"+(l?" on":"")+(l>=3?" hot":"");
+      labels+=`<text x="${z.x}" y="${z.y}"${rot} class="${cls}">${xmlEsc(z.s)}</text>`;
+      if(z.closed)labels+=`<text x="${z.x}" y="${z.y+9}" class="zm-t x">closed</text>`;
+      else if(v&&!z.r)labels+=`<text x="${z.x}" y="${z.y+10}" class="zm-t h${l>=3?" hot":""}">${zHours(v)}</text>`}
+    let cities="";for(const[n,[x,y]]of Object.entries(C.cities)){const v=hrs.get(n)||0,e=xmlEsc(n);
+      cities+=`<g data-z="${e}"><circle cx="${x}" cy="${y}" r="5" class="zm-c${n===sel?" sel":""}"><title>${e}${v?": "+zHours(v):""}</title></circle><text x="${x}" y="${y-8}" class="zm-t c">${e}${v?" · "+zHours(v):""}</text></g>`}
+    defs+=`<clipPath id="${id}-l"><path d="${C.land}"/></clipPath>`;
+    body+=`<g${tf}><path d="${C.land}" fill="none" stroke="var(--zm-glow)" stroke-width="16" stroke-linejoin="round" opacity=".35" filter="url(#${u}-b)"/>
+<path d="${C.land}" fill="none" stroke="var(--zm-shore)" stroke-width="5" stroke-linejoin="round" opacity=".35"/>
+<path d="${C.land}" fill="var(--zm-land)" stroke="var(--zm-edge)" stroke-width="2.6" stroke-linejoin="round"/>
+<g clip-path="url(#${id}-l)">${zones}${closed}
+<rect x="-40" y="-40" width="${W.w}" height="${W.h+80}" filter="url(#${u}-m)" opacity=".3" style="mix-blend-mode:soft-light;pointer-events:none"/>
+<rect x="-40" y="-40" width="${W.w}" height="${W.h+80}" filter="url(#${u}-p)" style="opacity:var(--zm-paper);pointer-events:none"/>
+${C.lakes?`<path d="${C.lakes}" fill="var(--zm-lake)" stroke="var(--zm-coast)" stroke-opacity=".7" stroke-width="1.2" style="pointer-events:none"/>`:""}
+<path d="${C.land}" fill="none" stroke="#000" stroke-opacity=".4" stroke-width="5" stroke-linejoin="round" filter="url(#${u}-b)" style="pointer-events:none"/>${selPath}</g>
+<path d="${C.land}" fill="none" stroke="var(--zm-coast)" stroke-opacity=".8" stroke-width="1.1" stroke-linejoin="round" style="pointer-events:none"/>
+${labels}${cities}</g>`}
+  const vw=world?W.w:ZMAPS.w,vh=world?W.h:ZMAPS.h;
+  // The sea between, as on the game's map: its name, and the Maelstrom's swirl.
+  const sea=world?`<g class="zm-sea" aria-hidden="true"><path d="M448 340m-26 0a26 26 0 1 0 52 0a20 20 0 1 0 -40 0a14 14 0 1 0 28 0a8 8 0 1 0 -16 0" fill="none" stroke="var(--zm-shore)" stroke-opacity=".35" stroke-width="1.4"/>
+<text x="448" y="392" class="zm-sea-t">The Maelstrom</text><text x="448" y="478" class="zm-sea-t big">The Great Sea</text>
+<text x="205" y="${vh-6}" class="zm-sea-t big">Kalimdor</text><text x="${W.ek[0]+275}" y="${vh-6}" class="zm-sea-t big">Eastern Kingdoms</text></g>`:"";
+  const best=[...hrs.entries()].sort((a,b)=>b[1]-a[1])[0];
+  const label=(world?"World":view==="ek"?"Eastern Kingdoms":"Kalimdor")+" map of where the guild played"+(best?". Busiest: "+best[0]+", "+zHours(best[1])+".":".");
+  return `<svg viewBox="0 0 ${vw} ${vh}" class="zm-svg" role="img" aria-label="${xmlEsc(label)}"><defs>${defs}
 <filter id="${u}-b" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3"/></filter>
 <filter id="${u}-p" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="3"/><feColorMatrix values="0 0 0 0 .08 0 0 0 0 .05 0 0 0 0 .03 0 0 0 -1.6 1.1"/></filter>
 <filter id="${u}-m" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".025" numOctaves="3" seed="9"/><feColorMatrix values="0 0 0 0 1 0 0 0 0 .85 0 0 0 0 .6 0 0 0 .9 -.35"/></filter>
 <pattern id="${u}-h" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 3h6" stroke="var(--zm-hatch)" stroke-width=".7"/></pattern>
 <pattern id="${u}-x" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v5" stroke="var(--zm-border)" stroke-width="1.2" stroke-opacity=".55"/></pattern>
-</defs><rect width="100%" height="100%" fill="var(--zm-sea)"/><rect width="100%" height="100%" fill="url(#${u}-h)"/>
-<path d="${C.land}" fill="none" stroke="var(--zm-glow)" stroke-width="16" stroke-linejoin="round" opacity=".35" filter="url(#${u}-b)"/>
-<path d="${C.land}" fill="none" stroke="var(--zm-shore)" stroke-width="5" stroke-linejoin="round" opacity=".35"/>
-<path d="${C.land}" fill="var(--zm-land)" stroke="var(--zm-edge)" stroke-width="2.6" stroke-linejoin="round"/>
-<g clip-path="url(#${u}-l)">${zones}${closed}
-<rect width="100%" height="100%" filter="url(#${u}-m)" opacity=".3" style="mix-blend-mode:soft-light;pointer-events:none"/>
-<rect width="100%" height="100%" filter="url(#${u}-p)" style="opacity:var(--zm-paper);pointer-events:none"/>
-<path d="${C.lakes}" fill="var(--zm-lake)" stroke="var(--zm-coast)" stroke-opacity=".7" stroke-width="1.2" style="pointer-events:none"/>
-<path d="${C.land}" fill="none" stroke="#000" stroke-opacity=".4" stroke-width="5" stroke-linejoin="round" filter="url(#${u}-b)" style="pointer-events:none"/>${selPath}</g>
-<path d="${C.land}" fill="none" stroke="var(--zm-coast)" stroke-opacity=".8" stroke-width="1.1" stroke-linejoin="round" style="pointer-events:none"/>
-${labels}${cities}</svg>`}
+</defs><rect width="100%" height="100%" fill="var(--zm-sea)"/><rect width="100%" height="100%" fill="url(#${u}-h)"/>${sea}${body}</svg>`}
 function wherePlays(){const sc=S.scribe;if(!sc)return null;
   const range=S.ui.zmRange||"week",tot=zoneTotals(range),any=Object.keys(sc.zones||{}).length||Object.keys(sc.zonesOld||{}).length;
   const head=h("div",{class:"spread",style:"align-items:baseline;flex-wrap:wrap;gap:.5rem"},h("h2",{id:"zm-h"},"Where the Guild Plays"),
@@ -2880,8 +2900,8 @@ function wherePlays(){const sc=S.scribe;if(!sc)return null;
   if(!ZMAPS){loadZoneMaps();return h("section",{class:"card","aria-labelledby":"zm-h",style:"gap:.5rem"},head,h("p",{class:"small ter",style:"margin:0"},"Drawing the map…"))}
   const rows=[...tot.values()].map(z=>({...z,place:zonePlace(z.name)})).sort((a,b)=>b.min-a.min);
   const onK=rows.filter(r=>r.place&&r.place.c==="kalimdor").reduce((a,r)=>a+r.min,0),onE=rows.filter(r=>r.place&&r.place.c==="ek").reduce((a,r)=>a+r.min,0);
-  const cont=S.ui.zmCont||(onE>onK?"ek":"kalimdor"),sel=S.ui.zmSel||null;
-  const pick=n=>{const p=zonePlace(n);setUi({zmSel:S.ui.zmSel===n?null:n,...(p?{zmCont:p.c}:{})})};
+  const busier=onE>onK?"ek":"kalimdor",cont=S.ui.zmCont||(window.innerWidth<700?busier:"world"),sel=S.ui.zmSel||null;
+  const pick=n=>{const p=zonePlace(n),onMap=cont==="world"||(p&&p.c===cont);setUi({zmSel:S.ui.zmSel===n?null:n,...(p&&!onMap&&p.c!=="zephras"?{zmCont:p.c}:p&&p.c==="zephras"&&cont!=="world"?{zmCont:"world"}:{})})};
   const map=h("div",{class:"zm-map",onclick:e=>{const t=e.target.closest&&e.target.closest("[data-z]");if(t)pick(t.getAttribute("data-z"))}});
   map.innerHTML=zoneMapSvg(cont,tot,sel);
   const nameOfPlace=r=>r.place?(r.place.zone||r.place.city):r.name;
@@ -2900,8 +2920,8 @@ function wherePlays(){const sc=S.scribe;if(!sc)return null;
   const off=rows.filter(r=>!r.place);
   const key=h("div",{class:"zm-key"},"Less",[1,2,3,4,5].map(i=>h("i",{style:`background:var(--zm-${i})`})),"More");
   return h("section",{class:"card","aria-labelledby":"zm-h",style:"gap:.75rem"},head,
-    h("div",{class:"zm"},h("div",{style:"display:flex;flex-direction:column;gap:.5rem;min-width:0"},
-        seg("Continent",[["kalimdor","Kalimdor"],["ek","Eastern Kingdoms"]],cont,k=>setUi({zmCont:k},true)),map,
+    h("div",{class:"zm"+(cont==="world"?" world":"")},h("div",{style:"display:flex;flex-direction:column;gap:.5rem;min-width:0"},
+        seg("Map",[["world","World"],["kalimdor","Kalimdor"],["ek","Eastern Kingdoms"]],cont,k=>setUi({zmCont:k},true)),map,
         h("div",{class:"spread",style:"flex-wrap:wrap;gap:.25rem .75rem"},key,h("span",{class:"small ter"},"Tap a zone for who was there."))),
       h("div",{class:"zm-side"},detail,busiest,
         off.length?h("p",{class:"small",style:"margin:0"},h("span",{class:"ter"},"Also in dungeons, raids and places the map doesn't show: "),off.slice(0,8).map((r,i)=>[i?", ":"",r.name+" "+zHours(r.min)])):null,

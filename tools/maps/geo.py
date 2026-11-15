@@ -11,7 +11,7 @@ KAL=dict(
    ell(334,484,10,8),ell(318,495,4,3.5),ell(348,470,4,3),ell(344,500,3,3),ell(322,476,3,2.5),ell(355,488,2.5,2.5),
    ell(372,286,5,4),ell(392,300,4,3),ell(408,276,3.5,3),ell(366,410,5,6),ell(352,424,3,3),
    ell(10,632,7,18),ell(14,598,5,6)],
- lakes=[ell(229,132,11,12),ell(150,325,10,8),ell(262,550,0,0)],
+ lakes=[],
  z={
  "Teldrassil":[(-50,-50),(200,-50),(200,100),(-50,100)],
  "Darkshore":[(-50,100),(212,100),(213,152),(185,155),(165,163),(152,185),(148,210),(146,245),(150,268),(108,272),(-50,272)],
@@ -83,3 +83,15 @@ EK=dict(
 SHORT={"Stonetalon Mountains":"Stonetalon","Dustwallow Marsh":"Dustwallow","Un'Goro Crater":"Un'Goro","Western Plaguelands":"W. Plaguelands","Eastern Plaguelands":"E. Plaguelands",
  "Silverpine Forest":"Silverpine","Alterac Mountains":"Alterac","Hillsbrad Foothills":"Hillsbrad","The Hinterlands":"Hinterlands","Arathi Highlands":"Arathi","Elwynn Forest":"Elwynn",
  "Redridge Mountains":"Redridge","Stranglethorn Vale":"Stranglethorn","Tirisfal Glades":"Tirisfal","Swamp of Sorrows":"Swamp of Sorrows","Burning Steppes":"Burning Steppes","Deadwind Pass":"Deadwind"}
+# Zephras Isle (WoW Forever's starting isle for both factions) sits in the sea between the continents, so it's only on
+# the whole-world view. Its points are in world coordinates (Kalimdor at 0,0; the Eastern Kingdoms shifted right).
+ZEP=dict(
+ scale=1,ox=0,oy=0,
+ coast=[(434,62),(448,58),(462,64),(470,78),(468,94),(472,108),(462,122),(446,128),(432,122),(424,108),(426,92),(422,78)],
+ isles=[ell(480,118,4,3),ell(418,70,3,3)],
+ lakes=[],
+ z={"Zephras Isle":[(380,20),(520,20),(520,160),(380,160)]},
+ lab={"Zephras Isle":(447,94)},
+ cities={},
+ closed=[])
+WORLD=dict(w=860,h=660,ek=(470,10))
