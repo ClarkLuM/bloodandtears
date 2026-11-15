@@ -3138,7 +3138,7 @@ function scribeLine(){const sc=S.scribe;
       if(/SlashCmdList|local ADDON|CreateFrame\(/.test(text)||!/^\s*BloodAndTearsScribeDB\s*=\s*\{/m.test(text)){toast(/SlashCmdList|local ADDON|CreateFrame\(/.test(text)?"That's the addon itself, not its notes. Upload the one in WTF\\Account\\<account>\\SavedVariables instead.":"That isn't the scribe file. Look in WTF\\Account\\<account>\\SavedVariables.");return}
       toast("Reading the scribe file…");
       try{const r=await httpsCallable(fns,"scribeUpload")({text}),d=r.data||{};
-        toast("Scribe file read: "+d.matched+(d.matched===1?" guildie":" guildies")+" matched"+(d.recipeChars?", recipes for "+d.recipeChars+(d.recipeChars===1?" character":" characters"):"")+(d.unknownN?". Not on the site yet: "+d.unknown.join(", ")+(d.unknownN>d.unknown.length?" and more":""):"")+".")}
+        toast("Scribe file read: "+d.matched+(d.matched===1?" guildie":" guildies")+" matched"+(d.recipeChars?", recipes for "+d.recipeChars+(d.recipeChars===1?" character":" characters"):"")+(d.levelled&&d.levelled.length?". Levels updated: "+d.levelled.join(", "):"")+(d.unknownN?". Not on the site yet: "+d.unknown.join(", ")+(d.unknownN>d.unknown.length?" and more":""):"")+".")}
       catch(err){toast(err&&err.message?err.message.replace(/^.*?: /,""):"Couldn't read that file.")}}});
     return[inp,h("label",{for:"scribe-file",class:"btn sm",title:"In your WoW folder: _forever_\WTF\Account\<account>\SavedVariables\BloodAndTearsScribe.lua"},"Upload the scribe file")]})():null;
   return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):isOfficer()?h("span",{},"No guild scribe file yet"):null,up)}

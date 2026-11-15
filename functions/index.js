@@ -881,13 +881,13 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
   if (sv.guild && keyOf(sv.guild).replace(/ /g, "-") !== GUILD_SLUG) throw new HttpsError("failed-precondition", `That file is from ${short(sv.guild, 40)}, not Blood and Tears.`);
   // Match the addon's character names to the site's characters. Opted-out names are skipped.
   const opt = ((await db().doc("guild/optout").get()).data() || {}).names || {};
-  const byName = new Map(), docs = [];
+  const byName = new Map(), docs = [], dataOf = new Map();
   for (const coll of ["members", "alts"]) for (const d of (await db().collection(coll).get()).docs) {
-    const k = keyOf(plainName(d.data() || {})); if (!byName.has(k)) byName.set(k, { coll, id: d.id }); docs.push(d); }
+    const k = keyOf(plainName(d.data() || {})); if (!byName.has(k)) byName.set(k, { coll, id: d.id }); docs.push(d); dataOf.set(coll + "/" + d.id, d.data() || {}); }
   const ref = db().doc("guild/scribe"), cur = (await ref.get()).data() || {};
   const members = { ...(cur.members || {}) }, days = { ...(cur.days || {}) }, hours = { ...(cur.hours || {}) }, raids = { ...(cur.raids || {}) };
   const iso = t => (+t > 1e9 ? new Date(+t * 1000).toISOString() : "");
-  let matched = 0; const unknown = [];
+  let matched = 0; const unknown = [], levelled = [], upNow = new Date().toISOString();
   for (const [name, m] of Object.entries(sv.members || {})) {
     const k = keyOf(name); if (opt[k]) continue;
     const hit = byName.get(k); if (!hit) { if (m && !m.gone) unknown.push(short(name, 40)); continue; }
@@ -896,7 +896,22 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
     const was = members[hit.id] || {}, last = iso(m.last);
     members[hit.id] = { last: last && (!was.last || last > was.last) ? last : (was.last || ""), zone: m.zone ? short(m.zone, 60) : (was.zone || ""), gone: !!m.gone };
     const set = new Set([...(days[hit.id] || []), ...Object.keys(m.days || {}).filter(isDay)]);
-    days[hit.id] = [...set].sort().slice(-60);
+    days[hit.id] = [...set].sort().slice(-60);    // Levels: the scribe often sees a ding before the armory does (the armory only updates after a logout). When its
+    // level is higher than the site's, add "Reached level N" to the character's history, timed from when the scribe
+    // first saw each new level (or this upload, if it didn't note a time). The armory only ever raises a level, so it
+    // won't log the same ding again when it catches up. The Hall of Firsts reads this history.
+    const d = dataOf.get(hit.coll + "/" + hit.id), have = Math.max(1, Math.min(60, +(d && d.level) || 1)), lv = Math.max(1, Math.min(60, Math.floor(+m.level || 0)));
+    if (d && lv > have) {
+      const journey = Array.isArray(d.journey) ? d.journey.slice() : [], upTimes = m.ups && typeof m.ups === "object" ? m.ups : {};
+      const has = new Set(journey.map(j => j && j.t));
+      for (let l = have + 1; l <= lv; l++) { const t = "Reached level " + l; if (has.has(t)) continue;
+        // A time from the scribe, kept between when the site first had the character and now.
+        let at = iso(upTimes[l]) || upNow; if (at > upNow) at = upNow; if (d.createdAt && at < d.createdAt) at = d.createdAt;
+        journey.push({ t, at, from: l - 1, via: "scribe" }); }
+      journey.sort((a, b) => String(b.at || "").localeCompare(String(a.at || "")));
+      await db().doc(`${hit.coll}/${hit.id}`).set({ level: lv, journey: journey.slice(0, 40) }, { merge: true });
+      levelled.push(short(name, 40) + " " + have + " → " + lv);
+    }
   }
   const hourCut = new Date(Date.now() + 8 * 36e5 - 42 * 864e5).toISOString().slice(0, 13).replace("T", " ");
   for (const [h, n] of Object.entries(sv.hours || {})) if (isHour(h) && +n >= 0 && +n < 1000 && h >= hourCut) hours[h] = Math.max(+hours[h] || 0, +n);
@@ -932,7 +947,8 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
   }
   await ref.set({ members, days, hours, raids, events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short((sv.by && listed.filter(n => keyOf(n).startsWith(keyOf(sv.by) + " ")).length === 1 ? listed.find(n => keyOf(n).startsWith(keyOf(sv.by) + " ")) : sv.by), 40), up: new Date().toISOString() });
   await saveStreaks().catch(err => logger.warn("streaks", err.message));
-  return { matched, unknown: unknown.slice(0, 20), unknownN: unknown.length, raids: Object.keys(sv.raids || {}).length, recipeChars };
+  if (levelled.length) await updateFirsts().catch(err => logger.warn("firsts", err.message));
+  return { matched, unknown: unknown.slice(0, 20), unknownN: unknown.length, raids: Object.keys(sv.raids || {}).length, recipeChars, levelled: levelled.slice(0, 20) };
 });
 async function syncAll() {
   let n = 0, changed = 0; const missing = [];

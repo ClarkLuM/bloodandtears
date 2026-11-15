@@ -1,5 +1,6 @@
 -- Blood and Tears Scribe
--- While you play, this reads the in-game guild list every five minutes and notes, for each member: their level, rank,
+-- While you play, this reads the in-game guild list every five minutes and notes, for each member: their level (and when
+-- it went up), rank,
 -- when they were last online, which days they were on, and the last zone they were seen in. It also notes how many
 -- guildies are online each hour, joins and leaves, who was in your raid group inside a raid, and the
 -- recipes your own characters know (when you open a profession window).
@@ -11,7 +12,7 @@
 -- The addon never sends anything anywhere, reads nothing during combat and draws nothing on screen. /scribe shows a summary.
 
 local ADDON = ...
-local VERSION = 2
+local VERSION = 3
 local DAYS_KEPT = 60          -- days of "seen" days kept per member
 local HOURS_KEPT = 42         -- days of hourly online counts kept
 local EVENTS_KEPT = 200       -- joins and leaves
@@ -45,8 +46,10 @@ end
 
 local function prune()
   local dayCut, hourCut = dayOf(now() - DAYS_KEPT * 86400), hourOf(now() - HOURS_KEPT * 86400)
+  local upCut = now() - DAYS_KEPT * 86400
   for _, m in pairs(db.members) do
     if m.days then for d in pairs(m.days) do if d < dayCut then m.days[d] = nil end end end
+    if m.ups then for l, t in pairs(m.ups) do if t < upCut then m.ups[l] = nil end end end
   end
   for h in pairs(db.hours) do if h < hourCut then db.hours[h] = nil end end
   local keys = {}
@@ -91,6 +94,12 @@ local function readRoster()
         db.members[name] = m
       end
       m.days = m.days or {}
+      -- Level-ups: when the list first shows a higher level, note the time against each new level, so the site can
+      -- date the ding (to within the five-minute read while you're online; otherwise the first read that sees it).
+      if type(level) == "number" and type(m.level) == "number" and level > m.level then
+        m.ups = m.ups or {}
+        for l = m.level + 1, level do m.ups[l] = m.ups[l] or t end
+      end
       m.level, m.class, m.rank = level, classFile, rankName
       m.gone = nil
       if isOnline then
@@ -150,6 +159,26 @@ local function system(msg)
   askRoster()
 end
 
+-- Your own level-ups, timed exactly (the game says when you ding). In Forever the game's "who am I" gives only the
+-- first part of a two-part name, so match it to the one guild list name that starts with it.
+local function myEntry()
+  local me = UnitName("player")
+  if not me or not db then return nil end
+  if db.members[me] then return db.members[me] end
+  local found
+  for name, m in pairs(db.members) do
+    if name:sub(1, #me + 1) == me .. " " then if found then return nil end found = m end
+  end
+  return found
+end
+local function levelUp(newLevel)
+  local m = myEntry()
+  if not m or type(newLevel) ~= "number" then return end
+  m.ups = m.ups or {}
+  m.ups[newLevel] = now()
+  m.level = newLevel
+end
+
 -- Your own characters' recipes, read when you open a profession window. Tries the newer and the older game functions.
 local function readRecipes()
   if not db then return end
@@ -194,10 +223,12 @@ f:SetScript("OnEvent", function(_, event, a1)
     readRecipes()
   elseif event == "PLAYER_REGEN_ENABLED" then
     askRoster()
+  elseif event == "PLAYER_LEVEL_UP" then
+    levelUp(a1)
   end
 end)
 for _, e in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "GUILD_ROSTER_UPDATE", "GROUP_ROSTER_UPDATE", "ZONE_CHANGED_NEW_AREA",
-  "CHAT_MSG_SYSTEM", "TRADE_SKILL_SHOW", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_UPDATE", "PLAYER_REGEN_ENABLED" }) do
+  "CHAT_MSG_SYSTEM", "TRADE_SKILL_SHOW", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_UPDATE", "PLAYER_REGEN_ENABLED", "PLAYER_LEVEL_UP" }) do
   pcall(f.RegisterEvent, f, e)
 end
 

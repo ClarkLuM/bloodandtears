@@ -123,7 +123,7 @@ These aren't in the code:
 
 It sends nothing anywhere, reads nothing in combat and draws nothing on screen. `/scribe` in game shows a summary.
 
-Version 0.2.0 (15 Nov 2026) reads offline guildies too. The game's guild list only includes them when "Show Offline Members" is ticked, so the scribe ticks it while it reads and puts the setting back straight after; a list read without them no longer marks the offline guildies as gone. Levels in the notes file aren't used by the site yet: levels, and the level firsts in the Hall of Firsts, come from the armory.
+Version 0.2.0 (15 Nov 2026) reads offline guildies too. The game's guild list only includes them when "Show Offline Members" is ticked, so the scribe ticks it while it reads and puts the setting back straight after; a list read without them no longer marks the offline guildies as gone. Version 0.3.0 also notes when each guildie's level goes up (to within its five-minute read while the uploader is online; your own characters exactly, when you ding). On upload, any character the scribe has at a higher level than the site gets "Reached level N" added to their history, timed from when the scribe saw it (or the upload, if it has no time), and the Hall of Firsts is worked out again straight away. The armory only ever raises a level, so it doesn't log the same ding twice when it catches up.
 
 **Install:** copy the `BloodAndTearsScribe` folder into the game's `Interface\AddOns` folder (or install it from CurseForge once it's published there), then tick it in the in-game AddOns list.
 
