@@ -31,9 +31,12 @@ def cont(c):
             if p[0] in(-50,500) or p[1] in(-50,900,40,60): SEAPTS.add(T(c,p))
     for k,L in c["z"].items():
         lab=c["lab"][k];x,y=T(c,lab[:2])
-        zones[k]={"d":ring(tr(L),.2,3),"x":x,"y":y,"r":lab[2] if len(lab)>2 else 0,"s":SHORT.get(k,k)}
+        o=lab[2] if len(lab)>2 and isinstance(lab[2],dict) else {}
+        zones[k]={"d":ring(tr(L),.2,3),"x":x,"y":y,"s":SHORT.get(k,k)}
+        if o.get("lines"):zones[k]["l"]=o["lines"]
+        if o.get("fs"):zones[k]["f"]=o["fs"]
         if k in c["closed"]:zones[k]["closed"]=1
-    return {"land":land,"lakes":lakes,"zones":zones,"cities":{k:T(c,v) for k,v in c["cities"].items()}}
+    return {"land":land,"lakes":lakes,"zones":zones,"cities":{k:list(T(c,v[:2]))+([v[2]] if len(v)>2 else []) for k,v in c["cities"].items()}}
 out={"w":400,"h":650,"kalimdor":cont(KAL),"ek":cont(EK),"zephras":cont(ZEP),"world":WORLD}
 import os
 json.dump(out,open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","..","public","azeroth.json"),"w"),separators=(",",":"))

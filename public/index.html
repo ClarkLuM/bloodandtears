@@ -2861,12 +2861,15 @@ function zoneMapSvg(view,tot,sel){const W=ZMAPS.world||{w:860,h:660,ek:[470,10]}
       zones+=`<path d="${z.d}" class="zm-z l${l}" data-z="${e}"><title>${e}${z.closed?" (closed)":v?": "+zHours(v):""}</title></path>`;
       if(z.closed)closed+=`<path d="${z.d}" fill="url(#${u}-x)"/>`;
       if(n===sel)selPath=`<path d="${z.d}" class="zm-sel"/>`;
-      const rot=z.r?` transform="rotate(${z.r} ${z.x} ${z.y})"`:"",cls="zm-t"+(l?" on":"")+(l>=3?" hot":"");
-      labels+=`<text x="${z.x}" y="${z.y}"${rot} class="${cls}">${xmlEsc(z.s)}</text>`;
-      if(z.closed)labels+=`<text x="${z.x}" y="${z.y+9}" class="zm-t x">closed</text>`;
-      else if(v&&!z.r)labels+=`<text x="${z.x}" y="${z.y+10}" class="zm-t h${l>=3?" hot":""}">${zHours(v)}</text>`}
-    let cities="";for(const[n,[x,y]]of Object.entries(C.cities)){const v=hrs.get(n)||0,e=xmlEsc(n);
-      cities+=`<g data-z="${e}"><circle cx="${x}" cy="${y}" r="5" class="zm-c${n===sel?" sel":""}"><title>${e}${v?": "+zHours(v):""}</title></circle><text x="${x}" y="${y-8}" class="zm-t c">${e}${v?" · "+zHours(v):""}</text></g>`}
+      // Labels are always horizontal. A narrow zone's label is smaller or on two lines (z.l, z.f), or sits just offshore.
+      const cls="zm-t"+(l?" on":"")+(l>=3?" hot":""),fs=z.f||9,lines=z.l||[z.s],lh=fs+1,fsA=z.f?` style="font-size:${fs}px"`:"";
+      labels+=`<text x="${z.x}" y="${z.y}" class="${cls}"${fsA}>${lines.map((t,i)=>`<tspan x="${z.x}" dy="${i?lh:0}">${xmlEsc(t)}</tspan>`).join("")}</text>`;
+      const below=z.y+(lines.length-1)*lh;
+      if(z.closed)labels+=`<text x="${z.x}" y="${below+9}" class="zm-t x">closed</text>`;
+      else if(v)labels+=`<text x="${z.x}" y="${below+Math.min(10,fs+1)}" class="zm-t h${l>=3?" hot":""}">${zHours(v)}</text>`}
+    let cities="";for(const[n,[x,y,side]]of Object.entries(C.cities)){const v=hrs.get(n)||0,e=xmlEsc(n);
+      const tx=side==="r"?`x="${x+8}" y="${y+3}" style="text-anchor:start"`:`x="${x}" y="${y-8}"`;
+      cities+=`<g data-z="${e}"><circle cx="${x}" cy="${y}" r="5" class="zm-c${n===sel?" sel":""}"><title>${e}${v?": "+zHours(v):""}</title></circle><text ${tx} class="zm-t c">${e}${v?" · "+zHours(v):""}</text></g>`}
     defs+=`<clipPath id="${id}-l"><path d="${C.land}"/></clipPath>`;
     body+=`<g${tf}><path d="${C.land}" fill="none" stroke="var(--zm-glow)" stroke-width="16" stroke-linejoin="round" opacity=".35" filter="url(#${u}-b)"/>
 <path d="${C.land}" fill="none" stroke="var(--zm-shore)" stroke-width="5" stroke-linejoin="round" opacity=".35"/>
