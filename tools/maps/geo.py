@@ -85,7 +85,8 @@ EK=dict(
  cities={"Undercity":(146,182)},
  dg={"Shadowfang Keep":(84,262),"Scarlet Monastery":(166,146),"Ruins of Lordaeron":(122,180),"City of Dalaran":(142,240),"Scholomance":(212,196),
   "Stratholme":(292,132),"Naxxramas":(338,170),"Gnomeregan":(92,468),"The Deadmines":(62,700),"The Stockade":(88,600),"Excavation Site: Wetlands":(232,384),
-  "Uldaman":(268,506),"Blackrock Mountain":(204,568),"Sunken Temple":(292,676),"Zul'Gurub":(206,728)},
+  "Uldaman":(268,506),"Blackrock Mountain":(204,568),"Sunken Temple":(292,676),"Zul'Gurub":(206,728),
+  "The Drowned City":(84,744),"Krol'Dok Stronghold":(324,516)},
  closed=["Quel'Thalas","Gilneas"])
 SHORT={"Stonetalon Mountains":"Stonetalon","Dustwallow Marsh":"Dustwallow","Un'Goro Crater":"Un'Goro","Western Plaguelands":"W. Plaguelands","Eastern Plaguelands":"E. Plaguelands",
  "Silverpine Forest":"Silverpine","Alterac Mountains":"Alterac","Hillsbrad Foothills":"Hillsbrad","The Hinterlands":"Hinterlands","Arathi Highlands":"Arathi","Elwynn Forest":"Elwynn",
