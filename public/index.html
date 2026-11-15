@@ -2777,7 +2777,7 @@ function whenWePlay(){const hrs=(S.scribe&&S.scribe.hours)||{},keys=Object.keys(
     h("div",{class:"wwp",role:"img","aria-label":best?"Chart of guildies online by day and hour. Busiest is "+DOW[best[0]]+"s around "+hourName(best[1])+".":"Chart of guildies online by day and hour."},
       h("span",{}),...Array.from({length:24},(_,hr)=>h("span",{class:"wwp-h"},hr%6===0?hourName(hr):"")),
       ...DOW.flatMap((n,d)=>[h("span",{class:"wwp-d"},n.slice(0,3)),...Array.from({length:24},(_,hr)=>cell(d,hr))])),
-    h("p",{class:"small ter",style:"margin:0"},"Perth time. Counted every five minutes while the guild scribe is online, so blank hours just weren't watched."))}
+    h("p",{class:"small ter",style:"margin:0"},"Perth time. Counted every five minutes while the guild scribe is online, plus the hour each guildie was last on, so blank hours just weren't watched."))}
 // "2nd of 6 in the guild": a line under each profession and the honourable kills on a character's page.
 function rankLine(get,m,noun){const r=rankOfIn(get,m);if(!r||r.of<2)return null;
   const t=r.place===1&&!r.tied?"Best "+noun+" in the guild":(r.tied?"Joint ":"")+ordinal(r.place)+" of "+r.of+" in the guild";

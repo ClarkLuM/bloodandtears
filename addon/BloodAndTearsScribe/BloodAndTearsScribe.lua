@@ -14,7 +14,7 @@
 -- boss kill or a rare-or-better drop (/scribe quiet turns those off). /scribe shows a summary.
 
 local ADDON = ...
-local VERSION = 5
+local VERSION = 6
 local DAYS_KEPT = 60          -- days of "seen" days kept per member
 local HOURS_KEPT = 42         -- days of hourly online counts kept
 local EVENTS_KEPT = 200       -- joins and leaves
@@ -44,6 +44,7 @@ local function init()
   db.runs = db.runs or {}
   db.kills = db.kills or {}
   db.loot = db.loot or {}
+  db.lastHours = db.lastHours or {}
 end
 
 local function note(who, what)
@@ -60,6 +61,7 @@ local function prune()
     if m.ups then for l, t in pairs(m.ups) do if t < upCut then m.ups[l] = nil end end end
   end
   for h in pairs(db.hours) do if h < hourCut then db.hours[h] = nil end end
+  for h in pairs(db.lastHours) do if h < hourCut then db.lastHours[h] = nil end end
   local keys = {}
   for k in pairs(db.raids) do keys[#keys + 1] = k end
   table.sort(keys)
@@ -128,6 +130,13 @@ local function readRoster()
           -- The game only gives whole hours, so keep whichever is more recent.
           if not m.last or last > m.last + 3600 then m.last = last end
           if (y or 0) == 0 and (mo or 0) == 0 and (d or 0) == 0 then m.days[dayOf(last)] = true end
+          -- Backfill for "When the Guild Plays": the hour each offline guildie was last on counts as an hour someone
+          -- played, even if nobody running the scribe was online then. Only each person's latest session is known.
+          if (y or 0) == 0 and (mo or 0) == 0 and (d or 0) < HOURS_KEPT then
+            local hk = hourOf(last)
+            db.lastHours[hk] = db.lastHours[hk] or {}
+            db.lastHours[hk][name] = true
+          end
         end
       end
     end
@@ -137,6 +146,11 @@ local function readRoster()
   if putBack and full_list and setShowOffline then putBack = false; C_Timer.After(0, function() setShowOffline(false) end) end
   local hk = hourOf(t)
   if (db.hours[hk] or 0) < online then db.hours[hk] = online end
+  for h, names in pairs(db.lastHours) do
+    local n = 0
+    for _ in pairs(names) do n = n + 1 end
+    if h ~= hk and (db.hours[h] or 0) < n then db.hours[h] = n end
+  end
   prune()
 end
 
