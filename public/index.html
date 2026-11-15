@@ -99,8 +99,8 @@ p{margin:0}
 .page-head>div.ph-id:first-child{display:flex;flex-direction:row;align-items:center;gap:1rem;min-width:0}.ph-id>div{min-width:0;display:flex;flex-direction:column;gap:.25rem}
 .ph-mark{flex:none;width:3.5rem;height:3.5rem;filter:drop-shadow(0 4px 10px rgb(0 0 0 / .45))}
 @media (max-width:640px){.ph-mark{width:2.75rem;height:2.75rem}.page-head>div.ph-id:first-child{gap:.75rem}}
-.roster-layout .card,.roster-layout .tablebox,.roster-layout .totals{box-shadow:0 1px 0 rgb(0 0 0 / .35),0 10px 24px -14px rgb(0 0 0 / .7)}
-:root[data-theme="light"] .roster-layout .card,:root[data-theme="light"] .roster-layout .tablebox,:root[data-theme="light"] .roster-layout .totals{box-shadow:0 1px 0 rgb(58 22 8 / .06),0 10px 24px -16px rgb(58 22 8 / .28)}
+main .card,main .tablebox,main .totals{box-shadow:0 1px 0 rgb(0 0 0 / .35),0 10px 24px -14px rgb(0 0 0 / .7)}
+:root[data-theme="light"] main .card,:root[data-theme="light"] main .tablebox,:root[data-theme="light"] main .totals{box-shadow:0 1px 0 rgb(58 22 8 / .06),0 10px 24px -16px rgb(58 22 8 / .28)}
 .page-head>div:first-child{display:flex;flex-direction:column;gap:.25rem}
 .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
 .spread{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.75rem}
@@ -1547,7 +1547,7 @@ function viewCards(){
     :sort!=="level"?binder(list)
     :SETS.map(([t,range])=>{const ms=list.filter(m=>tierOf(+m.level||1)[1]===t);
       return ms.length?h("section",{class:"binder-set","aria-label":t+" cards"},h("div",{class:"binder-h"},h("h2",{},t),h("span",{class:"small ter"},range+" · "+ms.length+(ms.length===1?" card":" cards"))),binder(ms)):null});
-  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Cards"),h("p",{class:"sub"},"Everyone's trading card. Tap one to flip it; \"Open page\" shows under it.")),
+  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Cards"),h("p",{class:"sub"},"Everyone's trading card. Tap one to flip it; \"Open page\" shows under it."))),
       null),
     cardOfWeek(),tools,
     h("div",{class:"r-count",role:"status"},list.length===S.members.length?`${list.length} cards`:`Showing ${list.length} of ${S.members.length} cards`),
@@ -2292,8 +2292,8 @@ function viewHistory(){
   // A line above the first thing that happened before this device's last visit (if it was a while ago).
   let marked=!awhile()||!items.length||items[0].t<=lastHere;
   const mark=x=>{if(marked||x.t>lastHere)return null;marked=true;return h("div",{class:"hist-mark"},"You were last here")};
-  return[h("div",{class:"page-head"},h("div",{},h("a",{href:"#roster",class:"small"},"← Roster"),h("h1",{},"Guild History"),
-      h("p",{class:"sub"},"Everything the site has seen, newest first. The smallest moments fade out over time; the Hall of Firsts keeps the big ones.")),
+  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("a",{href:"#roster",class:"small"},"← Roster"),h("h1",{},"Guild History"),
+      h("p",{class:"sub"},"Everything the site has seen, newest first. The smallest moments fade out over time; the Hall of Firsts keeps the big ones."))),
       h("button",{class:"btn",type:"button",onclick:copyRecap},"Weekly recap")),
     histSummary(all),
     h("div",{class:"hist-tools"},
@@ -2497,7 +2497,7 @@ async function loadWidget(){
 // out in game and on Discord.
 function viewLfg(){
   const my=me();
-  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Dungeons"),h("p",{class:"sub"},"Who's the right level for each dungeon, who's been, who still needs it, and what drops.")),
+  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Dungeons"),h("p",{class:"sub"},"Who's the right level for each dungeon, who's been, who still needs it, and what drops."))),
       dgTabs("lfg")),
     rangeBoard()]}
 // Who's the right level for a dungeon. Pick one from the list; people are sorted into tank, healer and DPS.
@@ -2796,12 +2796,12 @@ function hallOfTitles(){
 // Activity: when and where the guild plays, from the guild scribe (the in-game addon an officer uploads).
 function viewActivity(){
   const any=S.scribe&&(Object.keys(S.scribe.hours||{}).length||Object.keys(S.scribe.zones||{}).length||Object.keys(S.scribe.zonesOld||{}).length);
-  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Activity"),h("p",{class:"sub"},"Where the guild plays and when, from the guild scribe's notes in game."))),
+  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Activity"),h("p",{class:"sub"},"Where the guild plays and when, from the guild scribe's notes in game.")))),
     wherePlays(),
     whenWePlay(),
     any?null:h("section",{class:"card",style:"gap:.5rem"},h("h2",{},"Nothing noted yet"),h("p",{class:"small ter",style:"margin:0"},"This page fills in from the guild scribe, an in-game addon an officer runs. Once its notes are uploaded, the busiest hours and a map of the zones show here."))]}
 function viewRecords(){
-  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs."))),
+  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
     h("div",{class:"rec-top rec-a"},raceCard(),recBoards()),
     hallOfTitles(),
     h("div",{class:"rec-links"},S.scribe?h("a",{class:"card rec-link",href:"#activity"},h("span",{},h("b",{},"When and where the guild plays"),h("span",{class:"small ter"}," · the busiest hours and a map of the zones")),h("span",{class:"rec-link-go"},"On the Activity page →")):null,
@@ -3035,7 +3035,7 @@ function viewProfessions(){
   if(t!=="Primary")body.push(grp("Secondary",SECONDARY));
   if(S.ui.profJump){S.ui.profJump=0;requestAnimationFrame(()=>{const e=document.getElementById("pt-h");if(e)e.scrollIntoView({block:"start"})})}
   // The finder first; the All / Primary / Secondary switch sits with the table it filters.
-  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Professions"),h("p",{class:"sub"},"Who to whisper for crafts and mats."))),recipeFinder(),
+  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Professions"),h("p",{class:"sub"},"Who to whisper for crafts and mats.")))),recipeFinder(),
     h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"big",id:"pt-h"},"Who Has What"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],t,k=>setUi({profTab:k},true))),
     h("section",{class:"card pt","aria-labelledby":"pt-h"},body),
     h("p",{class:"small ter"},(missing.length&&t!=="Secondary"?"Nobody has "+missing.join(", ")+" yet. ":"")+"Medals go to the top three; the wooden spoon to the lowest, once there are four. Tap a profession to see everyone.")]}
@@ -3106,7 +3106,7 @@ function viewRaids(){
   const lootRaids=RAIDS.map(r=>r[0]).filter(raidHasLoot);
   const lootCard=lootRaids.length?h("section",{class:"card","aria-labelledby":"rl-h",style:"gap:.75rem"},h("h2",{id:"rl-h"},"Raid Loot"),
       lootRaids.map(n=>h("div",{id:"rl-"+n.replace(/\W+/g,"-"),class:"rl-raid"},h("h3",{},n),dungeonLoot(n)))):null;
-  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Raids"),h("p",{class:"sub"},"Who's ready for each raid and what's missing. Raid nights are sorted out in game and on Discord.")),dgTabs("raids")),
+  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Raids"),h("p",{class:"sub"},"Who's ready for each raid and what's missing. Raid nights are sorted out in game and on Discord."))),dgTabs("raids")),
     raidsCard(),
     h("section",{class:"card","aria-labelledby":"rdr-h",style:"gap:.75rem"},h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"rdr-h"},"Who's Ready"),h("span",{class:"small ter"},sixty.length+" at 60 · "+close.length+" on the way")),table,
       sixty.length?h("p",{class:"small ter",style:"margin:0"},"Onyxia's Lair needs the Drakefire Amulet. The armory only shows worn items, so a blank amulet cell may just mean it's in their bags."):null),
