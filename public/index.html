@@ -76,7 +76,7 @@ nav.main a[aria-current="page"]{color:var(--text);background:var(--accent-subtle
 @media (min-width:1321px){.brand{display:grid;grid-template-columns:auto auto;column-gap:.75rem;row-gap:0;align-items:center}.brand-logo{grid-row:1/3}.brand b{line-height:1.625rem}.brand span{line-height:1rem}}
 /* The tools always stay on the right of the first row */
 .hdr-tools{margin-left:auto}
-@media (max-width:1120px){
+@media (max-width:1199px){
   header.top .wrap{padding-bottom:0}
   nav.main{order:3;width:100%;flex-wrap:nowrap;overflow-x:auto;margin:0 -.75rem;padding:0 .75rem .5rem;scrollbar-width:none}
   nav.main a{white-space:nowrap}
@@ -453,7 +453,7 @@ nav.bottom{display:none}
 .claim-banner{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 1.25rem;border-color:var(--accent-b)}
 @media (max-width:700px){
   nav.main{display:none!important}
-  nav.bottom{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:18;background:var(--sunken);border-top:1px solid var(--sep);padding:0 max(.25rem,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(.25rem,env(safe-area-inset-left,0px))}
+  nav.bottom{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:18;background:var(--sunken);border-top:1px solid var(--sep);padding:0 max(.25rem,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(.25rem,env(safe-area-inset-left,0px))}
   nav.bottom a{display:flex;align-items:center;justify-content:center;min-height:3.5rem;font-size:.75rem;line-height:.9375rem;font-weight:600;color:var(--sec);text-decoration:none;text-align:center;padding:.25rem 2px;border-top:3px solid transparent}
   nav.bottom a[aria-current="page"]{color:var(--accent-text);border-top-color:var(--accent)}
   body{padding-bottom:calc(4rem + env(safe-area-inset-bottom,0px))}
@@ -633,7 +633,8 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 :root[data-theme="light"] .title-tag{color:#7a5410;background:rgb(226 181 82/.18);border-color:rgb(184 140 40/.5)}
 .title-tag:hover{text-decoration:underline}
 .title-ic{width:.625rem;height:.625rem;background:currentColor;clip-path:polygon(0 100%,0 25%,25% 55%,50% 0,75% 55%,100% 25%,100% 100%)}
-@media (max-width:360px){nav.bottom a{font-size:.6875rem;letter-spacing:-.01em}.brand b{font-size:1.25rem;line-height:1.5rem}.brand-logo{width:2rem;height:2rem}}
+@media (max-width:430px){nav.bottom a{font-size:.6875rem;letter-spacing:-.01em;padding:.25rem 1px}}
+@media (max-width:360px){nav.bottom a{font-size:.625rem}.brand b{font-size:1.25rem;line-height:1.5rem}.brand-logo{width:2rem;height:2rem}}
 @media (max-width:480px){.brand{gap:.5rem;min-width:0}.brand b{font-size:1.0625rem;line-height:1.5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.hdr-tools{gap:.25rem}.hdr-tools .btn{padding:0 .5rem}header.top .wrap{column-gap:.5rem}.brand-logo{width:2.25rem;height:2.25rem}}
 @media (max-width:360px){.brand{gap:.375rem}.brand b{font-size:.9375rem}.brand-logo{width:1.875rem;height:1.875rem}}
 .tab-empty{display:none}
@@ -1074,7 +1075,7 @@ fetch("dungeon-loot.json").then(r=>r.ok?r.json():Promise.reject(new Error(r.stat
 const RAIDS=[["Barrow Deeps",10,{Tank:2,Healer:3,DPS:5},""],["Hyjal Summit",20,{Tank:3,Healer:5,DPS:12},""],
   ["Onyxia's Lair",40,{Tank:5,Healer:10,DPS:25},"Needs the Drakefire Amulet in your bags. The Horde quest chain starts with Warlord Goretooth in the Badlands."]];
 const DISCORD_RE=/^https:\/\/(discord\.gg|(www\.)?discord\.com\/invite)\/[A-Za-z0-9-]+\/?$/;
-const PAGES=[["roster","Roster"],["lfg","Dungeons"],["cards","Cards"],["professions","Professions"],["records","Records"]];
+const PAGES=[["roster","Roster"],["lfg","Dungeons"],["cards","Cards"],["professions","Professions"],["records","Records"],["activity","Activity"]];
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const el=document.createElement(tag);for(const[k,v]of Object.entries(attrs||{})){if(v==null||v===false)continue;if(k==="class")el.className=v;else if(k==="style")el.style.cssText=v;else if(k.startsWith("on"))el.addEventListener(k.slice(2),v);else if(k==="value"&&(tag==="input"||tag==="textarea"||tag==="select"))el.value=v;else el.setAttribute(k,v===true?"":v)}for(const k of kids.flat(Infinity)){if(k==null||k===false)continue;el.append(k.nodeType?k:document.createTextNode(String(k)))}return el}
@@ -1322,7 +1323,7 @@ function header(page){
 // The Search button in the header (or "/" anywhere) finds characters, recipes, dungeon drops, dungeons and pages, and goes
 // straight there. Recipes are loaded the first time it opens.
 const srchIcon=()=>{const x=h("span",{class:"srch-ic","aria-hidden":"true"});x.innerHTML='<svg viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m13 13 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';return x};
-const SRCH_PAGES=[["Roster","#roster"],["Dungeons","#lfg"],["Raids","#raids"],["Cards","#cards"],["Professions","#professions"],["Records","#records"],["Guild History","#history"]];
+const SRCH_PAGES=[["Roster","#roster"],["Dungeons","#lfg"],["Raids","#raids"],["Cards","#cards"],["Professions","#professions"],["Records","#records"],["Activity","#activity"],["Guild History","#history"]];
 function searchIndex(){
   const out=[],go=(hash,ui)=>()=>{if(ui)Object.assign(S.ui,ui);if(location.hash===hash)render();else location.hash=hash};
   for(const m of [...S.members,...S.alts])if(isMine(m)||memberState(m)!=="former")
@@ -2784,12 +2785,18 @@ function hallOfTitles(){
     lists.map(([g,xs])=>{const shown=all||g==="Guild"?xs:xs.filter(x=>x.holder);
       return shown.length?h("div",{class:"hot-g"},h("h3",{class:"pf-kind"},g),h("ul",{class:"hot-tiles"},shown.map(tile))):null}),
     hidden||all?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(!!all),onclick:()=>setUi({hotAll:!all},true)},all?"Show held titles only":"Show every title"):null)}
+// Activity: when and where the guild plays, from the guild scribe (the in-game addon an officer uploads).
+function viewActivity(){
+  const any=S.scribe&&(Object.keys(S.scribe.hours||{}).length||Object.keys(S.scribe.zones||{}).length||Object.keys(S.scribe.zonesOld||{}).length);
+  return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Activity"),h("p",{class:"sub"},"Where the guild plays and when, from the guild scribe's notes in game."))),
+    wherePlays(),
+    whenWePlay(),
+    any?null:h("section",{class:"card",style:"gap:.5rem"},h("h2",{},"Nothing noted yet"),h("p",{class:"small ter",style:"margin:0"},"This page fills in from the guild scribe, an in-game addon an officer runs. Once its notes are uploaded, the busiest hours and a map of the zones show here."))]}
 function viewRecords(){
   return[h("div",{class:"page-head"},h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs."))),
     raceCard(),
     h("div",{class:"rec-top"},recBoards(),hallOfTitles()),
-    whenWePlay(),
-    wherePlays(),
+    S.scribe?h("a",{class:"card rec-link",href:"#activity"},h("span",{},h("b",{},"When and where the guild plays"),h("span",{class:"small ter"}," · the busiest hours and a map of the zones")),h("span",{class:"rec-link-go"},"On the Activity page →")):null,
     h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →")),
     h("p",{class:"small ter"},"Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
 // When the guild plays: how many guildies are online by day of the week and hour (Perth), from the guild scribe's
@@ -3632,7 +3639,7 @@ function render(){
   if(S.authError){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("div",{class:"note warn"},S.authError)));return}
   if(!S.user){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("p",{class:"ter"},"Loading…")));return}
   const r=route();
-  const views={roster:viewRoster,lfg:viewLfg,raids:viewRaids,cards:viewCards,professions:viewProfessions,records:viewRecords};
+  const views={roster:viewRoster,lfg:viewLfg,raids:viewRaids,cards:viewCards,professions:viewProfessions,records:viewRecords,activity:viewActivity};
   const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():views[r.page]();
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
