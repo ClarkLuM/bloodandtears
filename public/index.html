@@ -977,10 +977,16 @@ a.r-name:hover{color:var(--accent-text)}
 .zm-key{display:flex;align-items:center;gap:.25rem;font-size:.75rem;color:var(--ter)}
 .zm-key i{width:1.25rem;height:.625rem;border-radius:2px;display:inline-block;border:1px solid var(--sep)}
 @media (max-width:900px){.zm{grid-template-columns:minmax(0,1fr)}.zm:not(.world) .zm-map{max-width:30rem;margin:0 auto;width:100%}}
-.zm.world{grid-template-columns:minmax(0,1fr)}
-.zm.world .zm-side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
-.zm.world .zm-side>*{grid-column:2}.zm.world .zm-side>.card{grid-column:1;grid-row:1/span 4}
-@media (max-width:760px){.zm.world .zm-side{display:flex}}
+.zm.world{grid-template-columns:minmax(0,1fr) minmax(0,19rem)}
+@media (max-width:1100px){.zm.world{grid-template-columns:minmax(0,1fr)}.zm.world .zm-side{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));align-items:start}.zm.world .zm-side>p{grid-column:1/-1}}
+.zm-card{gap:.5rem;padding:.875rem 1rem}.zm-card h3{margin:0;font-size:1rem;display:flex;align-items:center;gap:.375rem}
+.zm-dgl .zm-top{display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));column-gap:1.25rem}.zm-dgl .zm-top li:nth-child(2){border-top:0}
+@media (max-width:640px){.zm-dgl .zm-top li:nth-child(2){border-top:1px solid var(--sep)}}
+.zm-nm{display:flex;align-items:center;gap:.5rem;min-width:0;flex-wrap:wrap}
+.zm-detail{margin:0;border-left:2px solid var(--accent-text);padding:.125rem 0 .125rem .75rem;display:flex;flex-direction:column;gap:.375rem}
+.zm-dg path{cursor:pointer;fill:var(--zm-city);stroke:var(--zm-halo);stroke-width:1.6;stroke-linejoin:round}
+.zm-dg:hover path{fill:var(--gold-hi)}.zm-dg.sel path{stroke:var(--gold-hi);stroke-width:2.6}
+.zm-dgi{display:inline-block;width:.625rem;height:.625rem;transform:rotate(45deg);background:var(--zm-city);border:1px solid var(--zm-halo);flex:none}
 .zm-sea-t{font:italic 600 11px Figtree,system-ui,sans-serif;letter-spacing:.3em;text-anchor:middle;fill:var(--zm-shore);opacity:.45;pointer-events:none}
 .zm-sea-t.big{font-size:13px;letter-spacing:.25em}
 /* Guild scribe: when the guild plays, raid nights, recipes known */
@@ -2848,10 +2854,25 @@ function zonePlace(name){if(!ZMAPS)return null;const k=zKey(name),a=ZONE_ALIAS[k
   return null}
 // Draws one continent ("kalimdor", "ek") or the whole world, the way the game's world map lays it out: Kalimdor on the
 // left, the Eastern Kingdoms on the right, Zephras Isle and the Maelstrom in the sea between.
+// Dungeons and raids in the scribe's zone notes. The game reports the instance as the zone ("Scarlet Monastery", "Dire
+// Maul", "Blackrock Depths"), so wings share one name and Blackrock Mountain's instances share one entrance pin.
+const DG_ENTRANCE=n=>{const t=String(n||"").replace(/\s*\(.*\)$/,"");
+  if(/^Scarlet Monastery/i.test(t))return"Scarlet Monastery";if(/^Dire Maul/i.test(t))return"Dire Maul";if(/^Stratholme/i.test(t))return"Stratholme";
+  if(/Blackrock (Depths|Spire)|Molten Core|Blackwing Lair/i.test(t))return"Blackrock Mountain";if(/Atal'?Hakkar|Sunken Temple/i.test(t))return"Sunken Temple";
+  if(/Ahn'?Qiraj/i.test(t))return"Ahn'Qiraj";return t};
+let DG_INFO=null;
+function dgInfo(){if(DG_INFO)return DG_INFO;const m=new Map(),add=(name,lv,raid)=>{const k=zKey(DG_ENTRANCE(name));const o=m.get(k)||{name:DG_ENTRANCE(name),lo:99,hi:0,raid:false,parts:[]};
+    const [a,b]=String(lv).split(/[–-]/).map(Number);if(a)o.lo=Math.min(o.lo,a);if(b||a)o.hi=Math.max(o.hi,b||a);if(raid)o.raid=true;if(DG_ENTRANCE(name)!==name)o.parts.push(name);m.set(k,o)};
+  for(const[n,lv]of DUNGEONS)add(n,lv,false);for(const[n,size]of RAIDS)add(n,"60",true);
+  for(const n of["Molten Core","Blackwing Lair","Zul'Gurub","Ruins of Ahn'Qiraj","Naxxramas"])add(n,"60",true);
+  return DG_INFO=m}
+const dgOf=name=>dgInfo().get(zKey(DG_ENTRANCE(name)))||null;
+const dgLevels=d=>d.raid&&d.lo>=60?"Raid":d.lo<99?`Levels ${d.lo}–${d.hi}`:"";
 function zoneMapSvg(view,tot,sel){const W=ZMAPS.world||{w:860,h:660,ek:[470,10]};
   const parts=view==="world"?[["kalimdor",0,0],["ek",W.ek[0],W.ek[1]],["zephras",0,0]]:[[view,0,0]];
   const hrs=new Map();for(const z of tot.values()){const p=zonePlace(z.name);if(p&&parts.some(x=>x[0]===p.c)){const n=p.zone||p.city;hrs.set(n,(hrs.get(n)||0)+z.min)}}
   const isCity=n=>parts.some(([c])=>ZMAPS[c]&&ZMAPS[c].cities[n]);
+  const dgHrs=new Map();for(const z of tot.values()){const d=dgOf(z.name);if(d){const k=zKey(d.name);dgHrs.set(k,(dgHrs.get(k)||0)+z.min)}}
   const max=Math.max(1,...[...hrs.entries()].filter(([n])=>!isCity(n)).map(x=>x[1])),lvl=n=>{const v=hrs.get(n)||0;return v?Math.max(1,Math.min(5,Math.ceil(v/max*5))):0};
   const u="zm"+view,world=view==="world";
   let defs="",body="",top="";
@@ -2870,6 +2891,10 @@ function zoneMapSvg(view,tot,sel){const W=ZMAPS.world||{w:860,h:660,ek:[470,10]}
     let cities="";for(const[n,[x,y,side]]of Object.entries(C.cities)){const v=hrs.get(n)||0,e=xmlEsc(n);
       const tx=side==="r"?`x="${x+8}" y="${y+3}" style="text-anchor:start"`:`x="${x}" y="${y-8}"`;
       cities+=`<g data-z="${e}"><circle cx="${x}" cy="${y}" r="5" class="zm-c${n===sel?" sel":""}"><title>${e}${v?": "+zHours(v):""}</title></circle><text ${tx} class="zm-t c">${e}${v?" · "+zHours(v):""}</text></g>`}
+    // Entrance pins for the dungeons and raids guildies were in (only the visited ones, so the map stays clean).
+    let pins="";for(const[n,[x,y]]of Object.entries(C.dg||{})){const v=dgHrs.get(zKey(n))||0;if(!v)continue;const e=xmlEsc(n);
+      pins+=`<g data-z="${e}" class="zm-dg${n===sel?" sel":""}"><path d="M${x} ${y-6}L${x+6} ${y}L${x} ${y+6}L${x-6} ${y}Z"><title>${e}: ${zHours(v)}</title></path></g>`}
+    cities+=pins;
     defs+=`<clipPath id="${id}-l"><path d="${C.land}"/></clipPath>`;
     body+=`<g${tf}><path d="${C.land}" fill="none" stroke="var(--zm-glow)" stroke-width="16" stroke-linejoin="round" opacity=".35" filter="url(#${u}-b)"/>
 <path d="${C.land}" fill="none" stroke="var(--zm-shore)" stroke-width="5" stroke-linejoin="round" opacity=".35"/>
@@ -2901,34 +2926,42 @@ function wherePlays(){const sc=S.scribe;if(!sc)return null;
     any?seg("Time span",[["week","This week"],["month","4 weeks"],["all","All time"]],range,k=>setUi({zmRange:k,zmSel:null},true)):null);
   if(!any)return h("section",{class:"card","aria-labelledby":"zm-h",style:"gap:.5rem"},head,h("p",{class:"small ter",style:"margin:0"},"Building up. Once the guild scribe has noted where people are (version 0.7 or later), the time guildies spend in each zone shows here on a map."));
   if(!ZMAPS){loadZoneMaps();return h("section",{class:"card","aria-labelledby":"zm-h",style:"gap:.5rem"},head,h("p",{class:"small ter",style:"margin:0"},"Drawing the map…"))}
-  const rows=[...tot.values()].map(z=>({...z,place:zonePlace(z.name)})).sort((a,b)=>b.min-a.min);
-  const onK=rows.filter(r=>r.place&&r.place.c==="kalimdor").reduce((a,r)=>a+r.min,0),onE=rows.filter(r=>r.place&&r.place.c==="ek").reduce((a,r)=>a+r.min,0);
+  // Zones on the map, dungeons and raids (merged by entrance, so Scarlet Monastery's wings are one row), and anywhere else.
+  const all=[...tot.values()].map(z=>({...z,place:zonePlace(z.name),dg:dgOf(z.name)}));
+  const dgRows=[...all.filter(r=>r.dg).reduce((m,r)=>{const k=zKey(r.dg.name),o=m.get(k)||{name:r.dg.name,dg:r.dg,min:0,other:0,who:new Map()};o.min+=r.min;o.other+=r.other;
+    for(const[id,v]of r.who)o.who.set(id,(o.who.get(id)||0)+v);m.set(k,o);return m},new Map()).values()].sort((a,b)=>b.min-a.min);
+  const rows=all.filter(r=>r.place&&!r.dg).sort((a,b)=>b.min-a.min),off=all.filter(r=>!r.place&&!r.dg).sort((a,b)=>b.min-a.min);
+  const onK=rows.filter(r=>r.place.c==="kalimdor").reduce((a,r)=>a+r.min,0),onE=rows.filter(r=>r.place.c==="ek").reduce((a,r)=>a+r.min,0);
   const busier=onE>onK?"ek":"kalimdor",cont=S.ui.zmCont||(window.innerWidth<700?busier:"world"),sel=S.ui.zmSel||null;
-  const pick=n=>{const p=zonePlace(n),onMap=cont==="world"||(p&&p.c===cont);setUi({zmSel:S.ui.zmSel===n?null:n,...(p&&!onMap&&p.c!=="zephras"?{zmCont:p.c}:p&&p.c==="zephras"&&cont!=="world"?{zmCont:"world"}:{})})};
+  const pinOn=n=>{for(const c of["kalimdor","ek"])if(ZMAPS[c]&&ZMAPS[c].dg&&ZMAPS[c].dg[n])return c;return null};
+  const pick=n=>{const p=zonePlace(n),pc=p?p.c:pinOn(n),onMap=cont==="world"||pc===cont;
+    setUi({zmSel:S.ui.zmSel===n?null:n,...(pc&&!onMap?{zmCont:pc==="zephras"?"world":pc}:{})})};
   const map=h("div",{class:"zm-map",onclick:e=>{const t=e.target.closest&&e.target.closest("[data-z]");if(t)pick(t.getAttribute("data-z"))}});
   map.innerHTML=zoneMapSvg(cont,tot,sel);
-  const nameOfPlace=r=>r.place?(r.place.zone||r.place.city):r.name;
-  const selRow=sel&&rows.find(r=>nameOfPlace(r)===sel);
+  const nameOf2=r=>r.dg?r.name:r.place?(r.place.zone||r.place.city):r.name;
+  const selRow=sel&&([...rows,...dgRows].find(r=>nameOf2(r)===sel));
   const whoLine=(r,n)=>{const ppl=[...r.who.entries()].map(([id,m])=>[anyById(id),m]).filter(x=>x[0]).sort((a,b)=>b[1]-a[1]);
-    const shown=ppl.slice(0,n);const more=ppl.length-shown.length+(r.other>0?1:0);
+    const shown=ppl.slice(0,n),rest=ppl.length-shown.length,bits=[];if(rest>0)bits.push(rest+" more");if(r.other>0)bits.push("guildies not on the site");
     return h("span",{class:"zm-who small"},shown.map(([m,v])=>h("span",{class:"row",style:"gap:.25rem"},classIcon(m.cls),nameOf(m),h("span",{class:"ter"},zHours(v)))),
-      more>0?h("span",{class:"ter"},(shown.length?"and ":"")+(ppl.length-shown.length>0?(ppl.length-shown.length)+" more":"")+(r.other>0?(ppl.length-shown.length>0?" plus ":"")+"guildies not on the site":"")):null)};
-  const topMax=rows.length?rows[0].min:1,list=rows.slice(0,6);
-  const busiest=h("div",{class:"card",style:"gap:.5rem;padding:.875rem 1rem"},h("div",{class:"spread"},h("h3",{style:"margin:0;font-size:1rem"},"Busiest zones"),h("span",{class:"small ter"},range==="week"?"this week":range==="month"?"last 4 weeks":"all time")),
-    rows.length?h("ul",{class:"zm-top"},list.map(r=>{const n=nameOfPlace(r);return h("li",{},h("button",{type:"button","aria-pressed":String(sel===n),onclick:()=>pick(n)},
-      h("b",{},n),h("span",{class:"small ter"},zHours(r.min)),h("span",{class:"zm-bar","aria-hidden":"true"},h("i",{style:`width:${Math.max(4,Math.round(r.min/topMax*100))}%`})),whoLine(r,3)))})):h("p",{class:"small ter",style:"margin:0"},"Nobody noted in this span."));
-  const detail=selRow?h("div",{style:"border-left:2px solid var(--accent-text);padding:.125rem 0 .125rem .75rem;display:flex;flex-direction:column;gap:.375rem"},
-      h("div",{class:"spread"},h("b",{},nameOfPlace(selRow)),h("span",{class:"small ter"},zHours(selRow.min)+" of guild time")),whoLine(selRow,12)):
-    sel?h("p",{class:"small ter",style:"margin:0;border-left:2px solid var(--sep);padding-left:.75rem"},sel+": nobody noted there "+(range==="week"?"this week":range==="month"?"in the last 4 weeks":"yet")+"."):null;
-  const off=rows.filter(r=>!r.place);
-  const key=h("div",{class:"zm-key"},"Less",[1,2,3,4,5].map(i=>h("i",{style:`background:var(--zm-${i})`})),"More");
+      bits.length?h("span",{class:"ter"},(shown.length?"and ":"")+bits.join(" and ")):null)};
+  const span=range==="week"?"this week":range==="month"?"last 4 weeks":"all time";
+  const barList=(list,max,extra,nWho=3)=>h("ul",{class:"zm-top"},list.map(r=>{const n=nameOf2(r);return h("li",{},h("button",{type:"button","aria-pressed":String(sel===n),onclick:()=>pick(n)},
+      h("span",{class:"zm-nm"},h("b",{},n),extra?extra(r):null),h("span",{class:"small ter"},zHours(r.min)),h("span",{class:"zm-bar","aria-hidden":"true"},h("i",{style:`width:${Math.max(4,Math.round(r.min/max*100))}%`})),whoLine(r,nWho)))}));
+  const busiest=h("div",{class:"card zm-card"},h("div",{class:"spread"},h("h3",{},"Busiest zones"),h("span",{class:"small ter"},span)),
+    rows.length?barList(rows.slice(0,5),rows[0].min,null,2):h("p",{class:"small ter",style:"margin:0"},"Nobody noted in a zone in this span."));
+  const dgCard=dgRows.length?h("div",{class:"card zm-card zm-dgl"},h("div",{class:"spread"},h("h3",{},h("span",{class:"zm-dgi","aria-hidden":"true"}),"Dungeons and raids"),h("span",{class:"small ter"},span)),
+    barList(dgRows.slice(0,6),dgRows[0].min,r=>h("span",{class:"tag small"},dgLevels(r.dg)))):null;
+  const detail=selRow?h("div",{class:"zm-detail"},
+      h("div",{class:"spread"},h("b",{},nameOf2(selRow)),h("span",{class:"small ter"},zHours(selRow.min)+(selRow.dg?" · "+dgLevels(selRow.dg):""))),whoLine(selRow,12)):
+    sel?h("p",{class:"small ter zm-detail"},sel+": nobody noted there "+(range==="week"?"this week":range==="month"?"in the last 4 weeks":"yet")+"."):null;
+  const key=h("div",{class:"zm-key"},"Less",[1,2,3,4,5].map(i=>h("i",{style:`background:var(--zm-${i})`})),"More",h("span",{class:"zm-dgi","aria-hidden":"true",style:"margin-left:.75rem"}),"Dungeon or raid entrance");
   return h("section",{class:"card","aria-labelledby":"zm-h",style:"gap:.75rem"},head,
     h("div",{class:"zm"+(cont==="world"?" world":"")},h("div",{style:"display:flex;flex-direction:column;gap:.5rem;min-width:0"},
         seg("Map",[["world","World"],["kalimdor","Kalimdor"],["ek","Eastern Kingdoms"]],cont,k=>setUi({zmCont:k},true)),map,
-        h("div",{class:"spread",style:"flex-wrap:wrap;gap:.25rem .75rem"},key,h("span",{class:"small ter"},"Tap a zone for who was there."))),
+        h("div",{class:"spread",style:"flex-wrap:wrap;gap:.25rem .75rem"},key,h("span",{class:"small ter"},"Tap a zone or entrance for who was there.")),dgCard),
       h("div",{class:"zm-side"},detail,busiest,
-        off.length?h("p",{class:"small",style:"margin:0"},h("span",{class:"ter"},"Also in dungeons, raids and places the map doesn't show: "),off.slice(0,8).map((r,i)=>[i?", ":"",r.name+" "+zHours(r.min)])):null,
-        h("p",{class:"small ter",style:"margin:0"},"Guildie-time: two people in a zone for an hour is 2h. Counted every five minutes while the guild scribe is online, so it only sees time when the scribe is on. Cities count on their own, so Orgrimmar doesn't swamp the levelling zones. Our own drawing of the continents, not Blizzard's map."))))}
+        off.length?h("p",{class:"small",style:"margin:0"},h("span",{class:"ter"},"Also: "),off.slice(0,6).map((r,i)=>[i?", ":"",r.name+" "+zHours(r.min)])):null,
+        h("p",{class:"small ter",style:"margin:0"},"Hours are guildie-time (two people for an hour is 2h), counted while the guild scribe is online. Cities count on their own."))))}
 // "2nd of 6 in the guild": a line under each profession and the honourable kills on a character's page.
 function rankLine(get,m,noun){const r=rankOfIn(get,m);if(!r||r.of<2)return null;
   const t=r.place===1&&!r.tied?"Best "+noun+" in the guild":(r.tied?"Joint ":"")+ordinal(r.place)+" of "+r.of+" in the guild";

@@ -39,6 +39,10 @@ KAL=dict(
   "Desolace":(62,462),"Shen'dralas":(109,512,{"lines":["Shen'","dralas"],"fs":7}),"Dustwallow Marsh":(278,598),"Feralas":(82,598),"Thousand Needles":(236,634),"Un'Goro Crater":(190,708),
   "Silithus":(88,742),"Tanaris":(268,748)},
  cities={"Orgrimmar":(300,354,"r"),"Thunder Bluff":(156,478)},
+ # Dungeon and raid entrances, roughly where they are in game (one pin per entrance).
+ dg={"Ragefire Chasm":(290,372),"Wailing Caverns":(206,446),"Razorfen Kraul":(200,592),"Razorfen Downs":(232,606),"Blackfathom Deeps":(112,284),
+  "Maraudon":(58,498),"Zul'Farrak":(252,694),"Dire Maul":(98,586),"Onyxia's Lair":(270,606),"Ahn'Qiraj":(82,800),"Hyjal Summit":(244,226),
+  "Alcaz Island Prison":(318,532),"Shaper's Terrace":(182,742)},
  closed=[])
 EK=dict(
  scale=.74,ox=40,oy=10,
@@ -79,6 +83,9 @@ EK=dict(
   "Burning Steppes":(212,586),"Elwynn Forest":(150,620),"Westfall":(72,675),"Redridge Mountains":(250,622),"Duskwood":(148,675),"Deadwind Pass":(206,690,{"fs":7}),
   "Swamp of Sorrows":(268,660,{"lines":["Swamp of","Sorrows"]}),"Blasted Lands":(252,730),"Stranglethorn Vale":(168,760)},
  cities={"Undercity":(146,182)},
+ dg={"Shadowfang Keep":(84,262),"Scarlet Monastery":(166,146),"Ruins of Lordaeron":(122,180),"City of Dalaran":(142,240),"Scholomance":(212,196),
+  "Stratholme":(292,132),"Naxxramas":(338,170),"Gnomeregan":(92,468),"The Deadmines":(62,700),"The Stockade":(88,600),"Excavation Site: Wetlands":(232,384),
+  "Uldaman":(268,506),"Blackrock Mountain":(204,568),"Sunken Temple":(292,676),"Zul'Gurub":(206,728)},
  closed=["Quel'Thalas","Gilneas"])
 SHORT={"Stonetalon Mountains":"Stonetalon","Dustwallow Marsh":"Dustwallow","Un'Goro Crater":"Un'Goro","Western Plaguelands":"W. Plaguelands","Eastern Plaguelands":"E. Plaguelands",
  "Silverpine Forest":"Silverpine","Alterac Mountains":"Alterac","Hillsbrad Foothills":"Hillsbrad","The Hinterlands":"Hinterlands","Arathi Highlands":"Arathi","Elwynn Forest":"Elwynn",
@@ -93,5 +100,6 @@ ZEP=dict(
  z={"Zephras Isle":[(380,20),(520,20),(520,160),(380,160)]},
  lab={"Zephras Isle":(447,94)},
  cities={},
+ dg={},
  closed=[])
 WORLD=dict(w=860,h=660,ek=(470,10))
