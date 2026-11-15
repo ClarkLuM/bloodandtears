@@ -11,7 +11,7 @@
 -- The addon never sends anything anywhere, reads nothing during combat and draws nothing on screen. /scribe shows a summary.
 
 local ADDON = ...
-local VERSION = 1
+local VERSION = 2
 local DAYS_KEPT = 60          -- days of "seen" days kept per member
 local HOURS_KEPT = 42         -- days of hourly online counts kept
 local EVENTS_KEPT = 200       -- joins and leaves
@@ -55,8 +55,16 @@ local function prune()
   for i = 1, #keys - RAIDS_KEPT do db.raids[keys[i]] = nil end
 end
 
+-- The game only lists offline guildies when "Show Offline Members" is ticked in the guild window. Without it the
+-- list holds just the people online, so their levels were the only ones noted and everyone else looked "gone".
+-- So the scribe ticks it while it reads, then puts your setting back straight after.
+local showOffline = GetGuildRosterShowOffline or (C_GuildInfo and C_GuildInfo.GetShowOffline)
+local setShowOffline = SetGuildRosterShowOffline or (C_GuildInfo and C_GuildInfo.SetShowOffline)
+local putBack = false
+
 local function askRoster()
   if not IsInGuild() then return end
+  if showOffline and setShowOffline and not showOffline() then putBack = true; setShowOffline(true) end
   if C_GuildInfo and C_GuildInfo.GuildRoster then C_GuildInfo.GuildRoster() elseif GuildRoster then GuildRoster() end
 end
 
@@ -64,6 +72,8 @@ local function readRoster()
   if not db or not IsInGuild() or InCombatLockdown() then return end
   local n = GetNumGuildMembers() or 0
   if n == 0 then return end
+  -- A list without the offline guildies is only half the picture: note the people online, but don't mark anyone gone.
+  local full_list = not showOffline or showOffline()
   local t = now()
   db.guild = GetGuildInfo("player")
   db.realm = GetRealmName()
@@ -100,7 +110,8 @@ local function readRoster()
     end
   end
   -- Anyone no longer on the list is kept but marked as gone, so the site can tell leavers from quiet players.
-  for name, m in pairs(db.members) do if not present[name] then m.gone = true end end
+  if full_list then for name, m in pairs(db.members) do if not present[name] then m.gone = true end end end
+  if putBack and full_list and setShowOffline then putBack = false; C_Timer.After(0, function() setShowOffline(false) end) end
   local hk = hourOf(t)
   if (db.hours[hk] or 0) < online then db.hours[hk] = online end
   prune()

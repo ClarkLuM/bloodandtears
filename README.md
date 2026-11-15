@@ -123,6 +123,8 @@ These aren't in the code:
 
 It sends nothing anywhere, reads nothing in combat and draws nothing on screen. `/scribe` in game shows a summary.
 
+Version 0.2.0 (15 Nov 2026) reads offline guildies too. The game's guild list only includes them when "Show Offline Members" is ticked, so the scribe ticks it while it reads and puts the setting back straight after; a list read without them no longer marks the offline guildies as gone. Levels in the notes file aren't used by the site yet: levels, and the level firsts in the Hall of Firsts, come from the armory.
+
 **Install:** copy the `BloodAndTearsScribe` folder into the game's `Interface\AddOns` folder (or install it from CurseForge once it's published there), then tick it in the in-game AddOns list.
 
 **Upload:** the game saves the notes when you log out or type `/reload`, to `WTF\Account\<ACCOUNT>\SavedVariables\BloodAndTearsScribe.lua` in the game folder. It has the same name as the addon's own file, so check it starts with `BloodAndTearsScribeDB = {`. On the site, open Roster, then Details next to "Up to date", and choose **Upload the scribe file** (officers only). The server (`scribeUpload`) reads the file as data, matches names to characters, skips anyone who opted out, and keeps what it uses in `guild/scribe`. Every few days is plenty: the guild list reports last-online times back from the moment of upload.
