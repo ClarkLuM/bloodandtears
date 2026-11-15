@@ -958,14 +958,16 @@ a.r-name:hover{color:var(--accent-text)}
 .zm-z:hover{filter:brightness(1.18)}
 .zm-z.l1{fill:var(--zm-1)}.zm-z.l2{fill:var(--zm-2)}.zm-z.l3{fill:var(--zm-3)}.zm-z.l4{fill:var(--zm-4)}.zm-z.l5{fill:var(--zm-5)}
 .zm-sel{fill:none;stroke:var(--gold-hi);stroke-width:2.4;stroke-linejoin:round;pointer-events:none}
-.zm-t{font:600 9px Figtree,system-ui,sans-serif;text-anchor:middle;paint-order:stroke;stroke:var(--zm-halo);stroke-width:2.5px;fill:var(--zm-lab0);pointer-events:none}
+.zm-t{font:600 calc(9px*var(--zk,1)) Figtree,system-ui,sans-serif;text-anchor:middle;paint-order:stroke;stroke:var(--zm-halo);stroke-width:2.5px;fill:var(--zm-lab0);pointer-events:none}
 .zm-t.on{fill:var(--zm-lab)}:root:not([data-theme="light"]) .zm-t.on{fill:#f6e7da}
 :root[data-theme="light"] .zm-t.hot{fill:#fff;stroke:#5a0716}
-.zm-t.h{font-size:8px;fill:var(--accent-text)}:root[data-theme="light"] .zm-t.h.hot{fill:#ffe9c9}
-.zm-t.x{font-size:7px;font-style:italic}
+.zm-t.h{font-size:calc(8px*var(--zk,1));fill:var(--accent-text)}:root[data-theme="light"] .zm-t.h.hot{fill:#ffe9c9}
+.zm-t.x{font-size:calc(7px*var(--zk,1));font-style:italic}
 .zm-c{cursor:pointer;fill:var(--zm-city);stroke:var(--zm-halo);stroke-width:2}
 .zm-c.sel{stroke:var(--gold-hi);stroke-width:3}
-.zm-t.c{fill:var(--zm-city);font-size:8.5px}
+.zm-t.c{fill:var(--zm-city);font-size:calc(8.5px*var(--zk,1))}
+/* The World view is drawn smaller, so its text is scaled up to stay readable */
+.zm-svg.w{--zk:1.25}
 .zm-side{display:flex;flex-direction:column;gap:1rem;min-width:0}
 .zm-top{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .zm-top li{border-top:1px solid var(--sep)}.zm-top li:first-child{border-top:0}
@@ -2885,7 +2887,7 @@ function zoneMapSvg(view,tot,sel){const W=ZMAPS.world||{w:860,h:660,ek:[470,10]}
   const isCity=n=>parts.some(([c])=>ZMAPS[c]&&ZMAPS[c].cities[n]);
   const dgHrs=new Map();for(const z of tot.values()){const d=dgOf(z.name);if(d){const k=zKey(d.name);dgHrs.set(k,(dgHrs.get(k)||0)+z.min)}}
   const max=Math.max(1,...[...hrs.entries()].filter(([n])=>!isCity(n)).map(x=>x[1])),lvl=n=>{const v=hrs.get(n)||0;return v?Math.max(1,Math.min(5,Math.ceil(v/max*5))):0};
-  const u="zm"+view,world=view==="world";
+  const u="zm"+view,world=view==="world",K=world?1.25:1;
   let defs="",body="",top="";
   for(const[c,dx,dy]of parts){const C=ZMAPS[c];if(!C)continue;const id=u+c,tf=dx||dy?` transform="translate(${dx} ${dy})"`:"";
     let zones="",labels="",closed="",selPath="";
@@ -2894,13 +2896,13 @@ function zoneMapSvg(view,tot,sel){const W=ZMAPS.world||{w:860,h:660,ek:[470,10]}
       if(z.closed)closed+=`<path d="${z.d}" fill="url(#${u}-x)"/>`;
       if(n===sel)selPath=`<path d="${z.d}" class="zm-sel"/>`;
       // Labels are always horizontal. A narrow zone's label is smaller or on two lines (z.l, z.f), or sits just offshore.
-      const cls="zm-t"+(l?" on":"")+(l>=3?" hot":""),fs=z.f||9,lines=z.l||[z.s],lh=fs+1,fsA=z.f?` style="font-size:${fs}px"`:"";
+      const cls="zm-t"+(l?" on":"")+(l>=3?" hot":""),fs=(z.f||9)*K,lines=z.l||[z.s],lh=fs+1,fsA=z.f?` style="font-size:${fs}px"`:"";
       labels+=`<text x="${z.x}" y="${z.y}" class="${cls}"${fsA}>${lines.map((t,i)=>`<tspan x="${z.x}" dy="${i?lh:0}">${xmlEsc(t)}</tspan>`).join("")}</text>`;
       const below=z.y+(lines.length-1)*lh;
-      if(z.closed)labels+=`<text x="${z.x}" y="${below+9}" class="zm-t x">closed</text>`;
-      else if(v)labels+=`<text x="${z.x}" y="${below+Math.min(10,fs+1)}" class="zm-t h${l>=3?" hot":""}">${zHours(v)}</text>`}
+      if(z.closed)labels+=`<text x="${z.x}" y="${below+9*K}" class="zm-t x">closed</text>`;
+      else if(v)labels+=`<text x="${z.x}" y="${below+Math.min(10,(z.f||9)+1)*K}" class="zm-t h${l>=3?" hot":""}">${zHours(v)}</text>`}
     let cities="";for(const[n,[x,y,side]]of Object.entries(C.cities)){const v=hrs.get(n)||0,e=xmlEsc(n);
-      const tx=side==="r"?`x="${x+8}" y="${y+3}" style="text-anchor:start"`:`x="${x}" y="${y-8}"`;
+      const tx=side==="r"?`x="${x+8}" y="${y+3*K}" style="text-anchor:start"`:`x="${x}" y="${y-8}"`;
       cities+=`<g data-z="${e}"><circle cx="${x}" cy="${y}" r="5" class="zm-c${n===sel?" sel":""}"><title>${e}${v?": "+zHours(v):""}</title></circle><text ${tx} class="zm-t c">${e}${v?" · "+zHours(v):""}</text></g>`}
     // Every dungeon and raid entrance as a faint diamond, filled gold where guildies were in this span.
     // An entrance inside a capital (Ragefire Chasm in Orgrimmar) is a small badge on the city's dot.
@@ -2925,7 +2927,7 @@ ${labels}${cities}</g>`}
 <text x="205" y="${vh-6}" class="zm-sea-t big">Kalimdor</text><text x="${W.ek[0]+275}" y="${vh-6}" class="zm-sea-t big">Eastern Kingdoms</text></g>`:"";
   const best=[...hrs.entries()].sort((a,b)=>b[1]-a[1])[0];
   const label=(world?"World":view==="ek"?"Eastern Kingdoms":"Kalimdor")+" map of where the guild played"+(best?". Busiest: "+best[0]+", "+zHours(best[1])+".":".");
-  return `<svg viewBox="0 0 ${vw} ${vh}" class="zm-svg" role="img" aria-label="${xmlEsc(label)}"><defs>${defs}
+  return `<svg viewBox="0 0 ${vw} ${vh}" class="zm-svg${world?" w":""}" role="img" aria-label="${xmlEsc(label)}"><defs>${defs}
 <filter id="${u}-b" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3"/></filter>
 <filter id="${u}-p" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="3"/><feColorMatrix values="0 0 0 0 .08 0 0 0 0 .05 0 0 0 0 .03 0 0 0 -1.6 1.1"/></filter>
 <filter id="${u}-m" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".025" numOctaves="3" seed="9"/><feColorMatrix values="0 0 0 0 1 0 0 0 0 .85 0 0 0 0 .6 0 0 0 .9 -.35"/></filter>
