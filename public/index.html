@@ -2469,6 +2469,8 @@ function scribeStamps(m){const sc=S.scribe||{},out=[];
   for(const r of Object.values(sc.runs||{}))if((r.ids||[]).includes(m.id)){const d=dgName(r.zone);if(d)out.push([d,r.day+"T12:00:00+08:00"])}
   for(const k of Array.isArray(sc.kills)?sc.kills:[])if((k.ids||[]).includes(m.id)){const d=dgName(k.zone,k.boss);if(d)out.push([d,k.at])}
   for(const l of Array.isArray(sc.loot)?sc.loot:[])if(l.id===m.id){const d=dgName(l.zone,null,l.item&&l.item.name);if(d)out.push([d,l.at])}
+  // Dungeons the player marked as done on the addon's Dungeons tab.
+  for(const[d,at]of Object.entries((sc.stamps||{})[m.id]||{})){const n=dgName(d);if(n)out.push([n,at])}
   return out}
 // Dungeons worked out from loot: gear they're wearing now, plus items the Journey saw them equip or loot.
 function lootStampsOf(m){const out=new Map(),see=(name,at)=>{const hit=DUNGEON_LOOT[String(name||"").trim().toLowerCase()];if(!hit)return;

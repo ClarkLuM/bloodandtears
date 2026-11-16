@@ -59,6 +59,7 @@ local function init()
   db.joined = db.joined or {}   -- when the scribe saw each guildie join (for "a month in the guild")
   db.profs = db.profs or {}     -- professions and skill each scribe shares for its own character
   db.stamps = db.stamps or {}   -- dungeons a player marked as done on the Dungeons tab, per character
+  db.mine = db.mine or {}       -- this account's characters that have logged in with the scribe (for alts and mains)
   if db.ui.pip == nil then db.ui.pip = true end
   if db.ui.share == nil then db.ui.share = true end
   if db.ui.summary == nil then db.ui.summary = true end
@@ -67,6 +68,7 @@ end
 
 -- Who's online right now, from the latest guild list read (not saved).
 local onlineNow = {}
+local notes = {}   -- guild list public notes, for "alt of X" (not saved)
 
 local function note(who, what)
   local e = { t = now(), who = who, what = what }
@@ -124,8 +126,9 @@ local function readRoster()
   local today, present, online = dayOf(t), {}, 0
   wipe(onlineNow)
   for i = 1, n do
-    local full, rankName, _, level, _, zone, _, _, isOnline, _, classFile = GetGuildRosterInfo(i)
+    local full, rankName, _, level, _, zone, pubNote, _, isOnline, _, classFile = GetGuildRosterInfo(i)
     if full then
+      notes[short(full)] = pubNote
       local name = short(full)
       present[name] = true
       local m = db.members[name]
@@ -432,7 +435,7 @@ end
 -- fonts and plain coloured textures, so it needs no other files except the gingerbread logo (logo.tga).
 ---------------------------------------------------------------------------------------------------------------------
 local LOGO = "Interface\\AddOns\\" .. (ADDON or "BloodAndTearsScribe") .. "\\logo"
-local GOLD, DIM, INK = "|cfff0c35a", "|cffa8957d", "|cffe9dcc8"
+local GOLD, DIM, INK = "|cffe0a862", "|cffa6948e", "|cffefe6e2"   -- the site's accent text, tertiary and primary ink
 local QHEX = { [0] = "|cff9d9d9d", "|cffffffff", "|cff1eff00", "|cff0070dd", "|cffa335ee", "|cffff8000", "|cffe6cc80" }
 local W = 430
 -- Small pictures inside text (the game's fonts have no symbols): a sword for a run, a bag for a drop, light for a ding.
@@ -455,6 +458,29 @@ local function nameIn(name, cls) return classHex(cls) .. (name or "?") .. "|r" e
 -- look the rest up in the guild list.
 local function fullName(n) local _, full = guildie(n); return full or n end
 local function memberName(n) local m, full = guildie(n); return nameIn(full or n, m and m.class) end
+-- Whose alt a character is: one of your own characters (you pick your main on the Scribe tab), what another scribe
+-- shared for theirs, or a guild note that says "alt" and names a guildie. Returns the main's full name, or nil.
+local function myMain()
+  if db.ui.main and db.mine[db.ui.main] then return db.ui.main end
+  local best
+  for n, c in pairs(db.mine) do if not best or (c.lv or 0) > (db.mine[best].lv or 0) then best = n end end
+  return best
+end
+local function mainOf(name)
+  local short1 = first(name)
+  if db.mine[short1] then local mn = myMain(); if mn and mn ~= short1 then return fullName(mn) end return nil end
+  local p = db.profs[short1] or db.profs[name]
+  if p and p.main and p.main ~= "" and p.main ~= short1 then return fullName(p.main) end
+  local note = notes[name] or notes[short1]
+  if note and note:lower():find("alt") then
+    for full in pairs(db.members) do
+      local f1 = first(full)
+      if f1 ~= short1 and #f1 > 2 and note:lower():find(f1:lower(), 1, true) then return full end
+    end
+  end
+  return nil
+end
+local function altTag(name) local mn = mainOf(name); return mn and (DIM .. "  alt of " .. mn .. "|r") or "" end
 local function itemText(l) return (QHEX[l.q or 2] or QHEX[2]) .. "[" .. (l.name or "?") .. "]|r" end
 local function clock(t) local h, mi = tonumber(date("!%H", t + PERTH)), date("!%M", t + PERTH); return ((h % 12 == 0) and 12 or h % 12) .. ":" .. mi .. (h < 12 and "am" or "pm") end
 local function hrs(min) if min < 60 then return math.floor(min + 0.5) .. "m" elseif min < 600 then return (math.floor(min / 6 + 0.5) / 10) .. "h" else return math.floor(min / 60 + 0.5) .. "h" end end
@@ -546,6 +572,12 @@ local function text(parent, font, justify)
   local fs = parent:CreateFontString(nil, "OVERLAY", font or "GameFontHighlightSmall")
   fs:SetJustifyH(justify or "LEFT")
   if fs.SetWordWrap then fs:SetWordWrap(false) end
+  -- Easier to read over a see-through panel: a soft shadow under every line, and the site's ink colours instead of the
+  -- game's dim grey and bright white.
+  fs:SetShadowColor(0, 0, 0, 0.9); fs:SetShadowOffset(1, -1)
+  if font == "GameFontDisableSmall" then fs:SetTextColor(0.75, 0.68, 0.66)
+  elseif font == nil or font == "GameFontHighlightSmall" or font == "GameFontHighlight" then fs:SetTextColor(0.937, 0.902, 0.886)
+  elseif font == "GameFontNormalLarge" or font == "GameFontNormalHuge" then fs:SetTextColor(0.941, 0.773, 0.549) end
   return fs
 end
 local function panel(name, w, h)
@@ -555,20 +587,20 @@ local function panel(name, w, h)
   if fr.SetBackdrop then
     fr:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
       tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 } })
-    fr:SetBackdropColor(0.10, 0.06, 0.05, 0.96)
-    fr:SetBackdropBorderColor(0.55, 0.38, 0.17, 1)
-  else
-    local bg = tex(fr, "BACKGROUND", 0.10, 0.06, 0.05, 0.96); bg:SetAllPoints()
+    fr:SetBackdropColor(0.086, 0.063, 0.063, 0)
+    fr:SetBackdropBorderColor(0.36, 0.27, 0.25, 1)
   end
+  -- A solid panel underneath, so the world and other windows don't show through the lists.
+  local bg = tex(fr, "BACKGROUND", 0.086, 0.063, 0.063, 0.9); bg:SetPoint("TOPLEFT", 4, -4); bg:SetPoint("BOTTOMRIGHT", -4, 4)
   -- The crimson header with the gingerbread and a gold title
-  local hd = tex(fr, "BORDER", 0.33, 0.06, 0.11, 1)
+  local hd = tex(fr, "BORDER", 0.122, 0.090, 0.086, 1)
   hd:SetPoint("TOPLEFT", 4, -4); hd:SetPoint("TOPRIGHT", -4, -4); hd:SetHeight(44)
-  local line = tex(fr, "BORDER", 0.55, 0.38, 0.17, 1)
-  line:SetPoint("TOPLEFT", hd, "BOTTOMLEFT"); line:SetPoint("TOPRIGHT", hd, "BOTTOMRIGHT"); line:SetHeight(1)
+  local line = tex(fr, "BORDER", 0.647, 0.051, 0.173, 1)
+  line:SetPoint("TOPLEFT", hd, "BOTTOMLEFT"); line:SetPoint("TOPRIGHT", hd, "BOTTOMRIGHT"); line:SetHeight(2)
   local logo = fr:CreateTexture(nil, "ARTWORK"); logo:SetTexture(LOGO); logo:SetSize(32, 32); logo:SetPoint("TOPLEFT", 12, -10)
   fr.title = text(fr, "GameFontNormalLarge"); fr.title:SetPoint("TOPLEFT", logo, "TOPRIGHT", 8, -1)
   fr.sub = text(fr, "GameFontDisableSmall"); fr.sub:SetPoint("TOPLEFT", fr.title, "BOTTOMLEFT", 0, -2)
-  local x = CreateFrame("Button", nil, fr, "UIPanelCloseButton"); x:SetPoint("TOPRIGHT", 0, 0)
+  local x = CreateFrame("Button", nil, fr, "UIPanelCloseButton"); x:SetSize(28, 28); x:SetPoint("TOPRIGHT", -8, -12)
   fr:EnableMouse(true); fr:SetMovable(true); fr:SetClampedToScreen(true)
   fr:RegisterForDrag("LeftButton")
   fr:SetScript("OnDragStart", function(self) if not (db and db.ui.lock) then self:StartMoving() end end)
@@ -582,61 +614,91 @@ local function rows(parent, n, top)
   local list = {}
   for i = 1, n do
     local r = CreateFrame("Frame", nil, parent)
-    r:SetSize(W - 28, 18)
-    r:SetPoint("TOPLEFT", 14, top - (i - 1) * 18)
+    r:SetSize(W - 28, 20)
+    r:SetPoint("TOPLEFT", 14, top - (i - 1) * 20)
+    r.sep = tex(r, "BACKGROUND", 1, 1, 1, 0.045); r.sep:SetPoint("BOTTOMLEFT", 0, -1); r.sep:SetPoint("BOTTOMRIGHT", 0, -1); r.sep:SetHeight(1)
     r.mark = text(r, "GameFontNormalSmall"); r.mark:SetPoint("LEFT", 0, 0); r.mark:SetWidth(14)
     r.right = text(r, "GameFontDisableSmall", "RIGHT"); r.right:SetPoint("RIGHT", 0, 0)
     r.main = text(r, "GameFontHighlightSmall"); r.main:SetPoint("LEFT", 16, 0); r.main:SetPoint("RIGHT", r.right, "LEFT", -6, 0)
     r.bar = tex(r, "BACKGROUND", 0.10, 0.06, 0.05, 1); r.bar:SetPoint("BOTTOMLEFT", 16, -1); r.bar:SetPoint("BOTTOMRIGHT", 0, -1); r.bar:SetHeight(3)
-    r.fill = tex(r, "ARTWORK", 0.94, 0.76, 0.35, 1); r.fill:SetPoint("TOPLEFT", r.bar); r.fill:SetPoint("BOTTOMLEFT", r.bar); r.fill:SetWidth(1)
+    r.fill = tex(r, "ARTWORK", 0.839, 0.616, 0.337, 1); r.fill:SetPoint("TOPLEFT", r.bar); r.fill:SetPoint("BOTTOMLEFT", r.bar); r.fill:SetWidth(1)
     r.bar:Hide(); r.fill:Hide()
+    -- A row can carry a few lines to show on hover (the grouped level-ups).
+    r:EnableMouse(true)
+    r:SetScript("OnEnter", function(self)
+      if not self.tip then return end
+      GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+      for _, l in ipairs(self.tip) do GameTooltip:AddLine(l, 1, 1, 1) end
+      GameTooltip:Show()
+    end)
+    r:SetScript("OnLeave", function() GameTooltip:Hide() end)
     list[i] = r
   end
   return list
 end
-local function setRow(r, mark, main, right, pct)
+local function setRow(r, mark, main, right, pct, tip)
+  r.tip = tip
   r.mark:SetText(mark or ""); r.main:SetText(main or ""); r.right:SetText(right or "")
-  if pct then r.bar:Show(); r.fill:Show(); r.fill:SetWidth(math.max(1, (W - 44) * math.min(1, pct))) else r.bar:Hide(); r.fill:Hide() end
+  if pct then r.bar:Show(); r.fill:Show(); r.sep:Hide(); r.fill:SetWidth(math.max(1, (W - 44) * math.min(1, pct))) else r.bar:Hide(); r.fill:Hide(); r.sep:Show() end
   r:Show()
 end
 
+-- The game's own red buttons, made easier to read: a smaller label in light text (gold for the chosen one, which also
+-- stays lit), with a shadow. Pass a frame made with UIPanelButtonTemplate.
+local function wowButton(b, w, h, label)
+  b:SetSize(w, h)
+  b:SetText(label)
+  local fs = b.GetFontString and b:GetFontString()
+  if fs then
+    fs:SetFontObject("GameFontHighlightSmall")
+    fs:SetShadowColor(0, 0, 0, 1); fs:SetShadowOffset(1, -1)
+    fs:SetTextColor(0.93, 0.89, 0.86)
+  end
+  b.setOn = function(self, on)
+    if on then self:LockHighlight() else self:UnlockHighlight() end
+    local f = self:GetFontString()
+    if f then if on then f:SetTextColor(1, 0.82, 0.35) else f:SetTextColor(0.93, 0.89, 0.86) end end
+  end
+  return b
+end
+
 -------------------------------------------------------------------- the main window
-local win = panel("BloodAndTearsScribeWindow", W, 470)
+local win = panel("BloodAndTearsScribeWindow", W, 490)
 win:SetPoint("CENTER", 0, 60)
 win.title:SetText("Blood and Tears")
 win.sub:SetText("Guild scribe " .. ((GetAddOnMetadata or (C_AddOns and C_AddOns.GetAddOnMetadata) or function() return "" end)(ADDON, "Version") or ""))
 local pages, tabs, current = {}, {}, "today"
 local function page(key)
-  local p = CreateFrame("Frame", nil, win); p:SetPoint("TOPLEFT", 4, -84); p:SetPoint("BOTTOMRIGHT", -4, 4); p:Hide()
+  local p = CreateFrame("Frame", nil, win); p:SetPoint("TOPLEFT", 4, -90); p:SetPoint("BOTTOMRIGHT", -4, 4); p:Hide()
   pages[key] = p; return p
 end
-local function label(p, s, y) local l = text(p, "GameFontNormalSmall"); l:SetPoint("TOPLEFT", 14, y); l:SetText(s); return l end
+local function label(p, s, y) local l = text(p, "GameFontNormalSmall"); l:SetPoint("TOPLEFT", 14, y); l:SetText(s); l:SetTextColor(0.651, 0.580, 0.557); return l end
 
 -- Today
 local pToday = page("today")
-local onlineLabel = label(pToday, "ONLINE NOW", -6)
-local onlineRows = rows(pToday, 7, -22)
-local todayLabel = label(pToday, "TODAY", -156)
-local feedRows = rows(pToday, 9, -172)
+local onlineLabel = label(pToday, "Online now", -6)
+local onlineRows = rows(pToday, 7, -26)
+local todayLabel = label(pToday, "Today", -178)
+local feedRows = rows(pToday, 8, -196)
 local todayFoot = text(pToday, "GameFontDisableSmall"); todayFoot:SetPoint("BOTTOMLEFT", 14, 12); todayFoot:SetWidth(W - 28)
 if todayFoot.SetWordWrap then todayFoot:SetWordWrap(true) end
 todayFoot:SetJustifyV("BOTTOM"); todayFoot:SetHeight(30)
 
 -- This week
 local pWeek = page("week")
-label(pWeek, "BUSIEST ZONES  ·  THIS WEEK", -6)
+label(pWeek, "Busiest zones this week", -6)
 local zoneRows = rows(pWeek, 5, -24)
 for _, r in ipairs(zoneRows) do r:SetHeight(24) end
 for i, r in ipairs(zoneRows) do r:ClearAllPoints(); r:SetPoint("TOPLEFT", 14, -24 - (i - 1) * 24) end
-label(pWeek, "WHEN THE GUILD PLAYS  ·  PERTH TIME", -152)
+label(pWeek, "When the guild plays (Perth time)", -162)
 local grid, CELL_W, CELL_H = {}, 13, 11
 local dayNames = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" }
 for d = 0, 6 do
-  local l = text(pWeek, "GameFontDisableSmall"); l:SetPoint("TOPLEFT", 14, -172 - d * (CELL_H + 2)); l:SetText(dayNames[d + 1])
+  local l = text(pWeek, "GameFontDisableSmall"); l:SetPoint("TOPLEFT", 14, -192 - d * (CELL_H + 2)); l:SetText(dayNames[d + 1])
   grid[d] = {}
   for h = 0, 23 do
     local c = tex(pWeek, "ARTWORK", 0.13, 0.08, 0.06, 1)
-    c:SetSize(CELL_W, CELL_H); c:SetPoint("TOPLEFT", 50 + h * (CELL_W + 1), -172 - d * (CELL_H + 2))
+    c:SetSize(CELL_W, CELL_H); c:SetPoint("TOPLEFT", 50 + h * (CELL_W + 1), -192 - d * (CELL_H + 2))
     grid[d][h] = c
   end
 end
@@ -644,14 +706,14 @@ for _, h in ipairs({ 0, 6, 12, 18 }) do
   local l = text(pWeek, "GameFontDisableSmall"); l:SetPoint("BOTTOMLEFT", grid[0][h], "TOPLEFT", 0, 2)
   l:SetText(h == 0 and "12am" or h == 12 and "12pm" or (h % 12) .. (h < 12 and "am" or "pm"))
 end
-local weekFoot = text(pWeek, "GameFontHighlightSmall"); weekFoot:SetPoint("TOPLEFT", 14, -272); weekFoot:SetWidth(W - 28)
-local weekNote = text(pWeek, "GameFontDisableSmall"); weekNote:SetPoint("TOPLEFT", 14, -290); weekNote:SetWidth(W - 28)
+local weekFoot = text(pWeek, "GameFontHighlightSmall"); weekFoot:SetPoint("TOPLEFT", 14, -292); weekFoot:SetWidth(W - 28)
+local weekNote = text(pWeek, "GameFontDisableSmall"); weekNote:SetPoint("TOPLEFT", 14, -310); weekNote:SetWidth(W - 28)
 weekNote:SetText("From this scribe's own notes. The site has the whole picture.")
 local SHADES = { { 0.29, 0.10, 0.12 }, { 0.43, 0.10, 0.15 }, { 0.64, 0.09, 0.18 }, { 0.83, 0.16, 0.27 }, { 0.94, 0.34, 0.42 } }
 
 -- Scribe
 local pScribe = page("scribe")
-label(pScribe, "IN THE NOTES FILE", -6)
+label(pScribe, "In the notes file", -6)
 local big = {}
 for i = 1, 3 do
   local n = text(pScribe, "GameFontNormalHuge"); n:SetPoint("TOPLEFT", 14 + (i - 1) * 126, -26)
@@ -661,7 +723,7 @@ end
 local scribeInfo = text(pScribe, "GameFontHighlightSmall"); scribeInfo:SetPoint("TOPLEFT", 14, -84); scribeInfo:SetWidth(W - 28)
 if scribeInfo.SetWordWrap then scribeInfo:SetWordWrap(true) end
 scribeInfo:SetHeight(48); scribeInfo:SetJustifyV("TOP")
-label(pScribe, "SETTINGS", -146)
+label(pScribe, "Settings", -146)
 local checks = {}
 local function check(key, s, y, after)
   local c = CreateFrame("CheckButton", nil, pScribe, "UICheckButtonTemplate")
@@ -672,31 +734,48 @@ local function check(key, s, y, after)
 end
 local upload = text(pScribe, "GameFontDisableSmall"); upload:SetPoint("BOTTOMLEFT", 14, 12); upload:SetWidth(W - 28)
 if upload.SetWordWrap then upload:SetWordWrap(true) end
-upload:SetJustifyV("BOTTOM"); upload:SetHeight(78)
-upload:SetText("Your notes file is World of Warcraft\\_forever_\\WTF\\Account\\(your account)\\SavedVariables\\BloodAndTearsScribe.lua. "
-  .. "Type /reload (or log out) to save it, then on the site open Roster, Details, Upload the scribe file. The file picker usually reopens in that folder next time.")
+upload:SetJustifyV("BOTTOM"); upload:SetHeight(44)
+upload:SetText("The notes file is _forever_\\WTF\\Account\\(your account)\\SavedVariables\\BloodAndTearsScribe.lua. Type /reload to save it, then upload it on the site: Roster, Details.")
 
 -- Recipes: your professions, when each was last read, and a button that opens its window (the game only shares a
 -- recipe list while that window is open, and only lets an addon open it from a click, through a secure button).
 local pRecipes = page("recipes")
-local recLabel = label(pRecipes, "YOUR PROFESSIONS", -6)
+-- "Who can make it?": search every recipe list the scribe holds (yours, and any guildie whose scribe shared theirs).
+local search = CreateFrame("EditBox", nil, pRecipes, "InputBoxTemplate")
+search:SetSize(W - 40, 22); search:SetPoint("TOPLEFT", 20, -6); search:SetAutoFocus(false)
+search:SetMaxLetters(60)
+local searchHint = text(pRecipes, "GameFontDisableSmall"); searchHint:SetPoint("LEFT", search, "LEFT", 2, 0)
+searchHint:SetText("Who can make it? Type a recipe or item")
+search:SetScript("OnEscapePressed", function(self) self:SetText(""); self:ClearFocus() end)
+search:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
+search:SetScript("OnTextChanged", function() refresh() end)
+search:SetScript("OnEditFocusGained", function() searchHint:Hide() end)
+search:SetScript("OnEditFocusLost", function(self) if self:GetText() == "" then searchHint:Show() end end)
+local recLabel = label(pRecipes, "Your professions", -38)
 local CRAFTS = { Alchemy = "Alchemy", Blacksmithing = "Blacksmithing", Cooking = "Cooking", Enchanting = "Enchanting", Engineering = "Engineering",
   ["First Aid"] = "First Aid", Leatherworking = "Leatherworking", Tailoring = "Tailoring", Mining = "Smelting" }
 local recRows = {}
 for i = 1, 5 do
-  local r = CreateFrame("Frame", nil, pRecipes); r:SetSize(W - 28, 34); r:SetPoint("TOPLEFT", 14, -26 - (i - 1) * 38)
+  local r = CreateFrame("Frame", nil, pRecipes); r:SetSize(W - 28, 34); r:SetPoint("TOPLEFT", 14, -58 - (i - 1) * 38)
   r.name = text(r, "GameFontHighlight"); r.name:SetPoint("TOPLEFT", 0, -2)
   r.info = text(r, "GameFontDisableSmall"); r.info:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3); r.info:SetWidth(W - 130)
   local ok, b = pcall(CreateFrame, "Button", nil, r, "SecureActionButtonTemplate,UIPanelButtonTemplate")
   if ok and b then
-    b:SetSize(76, 22); b:SetPoint("RIGHT", 0, 0); b:SetText("Read")
+    wowButton(b, 76, 22, "Read"); b:SetPoint("RIGHT", 0, 0)
     if b.RegisterForClicks then b:RegisterForClicks("AnyUp", "AnyDown") end
     b:SetAttribute("type", "spell")
     r.btn = b
   end
   r:Hide(); recRows[i] = r
 end
-local recEmpty = text(pRecipes, "GameFontDisableSmall"); recEmpty:SetPoint("TOPLEFT", 14, -26); recEmpty:SetWidth(W - 28)
+local recEmpty = text(pRecipes, "GameFontDisableSmall"); recEmpty:SetPoint("TOPLEFT", 14, -58); recEmpty:SetWidth(W - 28)
+local hitRows = {}
+for i = 1, 6 do
+  local r = CreateFrame("Frame", nil, pRecipes); r:SetSize(W - 28, 34); r:SetPoint("TOPLEFT", 14, -58 - (i - 1) * 38)
+  r.name = text(r, "GameFontHighlight"); r.name:SetPoint("TOPLEFT", 0, -2); r.name:SetWidth(W - 28)
+  r.info = text(r, "GameFontDisableSmall"); r.info:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3); r.info:SetWidth(W - 28)
+  r:Hide(); hitRows[i] = r
+end
 local recFoot = text(pRecipes, "GameFontDisableSmall"); recFoot:SetPoint("BOTTOMLEFT", 14, 12); recFoot:SetWidth(W - 28)
 if recFoot.SetWordWrap then recFoot:SetWordWrap(true) end
 recFoot:SetJustifyV("BOTTOM"); recFoot:SetHeight(92)
@@ -751,9 +830,43 @@ local function ago(t)
   if d < 3600 then return math.max(1, math.floor(d / 60)) .. "m ago" elseif d < 86400 then return math.floor(d / 3600) .. "h ago" end
   local n = math.floor(d / 86400); return n == 1 and "yesterday" or n .. " days ago"
 end
+local function fillSearch(q)
+  q = q:lower()
+  local found, order = {}, {}
+  for who, profs in pairs(db.recipes) do
+    for prof, r in pairs(profs) do
+      for _, n in ipairs(r.list or {}) do
+        if n:lower():find(q, 1, true) then
+          if not found[n] then found[n] = {}; order[#order + 1] = n end
+          found[n][#found[n] + 1] = { who = who, prof = prof }
+        end
+      end
+    end
+  end
+  table.sort(order, function(a, b)
+    local sa, sb = a:lower():sub(1, #q) == q, b:lower():sub(1, #q) == q
+    if sa ~= sb then return sa end
+    return a < b
+  end)
+  recLabel:SetText(#order == 0 and "Nobody the scribe knows of can make that" or (#order .. (#order == 1 and " recipe" or " recipes") .. " match" .. (#order > #hitRows and (", showing " .. #hitRows) or "")))
+  for i, r in ipairs(hitRows) do
+    local n = order[i]
+    if n then
+      local bits = {}
+      for _, c in ipairs(found[n]) do local m, full = guildie(c.who); bits[#bits + 1] = nameIn(full or c.who, m and m.class) .. DIM .. " (" .. c.prof .. ")|r" end
+      table.sort(bits)
+      r.name:SetText(n); r.info:SetText(table.concat(bits, ",  ")); r:Show()
+    else r:Hide() end
+  end
+  for _, r in ipairs(recRows) do r:Hide() end
+  recEmpty:SetText("")
+end
 local function fillRecipes()
   local me = UnitName("player") or "?"
-  recLabel:SetText("YOUR PROFESSIONS  ·  " .. fullName(me):upper())
+  local q = search:GetText() or ""
+  if q:gsub("%s", "") ~= "" and #q >= 2 then fillSearch(q:gsub("^%s+", ""):gsub("%s+$", "")); return end
+  for _, r in ipairs(hitRows) do r:Hide() end
+  recLabel:SetText("Professions for " .. fullName(me))
   readSkills()
   local mine, learned = db.recipes[me] or {}, db.ui.learned and db.ui.learned[me]
   -- Mining's window is Smelting, but the game files its recipes under Mining.
@@ -801,9 +914,8 @@ local BANDS = { { "mine", "Your level" }, { "Novice", "Novice" }, { "Experienced
 for i, bd in ipairs(BANDS) do
   local b = CreateFrame("Button", nil, pDungeons, "UIPanelButtonTemplate")
   local bw = (W - 28 - 3 * 4) / 4
-  b:SetSize(bw, 20); b:SetPoint("TOPLEFT", 14 + (i - 1) * (bw + 4), -6)
-  b:SetText(bd[2]); b.key = nil; b.band = bd[1]
-  if b.GetFontString and b:GetFontString() then b:GetFontString():SetFontObject("GameFontNormalSmall") end
+  wowButton(b, bw, 20, bd[2]); b:SetPoint("TOPLEFT", 14 + (i - 1) * (bw + 4), -8)
+  b.band = bd[1]
   b:SetScript("OnClick", function() dgBand, dgScroll = bd[1], 0; refresh() end)
   dgBtns[i] = b
 end
@@ -861,7 +973,7 @@ pDungeons:SetScript("OnMouseWheel", function(_, delta)
 end)
 local function fillDungeons()
   local me, lv = UnitName("player") or "?", UnitLevel("player") or 1
-  for _, b in ipairs(dgBtns) do if b.band == dgBand then b:LockHighlight() else b:UnlockHighlight() end end
+  for _, b in ipairs(dgBtns) do b:setOn(b.band == dgBand) end
   local list = {}
   if dgBand == "mine" then
     for _, d in ipairs(DUNGEONS) do if lv >= d[2] and lv <= d[3] then list[#list + 1] = d end end
@@ -872,9 +984,9 @@ local function fillDungeons()
   dgCount = #list
   local done = 0
   for _, d in ipairs(list) do if seenIn(d[1], me) or (db.stamps[me] and db.stamps[me][d[1]]) then done = done + 1 end end
-  if dgBand == "mine" then dgLabel:SetText(GOLD .. "FOR " .. fullName(me):upper() .. " · LEVEL " .. lv .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done|r")
+  if dgBand == "mine" then dgLabel:SetText(GOLD .. "For " .. fullName(me) .. ", level " .. lv .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done|r")
   else local g; for _, x in ipairs(DG_GROUPS) do if x[1] == dgBand then g = x end end
-    dgLabel:SetText(GOLD .. g[2]:upper() .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done by " .. fullName(me) .. "|r") end
+    dgLabel:SetText(GOLD .. g[2] .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done by " .. fullName(me) .. "|r") end
   local on = {}
   for _, o in ipairs(onlineNow) do on[o.name] = o end
   local fresh = now() - 14 * 86400
@@ -911,34 +1023,45 @@ local function show(key)
   local nr = ui.needReading and ui.needReading() or 0
   for _, t in ipairs(tabs) do
     if t.key == "recipes" then t:SetText(nr > 0 and ("Recipes (" .. nr .. ")") or "Recipes") end
-    if t.key == key then t:LockHighlight(); t:GetFontString():SetTextColor(1, 0.82, 0.35) else t:UnlockHighlight(); t:GetFontString():SetTextColor(0.75, 0.68, 0.6) end
+    t:setOn(t.key == key)
   end
   refresh()
 end
 for i, t in ipairs(TABS) do
   local b = CreateFrame("Button", nil, win, "UIPanelButtonTemplate")
-  local tw = (W - 24 - 4 * 4) / 5
-  b:SetSize(tw, 24); b:SetPoint("TOPLEFT", 12 + (i - 1) * (tw + 4), -54)
-  b:SetText(t[2]); b.key = t[1]
-  if b.GetFontString and b:GetFontString() then b:GetFontString():SetFontObject("GameFontNormalSmall") end
+  local tw = (W - 28 - 4 * 4) / 5
+  wowButton(b, tw, 24, t[2]); b:SetPoint("TOPLEFT", 14 + (i - 1) * (tw + 4), -56)
+  b.key = t[1]
   b:SetScript("OnClick", function() show(t[1]) end)
   tabs[i] = b
 end
+
 
 -------------------------------------------------------------------- filling the tabs
 local pip   -- the minimap count, set below
 local function fillToday()
   table.sort(onlineNow, function(a, b) return (a.zone or "") < (b.zone or "") or ((a.zone or "") == (b.zone or "") and a.name < b.name) end)
-  onlineLabel:SetText("ONLINE NOW  ·  " .. #onlineNow)
+  onlineLabel:SetText("Online now  ·  " .. #onlineNow)
   for i, r in ipairs(onlineRows) do
     local o = onlineNow[i]
     if i == #onlineRows and #onlineNow > #onlineRows then setRow(r, "", DIM .. "and " .. (#onlineNow - #onlineRows + 1) .. " more|r", "")
-    elseif o then setRow(r, dot(o.class), nameIn(o.name, o.class) .. "  " .. DIM .. (o.level or "") .. "|r", o.zone or "")
+    elseif o then setRow(r, dot(o.class), nameIn(o.name, o.class) .. "  " .. DIM .. (o.level or "") .. "|r" .. altTag(o.name), o.zone or "")
     else r:Hide() end
   end
   if #onlineNow == 0 then setRow(onlineRows[1], "", DIM .. "Nobody else is on right now.|r", "") end
   local feed = todayFeed()
-  todayLabel:SetText("TODAY")
+  -- On busy days the level-ups would fill the list, so more than three become one line (hover it for everyone).
+  local dings = {}
+  for _, e in ipairs(feed) do if e.kind == "ding" then dings[#dings + 1] = e end end
+  if #dings > 3 then
+    local kept, put = {}, false
+    for _, e in ipairs(feed) do
+      if e.kind ~= "ding" then kept[#kept + 1] = e
+      elseif not put then put = true; kept[#kept + 1] = { kind = "dings", t = e.t, list = dings } end
+    end
+    feed = kept
+  end
+  todayLabel:SetText("Today")
   for i, r in ipairs(feedRows) do
     local e = feed[i]
     if not e then r:Hide()
@@ -948,7 +1071,11 @@ local function fillToday()
     elseif e.kind == "loot" then
       setRow(r, IC_LOOT, memberName(e.l.who) .. " looted " .. itemText(e.l), clock(e.t))
     elseif e.kind == "ding" then
-      setRow(r, IC_DING, nameIn(e.name, e.class) .. " reached level " .. e.level, clock(e.t))
+      setRow(r, IC_DING, nameIn(e.name, e.class) .. " reached level " .. e.level .. altTag(e.name), clock(e.t))
+    elseif e.kind == "dings" then
+      local tip, top = {}, {}
+      for _, d in ipairs(e.list) do tip[#tip + 1] = nameIn(d.name, d.class) .. "  level " .. d.level .. "  " .. DIM .. clock(d.t) .. "|r"; if #top < 3 then top[#top + 1] = nameIn(first(d.name), d.class) end end
+      setRow(r, IC_DING, #e.list .. " guildies levelled up today: " .. table.concat(top, ", ") .. DIM .. " and more|r", clock(e.t), nil, tip)
     elseif e.kind == "join" then
       setRow(r, IC_JOIN, INK .. e.name .. "|r joined the guild", clock(e.t))
     elseif e.kind == "leave" then
@@ -993,6 +1120,7 @@ local function fillScribe()
   scribeInfo:SetText(n .. " guildies on the list, " .. #db.kills .. " boss kills noted" .. (firstDay and (", notes back to " .. firstDay) or "") .. ". "
     .. (not db.ui.share and "Sharing with other scribes is off." or #hs > 0 and ("Sharing with " .. table.concat(hs, ", ") .. ".") or "No other scribes heard from this session."))
   for k, c in pairs(checks) do c:SetChecked(db.ui[k] and true or false) end
+  if ui.mainBtn then ui.mainBtn() end
 end
 refresh = function()
   if not db then return end
@@ -1052,6 +1180,21 @@ check("summary", "Show my session summary when I log out", -188)
 check("lock", "Lock the window in place", -212)
 check("hideButton", "Hide the minimap button (/scribe still opens the window)", -236, function() if db.ui.hideButton then mm:Hide() else mm:Show() end end)
 check("share", "Share notes with guildies who run the scribe too", -260)
+-- Your main, for "alt of" on your other characters (here, and for other scribes over the sharing).
+local mainLabel = text(pScribe, "GameFontHighlightSmall"); mainLabel:SetPoint("TOPLEFT", 16, -294)
+local mainBtn = wowButton(CreateFrame("Button", nil, pScribe, "UIPanelButtonTemplate"), 160, 20, "")
+mainBtn:SetPoint("LEFT", mainLabel, "RIGHT", 8, 0)
+mainBtn:SetScript("OnClick", function()
+  local names = {}
+  for n in pairs(db.mine) do names[#names + 1] = n end
+  table.sort(names)
+  if #names == 0 then return end
+  local cur = myMain()
+  for i, n in ipairs(names) do if n == cur then db.ui.main = names[i % #names + 1]; break end end
+  if not db.ui.main or not db.mine[db.ui.main] then db.ui.main = names[1] end
+  refresh()
+end)
+ui.mainBtn = function() local mn = myMain(); mainLabel:SetText("Your main:"); mainBtn:SetText(mn and fullName(mn) or "log in on it once") end
 
 -------------------------------------------------------------------- the session summary
 -- What you did since you logged in: levels, time played, zones (counted each minute), bosses, good drops, and the
@@ -1067,6 +1210,8 @@ local function sessionTick()
   end
 end
 ui.login = function()
+  local me = UnitName("player")
+  if me then db.mine[me] = { lv = UnitLevel("player"), at = now(), class = select(2, UnitClass("player")) } end
   if ui.sharing then ui.sharing() end
   sess = { t = now(), level = UnitLevel("player"), zones = {}, with = {} }
   C_Timer.NewTicker(60, sessionTick)
@@ -1091,8 +1236,8 @@ for i = 1, 16 do
   local fs = text(sum, "GameFontHighlightSmall"); fs:SetPoint("TOPLEFT", 16, -114 - (i - 1) * 16); fs:SetWidth(W + 8)
   sumLines[i] = fs
 end
-local keep = CreateFrame("Button", nil, sum, "UIPanelButtonTemplate"); keep:SetSize(120, 24); keep:SetPoint("BOTTOMRIGHT", -14, 12); keep:SetText("Keep playing")
-local close = CreateFrame("Button", nil, sum, "UIPanelButtonTemplate"); close:SetSize(90, 24); close:SetPoint("RIGHT", keep, "LEFT", -6, 0); close:SetText("Close")
+local keep = wowButton(CreateFrame("Button", nil, sum, "UIPanelButtonTemplate"), 120, 24, "Keep playing"); keep:SetPoint("BOTTOMRIGHT", -14, 12)
+local close = wowButton(CreateFrame("Button", nil, sum, "UIPanelButtonTemplate"), 90, 24, "Close"); close:SetPoint("RIGHT", keep, "LEFT", -6, 0)
 keep:SetScript("OnClick", function() if CancelLogout then pcall(CancelLogout) end sum:Hide() end)
 close:SetScript("OnClick", function() sum:Hide() end)
 
@@ -1106,26 +1251,26 @@ local function fillSummary(leaving)
   local bosses, drops = {}, {}
   for _, k in ipairs(db.kills) do if k.t >= sess.t then bosses[#bosses + 1] = k end end
   for _, l in ipairs(db.loot) do if l.t >= sess.t and l.who == short(me) then drops[#drops + 1] = l end end
-  local vals = { { (lv - (sess.level or lv) >= 0 and "+" or "") .. (lv - (sess.level or lv)), "LEVELS" }, { dur(t - sess.t), "PLAYED" }, { #bosses, "BOSSES" }, { #drops, "DROPS" } }
+  local vals = { { (lv - (sess.level or lv) >= 0 and "+" or "") .. (lv - (sess.level or lv)), "Levels" }, { dur(t - sess.t), "Played" }, { #bosses, "Bosses" }, { #drops, "Drops" } }
   for i, v in ipairs(vals) do sumStats[i].n:SetText(v[1]); sumStats[i].l:SetText(v[2]) end
   local out = {}
   local zl = {}
   for z, m in pairs(sess.zones) do zl[#zl + 1] = { z, m } end
   table.sort(zl, function(a, b) return a[2] > b[2] end)
   if #zl > 0 then
-    out[#out + 1] = GOLD .. "WHERE YOU WENT|r"
+    out[#out + 1] = GOLD .. "Where you went|r"
     local bits = {}
     for i = 1, math.min(4, #zl) do bits[#bits + 1] = INK .. zl[i][1] .. "|r " .. DIM .. hrs(zl[i][2]) .. "|r" end
     out[#out + 1] = table.concat(bits, "   ")
   end
   if #bosses > 0 then
-    out[#out + 1] = GOLD .. "DUNGEONS|r"
+    out[#out + 1] = GOLD .. "Dungeons|r"
     local by, order = {}, {}
     for _, k in ipairs(bosses) do local z = k.zone or "?"; if not by[z] then by[z] = {}; order[#order + 1] = z end; table.insert(by[z], k.boss) end
     for i = 1, math.min(3, #order) do local z = order[i]; out[#out + 1] = INK .. z .. "|r" .. DIM .. "  ·  " .. table.concat(by[z], ", ") .. "|r" end
   end
   if #drops > 0 then
-    out[#out + 1] = GOLD .. "DROPS|r"
+    out[#out + 1] = GOLD .. "Drops|r"
     local bits = {}
     for i = 1, math.min(6, #drops) do bits[#bits + 1] = itemText(drops[i]) end
     out[#out + 1] = table.concat(bits, "  ")
@@ -1135,7 +1280,7 @@ local function fillSummary(leaving)
   for n, m in pairs(sess.with) do wl[#wl + 1] = { n, m } end
   table.sort(wl, function(a, b) return a[2] > b[2] end)
   if #wl > 0 then
-    out[#out + 1] = GOLD .. "WITH GUILDIES|r"
+    out[#out + 1] = GOLD .. "With guildies|r"
     local bits = {}
     for i = 1, math.min(5, #wl) do local m = db.members[wl[i][1]]; bits[#bits + 1] = nameIn(wl[i][1], m and m.class) .. DIM .. " " .. hrs(wl[i][2]) .. "|r" end
     out[#out + 1] = table.concat(bits, ",  ")
@@ -1256,7 +1401,8 @@ local function myProfLine()
       if name and not header and (CRAFTS[name] or name == "Herbalism" or name == "Skinning" or name == "Fishing") then ranks[#ranks + 1] = clean(name, 30) .. ":" .. (rank or 0) end
     end
   end
-  return me and ("P~" .. clean(me, 40) .. "~" .. (UnitLevel("player") or 0) .. "~" .. table.concat(ranks, ",")) or nil
+  local mn = myMain()
+  return me and ("P~" .. clean(me, 40) .. "~" .. (UnitLevel("player") or 0) .. "~" .. table.concat(ranks, ",") .. "~" .. clean(mn and mn ~= me and mn or "", 40)) or nil
 end
 local function sendRecipes(me, prof)
   local r = db.recipes[me] and db.recipes[me][prof]
@@ -1343,6 +1489,7 @@ ui.addonMsg = function(prefix, msg, channel, sender)
   elseif kind == "P" and f[2] and f[2] ~= "" then
     local p = { lv = num(f[3], 1, 60), at = now(), ranks = {} }
     for name, r in (f[4] or ""):gmatch("([^:,]+):(%d+)") do p.ranks[clean(name, 30)] = num(r, 0, 300) end
+    p.main = f[5] and clean(f[5], 40) or nil
     db.profs[clean(f[2], 40)] = p
   elseif kind == "R" then
     local who, prof, at, i, total = clean(f[2], 40), clean(f[3], 30), num(f[4], 1e9, now() + 600), num(f[5], 1, 40), num(f[6], 1, 40)
@@ -1406,6 +1553,8 @@ local function tooltipLines(tt)
   bits1[#bits1 + 1] = "on " .. days .. " of the last 14 days"
   tt:AddLine(" ")
   tt:AddLine("Blood and Tears", 0.94, 0.76, 0.35)
+  local mn = mainOf(full or name)
+  if mn then tt:AddLine("Alt of " .. mn, 1, 1, 1) end
   tt:AddLine(table.concat(bits1, " · "), 0.75, 0.75, 0.75)
   tt:AddLine(runs > 0 and (runs .. (runs == 1 and " dungeon" or " dungeons") .. " this week · last: " .. last.zone) or "No dungeons this week", 0.75, 0.75, 0.75)
   local p = db.profs[name] or db.profs[full]

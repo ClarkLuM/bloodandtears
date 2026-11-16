@@ -1031,7 +1031,16 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
     }
     if (Object.keys(rec).length) { await db().doc(`${hit.coll}/${hit.id}`).set({ recipes: rec }, { merge: true }); recipeChars++; }
   }
-  await ref.set({ members, days, hours, raids, runs, zones, zonesOld, kills: kills.slice(-300), loot: loot.slice(-300), events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short((sv.by && listed.filter(n => keyOf(n).startsWith(keyOf(sv.by) + " ")).length === 1 ? listed.find(n => keyOf(n).startsWith(keyOf(sv.by) + " ")) : sv.by), 40), up: new Date().toISOString() });
+  // Dungeons players marked as done on the addon's Dungeons tab (Scribe 0.10.4), per character: they stamp the
+  // passport on the site. A character in this file replaces its own list (so an unmark sticks); others are kept.
+  const stamps = { ...(cur.stamps || {}) };
+  for (const [name, ds] of Object.entries(sv.stamps || {})) {
+    const hit = ownChar(name); if (!hit || opt[keyOf(name)] || !ds || typeof ds !== "object") continue;
+    const o = {};
+    for (const [d, t] of Object.entries(ds)) { const at = iso(t); if (at && Object.keys(o).length < 60) o[short(d, 60)] = at; }
+    stamps[hit.id] = o;
+  }
+  await ref.set({ stamps, members, days, hours, raids, runs, zones, zonesOld, kills: kills.slice(-300), loot: loot.slice(-300), events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short((sv.by && listed.filter(n => keyOf(n).startsWith(keyOf(sv.by) + " ")).length === 1 ? listed.find(n => keyOf(n).startsWith(keyOf(sv.by) + " ")) : sv.by), 40), up: new Date().toISOString() });
   await saveStreaks().catch(err => logger.warn("streaks", err.message));
   if (levelled.length) await updateFirsts().catch(err => logger.warn("firsts", err.message));
   return { matched, unknown: unknown.slice(0, 20), unknownN: unknown.length, raids: Object.keys(sv.raids || {}).length, recipeChars, levelled: levelled.slice(0, 20),
