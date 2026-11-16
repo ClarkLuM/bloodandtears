@@ -235,9 +235,12 @@ end
 
 -- Turns the game's own message (in whatever language it's running) into a pattern to read names and items from.
 local function pattern(s)
-  if not s then return nil end
-  local p = s:gsub("([%.%(%)%-%+%*%?%[%]%^%$])", "%%%1"):gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
-  return "^" .. p .. "$"
+  if type(s) ~= "string" then return nil end
+  -- "%1$s" (numbered) becomes "%s"; every magic character, "%" included, is escaped; then "%s" and "%d" become captures.
+  local p = s:gsub("%%%%", "\1"):gsub("%%%d+%$", "%%"):gsub("[%^%$%(%)%.%[%]%*%+%-%?%%]", "%%%0"):gsub("%%%%s", "(.+)"):gsub("%%%%d", "(%%d+)")
+  p = "^" .. p:gsub("\1", "%%%%") .. "$"
+  if not pcall(string.match, "", p) then return nil end
+  return p
 end
 
 -- Dungeons: who was in your group inside a dungeon (once per dungeon per day), every boss your group kills, and the
@@ -422,7 +425,9 @@ local function readCraft()
 end
 
 local ui = {}   -- the window, the minimap button and the session summary fill this in below
-f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4, a5)
+f:SetScript("OnEvent", function(_, event, ...)
+  -- Never pop a Lua error at the player: anything that goes wrong is kept (the last 10) in the saved notes instead.
+  local ok, err = pcall(function(a1, a2, a3, a4, a5)
   if event == "ADDON_LOADED" and a1 == ADDON then
     init()
   elseif event == "PLAYER_LOGIN" then
@@ -462,6 +467,12 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4, a5)
     if ui.addonMsg then pcall(ui.addonMsg, a1, a2, a3, a4) end
   elseif event == "LOGOUT_CANCEL" then
     if ui.logoutCancelled then pcall(ui.logoutCancelled) end
+  end
+  end, ...)
+  if not ok and db then
+    db.errs = db.errs or {}
+    table.insert(db.errs, date("%Y-%m-%d %H:%M ") .. tostring(event) .. ": " .. tostring(err))
+    while #db.errs > 10 do table.remove(db.errs, 1) end
   end
 end)
 for _, e in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "GUILD_ROSTER_UPDATE", "GROUP_ROSTER_UPDATE", "ZONE_CHANGED_NEW_AREA",
