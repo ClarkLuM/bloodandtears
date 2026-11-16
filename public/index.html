@@ -1278,6 +1278,32 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
  .dg-x{grid-row:1/span 3}
  .dg-ach-p{min-width:0;flex:1 1 100%}
 }
+
+/* Cards: tip toward the pointer and catch the light */
+.lg-flip{position:relative;transform:perspective(900px) rotateX(0) rotateY(0);transition:transform .5s cubic-bezier(.23,1,.32,1),box-shadow .5s}
+.lg-flip.tilt{transform:perspective(900px) rotateX(var(--rx,0)) rotateY(var(--ry,0)) scale(1.035);transition:transform .08s linear,box-shadow .3s;box-shadow:0 22px 40px -16px rgb(0 0 0 / .7)}
+.lg-flip::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgb(255 255 255 / .32),rgb(255 255 255 / .06) 30%,transparent 55%);mix-blend-mode:overlay;z-index:3}
+.lg-flip.tilt::after{opacity:1}
+/* Badges on the art fit their words instead of squeezing into circles */
+.lg-stamp{width:auto;min-width:1.625rem;padding:0 .375rem;border-radius:999px;box-sizing:border-box}
+/* Each set headed in its own metal */
+.binder-h{align-items:center;gap:.625rem;padding:.625rem 1rem;border:0;border-radius:10px;background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 18%,transparent),transparent 70%);box-shadow:inset 3px 0 0 var(--tc)}
+.binder-h h2{font:400 1.25rem/1.5rem var(--display);background:linear-gradient(100deg,color-mix(in srgb,var(--t1) 55%,#fff),var(--tc) 50%,color-mix(in srgb,var(--tc) 70%,var(--t2)));-webkit-background-clip:text;background-clip:text;color:transparent}
+.binder-mark{color:var(--tc);font-size:1rem;line-height:1}
+.binder-n{margin-left:auto;font-size:.75rem;font-weight:600;padding:0 .5rem;border-radius:999px;background:color-mix(in srgb,var(--tc) 20%,transparent);color:var(--sec)}
+:root[data-theme="light"] .binder-h h2{background:none;color:color-mix(in srgb,var(--tc) 45%,#1a1211)}
+:root[data-theme="light"] .binder-h{box-shadow:inset 3px 0 0 color-mix(in srgb,var(--tc) 70%,#3a1608)}
+.binder-set{gap:1rem;margin-top:.5rem}
+/* Card of the week: lit in their class colour */
+.cow{background:radial-gradient(70% 120% at 12% 50%,color-mix(in srgb,var(--cc) 18%,transparent),transparent 70%),var(--raised);border-color:color-mix(in srgb,var(--cc) 30%,var(--sep))}
+.cow .pf-kind{color:color-mix(in srgb,var(--cc) 70%,var(--accent-text));letter-spacing:.08em}
+.cow-info h2{font-weight:400;font-size:2.5rem;line-height:2.75rem;color:color-mix(in srgb,var(--cc) 75%,#fff)}
+:root[data-theme="light"] .cow-info h2{color:color-mix(in srgb,var(--cc) 40%,#1a1211)}
+:root[data-theme="light"] .cow .pf-kind{color:color-mix(in srgb,var(--cc) 45%,#3a1608)}
+.cow-nums{border-color:color-mix(in srgb,var(--sep) 70%,transparent);padding:.75rem 0}
+.cow-nums b{font:400 1.5rem/1.75rem var(--display)}
+.cow-nums span{font-size:.6875rem!important;letter-spacing:.06em;text-transform:uppercase}
+@media (max-width:760px){.cow-info h2{font-size:2rem;line-height:2.25rem}}
 </style>
 </head>
 <body>
@@ -1847,13 +1873,15 @@ function viewCards(){
     h("div",{class:"r-ctrls"},
       h("label",{class:"r-sort"},h("span",{class:"ter"},"Sort"),h("select",{id:"c-sort",onchange:e=>setUi({cSort:e.target.value},true)},C_SORTS.map(([v,l])=>h("option",{value:v,selected:sort===v},l)))),
       seg("Filter by role",[["All","All",S.members.length],...ROLES.map(r=>[r,r,inRole(r).length])],role,k=>setUi({role:k},true))));
-  // Sorted by level, the binder is split into its sets: gold foil at 60, silver from 40, bronze from 20.
-  const SETS=[["Gold foil","Level 60"],["Silver","Levels 40 to 59"],["Bronze","Levels 20 to 39"],["Plain","Under level 20"]];
+  // Sorted by level, the binder is split into its sets, one for each metal (a new one every ten levels).
+  const SETS=TIERS.map(([lv,t],i)=>[t,lv>=60?"Level 60":lv?"Levels "+lv+" to "+(TIERS[i-1][0]-1):"Under level 10"]);
   const binder=ms=>h("div",{class:"binder"},ms.map(binderIt));
   const body=!list.length?h("p",{class:"empty"},S.members.length?"No cards match. Try a different search or role.":"No cards yet. They appear as the guild list fills in.")
     :sort!=="level"?binder(list)
     :SETS.map(([t,range])=>{const ms=list.filter(m=>tierOf(+m.level||1)[1]===t);
-      return ms.length?h("section",{class:"binder-set","aria-label":t+" cards"},h("div",{class:"binder-h"},h("h2",{},t),h("span",{class:"small ter"},range+" · "+ms.length+(ms.length===1?" card":" cards"))),binder(ms)):null});
+      // Each set is headed in its own metal, with its rarity mark and a count.
+      const tr=TIERS.find(x=>x[1]===t)||TIERS[TIERS.length-1],mark=TIER_MARK[t]||"○";
+      return ms.length?h("section",{class:"binder-set","aria-label":t+" cards",style:`--tc:${tr[3]};--t1:${tr[2][0]};--t2:${tr[2][1]}`},h("div",{class:"binder-h"},h("span",{class:"binder-mark","aria-hidden":"true"},mark),h("h2",{},t),h("span",{class:"small ter"},range),h("span",{class:"binder-n"},ms.length+(ms.length===1?" card":" cards"))),binder(ms)):null});
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Cards"),h("p",{class:"sub"},"Everyone's trading card. Tap one to flip it; \"Open page\" shows under it."))),
       null),
     cardOfWeek(),tools,
@@ -1870,7 +1898,7 @@ function cardOfWeek(){
   const a=m.armory||{},t=titlesOf(m);
   const nums=[["Level",String(m.level||1)],["Honourable kills",(+a.hk||0).toLocaleString("en-AU")],["Dungeons",passportOf(m).length+" of "+DUNGEONS.length],["Loot points",String(lootPts(m))]];
   const profs=Object.entries(m.profs||{}).filter(([p,v])=>!CLASS_SKILLS[p]&&+v>0).sort((x,y)=>(PRIMARY.includes(y[0])-PRIMARY.includes(x[0]))||+y[1]-+x[1]).slice(0,4);
-  return h("section",{class:"card cow","aria-labelledby":"cow-h"},
+  return h("section",{class:"card cow","aria-labelledby":"cow-h",style:`--cc:${CLASSES[m.cls]||"#bfaea9"}`},
     h("div",{class:"cow-card"},flipCard(m)),
     h("div",{class:"cow-info"},
       h("span",{class:"pf-kind"},"Card of the Week"),h("h2",{id:"cow-h"},nameOf(m)),h("p",{class:"cow-why"},why),
@@ -2185,7 +2213,13 @@ const lvlOf=t=>+String(t||"").replace(/\D/g,"");
 const lvGain=m=>{if(!lastHere)return 0;let k=0;for(const j of Array.isArray(m.journey)?m.journey:[]){const t=String(j.t||"");if(Date.parse(j.at||"")>lastHere&&/^Reached level \d+/.test(t)){const to=lvlOf(t);k+=Math.max(1,to-(j.from!=null?+j.from:to-1))}}return k};
 /* ---------- Character cards ---------- */
 // Frame by level: plain, bronze 20+, silver 40+, gold foil at 60. Picture is the armory render on the race background.
-const TIERS=[[60,"Gold foil",["#f6d77a","#b8862e","#fff1b8","#a8741f"],"#f3cf6e"],[40,"Silver",["#e6e6e6","#8d8d8d","#f5f5f5","#7a7a7a"],"#d8d8d8"],[20,"Bronze",["#d39a62","#7a4a22","#e0b07e","#6b3f1c"],"#d9a36b"],[0,"Plain",["#4a3a39","#312625","#4a3a39","#312625"],"#bfaea9"]];
+// A card's metal goes up every ten levels, so there's a new one to collect along the way.
+const TIERS=[[60,"Gold foil",["#f6d77a","#b8862e","#fff1b8","#a8741f"],"#f3cf6e"],[50,"Thorium",["#7fd6c2","#2a6b5d","#bff0e3","#1b4a40"],"#8fe0cc"],
+  [40,"Silver",["#e6e6e6","#8d8d8d","#f5f5f5","#7a7a7a"],"#d8d8d8"],[30,"Iron",["#9aa3ad","#4a525c","#c3cad2","#2f353c"],"#aab3bd"],
+  [20,"Bronze",["#d39a62","#7a4a22","#e0b07e","#6b3f1c"],"#d9a36b"],[10,"Copper",["#e3876a","#8a3420","#f4b39c","#5e1f10"],"#ec9a7e"],
+  [0,"Plain",["#4a3a39","#312625","#4a3a39","#312625"],"#bfaea9"]];
+const TIER_MARK={"Gold foil":"★","Thorium":"✦","Silver":"◆","Iron":"▲","Bronze":"●","Copper":"■"};
+const TIER_SHINE={"Gold foil":"rgb(255 240 190 / .55)","Thorium":"rgb(200 255 240 / .42)","Silver":"rgb(255 255 255 / .38)","Iron":"rgb(220 230 240 / .3)","Bronze":"rgb(255 222 186 / .26)","Copper":"rgb(255 200 180 / .24)"};
 const tierOf=lv=>TIERS.find(x=>lv>=x[0]);
 // Title holders get their own card frame, by the kind of title. The level still shows in the round badge.
 const FRAMES={pvp:["Warlord frame",["#e36a78","#5c0a18","#f39aa3","#3d0610"]],crawler:["Delver frame",["#63c7c0","#16504d","#9be3dd","#0d3836"]],
@@ -2288,7 +2322,7 @@ function cardData(m){
     ["Dungeons",String(passportOf(m).length)]].filter(Boolean);
   const all=[...S.members,...S.alts].sort((a,b)=>String(a.createdAt||"").localeCompare(String(b.createdAt||""))||String(a.id).localeCompare(String(b.id)));
   const no=Math.max(1,all.findIndex(x=>x.id===m.id)+1),num=String(no).padStart(2,"0")+"/"+String(Math.max(all.length,no)).padStart(2,"0");
-  const rarity={"Gold foil":"★","Silver":"◆","Bronze":"●"}[tier[1]]||"○";
+  const rarity=TIER_MARK[tier[1]]||"○";
   return{bg:charPic(m,"bg")||genericBg(m),render:charPic(m,"render")||genericFg(m),avatar:charPic(m,"avatar"),fg:genericFg(m),lv,tier,cc,
     art:[mix(cc,"#000000",.55),mix(cc,"#000000",.25),"#0f0a09"],rows,hp:typeof st.health==="number"?Math.round(st.health):0,
     name:nameOf(m),line:["Level "+lv,classLine(m),roleText(m)].filter(Boolean).join(" · "),
@@ -2297,7 +2331,7 @@ function cardData(m){
 function cardEl(m){
   const d=cardData(m),[,tname,f,edge]=d.tier;
   const artStyle=d.bg?`background-image:linear-gradient(180deg,${d.art[0]}55,${d.art[2]}cc),url(${d.bg})`:`background:linear-gradient(160deg,${d.art[0]},${d.art[1]} 55%,${d.art[2]})`;
-  const shine={"Gold foil":"rgb(255 240 190 / .55)","Silver":"rgb(255 255 255 / .38)","Bronze":"rgb(255 222 186 / .26)"}[tname]||(d.frame?"rgb(255 255 255 / .32)":undefined);
+  const shine=TIER_SHINE[tname]||(d.frame?"rgb(255 255 255 / .32)":undefined);
   return h("div",{class:"lg-card"+(shine?" foil":""),style:`background:linear-gradient(135deg,${f[0]},${f[1]} 35%,${f[2]} 55%,${f[3]})`+(shine?`;--shine:${shine}`:""),role:"img","aria-label":`${d.name}, ${d.line}, ${tname} card${d.frame?", "+d.frame.name:""}. ${d.gm?"Guild Master. ":""}${d.pvp?"PvP "+pvpRank(d.pvp)+". ":""}${d.move?d.move.text+". ":""}${d.flav}`+(d.stamps.length?" Stamps: "+d.stamps.map(x=>x[1]).join(", ")+".":"")},
     h("div",{class:"lg-card-in"},
       h("div",{class:"lg-art"+(d.move?" has-move":"")+(d.gm?" is-gm":""),style:artStyle},
@@ -2376,7 +2410,7 @@ const BACK_STATS=[["health","Health"],["mana","Mana"],["strength","Strength"],["
   ["armor","Armour"],["attack-power","Attack Power"],["spell-power","Spell Power"],["critical-strike","Crit"],["spell-crit","Spell Crit"],["dodge","Dodge"],["defense","Defence"]];
 function cardBack(m){
   const d=cardData(m),[,tname,f,edge]=d.tier,a=m.armory||{},st=a.stats&&typeof a.stats==="object"?a.stats:{};
-  const shine={"Gold foil":"rgb(255 240 190 / .55)","Silver":"rgb(255 255 255 / .38)","Bronze":"rgb(255 222 186 / .26)"}[tname];
+  const shine=TIER_SHINE[tname];
   const stats=BACK_STATS.filter(([k])=>typeof st[k]==="number"&&st[k]>0).slice(0,10);
   const trees=Array.isArray(a.talents)?a.talents.filter(t=>t&&t.name):[];
   const profs=Object.entries(m.profs||{}).filter(([p,v])=>!CLASS_SKILLS[p]&&+v>0).sort((x,y)=>+y[1]-+x[1]).slice(0,4);
@@ -2413,7 +2447,13 @@ function flipCard(m){
     el.setAttribute("aria-pressed",String(now));front.setAttribute("aria-hidden",String(now));back.setAttribute("aria-hidden",String(!now));front.inert=now;back.inert=!now};
   el.addEventListener("click",e=>{if(!e.target.closest(".lg-tabs"))flip()});el.addEventListener("keydown",e=>{if(e.target.closest&&e.target.closest(".lg-tabs"))return;if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}});
   front.inert=on;back.inert=!on;
+  // On a computer the card tips toward the pointer and catches the light, like holding a real one.
+  if(TILT){el.addEventListener("pointermove",e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+      el.style.setProperty("--rx",((.5-y)*12).toFixed(2)+"deg");el.style.setProperty("--ry",((x-.5)*14).toFixed(2)+"deg");
+      el.style.setProperty("--mx",(x*100).toFixed(1)+"%");el.style.setProperty("--my",(y*100).toFixed(1)+"%");el.classList.add("tilt")});
+    el.addEventListener("pointerleave",()=>el.classList.remove("tilt"))}
   return el}
+const TILT=(()=>{try{return matchMedia("(hover:hover) and (pointer:fine)").matches&&!matchMedia("(prefers-reduced-motion:reduce)").matches}catch(e){return false}})();
 async function cardPng(m){
   try{await document.fonts.ready}catch(e){}
   const d=cardData(m),[,,f,edge]=d.tier,K=2,W=260*K,H=380*K,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
