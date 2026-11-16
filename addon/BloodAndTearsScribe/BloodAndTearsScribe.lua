@@ -688,19 +688,32 @@ local function rows(parent, n, top)
     r.bar:Hide(); r.fill:Hide()
     -- A row can carry a few lines to show on hover (the grouped level-ups).
     r:EnableMouse(true)
+    -- A loot row carries its item: hover for the item's own tooltip, shift-click to put its link in chat.
     r:SetScript("OnEnter", function(self)
+      if self.item then
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        if not pcall(GameTooltip.SetHyperlink, GameTooltip, "item:" .. self.item) then GameTooltip:AddLine(self.itemName or "", 1, 1, 1) end
+        GameTooltip:AddLine("Shift-click to link it in chat", 0.6, 0.6, 0.6)
+        GameTooltip:Show()
+        return
+      end
       if not self.tip then return end
       GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
       for _, l in ipairs(self.tip) do GameTooltip:AddLine(l, 1, 1, 1) end
       GameTooltip:Show()
     end)
     r:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    r:SetScript("OnMouseUp", function(self)
+      if not (self.item and IsModifiedClick and IsModifiedClick("CHATLINK") and ChatEdit_InsertLink) then return end
+      local l = Item.link(self.item)
+      if l then ChatEdit_InsertLink(l) end
+    end)
     list[i] = r
   end
   return list
 end
 local function setRow(r, mark, main, right, pct, tip)
-  r.tip = tip
+  r.tip = tip; r.item = nil; r.itemName = nil
   r.mark:SetText(mark or ""); r.main:SetText(main or ""); r.right:SetText(right or "")
   if pct then r.bar:Show(); r.fill:Show(); r.sep:Hide(); r.fill:SetWidth(math.max(1, (W - 44) * math.min(1, pct))) else r.bar:Hide(); r.fill:Hide(); r.sep:Show() end
   r:Show()
@@ -808,7 +821,7 @@ local search = CreateFrame("EditBox", nil, pRecipes, "InputBoxTemplate")
 search:SetSize(W - 40, 22); search:SetPoint("TOPLEFT", 20, -6); search:SetAutoFocus(false)
 search:SetMaxLetters(60)
 local searchHint = text(pRecipes, "GameFontDisableSmall"); searchHint:SetPoint("LEFT", search, "LEFT", 2, 0)
-searchHint:SetText("Who can make it? Type a recipe or item")
+searchHint:SetText("Who can make it? Type a name, or shift-click an item")
 search:SetScript("OnEscapePressed", function(self) self:SetText(""); self:ClearFocus() end)
 search:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
 search:SetScript("OnTextChanged", function() refresh() end)
@@ -1176,6 +1189,7 @@ local function fillToday()
       setRow(r, IC_RUN, INK .. e.zone .. "|r" .. DIM .. "  ·  " .. e.n .. (e.n == 1 and " boss" or " bosses") .. (g > 1 and (", with " .. (g - 1) .. (g == 2 and " guildie" or " guildies")) or "") .. "|r", clock(e.t))
     elseif e.kind == "loot" then
       setRow(r, IC_LOOT, memberName(e.l.who) .. " looted " .. itemText(e.l), clock(e.t))
+      r.item = e.l.id; r.itemName = e.l.name
     elseif e.kind == "ding" then
       setRow(r, IC_DING, nameIn(e.name, e.class) .. " reached level " .. e.level .. altTag(e.name), clock(e.t))
     elseif e.kind == "dings" then
@@ -1410,6 +1424,23 @@ SlashCmdList.BTSCRIBE = function(arg)
   if arg == "reset" then win:ClearAllPoints(); win:SetPoint("CENTER", 0, 60); db.ui.angle = 200; place(); win:Show(); return end
   if arg == "week" then show("week") elseif arg == "dungeons" then show("dungeons") elseif arg == "recipes" then show("recipes") elseif arg == "files" or arg == "file" then show("scribe") end
   if win:IsShown() and arg == "" then win:Hide() else win:Show() end
+end
+
+-- With the scribe's window open, shift-click any item (in your bags, a chat link, a vendor, the auction house) to
+-- look up who can make it. With the chat box open the shift-click links the item as usual, and nothing happens here.
+if hooksecurefunc and HandleModifiedItemClick then
+  pcall(hooksecurefunc, "HandleModifiedItemClick", function(link)
+    pcall(function()
+      if not db or not win:IsShown() or type(link) ~= "string" then return end
+      if not (IsModifiedClick and IsModifiedClick("CHATLINK")) then return end
+      if ChatEdit_GetActiveWindow and ChatEdit_GetActiveWindow() then return end
+      local name = link:match("%[(.-)%]")
+      if not name or name == "" then return end
+      show("recipes")
+      searchHint:Hide()
+      search:SetText(name:sub(1, 60))
+    end)
+  end)
 end
 
 ---------------------------------------------------------------------------------------------------------------------
