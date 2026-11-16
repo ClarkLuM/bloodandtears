@@ -285,8 +285,16 @@ end
 
 -- "X has joined the guild." and friends, using the game's own wording so it works in any language.
 local JOIN, LEAVE, REMOVED = pattern(ERR_GUILD_JOIN_S), pattern(ERR_GUILD_LEAVE_S), pattern(ERR_GUILD_REMOVE_SS)
+local LEARNED = pattern(ERR_LEARN_RECIPE_S)
 local function system(msg)
   if not db or not msg then return end
+  -- "You have learned how to create a new item": the Recipes tab asks for the profession to be read again.
+  if LEARNED and msg:match(LEARNED) then
+    db.ui.learned = db.ui.learned or {}
+    db.ui.learned[UnitName("player") or "?"] = now()
+    refresh()
+    return
+  end
   local who, what
   if JOIN then who = msg:match(JOIN); what = "joined" end
   if not who and LEAVE then who = msg:match(LEAVE); what = "left" end
@@ -342,6 +350,23 @@ local function readRecipes()
   table.sort(names)
   db.recipes[me] = db.recipes[me] or {}
   db.recipes[me][prof] = { at = now(), list = names }
+  refresh()
+end
+-- Enchanting (and Beast Training) use the older Craft window, which the trade skill functions don't see.
+local function readCraft()
+  if not db or not GetNumCrafts then return end
+  local me, names = UnitName("player"), {}
+  local prof = (GetCraftDisplaySkillLine and GetCraftDisplaySkillLine()) or (GetCraftName and GetCraftName())
+  if not prof or prof == "" or prof == "UNKNOWN" or prof == "Beast Training" then return end
+  for i = 1, GetNumCrafts() do
+    local name, _, kind = GetCraftInfo(i)
+    if name and kind ~= "header" then names[#names + 1] = name end
+  end
+  if #names == 0 then return end
+  table.sort(names)
+  db.recipes[me] = db.recipes[me] or {}
+  db.recipes[me][prof] = { at = now(), list = names }
+  refresh()
 end
 
 local ui = {}   -- the window, the minimap button and the session summary fill this in below
@@ -366,6 +391,10 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4, a5)
     system(a1)
   elseif event == "TRADE_SKILL_SHOW" or event == "TRADE_SKILL_LIST_UPDATE" or event == "TRADE_SKILL_UPDATE" then
     readRecipes()
+  elseif event == "CRAFT_SHOW" or event == "CRAFT_UPDATE" then
+    pcall(readCraft)
+  elseif event == "SKILL_LINES_CHANGED" then
+    if ui.skills then pcall(ui.skills) end
   elseif event == "PLAYER_REGEN_ENABLED" then
     askRoster()
   elseif event == "PLAYER_LEVEL_UP" then
@@ -378,7 +407,7 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4, a5)
 end)
 for _, e in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "GUILD_ROSTER_UPDATE", "GROUP_ROSTER_UPDATE", "ZONE_CHANGED_NEW_AREA",
   "CHAT_MSG_SYSTEM", "TRADE_SKILL_SHOW", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_UPDATE", "PLAYER_REGEN_ENABLED", "PLAYER_LEVEL_UP", "PLAYER_ENTERING_WORLD", "ENCOUNTER_END", "CHAT_MSG_LOOT",
-  "PLAYER_CAMPING", "PLAYER_QUITING", "LOGOUT_CANCEL" }) do
+  "PLAYER_CAMPING", "PLAYER_QUITING", "LOGOUT_CANCEL", "CRAFT_SHOW", "CRAFT_UPDATE", "SKILL_LINES_CHANGED" }) do
   pcall(f.RegisterEvent, f, e)
 end
 
@@ -558,6 +587,8 @@ local onlineRows = rows(pToday, 7, -22)
 local todayLabel = label(pToday, "TODAY", -156)
 local feedRows = rows(pToday, 9, -172)
 local todayFoot = text(pToday, "GameFontDisableSmall"); todayFoot:SetPoint("BOTTOMLEFT", 14, 12); todayFoot:SetWidth(W - 28)
+if todayFoot.SetWordWrap then todayFoot:SetWordWrap(true) end
+todayFoot:SetJustifyV("BOTTOM"); todayFoot:SetHeight(30)
 
 -- This week
 local pWeek = page("week")
@@ -613,19 +644,103 @@ upload:SetJustifyV("BOTTOM"); upload:SetHeight(78)
 upload:SetText("Your notes file is World of Warcraft\\_forever_\\WTF\\Account\\(your account)\\SavedVariables\\BloodAndTearsScribe.lua. "
   .. "Type /reload (or log out) to save it, then on the site open Roster, Details, Upload the scribe file. In Chrome or Edge the site remembers the file after the first time.")
 
+-- Recipes: your professions, when each was last read, and a button that opens its window (the game only shares a
+-- recipe list while that window is open, and only lets an addon open it from a click, through a secure button).
+local pRecipes = page("recipes")
+local recLabel = label(pRecipes, "YOUR PROFESSIONS", -6)
+local CRAFTS = { Alchemy = "Alchemy", Blacksmithing = "Blacksmithing", Cooking = "Cooking", Enchanting = "Enchanting", Engineering = "Engineering",
+  ["First Aid"] = "First Aid", Leatherworking = "Leatherworking", Tailoring = "Tailoring", Mining = "Smelting" }
+local recRows = {}
+for i = 1, 5 do
+  local r = CreateFrame("Frame", nil, pRecipes); r:SetSize(W - 28, 34); r:SetPoint("TOPLEFT", 14, -26 - (i - 1) * 38)
+  r.name = text(r, "GameFontHighlight"); r.name:SetPoint("TOPLEFT", 0, -2)
+  r.info = text(r, "GameFontDisableSmall"); r.info:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3); r.info:SetWidth(W - 130)
+  local ok, b = pcall(CreateFrame, "Button", nil, r, "SecureActionButtonTemplate,UIPanelButtonTemplate")
+  if ok and b then
+    b:SetSize(76, 22); b:SetPoint("RIGHT", 0, 0); b:SetText("Read")
+    if b.RegisterForClicks then b:RegisterForClicks("AnyUp", "AnyDown") end
+    b:SetAttribute("type", "spell")
+    r.btn = b
+  end
+  r:Hide(); recRows[i] = r
+end
+local recEmpty = text(pRecipes, "GameFontDisableSmall"); recEmpty:SetPoint("TOPLEFT", 14, -26); recEmpty:SetWidth(W - 28)
+local recFoot = text(pRecipes, "GameFontDisableSmall"); recFoot:SetPoint("BOTTOMLEFT", 14, 12); recFoot:SetWidth(W - 28)
+if recFoot.SetWordWrap then recFoot:SetWordWrap(true) end
+recFoot:SetJustifyV("BOTTOM"); recFoot:SetHeight(92)
+recFoot:SetText(GOLD .. "How recipes get to the site|r\n"
+  .. INK .. "1.|r Click Read: the profession's window opens and the scribe notes every recipe in it.\n"
+  .. INK .. "2.|r Close the window. Do it once per profession, and again after learning new ones (this tab says when).\n"
+  .. INK .. "3.|r Type /reload or log out to save, then upload the file on the site.\n"
+  .. "The game only shares a recipe list while its window is open, so the scribe can't read them by itself.")
+local myProfs = {}
+-- Your professions from the skill list (the game's own names; English clients).
+local function readSkills()
+  wipe(myProfs)
+  if not GetNumSkillLines then return end
+  for i = 1, GetNumSkillLines() do
+    local name, header, _, rank, _, _, max = GetSkillLineInfo(i)
+    if name and not header and CRAFTS[name] then myProfs[#myProfs + 1] = { name = name, rank = rank, max = max } end
+  end
+  table.sort(myProfs, function(a, b) return a.name < b.name end)
+  -- The buttons' spells can only be set out of combat.
+  if not InCombatLockdown() then
+    for i, r in ipairs(recRows) do local p = myProfs[i]; if r.btn and p then r.btn:SetAttribute("spell", CRAFTS[p.name]) end end
+  end
+end
+ui.skills = function() readSkills(); refresh() end
+-- Professions on this character that haven't been read, or have new recipes since they were.
+local function needReading()
+  local me = UnitName("player") or "?"
+  local mine, learned, n = (db and db.recipes[me]) or {}, db and db.ui.learned and db.ui.learned[me], 0
+  for _, p in ipairs(myProfs) do
+    local got = mine[p.name] or mine[CRAFTS[p.name]]
+    if not got or (learned and learned > got.at) then n = n + 1 end
+  end
+  return n
+end
+ui.needReading = needReading
+local function ago(t)
+  local d = now() - t
+  if d < 3600 then return math.max(1, math.floor(d / 60)) .. "m ago" elseif d < 86400 then return math.floor(d / 3600) .. "h ago" end
+  local n = math.floor(d / 86400); return n == 1 and "yesterday" or n .. " days ago"
+end
+local function fillRecipes()
+  local me = UnitName("player") or "?"
+  recLabel:SetText("YOUR PROFESSIONS  ·  " .. me:upper())
+  if #myProfs == 0 then readSkills() end
+  local mine, learned = db.recipes[me] or {}, db.ui.learned and db.ui.learned[me]
+  -- Mining's window is Smelting, but the game files its recipes under Mining.
+  for i, r in ipairs(recRows) do
+    local p = myProfs[i]
+    if p then
+      local got = mine[p.name] or mine[CRAFTS[p.name]]
+      r.name:SetText(p.name .. "  " .. DIM .. (p.rank or "") .. (p.max and ("/" .. p.max) or "") .. "|r")
+      if not got then r.info:SetText(GOLD .. "Not read yet|r")
+      elseif learned and learned > got.at then r.info:SetText(GOLD .. "You've learned something new since. Read it again.|r")
+      else r.info:SetText(#got.list .. " recipes, read " .. ago(got.at)) end
+      r:Show()
+    else r:Hide() end
+  end
+  recEmpty:SetText(#myProfs == 0 and "No crafting professions on this character." or "")
+end
+
 -- Tabs along the top
-local TABS = { { "today", "Today" }, { "week", "This week" }, { "scribe", "Scribe" } }
+local TABS = { { "today", "Today" }, { "week", "This week" }, { "recipes", "Recipes" }, { "scribe", "Scribe" } }
 local function show(key)
   current = key
   for k, p in pairs(pages) do if k == key then p:Show() else p:Hide() end end
+  local nr = ui.needReading and ui.needReading() or 0
   for _, t in ipairs(tabs) do
+    if t.key == "recipes" then t:SetText(nr > 0 and ("Recipes (" .. nr .. ")") or "Recipes") end
     if t.key == key then t:LockHighlight(); t:GetFontString():SetTextColor(1, 0.82, 0.35) else t:UnlockHighlight(); t:GetFontString():SetTextColor(0.75, 0.68, 0.6) end
   end
   refresh()
 end
 for i, t in ipairs(TABS) do
   local b = CreateFrame("Button", nil, win, "UIPanelButtonTemplate")
-  b:SetSize((W - 36) / 3, 24); b:SetPoint("TOPLEFT", 12 + (i - 1) * ((W - 36) / 3 + 6), -54)
+  local tw = (W - 24 - 3 * 4) / 4
+  b:SetSize(tw, 24); b:SetPoint("TOPLEFT", 12 + (i - 1) * (tw + 4), -54)
   b:SetText(t[2]); b.key = t[1]
   b:SetScript("OnClick", function() show(t[1]) end)
   tabs[i] = b
@@ -659,7 +774,9 @@ local function fillToday()
   end
   if #feed == 0 then setRow(feedRows[1], "", DIM .. "Nothing yet today. Runs, good drops and dings show here.|r", "") end
   local z = zoneTotals(1)[1]
-  todayFoot:SetText(z and ("Busiest today: " .. z[1] .. ", " .. hrs(z[2]) .. " of guild time") or "")
+  local nr = ui.needReading and ui.needReading() or 0
+  todayFoot:SetText((nr > 0 and (GOLD .. nr .. (nr == 1 and " profession needs" or " professions need") .. " reading for the site: see the Recipes tab.|r\n") or "")
+    .. (z and ("Busiest today: " .. z[1] .. ", " .. hrs(z[2]) .. " of guild time") or ""))
 end
 local function fillWeek()
   local list = zoneTotals(7)
@@ -694,7 +811,7 @@ refresh = function()
   if not db then return end
   if pip then pip() end
   if not win:IsShown() then return end
-  if current == "today" then fillToday() elseif current == "week" then fillWeek() else fillScribe() end
+  if current == "today" then fillToday() elseif current == "week" then fillWeek() elseif current == "recipes" then fillRecipes() else fillScribe() end
   if current == "today" then db.ui.seen = now(); if pip then pip() end end
 end
 win:SetScript("OnShow", function() show(current) end)
@@ -736,6 +853,8 @@ mm:SetScript("OnEnter", function(self)
   GameTooltip:AddLine(#onlineNow .. " guildies online", 1, 1, 1)
   local n = db and #todayFeed(db.ui.seen or 0) or 0
   if n > 0 then GameTooltip:AddLine(n .. (n == 1 and " new note today" or " new notes today"), 1, 1, 1) end
+  local nr = ui.needReading and ui.needReading() or 0
+  if nr > 0 then GameTooltip:AddLine(nr .. (nr == 1 and " profession to read (Recipes tab)" or " professions to read (Recipes tab)"), 0.94, 0.76, 0.35) end
   GameTooltip:AddLine("Click to open. Drag to move.", 0.66, 0.58, 0.49)
   GameTooltip:Show()
 end)
@@ -763,6 +882,7 @@ ui.login = function()
   sess = { t = now(), level = UnitLevel("player"), zones = {}, with = {} }
   C_Timer.NewTicker(60, sessionTick)
   if db.ui.hideButton then mm:Hide() end
+  readSkills()
   place(); pip()
 end
 
@@ -846,6 +966,6 @@ SlashCmdList.BTSCRIBE = function(arg)
   if arg == "summary" then fillSummary(false); sum:Show(); return end
   if arg == "button" then db.ui.hideButton = not db.ui.hideButton; if db.ui.hideButton then mm:Hide() else mm:Show(); place() end; return end
   if arg == "reset" then win:ClearAllPoints(); win:SetPoint("CENTER", 0, 60); db.ui.angle = 200; place(); win:Show(); return end
-  if arg == "week" then show("week") elseif arg == "files" or arg == "file" then show("scribe") end
+  if arg == "week" then show("week") elseif arg == "recipes" then show("recipes") elseif arg == "files" or arg == "file" then show("scribe") end
   if win:IsShown() and arg == "" then win:Hide() else win:Show() end
 end
