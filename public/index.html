@@ -1304,6 +1304,39 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 .cow-nums b{font:400 1.5rem/1.75rem var(--display)}
 .cow-nums span{font-size:.6875rem!important;letter-spacing:.06em;text-transform:uppercase}
 @media (max-width:760px){.cow-info h2{font-size:2rem;line-height:2.25rem}}
+
+/* Who Has What as a grid of profession tiles: the top three with medals, everyone else a tap away */
+.card.pt{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17.5rem),1fr));gap:.75rem;background:none;border:0;box-shadow:none;padding:0}
+.pt-grp{grid-column:1/-1;background:none;border:0;padding:.75rem .25rem 0}
+.pt-grp:first-child{padding-top:0}
+.pt-row{position:relative;display:flex;flex-direction:column;gap:.625rem;padding:1rem 1.125rem 1.125rem;border:1px solid color-mix(in srgb,var(--sep) 70%,transparent);border-radius:10px;background:var(--raised);box-shadow:0 1px 2px rgb(0 0 0 / .28);align-items:stretch}
+:root[data-theme="light"] .pt-row{box-shadow:0 1px 2px rgb(58 22 8 / .08)}
+.pt-row.open{grid-row:span 2;background:var(--raised)}
+.pt-name{flex-direction:row;align-items:center;gap:.5rem;padding-right:2.5rem}
+.pt-name b{font:400 1.25rem/1.5rem var(--display);font-size:1.25rem}
+.pt-cnt{font-size:.75rem;font-weight:600;padding:0 .5rem;border-radius:999px;background:var(--sunken);color:var(--sec);line-height:1.25rem}
+.pt-chev{position:absolute;top:.75rem;right:.75rem}
+.pt-row>span[aria-hidden]{display:none}
+.pt-ppl{flex-direction:column;flex-wrap:nowrap;gap:.625rem}
+.pt-p{min-width:0;padding:0;background:none;border:0;border-radius:0;gap:.3125rem}
+.pt-p.me .pt-t a{text-decoration:underline;text-decoration-color:var(--accent-text);text-underline-offset:3px}
+.pt-p.spoon{border:0;opacity:.8}
+.pt-t{font-weight:400}
+.pt-t a{color:color-mix(in srgb,var(--cc) 80%,#fff);text-decoration:none}
+:root[data-theme="light"] .pt-t a{color:color-mix(in srgb,var(--cc) 40%,#1a1211)}
+.pt-v{font-size:.875rem;font-weight:600;color:var(--text)}
+.pt-p .track{height:4px;border-radius:999px;background:linear-gradient(90deg,transparent calc(25% - 1px),var(--raised) calc(25% - 1px) 25%,transparent 25% calc(50% - 1px),var(--raised) calc(50% - 1px) 50%,transparent 50% calc(75% - 1px),var(--raised) calc(75% - 1px) 75%,transparent 75%),var(--sunken)}
+.pt-p .track i{border-radius:999px;background:color-mix(in srgb,var(--cc) 75%,var(--accent-text))}
+.pt-p .track i.max{background:var(--gold-hi)}
+.pt-more{margin-top:-.125rem}
+.pt-more .linkish{color:var(--accent-text)}
+.pt-none{margin:0;font-size:.875rem;color:var(--ter)}
+/* The finder: a bigger search box, the fine print smaller */
+.rf .r-search input{height:3rem;font-size:1.0625rem;padding-left:2.5rem}
+.rf .r-search svg{width:1.125rem;height:1.125rem;margin-top:-.5625rem;left:.875rem}
+.rf .r-sort select{height:3rem}
+.rf>p.small{font-size:.75rem;line-height:1.125rem}
+.rf h2{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ter);font-family:var(--body);font-weight:600}
 </style>
 </head>
 <body>
@@ -3443,16 +3476,17 @@ function viewProfessions(){
   for(const p in by){by[p].sort((a,b)=>b.sk-a.sk||nameOf(a.m).localeCompare(nameOf(b.m)));by[p].forEach(x=>{x.pl=1+by[p].filter(y=>y.sk>x.sk).length})}
   const t=S.ui.profTab||"All",openP=S.ui.pfOpen;
   // One chip per character: place, name, skill and a bar. The rank (Expert and so on) is in the tooltip.
-  const chip=(x,p,spoon)=>h("li",{class:"pt-p"+(spoon?" spoon":"")+(isMine(x.m)?" me":""),title:CLASS_SKILLS[p]?"":rankOf(x.sk)+" · "+x.sk+" / 300"},
+  const chip=(x,p,spoon)=>h("li",{class:"pt-p"+(spoon?" spoon":"")+(isMine(x.m)?" me":""),style:`--cc:${CLASSES[x.m.cls]||"#bfaea9"}`,title:CLASS_SKILLS[p]?"":rankOf(x.sk)+" · "+x.sk+" / 300"},
     h("span",{class:"pt-t"},x.pl<=3&&!spoon?medal(x.pl):null,classIcon(x.m.cls),charLink(x.m),h("span",{class:"pt-v"+(x.sk>=300?" max":"")},String(x.sk))),
     h("span",{class:"track","aria-hidden":"true"},h("i",{class:x.sk>=300?"max":"",style:`width:${(x.sk/300*100).toFixed(1)}%`})),
     spoon?h("span",{class:"pt-spoon"},"Wooden spoon"):null);
   const row=p=>{const l=by[p]||[],open=openP===p,N=3,shown=open?l:l.slice(0,N);
     const toggle=()=>{if(!open)openAnim("p:"+p);setUi({pfOpen:open?null:p})};
     return h("div",{class:"pt-row"+(open?" open":"")},
-      h("button",{type:"button",class:"pt-name","aria-expanded":String(open),onclick:toggle,disabled:l.length<=N||null},h("b",{},p),h("span",{class:"small ter"},l.length?l.length+(l.length===1?" character":" characters"):"Nobody yet")),
+      h("button",{type:"button",class:"pt-name","aria-expanded":String(open),onclick:toggle,disabled:l.length<=N||null},h("b",{},p),h("span",{class:"pt-cnt"},l.length?String(l.length):"0")),
+      !l.length?h("p",{class:"pt-none"},"Nobody yet. Could be you."):null,
       h("ol",{class:"pt-ppl"+(open?anim("p:"+p):"")},shown.map((x,i)=>chip(x,p,open&&l.length>3&&i===l.length-1)),
-        !open&&l.length>N?h("li",{class:"pt-more"},h("button",{type:"button",class:"btn ghost sm",onclick:toggle},"+"+(l.length-N)+" more")):null),
+        !open&&l.length>N?h("li",{class:"pt-more"},h("button",{type:"button",class:"linkish small",onclick:toggle},"+ "+(l.length-N)+" more")):null),
       l.length>N?h("button",{type:"button",class:"cm-tog pt-chev","aria-expanded":String(open),"aria-label":(open?"Show fewer in ":"Show everyone in ")+p,onclick:toggle},""):h("span",{"aria-hidden":"true"}))};
   const missing=PRIMARY.filter(p=>!by[p]);
   const grp=(name,list)=>[h("div",{class:"pt-grp"},name),list.map(row)];
