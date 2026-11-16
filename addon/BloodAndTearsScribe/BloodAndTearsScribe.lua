@@ -451,7 +451,10 @@ local function classHex(cls)
 end
 local function first(n) return (n or ""):match("^(%S+)") or n end
 local function nameIn(name, cls) return classHex(cls) .. (name or "?") .. "|r" end
-local function memberName(n) local m = guildie(n); return nameIn(first(n), m and m.class) end
+-- Names on screen are full: the game's "who am I" and group lists give only the first part of a two-part name, so
+-- look the rest up in the guild list.
+local function fullName(n) local _, full = guildie(n); return full or n end
+local function memberName(n) local m, full = guildie(n); return nameIn(full or n, m and m.class) end
 local function itemText(l) return (QHEX[l.q or 2] or QHEX[2]) .. "[" .. (l.name or "?") .. "]|r" end
 local function clock(t) local h, mi = tonumber(date("!%H", t + PERTH)), date("!%M", t + PERTH); return ((h % 12 == 0) and 12 or h % 12) .. ":" .. mi .. (h < 12 and "am" or "pm") end
 local function hrs(min) if min < 60 then return math.floor(min + 0.5) .. "m" elseif min < 600 then return (math.floor(min / 6 + 0.5) / 10) .. "h" else return math.floor(min / 60 + 0.5) .. "h" end end
@@ -750,7 +753,7 @@ local function ago(t)
 end
 local function fillRecipes()
   local me = UnitName("player") or "?"
-  recLabel:SetText("YOUR PROFESSIONS  ·  " .. me:upper())
+  recLabel:SetText("YOUR PROFESSIONS  ·  " .. fullName(me):upper())
   readSkills()
   local mine, learned = db.recipes[me] or {}, db.ui.learned and db.ui.learned[me]
   -- Mining's window is Smelting, but the game files its recipes under Mining.
@@ -779,15 +782,39 @@ local DUNGEONS = { { "Ragefire Chasm", 13, 18 }, { "Hall of Thanes", 13, 20 }, {
   { "Sunken Temple", 50, 60 }, { "Blackrock Depths", 52, 60 }, { "Dire Maul: East", 54, 60 }, { "Lower Blackrock Spire", 55, 60 },
   { "Blackmaw Hold", 55, 60 }, { "Upper Blackrock Spire", 55, 60 }, { "Dire Maul: West", 56, 60 }, { "Dire Maul: North", 56, 60 },
   { "Shaper's Terrace", 58, 60 }, { "Stratholme: Living", 58, 60 }, { "Stratholme: Undead", 58, 60 }, { "Scholomance", 58, 60 } }
+-- The site's achievement groups; everything not in the first two is Master.
+local DG_GROUPS = {
+  { "Novice", "Novice Spelunker", { "Ragefire Chasm", "Ruins of Lordaeron", "Wailing Caverns", "The Deadmines", "Shadowfang Keep", "Excavation Site: Wetlands" } },
+  { "Experienced", "Experienced Spelunker", { "City of Dalaran", "Blackfathom Deeps", "Gnomeregan", "The Drowned City", "Scarlet Monastery: Graveyard", "Scarlet Monastery: Library",
+    "Scarlet Monastery: Armory", "Scarlet Monastery: Cathedral", "Razorfen Kraul", "Krol'Dok Stronghold" } },
+  { "Master", "Master Spelunker", nil } }
+local function groupOf(name)
+  for _, g in ipairs(DG_GROUPS) do if g[3] then for _, n in ipairs(g[3]) do if n == name then return g end end end end
+  return DG_GROUPS[3]
+end
 local pDungeons = page("dungeons")
-local dgLabel = label(pDungeons, "DUNGEONS FOR YOUR LEVEL", -6)
+local dgBand, dgScroll = "mine", 0
+local dgLabel = text(pDungeons, "GameFontNormalSmall"); dgLabel:SetPoint("TOPLEFT", 14, -36); dgLabel:SetWidth(W - 28)
+-- Which dungeons to show: the ones for your level, or one of the site's achievement groups.
+local dgBtns = {}
+local BANDS = { { "mine", "Your level" }, { "Novice", "Novice" }, { "Experienced", "Experienced" }, { "Master", "Master" } }
+for i, bd in ipairs(BANDS) do
+  local b = CreateFrame("Button", nil, pDungeons, "UIPanelButtonTemplate")
+  local bw = (W - 28 - 3 * 4) / 4
+  b:SetSize(bw, 20); b:SetPoint("TOPLEFT", 14 + (i - 1) * (bw + 4), -6)
+  b:SetText(bd[2]); b.key = nil; b.band = bd[1]
+  if b.GetFontString and b:GetFontString() then b:GetFontString():SetFontObject("GameFontNormalSmall") end
+  b:SetScript("OnClick", function() dgBand, dgScroll = bd[1], 0; refresh() end)
+  dgBtns[i] = b
+end
+local ROWS_DG, ROW_H = 8, 34
 local dgRows = {}
-for i = 1, 5 do
-  local r = CreateFrame("Frame", nil, pDungeons); r:SetSize(W - 28, 54); r:SetPoint("TOPLEFT", 14, -24 - (i - 1) * 58)
+for i = 1, ROWS_DG do
+  local r = CreateFrame("Frame", nil, pDungeons); r:SetSize(W - 28, ROW_H - 2); r:SetPoint("TOPLEFT", 14, -54 - (i - 1) * ROW_H)
   r.name = text(r, "GameFontHighlight"); r.name:SetPoint("TOPLEFT", 0, -1)
   r.flag = text(r, "GameFontNormalSmall", "RIGHT"); r.flag:SetPoint("TOPRIGHT", 0, -2)
+  r.name:SetPoint("RIGHT", r.flag, "LEFT", -8, 0)
   r.range = text(r, "GameFontDisableSmall"); r.range:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3); r.range:SetWidth(W - 28)
-  r.who = text(r, "GameFontHighlightSmall"); r.who:SetPoint("TOPLEFT", r.range, "BOTTOMLEFT", 0, -3); r.who:SetWidth(W - 28)
   -- Click a dungeon to mark it done (or not): the notes only know runs the scribe saw, so older ones need marking once.
   local hit = CreateFrame("Button", nil, r); hit:SetAllPoints()
   local hl = tex(hit, "HIGHLIGHT", 1, 1, 1, 0.05); hl:SetAllPoints()
@@ -801,16 +828,19 @@ for i = 1, 5 do
   hit:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:AddLine(r.dungeon or "", 1, 1, 1)
+    if r.whoText and r.whoText ~= "" then GameTooltip:AddLine("Online and in range: " .. r.whoText, 1, 1, 1, true) end
     GameTooltip:AddLine(r.marked and "Marked as done. Click to unmark." or r.seen and "The scribe saw you here." or "Done it before? Click to mark it.", 0.75, 0.75, 0.75)
     GameTooltip:Show()
   end)
   hit:SetScript("OnLeave", function() GameTooltip:Hide() end)
   r:Hide(); dgRows[i] = r
 end
+pDungeons:EnableMouseWheel(true)
+local dgMore = text(pDungeons, "GameFontDisableSmall", "CENTER"); dgMore:SetPoint("TOP", 0, -54 - ROWS_DG * ROW_H - 2)
 local dgFoot = text(pDungeons, "GameFontDisableSmall"); dgFoot:SetPoint("BOTTOMLEFT", 14, 12); dgFoot:SetWidth(W - 28)
 if dgFoot.SetWordWrap then dgFoot:SetWordWrap(true) end
 dgFoot:SetJustifyV("BOTTOM"); dgFoot:SetHeight(32)
-dgFoot:SetText("The scribe only knows runs it saw, so click a dungeon you'd done before to mark it. In range: their level fits. Offline: seen in the last two weeks.")
+dgFoot:SetText("Click a dungeon you'd done before the scribe was running to mark it. Hover one for who's online and in range.")
 -- Seen by the scribe: a dungeon run or a boss kill there with you in the group. The game names Scarlet Monastery and
 -- Dire Maul without the wing, so those count for every wing.
 local function sameDungeon(z, dname)
@@ -824,38 +854,53 @@ local function seenIn(dname, me)
   for _, k in ipairs(db.kills) do if sameDungeon(k.zone, dname) and k.who and k.who[me] then return true end end
   return false
 end
+local dgCount = 0
+pDungeons:SetScript("OnMouseWheel", function(_, delta)
+  dgScroll = math.max(0, math.min(math.max(0, dgCount - ROWS_DG), dgScroll - delta))
+  refresh()
+end)
 local function fillDungeons()
   local me, lv = UnitName("player") or "?", UnitLevel("player") or 1
-  dgLabel:SetText("DUNGEONS FOR YOUR LEVEL  ·  " .. me:upper() .. " " .. lv)
+  for _, b in ipairs(dgBtns) do if b.band == dgBand then b:LockHighlight() else b:UnlockHighlight() end end
   local list = {}
-  for _, d in ipairs(DUNGEONS) do if lv >= d[2] and lv <= d[3] then list[#list + 1] = d end end
-  if #list == 0 then for _, d in ipairs(DUNGEONS) do if d[2] > lv then list[#list + 1] = d; if #list >= 2 then break end end end end
+  if dgBand == "mine" then
+    for _, d in ipairs(DUNGEONS) do if lv >= d[2] and lv <= d[3] then list[#list + 1] = d end end
+    if #list == 0 then for _, d in ipairs(DUNGEONS) do if d[2] > lv then list[#list + 1] = d; if #list >= 3 then break end end end end
+  else
+    for _, d in ipairs(DUNGEONS) do if groupOf(d[1])[1] == dgBand then list[#list + 1] = d end end
+  end
+  dgCount = #list
+  local done = 0
+  for _, d in ipairs(list) do if seenIn(d[1], me) or (db.stamps[me] and db.stamps[me][d[1]]) then done = done + 1 end end
+  if dgBand == "mine" then dgLabel:SetText(GOLD .. "FOR " .. fullName(me):upper() .. " · LEVEL " .. lv .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done|r")
+  else local g; for _, x in ipairs(DG_GROUPS) do if x[1] == dgBand then g = x end end
+    dgLabel:SetText(GOLD .. g[2]:upper() .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done by " .. fullName(me) .. "|r") end
   local on = {}
   for _, o in ipairs(onlineNow) do on[o.name] = o end
   local fresh = now() - 14 * 86400
   for i, r in ipairs(dgRows) do
-    local d = list[i]
+    local d = list[i + dgScroll]
     if d then
       r.dungeon = d[1]
       r.marked = db.stamps[me] and db.stamps[me][d[1]] and true or false
       r.seen = seenIn(d[1], me)
       r.name:SetText(d[1])
-      r.flag:SetText((r.seen or r.marked) and (DIM .. "Been|r") or (lv >= d[2] and (GOLD .. "You haven't been|r") .. DIM .. "  (click if you have)|r" or (DIM .. "From level " .. d[2] .. "|r")))
+      r.flag:SetText((r.seen or r.marked) and (DIM .. "Been|r") or lv < d[2] and (DIM .. "From level " .. d[2] .. "|r") or (GOLD .. "Not yet|r"))
       local names, off = {}, 0
       for name, m in pairs(db.members) do
         local l = m.level or 0
         if not m.gone and l >= d[2] and l <= d[3] and first(name) ~= me then
-          local o = on[name]
-          if o then names[#names + 1] = nameIn(first(name), m.class) .. " " .. DIM .. l .. "|r"
+          if on[name] then names[#names + 1] = nameIn(name, m.class) .. " " .. DIM .. l .. "|r"
           elseif (m.last or 0) >= fresh then off = off + 1 end
         end
       end
       table.sort(names)
-      r.range:SetText("Levels " .. d[2] .. "–" .. d[3] .. "  ·  online and in range:")
-      r.who:SetText((#names > 0 and table.concat(names, ",  ") or (DIM .. "nobody online|r")) .. (off > 0 and (DIM .. "   +" .. off .. " offline|r") or ""))
+      r.whoText = table.concat(names, ", ")
+      r.range:SetText("Levels " .. d[2] .. "–" .. d[3] .. "  ·  " .. (#names > 0 and (#names .. " online in range: " .. r.whoText) or "nobody online in range") .. (off > 0 and (DIM .. "  +" .. off .. " offline|r") or ""))
       r:Show()
     else r:Hide() end
   end
+  dgMore:SetText(#list > ROWS_DG and ((dgScroll + 1) .. "–" .. math.min(#list, dgScroll + ROWS_DG) .. " of " .. #list .. " · scroll for more") or "")
 end
 
 -- Tabs along the top
@@ -903,13 +948,13 @@ local function fillToday()
     elseif e.kind == "loot" then
       setRow(r, IC_LOOT, memberName(e.l.who) .. " looted " .. itemText(e.l), clock(e.t))
     elseif e.kind == "ding" then
-      setRow(r, IC_DING, nameIn(first(e.name), e.class) .. " reached level " .. e.level, clock(e.t))
+      setRow(r, IC_DING, nameIn(e.name, e.class) .. " reached level " .. e.level, clock(e.t))
     elseif e.kind == "join" then
-      setRow(r, IC_JOIN, INK .. first(e.name) .. "|r joined the guild", clock(e.t))
+      setRow(r, IC_JOIN, INK .. e.name .. "|r joined the guild", clock(e.t))
     elseif e.kind == "leave" then
-      setRow(r, IC_LEAVE, DIM .. first(e.name) .. (e.what == "removed" and " was removed from the guild" or " left the guild") .. "|r", clock(e.t))
+      setRow(r, IC_LEAVE, DIM .. e.name .. (e.what == "removed" and " was removed from the guild" or " left the guild") .. "|r", clock(e.t))
     else
-      setRow(r, IC_ANNIV, nameIn(first(e.name), e.class) .. " has been in the guild " .. (e.months == 1 and "a month" or e.months % 12 == 0 and (e.months / 12 == 1 and "a year" or (e.months / 12) .. " years") or e.months .. " months"), "today")
+      setRow(r, IC_ANNIV, nameIn(e.name, e.class) .. " has been in the guild " .. (e.months == 1 and "a month" or e.months % 12 == 0 and (e.months / 12 == 1 and "a year" or (e.months / 12) .. " years") or e.months .. " months"), "today")
     end
   end
   if #feed == 0 then setRow(feedRows[1], "", DIM .. "Nothing yet today. Runs, good drops and dings show here.|r", "") end
@@ -1055,7 +1100,7 @@ local function fillSummary(leaving)
   if not sess then return end
   local me, t = UnitName("player"), now()
   local lv = UnitLevel("player")
-  sum.title:SetText(me .. "'s session")
+  sum.title:SetText(fullName(me) .. "'s session")
   sum.sub:SetText("Level " .. (sess.level or lv) .. (lv ~= sess.level and (" to " .. lv) or "") .. "  ·  " .. clock(sess.t) .. " to " .. clock(t))
   keep:SetShown(leaving and true or false)
   local bosses, drops = {}, {}
@@ -1092,7 +1137,7 @@ local function fillSummary(leaving)
   if #wl > 0 then
     out[#out + 1] = GOLD .. "WITH GUILDIES|r"
     local bits = {}
-    for i = 1, math.min(5, #wl) do local m = db.members[wl[i][1]]; bits[#bits + 1] = nameIn(first(wl[i][1]), m and m.class) .. DIM .. " " .. hrs(wl[i][2]) .. "|r" end
+    for i = 1, math.min(5, #wl) do local m = db.members[wl[i][1]]; bits[#bits + 1] = nameIn(wl[i][1], m and m.class) .. DIM .. " " .. hrs(wl[i][2]) .. "|r" end
     out[#out + 1] = table.concat(bits, ",  ")
   end
   if #out == 0 then out[1] = DIM .. "A quiet one. Nothing noted this session yet.|r" end
