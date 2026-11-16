@@ -4272,10 +4272,10 @@ function fadeImg(attrs){const src=attrs.src,img=h("img",{...attrs,class:((attrs.
 // Something just opened by a tap: it slides in on the next redraw only.
 const anim=k=>S.anim!=null&&S.anim===k?" opening":"";
 const openAnim=k=>{S.anim=k};
-// <details> folds slide open too, when someone opens one by hand.
-let foldTap=false;
-document.addEventListener("click",e=>{if(e.target.closest("summary"))foldTap=true},true);
-document.addEventListener("toggle",e=>{const d=e.target;if(!(d instanceof HTMLDetailsElement))return;if(foldTap&&d.open){d.classList.add("opening");setTimeout(()=>d.classList.remove("opening"),300)}foldTap=false},true);
+// <details> folds slide open too, when someone opens one by hand. The class goes on as the click lands, before the
+// fold opens: the toggle event comes a frame later, and adding it then showed the menu, hid it and faded it back in.
+document.addEventListener("click",e=>{const sm=e.target.closest("summary"),d=sm&&sm.parentElement;
+  if(d instanceof HTMLDetailsElement&&!d.open){d.classList.add("opening");setTimeout(()=>d.classList.remove("opening"),300)}},true);
 let rq=0;const schedule=()=>{if(rq)return;rq=requestAnimationFrame(()=>{rq=0;if(!$("#dlg").open)render();else schedule._pending=true})};
 $("#dlg").addEventListener("close",()=>{if(schedule._pending){schedule._pending=false;render()}});
 let syncTimer=0;
