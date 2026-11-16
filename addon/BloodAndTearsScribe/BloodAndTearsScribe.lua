@@ -1,3 +1,22 @@
+-- Item lookups: newer clients moved these into C_Item, so never call a missing one.
+local Item = {}
+do
+  local function call(fn, ...)
+    if not fn then return end
+    local ok, a, b, c = pcall(fn, ...)
+    if ok then return a, b, c end
+  end
+  local info = function(x) return call(GetItemInfo or (C_Item and C_Item.GetItemInfo), x) end
+  function Item.link(x) local _, l = info(x); return type(l) == "string" and l or nil end
+  function Item.quality(x) local _, _, q = info(x); return q end
+  function Item.icon(id)
+    local t = call(GetItemIcon or (C_Item and C_Item.GetItemIconByID), id)
+    if t then return t end
+    local fn = GetItemInfoInstant or (C_Item and C_Item.GetItemInfoInstant)
+    if fn then local ok, _, _, _, _, ic = pcall(fn, id); if ok then return ic end end
+  end
+end
+
 -- Blood and Tears Scribe
 -- While you play, this reads the in-game guild list every five minutes and notes, for each member: their level (and when
 -- it went up), rank,
@@ -288,7 +307,7 @@ local function lootSeen(msg)
   local name = link:match("%[(.-)%]")
   local col = link:match("|c%x%x(%x%x%x%x%x%x)")
   local q = col and QCOL[col:lower()]
-  if not q and GetItemInfo then q = select(3, GetItemInfo(link)) end
+  if not q then q = Item.quality(link) end
   if not id or not name or not q or q < 2 then return end
   table.insert(db.loot, { t = now(), who = short(who), id = id, q = q, name = name, zone = zone })
   prune()
@@ -802,9 +821,8 @@ for i = 1, 6 do
   -- Hover for the item's own tooltip; shift-click to put its link in chat.
   local function linkOf()
     local id = r.recipe and db.itemIds[r.recipe]
-    if id then local _, l = GetItemInfo(id); return l or ("item:" .. id), id end
-    local _, l = r.recipe and GetItemInfo(r.recipe)
-    return l, nil
+    if id then local l = Item.link(id); return l or ("item:" .. id), id end
+    return r.recipe and Item.link(r.recipe), nil
   end
   local hl = tex(r, "HIGHLIGHT", 1, 1, 1, 0.05); hl:SetAllPoints()
   r:EnableMouse(true)
@@ -916,7 +934,7 @@ local function fillSearch(q)
       end
       table.sort(bits)
       local id = db.itemIds[n]
-      local icon = id and GetItemIcon and GetItemIcon(id)
+      local icon = id and Item.icon(id)
       r.recipe = n
       r.name:SetText((icon and ("|T" .. icon .. ":16:16|t ") or "") .. n); r.info:SetText(table.concat(bits, ",  ")); r:Show()
     else r:Hide() end
