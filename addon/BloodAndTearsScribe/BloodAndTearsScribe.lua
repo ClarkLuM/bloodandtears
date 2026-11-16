@@ -827,7 +827,19 @@ local searchHint = text(pRecipes, "GameFontDisableSmall"); searchHint:SetPoint("
 searchHint:SetText("Who can make it? Type a name, or alt-click any item")
 search:SetScript("OnEscapePressed", function(self) self:SetText(""); self:ClearFocus() end)
 search:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
-search:SetScript("OnTextChanged", function() refresh() end)
+-- A small cross at the right end of the box clears it (shown only while there's text).
+do
+  local x = CreateFrame("Button", nil, search)
+  x:SetSize(16, 16); x:SetPoint("RIGHT", search, "RIGHT", -3, 0)
+  local t = x:CreateTexture(nil, "ARTWORK"); t:SetAllPoints(); t:SetTexture("Interface\\FriendsFrame\\ClearBroadcastIcon"); t:SetAlpha(0.6)
+  x:SetScript("OnEnter", function(self) t:SetAlpha(1); GameTooltip:SetOwner(self, "ANCHOR_RIGHT"); GameTooltip:AddLine("Clear the search", 1, 1, 1); GameTooltip:Show() end)
+  x:SetScript("OnLeave", function() t:SetAlpha(0.6); GameTooltip:Hide() end)
+  x:SetScript("OnClick", function() search:SetText(""); search:ClearFocus(); searchHint:Show() end)
+  x:Hide()
+  search.clear = x
+  if search.SetTextInsets then search:SetTextInsets(0, 20, 0, 0) end
+end
+search:SetScript("OnTextChanged", function(self) if self.clear then self.clear:SetShown((self:GetText() or "") ~= "") end refresh() end)
 search:SetScript("OnEditFocusGained", function() searchHint:Hide() end)
 search:SetScript("OnEditFocusLost", function(self) if self:GetText() == "" then searchHint:Show() end end)
 local recLabel = label(pRecipes, "Your professions", -38)
