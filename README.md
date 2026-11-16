@@ -142,6 +142,8 @@ Version 0.8.0 adds **a window and a session summary**, all drawn by the addon it
 - **This week:** the five busiest zones over seven days with bars, a weekday-by-hour chart in the site's five shades, and the busiest hour. It works from this scribe's own notes, so it's a small view of what the Activity page shows in full.
 Version 0.10.3 tidies the window: the game's own buttons with smaller light labels (the chosen tab lit, gold label), text shadows and the site's ink colours over a 90% panel, sentence-case headings, the close button inside a dark header with the site's red line, taller list rows with faint dividers.
 
+Version 0.10.5: the recipe search shows each result's icon, its item tooltip on hover, and shift-click puts its link in chat. The scribe notes what each recipe makes (item id from the profession window, in `db.itemIds`) and shares the ids with other scribes (`I` messages, which older copies ignore).
+
 Version 0.10.4 adds:
 
 - **Who can make it?** A search box on the Recipes tab looks through every recipe list in the notes (your characters', and guildies' whose scribes shared theirs) and lists each match with who can make it and in which profession.

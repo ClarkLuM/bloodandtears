@@ -60,6 +60,7 @@ local function init()
   db.profs = db.profs or {}     -- professions and skill each scribe shares for its own character
   db.stamps = db.stamps or {}   -- dungeons a player marked as done on the Dungeons tab, per character
   db.mine = db.mine or {}       -- this account's characters that have logged in with the scribe (for alts and mains)
+  db.itemIds = db.itemIds or {} -- what each recipe makes, by item id (for item tooltips in the recipe search)
   if db.ui.pip == nil then db.ui.pip = true end
   if db.ui.share == nil then db.ui.share = true end
   if db.ui.summary == nil then db.ui.summary = true end
@@ -339,6 +340,11 @@ local function levelUp(newLevel)
 end
 
 -- Your own characters' recipes, read when you open a profession window. Tries the newer and the older game functions.
+-- The item a recipe makes, from its link, so the recipe search can show the item's tooltip.
+local function noteItem(name, link)
+  local id = link and tonumber(link:match("item:(%d+)"))
+  if name and id then db.itemIds[name] = id end
+end
 local function readRecipes()
   if not db then return end
   local me, prof, names = UnitName("player"), nil, {}
@@ -350,13 +356,19 @@ local function readRecipes()
     if not prof and C_TradeSkillUI.GetTradeSkillLine then local ok2, _, name = pcall(C_TradeSkillUI.GetTradeSkillLine); prof = ok2 and name or nil end
     for _, id in ipairs(C_TradeSkillUI.GetAllRecipeIDs() or {}) do
       local r = C_TradeSkillUI.GetRecipeInfo(id)
-      if r and r.learned and r.name then names[#names + 1] = r.name end
+      if r and r.learned and r.name then
+        names[#names + 1] = r.name
+        if C_TradeSkillUI.GetRecipeItemLink then local ok3, l = pcall(C_TradeSkillUI.GetRecipeItemLink, id); if ok3 then noteItem(r.name, l) end end
+      end
     end
   elseif GetTradeSkillLine and GetNumTradeSkills then
     prof = GetTradeSkillLine()
     for i = 1, GetNumTradeSkills() do
       local name, kind = GetTradeSkillInfo(i)
-      if name and kind ~= "header" then names[#names + 1] = name end
+      if name and kind ~= "header" then
+        names[#names + 1] = name
+        if GetTradeSkillItemLink then local ok3, l = pcall(GetTradeSkillItemLink, i); if ok3 then noteItem(name, l) end end
+      end
     end
   end
   if not prof or prof == "" or prof == "UNKNOWN" or #names == 0 then return end
@@ -374,7 +386,10 @@ local function readCraft()
   if not prof or prof == "" or prof == "UNKNOWN" or prof == "Beast Training" then return end
   for i = 1, GetNumCrafts() do
     local name, _, kind = GetCraftInfo(i)
-    if name and kind ~= "header" then names[#names + 1] = name end
+    if name and kind ~= "header" then
+      names[#names + 1] = name
+      if GetCraftItemLink then local ok3, l = pcall(GetCraftItemLink, i); if ok3 then noteItem(name, l) end end
+    end
   end
   if #names == 0 then return end
   table.sort(names)
@@ -775,6 +790,27 @@ for i = 1, 6 do
   local r = CreateFrame("Frame", nil, pRecipes); r:SetSize(W - 28, 34); r:SetPoint("TOPLEFT", 14, -58 - (i - 1) * 38)
   r.name = text(r, "GameFontHighlight"); r.name:SetPoint("TOPLEFT", 0, -2); r.name:SetWidth(W - 28)
   r.info = text(r, "GameFontDisableSmall"); r.info:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3); r.info:SetWidth(W - 28)
+  -- Hover for the item's own tooltip; shift-click to put its link in chat.
+  local function linkOf()
+    local id = r.recipe and db.itemIds[r.recipe]
+    if id then local _, l = GetItemInfo(id); return l or ("item:" .. id), id end
+    local _, l = r.recipe and GetItemInfo(r.recipe)
+    return l, nil
+  end
+  local hl = tex(r, "HIGHLIGHT", 1, 1, 1, 0.05); hl:SetAllPoints()
+  r:EnableMouse(true)
+  r:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    local l = linkOf()
+    if l then GameTooltip:SetHyperlink(l:match("|H(item:[^|]+)|h") or l)
+    else GameTooltip:AddLine(self.recipe or "", 1, 1, 1); GameTooltip:AddLine("No item details yet. They show once someone who knows it has opened that profession with the scribe running.", 0.75, 0.75, 0.75, true) end
+    GameTooltip:Show()
+  end)
+  r:SetScript("OnLeave", function() GameTooltip:Hide() end)
+  r:SetScript("OnMouseUp", function()
+    local l = linkOf()
+    if l and IsModifiedClick and IsModifiedClick("CHATLINK") and ChatEdit_InsertLink and l:find("|H") then ChatEdit_InsertLink(l) end
+  end)
   r:Hide(); hitRows[i] = r
 end
 local recFoot = text(pRecipes, "GameFontDisableSmall"); recFoot:SetPoint("BOTTOMLEFT", 14, 12); recFoot:SetWidth(W - 28)
@@ -856,7 +892,10 @@ local function fillSearch(q)
       local bits = {}
       for _, c in ipairs(found[n]) do local m, full = guildie(c.who); bits[#bits + 1] = nameIn(full or c.who, m and m.class) .. DIM .. " (" .. c.prof .. ")|r" end
       table.sort(bits)
-      r.name:SetText(n); r.info:SetText(table.concat(bits, ",  ")); r:Show()
+      local id = db.itemIds[n]
+      local icon = id and GetItemIcon and GetItemIcon(id)
+      r.recipe = n
+      r.name:SetText((icon and ("|T" .. icon .. ":16:16|t ") or "") .. n); r.info:SetText(table.concat(bits, ",  ")); r:Show()
     else r:Hide() end
   end
   for _, r in ipairs(recRows) do r:Hide() end
@@ -1416,6 +1455,14 @@ local function sendRecipes(me, prof)
   end
   if #cur > 0 then parts[#parts + 1] = table.concat(cur, "^") end
   for i, part in ipairs(parts) do send("R~" .. clean(me, 40) .. "~" .. clean(prof, 30) .. "~" .. r.at .. "~" .. i .. "~" .. #parts .. "~" .. part) end
+  local ids = {}
+  for _, n in ipairs(r.list) do local id = db.itemIds[n]; if id then ids[#ids + 1] = id .. "=" .. clean(n, 80) end end
+  local cur2, len2 = {}, 0
+  for _, it in ipairs(ids) do
+    if len2 + #it + 1 > 235 and #cur2 > 0 then send("I~" .. table.concat(cur2, "^")); cur2, len2 = {}, 0 end
+    cur2[#cur2 + 1] = it; len2 = len2 + #it + 1
+  end
+  if #cur2 > 0 then send("I~" .. table.concat(cur2, "^")) end
 end
 local function sendMine()
   local me = UnitName("player")
@@ -1492,6 +1539,10 @@ ui.addonMsg = function(prefix, msg, channel, sender)
     for name, r in (f[4] or ""):gmatch("([^:,]+):(%d+)") do p.ranks[clean(name, 30)] = num(r, 0, 300) end
     p.main = f[5] and clean(f[5], 40) or nil
     db.profs[clean(f[2], 40)] = p
+  elseif kind == "I" then
+    for id, n in (f[2] or ""):gmatch("(%d+)=([^%^]+)") do
+      local v = num(id, 1, 9999999); if v then db.itemIds[clean(n, 80)] = v end
+    end
   elseif kind == "R" then
     local who, prof, at, i, total = clean(f[2], 40), clean(f[3], 30), num(f[4], 1e9, now() + 600), num(f[5], 1, 40), num(f[6], 1, 40)
     if who == "" or prof == "" or not at or not i or not total then return end
