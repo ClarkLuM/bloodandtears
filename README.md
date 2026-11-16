@@ -125,7 +125,7 @@ These aren't in the code:
 - who was in the raid group inside a raid
 - the recipes the uploader's own characters know (read when a profession window is opened)
 
-It sends nothing anywhere and draws nothing on screen. From version 0.5.0 it puts a short line in your chat when it notes a boss kill ("noted Baron Silverlaine in Shadowfang Keep (2 bosses today), with 4 guildies in the group.") or a rare-or-better drop; `/scribe quiet` turns those off and `/scribe loud` back on. `/scribe` shows a summary: guildies on the list, today's dungeons, bosses and good drops, the latest bosses, and how many are waiting in the file to upload.
+It sends nothing anywhere. From version 0.8.0 it keeps out of your chat and shows what it notes in a small window instead (see below). Versions 0.5.0 to 0.7.0 put a line in chat for each boss kill and rare drop; those lines are gone.
 
 Version 0.2.0 (15 Nov 2026) reads offline guildies too. The game's guild list only includes them when "Show Offline Members" is ticked, so the scribe ticks it while it reads and puts the setting back straight after; a list read without them no longer marks the offline guildies as gone. Version 0.3.0 also notes when each guildie's level goes up (to within its five-minute read while the uploader is online; your own characters exactly, when you ding). On upload, any character the scribe has at a higher level than the site gets "Reached level N" added to their history, timed from when the scribe saw it (or the upload, if it has no time), and the Hall of Firsts is worked out again straight away. The armory only ever raises a level, so it doesn't log the same ding twice when it catches up.
 
@@ -134,6 +134,16 @@ Version 0.4.0 also notes dungeon runs (who was in your group inside a dungeon, p
 Version 0.6.0 backfills **When the Guild Plays**: the guild list says how long ago each offline guildie was last on (to the hour), so that hour counts as an hour someone played, even if nobody running the scribe was online then. Only each person's latest session is known, so it fills gaps rather than the whole map.
 
 Version 0.7.0 adds up **time in each zone**: at each read, every guildie online has the minutes since they were last seen added to the zone they're in now (a first sighting, or a gap while the scribe was offline, counts as one five-minute read), per day, kept for 42 days. `/scribe` names today's busiest zones. On upload the server stores minutes per character per zone per day in `guild/scribe.zones` (guildies the site doesn't know are summed under `_`), taking the larger figure on a re-upload so nothing is counted twice, and folds days over two months old into `zonesOld` for the all-time view.
+
+Version 0.8.0 adds **a window and a session summary**, all drawn by the addon itself with the game's fonts and a gingerbread logo (`logo.tga`, 64×64):
+
+- A **minimap button** (drag it round the edge; `/scribe button` hides or shows it) opens the window, and a red pip counts today's new notes since you last looked. `/scribe` also opens it; Escape closes it; it can be dragged and locked.
+- **Today:** guildies online now (class colour, level, zone, from the latest guild list read), today's notes newest first (each dungeon with its boss count and how many guildies were with you, every rare-or-better drop, and guildies' dings from the guild list), and the busiest zone today.
+- **This week:** the five busiest zones over seven days with bars, a weekday-by-hour chart in the site's five shades, and the busiest hour. It works from this scribe's own notes, so it's a small view of what the Activity page shows in full.
+- **Scribe:** what's in the notes file (days of hours, dungeon runs, good drops, boss kills, how far back), how to upload, and settings: the pip, the session summary, locking the window, hiding the button. Settings live in `BloodAndTearsScribeDB.ui`, which the server ignores.
+- **Session summary:** shown when the logout countdown starts (or any time with `/scribe summary`): levels gained, time played, bosses, your good drops, the zones you spent time in (counted each minute), the dungeons and bosses, and the guildies you grouped with and for how long. "Keep playing" cancels the logout.
+
+The data the site uploads is unchanged, so 0.8.0 needs no server or site change.
 
 **The zone maps** (`public/azeroth.json`) are our own drawing, not Blizzard's map art: each coastline and zone border is a list of points placed by hand against a grid laid over the in-game world map, in `tools/maps/geo.py`, and `python tools/maps/build.py` turns them into rugged SVG paths (the wobble is generated, the same on both sides of a shared border). It includes WoW Forever's zones (Mount Hyjal, Shen'dralas, Moonglade on the north coast, Riverglades, and Zephras Isle on the world view) and shows Quel'Thalas and Gilneas as closed. To move a border, edit the points in `geo.py` and run the build again. Zone names from the game are matched loosely (case, "The", punctuation), with a few aliases (Stormwind City counts as Elwynn Forest, Ironforge as Dun Morogh); anything not on the map, such as dungeons, is listed under it.
 
