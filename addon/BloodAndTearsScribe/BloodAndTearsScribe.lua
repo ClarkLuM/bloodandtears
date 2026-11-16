@@ -304,6 +304,8 @@ local function lootSeen(msg)
     if not link and LOOT_OTHER then who, link = msg:match(LOOT_OTHER) end
   end
   if not who or not link then return end
+  -- Only guildies' loot: pugs in the group are left out (here, in the window and on the site).
+  if who ~= UnitName("player") and not guildie(short(who)) then return end
   local id = tonumber(link:match("item:(%d+)"))
   local name = link:match("%[(.-)%]")
   local col = link:match("|c%x%x(%x%x%x%x%x%x)")
@@ -430,6 +432,11 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4, a5)
     if ui.login then pcall(ui.login) end
   elseif event == "GUILD_ROSTER_UPDATE" then
     readRoster()
+    -- Drop pugs' loot noted by older versions, once the guild list is known.
+    if next(db.members) then
+      local mine = short(UnitName("player"))
+      for i = #db.loot, 1, -1 do local w = db.loot[i].who; if w ~= mine and not guildie(w) then table.remove(db.loot, i) end end
+    end
   elseif event == "GROUP_ROSTER_UPDATE" or event == "ZONE_CHANGED_NEW_AREA" or event == "PLAYER_ENTERING_WORLD" then
     readRaid()
     pcall(readRun)
@@ -544,7 +551,7 @@ local function todayFeed(since)
     end
   end
   for _, l in ipairs(db.loot) do
-    if dayOf(l.t) == today and (l.q or 0) >= 3 and (not since or l.t > since) then out[#out + 1] = { kind = "loot", t = l.t, l = l } end
+    if dayOf(l.t) == today and (l.q or 0) >= 3 and (not since or l.t > since) and (l.who == short(UnitName("player")) or guildie(l.who)) then out[#out + 1] = { kind = "loot", t = l.t, l = l } end
   end
   for name, m in pairs(db.members) do
     for lv, t in pairs(m.ups or {}) do
@@ -1202,7 +1209,8 @@ local function fillScribe()
   local nr = 0; for _ in pairs(db.runs) do nr = nr + 1 end
   big[1].n:SetText(nd); big[1].l:SetText(nd == 1 and "day of hours" or "days of hours")
   big[2].n:SetText(nr); big[2].l:SetText(nr == 1 and "dungeon run" or "dungeon runs")
-  big[3].n:SetText(#db.loot); big[3].l:SetText(#db.loot == 1 and "good drop" or "good drops")
+  local nl = 0; for _, l in ipairs(db.loot) do if l.who == short(UnitName("player")) or guildie(l.who) then nl = nl + 1 end end
+  big[3].n:SetText(nl); big[3].l:SetText(nl == 1 and "good drop" or "good drops")
   local n = 0; for _, m in pairs(db.members) do if not m.gone then n = n + 1 end end
   local hs = ui.heard and ui.heard() or {}
   scribeInfo:SetText(n .. " guildies on the list, " .. #db.kills .. " boss kills noted" .. (firstDay and (", notes back to " .. firstDay) or "") .. ". "
