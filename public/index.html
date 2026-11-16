@@ -3877,14 +3877,7 @@ function armoryAllLine(){
       S.user?h("button",{class:"btn sm",disabled:!!busy,onclick:go},busy?"Syncing everyone…":"⟳ Sync everyone"):null,
       scribeLine()):null)}
 // The guild scribe: when its file was last uploaded, and (for officers and guild scribes) the upload button.
-// In Chrome and Edge the site remembers the file after the first pick (a handle kept in this browser's IndexedDB), so the
-// next upload is one click; other browsers get the usual file picker every time.
-const SCRIBE_IDB="bt-scribe";
-const scribeIdb=(mode,fn)=>new Promise((ok,no)=>{try{const r=indexedDB.open(SCRIBE_IDB,1);r.onupgradeneeded=()=>r.result.createObjectStore("h");
-  r.onsuccess=()=>{try{const tx=r.result.transaction("h",mode),q=fn(tx.objectStore("h"));tx.oncomplete=()=>ok(q&&q.result);tx.onerror=()=>no(tx.error)}catch(e){no(e)}};r.onerror=()=>no(r.error)}catch(e){no(e)}});
-let scribeHandle=null,scribeHandleAsked=false;
-const loadScribeHandle=()=>{if(scribeHandleAsked||!window.showOpenFilePicker)return;scribeHandleAsked=true;
-  scribeIdb("readonly",st=>st.get("file")).then(h=>{if(h){scribeHandle=h;schedule()}}).catch(()=>{})};
+// A plain file picker: Chrome's "remember this file" picker refuses anything under Program Files, where WoW usually lives.
 async function sendScribeFile(file){
 
       if(file.size>3e6){toast("That file is too big to be the scribe file.");return}
@@ -3895,28 +3888,11 @@ async function sendScribeFile(file){
       try{const r=await httpsCallable(fns,"scribeUpload")({text}),d=r.data||{};
         toast("Scribe file read: "+d.matched+(d.matched===1?" guildie":" guildies")+" matched"+(d.recipeChars?", recipes for "+d.recipeChars+(d.recipeChars===1?" character":" characters"):"")+(d.levelled&&d.levelled.length?". Levels updated: "+d.levelled.join(", "):"")+(d.kills?", "+d.kills+(d.kills===1?" boss kill":" boss kills"):"")+(d.runs?", "+d.runs+(d.runs===1?" dungeon run":" dungeon runs"):"")+(d.zoneDays?", zone time for "+d.zoneDays+(d.zoneDays===1?" day":" days"):"")+(d.unknownN?". Not on the site yet: "+d.unknown.join(", ")+(d.unknownN>d.unknown.length?" and more":""):"")+".")}
       catch(err){toast(err&&err.message?err.message.replace(/^.*?: /,""):"Couldn't read that file.")}}
-async function pickScribeFile(){
-  try{const [fh]=await window.showOpenFilePicker({id:"bt-scribe",types:[{description:"Scribe notes",accept:{"text/plain":[".lua"]}}]});
-    const file=await fh.getFile();
-    scribeIdb("readwrite",st=>st.put(fh,"file")).then(()=>{scribeHandle=fh;schedule()}).catch(()=>{});
-    await sendScribeFile(file)}
-  catch(e){if(e&&e.name!=="AbortError")toast("Couldn't open that file.")}}
-async function uploadAgain(){
-  try{const ok=(await scribeHandle.queryPermission({mode:"read"}))==="granted"||(await scribeHandle.requestPermission({mode:"read"}))==="granted";
-    if(!ok){toast("The browser needs your OK to read the file again.");return}
-    await sendScribeFile(await scribeHandle.getFile())}
-  catch(e){toast("Couldn't find the file again. Pick it once more.");scribeHandle=null;scribeIdb("readwrite",st=>st.delete("file")).catch(()=>{});schedule()}}
 function scribeLine(){const sc=S.scribe,can=isOfficer()||isScribe();
-  if(can)loadScribeHandle();
   const tip="In your WoW folder: _forever_\\WTF\\Account\\<account>\\SavedVariables\\BloodAndTearsScribe.lua";
-  const up=!can?null:window.showOpenFilePicker?(scribeHandle
-      ?[h("button",{class:"btn sm primary",type:"button",title:"Reads "+scribeHandle.name+" again, from where you picked it last time",onclick:uploadAgain},"Upload the scribe file again"),
-        h("button",{class:"linkish small",type:"button",title:tip,onclick:pickScribeFile},"Pick a different file")]
-      :h("button",{class:"btn sm",type:"button",title:tip,onclick:pickScribeFile},"Upload the scribe file"))
-    :(()=>{const inp=h("input",{type:"file",accept:".lua,text/plain",class:"visually-hidden",id:"scribe-file",onchange:e=>{const file=e.target.files&&e.target.files[0];e.target.value="";if(file)sendScribeFile(file)}});
+  const up=!can?null:(()=>{const inp=h("input",{type:"file",accept:".lua,text/plain",class:"visually-hidden",id:"scribe-file",onchange:e=>{const file=e.target.files&&e.target.files[0];e.target.value="";if(file)sendScribeFile(file)}});
       return[inp,h("label",{for:"scribe-file",class:"btn sm",title:tip},"Upload the scribe file")]})();
-  return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):can?h("span",{},"No guild scribe file yet"):null,up,
-    can&&window.showOpenFilePicker&&!scribeHandle?h("span",{class:"small ter"},"The site remembers the file after the first time, so next time it's one click."):null)}
+  return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):can?h("span",{},"No guild scribe file yet"):null,up)}
 function armoryLine(m,can){
   const a=m.armory,busy=S.ui.armBusy===m.id;
   const sync=async()=>{if(!fns){toast("Sync isn't switched on yet.");return}S.ui.armBusy=m.id;render();

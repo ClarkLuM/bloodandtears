@@ -642,7 +642,7 @@ local upload = text(pScribe, "GameFontDisableSmall"); upload:SetPoint("BOTTOMLEF
 if upload.SetWordWrap then upload:SetWordWrap(true) end
 upload:SetJustifyV("BOTTOM"); upload:SetHeight(78)
 upload:SetText("Your notes file is World of Warcraft\\_forever_\\WTF\\Account\\(your account)\\SavedVariables\\BloodAndTearsScribe.lua. "
-  .. "Type /reload (or log out) to save it, then on the site open Roster, Details, Upload the scribe file. In Chrome or Edge the site remembers the file after the first time.")
+  .. "Type /reload (or log out) to save it, then on the site open Roster, Details, Upload the scribe file. The file picker usually reopens in that folder next time.")
 
 -- Recipes: your professions, when each was last read, and a button that opens its window (the game only shares a
 -- recipe list while that window is open, and only lets an addon open it from a click, through a secure button).
