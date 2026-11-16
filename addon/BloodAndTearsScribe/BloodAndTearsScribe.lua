@@ -58,6 +58,7 @@ local function init()
   db.ui = db.ui or {}
   db.joined = db.joined or {}   -- when the scribe saw each guildie join (for "a month in the guild")
   db.profs = db.profs or {}     -- professions and skill each scribe shares for its own character
+  db.stamps = db.stamps or {}   -- dungeons a player marked as done on the Dungeons tab, per character
   if db.ui.pip == nil then db.ui.pip = true end
   if db.ui.share == nil then db.ui.share = true end
   if db.ui.summary == nil then db.ui.summary = true end
@@ -787,18 +788,40 @@ for i = 1, 5 do
   r.flag = text(r, "GameFontNormalSmall", "RIGHT"); r.flag:SetPoint("TOPRIGHT", 0, -2)
   r.range = text(r, "GameFontDisableSmall"); r.range:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3); r.range:SetWidth(W - 28)
   r.who = text(r, "GameFontHighlightSmall"); r.who:SetPoint("TOPLEFT", r.range, "BOTTOMLEFT", 0, -3); r.who:SetWidth(W - 28)
+  -- Click a dungeon to mark it done (or not): the notes only know runs the scribe saw, so older ones need marking once.
+  local hit = CreateFrame("Button", nil, r); hit:SetAllPoints()
+  local hl = tex(hit, "HIGHLIGHT", 1, 1, 1, 0.05); hl:SetAllPoints()
+  hit:SetScript("OnClick", function()
+    local me, d = UnitName("player") or "?", r.dungeon
+    if not d then return end
+    db.stamps[me] = db.stamps[me] or {}
+    db.stamps[me][d] = (not db.stamps[me][d]) and now() or nil
+    refresh()
+  end)
+  hit:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:AddLine(r.dungeon or "", 1, 1, 1)
+    GameTooltip:AddLine(r.marked and "Marked as done. Click to unmark." or r.seen and "The scribe saw you here." or "Done it before? Click to mark it.", 0.75, 0.75, 0.75)
+    GameTooltip:Show()
+  end)
+  hit:SetScript("OnLeave", function() GameTooltip:Hide() end)
   r:Hide(); dgRows[i] = r
 end
 local dgFoot = text(pDungeons, "GameFontDisableSmall"); dgFoot:SetPoint("BOTTOMLEFT", 14, 12); dgFoot:SetWidth(W - 28)
 if dgFoot.SetWordWrap then dgFoot:SetWordWrap(true) end
 dgFoot:SetJustifyV("BOTTOM"); dgFoot:SetHeight(32)
-dgFoot:SetText("In range means their level is inside the dungeon's range. Offline counts guildies seen in the last two weeks. Ask in game.")
-local function beenTo(dname, me)
+dgFoot:SetText("The scribe only knows runs it saw, so click a dungeon you'd done before to mark it. In range: their level fits. Offline: seen in the last two weeks.")
+-- Seen by the scribe: a dungeon run or a boss kill there with you in the group. The game names Scarlet Monastery and
+-- Dire Maul without the wing, so those count for every wing.
+local function sameDungeon(z, dname)
+  if not z or z == "" then return false end
   local base = dname:match("^(.-):") or dname
-  for _, r in pairs(db.runs) do
-    local z = r.zone or ""
-    if (z == dname or z == base or z:find(base, 1, true)) and r.who and r.who[me] then return true end
-  end
+  local zb = z:gsub("^The ", ""):lower()
+  return z == dname or z == base or zb == base:gsub("^The ", ""):lower() or zb == dname:gsub("^The ", ""):lower()
+end
+local function seenIn(dname, me)
+  for _, r in pairs(db.runs) do if sameDungeon(r.zone, dname) and r.who and r.who[me] then return true end end
+  for _, k in ipairs(db.kills) do if sameDungeon(k.zone, dname) and k.who and k.who[me] then return true end end
   return false
 end
 local function fillDungeons()
@@ -813,8 +836,11 @@ local function fillDungeons()
   for i, r in ipairs(dgRows) do
     local d = list[i]
     if d then
+      r.dungeon = d[1]
+      r.marked = db.stamps[me] and db.stamps[me][d[1]] and true or false
+      r.seen = seenIn(d[1], me)
       r.name:SetText(d[1])
-      r.flag:SetText(beenTo(d[1], me) and (DIM .. "Been|r") or (lv >= d[2] and (GOLD .. "You haven't been|r") or (DIM .. "From level " .. d[2] .. "|r")))
+      r.flag:SetText((r.seen or r.marked) and (DIM .. "Been|r") or (lv >= d[2] and (GOLD .. "You haven't been|r") .. DIM .. "  (click if you have)|r" or (DIM .. "From level " .. d[2] .. "|r")))
       local names, off = {}, 0
       for name, m in pairs(db.members) do
         local l = m.level or 0
