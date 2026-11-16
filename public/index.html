@@ -1346,6 +1346,45 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
  .pt-chev{top:.5rem;right:.5rem;width:2rem;height:2rem}
  .pt-t{font-size:.8125rem}
 }
+
+/* Records: the top three on a podium */
+.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.5rem;margin:.75rem 0 .25rem}
+.pod{display:flex;flex-direction:column;align-items:center;gap:.125rem;text-decoration:none;color:var(--text);min-width:0}
+.pod-f{position:relative;width:3.25rem;height:3.25rem;border-radius:50%;display:grid;place-items:center;font:600 .9375rem/1 var(--display);background:color-mix(in srgb,var(--cc) 16%,var(--sunken));box-shadow:0 0 0 2px var(--raised),0 0 0 3.5px var(--cc);margin-bottom:.375rem;transition:transform .15s}
+.pod-1 .pod-f{width:4rem;height:4rem;font-size:1.125rem}
+.pod:hover .pod-f{transform:translateY(-2px)}
+.pod-m{position:absolute;right:-.375rem;bottom:-.375rem}.pod-m .medal{width:1.375rem;height:1.375rem;font-size:.6875rem;box-shadow:0 0 0 2px var(--raised)}
+.pod-n{font-size:.875rem;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--cc) 80%,#fff)}
+:root[data-theme="light"] .pod-n{color:color-mix(in srgb,var(--cc) 40%,#1a1211)}
+.pod-v{font-size:.75rem;color:var(--sec);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pod-b{align-self:stretch;margin-top:.5rem;display:grid;place-items:start center;padding-top:.375rem;border-radius:8px 8px 0 0;font:400 1.25rem/1 var(--display);color:var(--ter);background:linear-gradient(180deg,color-mix(in srgb,var(--cc) 22%,var(--sunken)),var(--sunken));border:1px solid color-mix(in srgb,var(--sep) 70%,transparent);border-bottom:0}
+.pod-1 .pod-b{height:4.5rem;color:var(--gold-hi)}.pod-2 .pod-b{height:3.25rem}.pod-3 .pod-b{height:2.25rem}
+.pod.me .pod-n{text-decoration:underline;text-decoration-color:var(--accent-text);text-underline-offset:3px}
+.podium+.rec-list{border-top:1px solid color-mix(in srgb,var(--sep) 70%,transparent);padding-top:.375rem}
+/* Hall of Titles: plaques tinted in their frame */
+.hot-tiles{gap:.625rem}
+.hot-tile{position:relative;overflow:hidden;background:linear-gradient(90deg,color-mix(in srgb,var(--f0,transparent) 16%,var(--raised)),var(--raised) 70%);border-color:color-mix(in srgb,var(--f0,var(--sep)) 30%,var(--sep))}
+.hot-tile.free{background:none;border-style:dashed}
+.hot-btn{padding:.625rem .75rem;gap:.75rem;min-height:3.25rem}
+.hot-fr{width:.375rem;height:2.25rem;border-radius:999px;box-shadow:none}
+.hot-txt b{font:400 1rem/1.25rem var(--display);color:var(--gold-hi)}
+.hot-tile.free .hot-txt b{color:var(--sec)}
+/* Phones and tablets: This Week above the leaderboards (the two-column rule above was winning on small screens) */
+@media (max-width:960px){.rec-a{grid-template-columns:minmax(0,1fr)}}
+/* Records top: This Week and the page links on the left, the leaderboards on the right */
+.rec-a{grid-template-areas:"week lb" "links lb";grid-template-rows:auto 1fr;align-items:start}
+.rec-a>:first-child{grid-area:week}.rec-a>.lb{grid-area:lb}.rec-a>.rec-links{grid-area:links;grid-template-columns:minmax(0,1fr);gap:.75rem}
+@media (max-width:960px){.rec-a{grid-template-areas:"week" "lb" "links";grid-template-rows:auto}}
+.rec-a .rec-link{flex-direction:column;align-items:flex-start;gap:.25rem}
+@media (max-width:640px){
+ .card.pt{gap:.5rem}
+ .pt-row{padding:.75rem .875rem .875rem;gap:.5rem}
+ .pt-p{flex:none}
+ .pt-ppl{gap:.5rem}
+ .pt-name b{font-size:1.0625rem;line-height:1.375rem}
+ .pt-chev{top:.5rem;right:.5rem;width:2rem;height:2rem}
+ .pt-t{font-size:.8125rem}
+}
 </style>
 </head>
 <body>
@@ -3176,12 +3215,18 @@ const recLine=([m,v,pl],fmt,cls="")=>h("li",{class:"rec-row "+cls},medal(pl),h("
 const recOpen=k=>!!(S.ui.recOpen||{})[k];
 const recToggle=k=>setUi({recOpen:{...(S.ui.recOpen||{}),[k]:!recOpen(k)}},true);
 // Top 3, then your character and the wooden spoon after a gap. "See all" lists everyone.
-function recList(k,rows,fmt,n=3){const open=recOpen(k),top=open?rows:rows.slice(0,n);
+function recList(k,rows,fmt,n=3,total=0){const open=recOpen(k),top=open?rows:rows.slice(0,n);
   const mine=open?[]:rows.filter(r=>isMine(r[0])&&!top.includes(r)),last=!open&&rows.length>n?rows[rows.length-1]:null;
   const gap=sp=>h("li",{class:"rec-gap","aria-hidden":"true"},sp?"··· Wooden spoon":"···");
   return[h("ol",{class:"rec-list"},top.map((r,i)=>[open&&i===rows.length-1&&rows.length>n?gap(1):null,recLine(r,fmt,open&&i===rows.length-1&&rows.length>n?"spoon":"")]),
       mine.map(r=>[gap(r===last),recLine(r,fmt,r===last?"spoon me":"me")]),last&&!mine.includes(last)?[gap(1),recLine(last,fmt,"spoon")]:null),
-    rows.length>n+1?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(open),onclick:()=>recToggle(k)},open?"Show top 3":"See all "+rows.length):null]}
+    rows.length>n+1?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(open),onclick:()=>recToggle(k)},open?(total?"Show fewer":"Show top 3"):"See all "+(total||rows.length)):null]}
+// The top three on a podium: first in the middle and tallest, a face ringed in class colour, the number under it.
+function podium(rows,fmt){const seat=(r,i)=>{if(!r)return h("div",{class:"pod pod-empty"});const[m,v,pl]=r,cc=CLASSES[m.cls]||"#bfaea9";
+    return h("a",{class:"pod pod-"+i+(isMine(m)?" me":""),href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,style:`--cc:${cc}`,title:nameOf(m)+" · "+fmt(v)},
+      h("span",{class:"pod-f"},nameOf(m).split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase(),h("span",{class:"pod-m"},medal(pl))),
+      h("span",{class:"pod-n"},nameOf(m).split(/\s+/)[0]),h("span",{class:"pod-v"},fmt(v)),h("span",{class:"pod-b","aria-hidden":"true"},String(pl)))};
+  return h("div",{class:"podium"},seat(rows[1],2),seat(rows[0],1),seat(rows[2],3))}
 // The four main boards share one card with a switch. The title and who holds it sit above the list.
 function recBoards(){
   const k=S.ui.recBoard&&REC_BOARDS.some(b=>b[0]===S.ui.recBoard)?S.ui.recBoard:"hk",[,title,get,fmt]=REC_BOARDS.find(b=>b[0]===k),rows=ranked(get);
@@ -3193,7 +3238,7 @@ function recBoards(){
     h("h3",{class:"visually-hidden"},title),
     holder?h("p",{class:"lb-title small"},"Title: ",h("b",{},TITLES[k])," · ",charLink(holder),rg?" · "+rg.text.toLowerCase():""):
       h("p",{class:"lb-title small ter"},rows.length+(rows.length===1?" character":" characters")),
-    rows.length?recList(k,rows,fmt,5):h("p",{class:"empty"},"Nobody on this board yet."))}
+    rows.length>=3?[podium(rows,fmt),recList(k,rows.slice(3),fmt,2,rows.length)]:rows.length?recList(k,rows,fmt,5):h("p",{class:"empty"},"Nobody on this board yet."))}
 // Profession rankings by value, for the Professions page table (members and alts; former members left off).
 // Hall of Titles: a grid of frame tiles, one per title. Tap one for how it's won, its frame, the reign and who's next.
 // Professions and classes show only the held titles until "Show every title".
@@ -3209,7 +3254,7 @@ function hallOfTitles(){
       x.holder?h("span",{},charLink(x.holder[0])," · "+x.fmt(x.holder[1])+(rg?" · "+rg.text.toLowerCase():"")):null,
       x.tied?h("span",{},"Tied: ",x.tied.map((r,i)=>[i?", ":"",charLink(r[0])])," · "+x.fmt(x.tied[0][1])):null,
       x.next?h("span",{},"Next: ",charLink(x.next[0])," · ",x.fmt(x.next[1])):x.holder?null:h("span",{class:"ter"},"Be alone at the top of the board to take it.")):null;
-    return h("li",{class:"hot-tile"+(open?" open":"")+(x.holder&&isMine(x.holder[0])?" me":"")+(x.holder?"":" free")},
+    return h("li",{class:"hot-tile"+(open?" open":"")+(x.holder&&isMine(x.holder[0])?" me":"")+(x.holder?"":" free"),style:fr?`--f0:${fr.f[0]};--f1:${fr.f[1]}`:null},
       h("button",{type:"button",class:"hot-btn","aria-expanded":String(open),onclick:()=>{if(!open)openAnim("t:"+x.k);setUi({hotOpen:open?null:x.k})}},sw,
         h("span",{class:"hot-txt"},h("b",{},x.t),h("span",{},short))),more)};
   const lists=groups.map(g=>[g,l.filter(x=>x.group===g)]).filter(x=>x[1].length);
@@ -3226,10 +3271,11 @@ function viewActivity(){
     any?null:h("section",{class:"card",style:"gap:.5rem"},h("h2",{},"Nothing noted yet"),h("p",{class:"small ter",style:"margin:0"},"This page fills in from the guild scribe, an in-game addon an officer runs. Once its notes are uploaded, the busiest hours and a map of the zones show here."))]}
 function viewRecords(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
-    h("div",{class:"rec-top rec-a"},raceCard(),recBoards()),
-    hallOfTitles(),
+    // This Week at its own height with the two page links under it, beside the leaderboards.
+    h("div",{class:"rec-top rec-a"},raceCard(),recBoards(),
     h("div",{class:"rec-links"},S.scribe?h("a",{class:"card rec-link",href:"#activity"},h("span",{},h("b",{},"When and where the guild plays"),h("span",{class:"small ter"}," · the busiest hours and a map of the zones")),h("span",{class:"rec-link-go"},"On the Activity page →")):null,
-    h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →"))),
+    h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →")))),
+    hallOfTitles(),
     h("p",{class:"small ter"},"Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
 // When the guild plays: how many guildies are online by day of the week and hour (Perth), from the guild scribe's
 // five-minute checks. It only knows hours when the scribe was online, so blank cells are "not watched", not "empty".
