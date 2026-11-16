@@ -3890,11 +3890,31 @@ async function sendScribeFile(file){
       try{const r=await httpsCallable(fns,"scribeUpload")({text}),d=r.data||{};
         toast("Scribe file read: "+d.matched+(d.matched===1?" guildie":" guildies")+" matched"+(d.recipeChars?", recipes for "+d.recipeChars+(d.recipeChars===1?" character":" characters"):"")+(d.levelled&&d.levelled.length?". Levels updated: "+d.levelled.join(", "):"")+(d.kills?", "+d.kills+(d.kills===1?" boss kill":" boss kills"):"")+(d.runs?", "+d.runs+(d.runs===1?" dungeon run":" dungeon runs"):"")+(d.zoneDays?", zone time for "+d.zoneDays+(d.zoneDays===1?" day":" days"):"")+(d.unknownN?". Not on the site yet: "+d.unknown.join(", ")+(d.unknownN>d.unknown.length?" and more":""):"")+".")}
       catch(err){toast(err&&err.message?err.message.replace(/^.*?: /,""):"Couldn't read that file.")}}
+// "Download for the addon": a snapshot of the site for the Scribe addon (SiteData.lua in its folder, read on /reload).
+// Everyone on the site: level, class, main (for alts), dungeon passport, professions, titles, recipes, Card of the Week.
+const luaStr=v=>'"'+String(v==null?"":v).replace(/\\/g,"\\\\").replace(/"/g,'\\"').replace(/[\r\n]+/g," ")+'"';
+function addonFile(){
+  const cow=(()=>{try{const c=cardOfWeek();return c&&c.m?nameOf(c.m):""}catch(e){return ""}})();
+  const rows=[...S.members,...S.alts].filter(m=>memberState(m)!=="former"||isMine(m)).map(m=>{
+    const main=m.isAlt?memberById(m.owner):null;
+    const profs=Object.entries(m.profs||{}).filter(([p,v])=>!CLASS_SKILLS[p]&&+v>0).map(([p,v])=>"["+luaStr(p)+"]="+(+v|0)).join(",");
+    const dg=passportOf(m).map(x=>luaStr(x.name)).join(",");
+    const ti=(()=>{try{return titlesOf(m).map(x=>luaStr(x.t)).join(",")}catch(e){return ""}})();
+    const rec=Object.entries(m.recipes||{}).map(([p,v])=>"["+luaStr(p)+"]={"+(Array.isArray(v&&v.list)?v.list:[]).slice(0,800).map(luaStr).join(",")+"}").join(",");
+    return "  ["+luaStr(nameOf(m))+"]={lv="+(+m.level||1)+",cls="+luaStr(String(m.cls||"").toUpperCase().replace(/\s+/g,""))+(main?",main="+luaStr(nameOf(main)):"")+
+      ",dungeons={"+dg+"},profs={"+profs+"},titles={"+ti+"}"+(rec?",recipes={"+rec+"}":"")+"},"});
+  return "-- Blood and Tears: a snapshot of the guild site for the Scribe addon. Save it as SiteData.lua in\n-- World of Warcraft\\_forever_\\Interface\\AddOns\\BloodAndTearsScribe, replacing the one there, then /reload.\n"+
+    "BloodAndTearsSiteData = {\n at="+luaStr(new Date().toISOString())+",\n cotw="+luaStr(cow)+",\n chars={\n"+rows.join("\n")+"\n },\n}\n"}
+function downloadAddonFile(){
+  const blob=new Blob([addonFile()],{type:"text/plain"}),a=h("a",{href:URL.createObjectURL(blob),download:"SiteData.lua"});
+  document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  toast("Saved SiteData.lua. Put it in the BloodAndTearsScribe addon folder, replacing the one there, then /reload in game.")}
 function scribeLine(){const sc=S.scribe,can=isOfficer()||isScribe();
   const tip="In your WoW folder: _forever_\\WTF\\Account\\<account>\\SavedVariables\\BloodAndTearsScribe.lua";
   const up=!can?null:(()=>{const inp=h("input",{type:"file",accept:".lua,text/plain",class:"visually-hidden",id:"scribe-file",onchange:e=>{const file=e.target.files&&e.target.files[0];e.target.value="";if(file)sendScribeFile(file)}});
       return[inp,h("label",{for:"scribe-file",class:"btn sm",title:tip},"Upload the scribe file")]})();
-  return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):can?h("span",{},"No guild scribe file yet"):null,up)}
+  return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):can?h("span",{},"No guild scribe file yet"):null,up,
+    h("button",{class:"btn sm ghost",type:"button",title:"A snapshot of the site for the Scribe addon: passports, professions, recipes, alts, titles",onclick:downloadAddonFile},"Download for the addon"))}
 function armoryLine(m,can){
   const a=m.armory,busy=S.ui.armBusy===m.id;
   const sync=async()=>{if(!fns){toast("Sync isn't switched on yet.");return}S.ui.armBusy=m.id;render();

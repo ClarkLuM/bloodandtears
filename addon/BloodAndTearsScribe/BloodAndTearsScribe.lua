@@ -475,6 +475,13 @@ local function fullName(n) local _, full = guildie(n); return full or n end
 local function memberName(n) local m, full = guildie(n); return nameIn(full or n, m and m.class) end
 -- Whose alt a character is: one of your own characters (you pick your main on the Scribe tab), what another scribe
 -- shared for theirs, or a guild note that says "alt" and names a guildie. Returns the main's full name, or nil.
+-- The site's snapshot (SiteData.lua, from the site's "Download for the addon"): passports, professions, recipes, alts.
+local function site() return type(BloodAndTearsSiteData) == "table" and type(BloodAndTearsSiteData.chars) == "table" and BloodAndTearsSiteData or nil end
+local function siteChar(name)
+  local sd = site(); if not sd or not name then return nil end
+  if sd.chars[name] then return sd.chars[name], name end
+  for full, c in pairs(sd.chars) do if full:sub(1, #name + 1) == name .. " " then return c, full end end
+end
 local function myMain()
   if db.ui.main and db.mine[db.ui.main] then return db.ui.main end
   local best
@@ -484,6 +491,8 @@ end
 local function mainOf(name)
   local short1 = first(name)
   if db.mine[short1] then local mn = myMain(); if mn and mn ~= short1 then return fullName(mn) end return nil end
+  local sc = siteChar(name)
+  if sc and sc.main and sc.main ~= "" then return sc.main end
   local p = db.profs[short1] or db.profs[name]
   if p and p.main and p.main ~= "" and p.main ~= short1 then return fullName(p.main) end
   local note = notes[name] or notes[short1]
@@ -738,7 +747,7 @@ for i = 1, 3 do
 end
 local scribeInfo = text(pScribe, "GameFontHighlightSmall"); scribeInfo:SetPoint("TOPLEFT", 14, -84); scribeInfo:SetWidth(W - 28)
 if scribeInfo.SetWordWrap then scribeInfo:SetWordWrap(true) end
-scribeInfo:SetHeight(48); scribeInfo:SetJustifyV("TOP")
+scribeInfo:SetHeight(58); scribeInfo:SetJustifyV("TOP")
 label(pScribe, "Settings", -146)
 local checks = {}
 local function check(key, s, y, after)
@@ -870,9 +879,19 @@ end
 local function fillSearch(q)
   q = q:lower()
   local found, order = {}, {}
-  for who, profs in pairs(db.recipes) do
-    for prof, r in pairs(profs) do
-      for _, n in ipairs(r.list or {}) do
+  -- The notes' lists (yours and shared ones), then the site's for anyone the notes don't have.
+  local lists, have = {}, {}
+  for who, profs in pairs(db.recipes) do for prof, r in pairs(profs) do lists[#lists + 1] = { who, prof, r.list or {} }; have[first(who) .. "|" .. prof] = true end end
+  local sd = site()
+  if sd then for full, c in pairs(sd.chars) do
+    if type(c.recipes) == "table" then for prof, l in pairs(c.recipes) do
+      if not have[first(full) .. "|" .. prof] and type(l) == "table" then lists[#lists + 1] = { full, prof, l } end
+    end end
+  end end
+  for _, L in ipairs(lists) do
+    local who, prof = L[1], L[2]
+    do
+      for _, n in ipairs(L[3]) do
         if n:lower():find(q, 1, true) then
           if not found[n] then found[n] = {}; order[#order + 1] = n end
           found[n][#found[n] + 1] = { who = who, prof = prof }
@@ -890,7 +909,11 @@ local function fillSearch(q)
     local n = order[i]
     if n then
       local bits = {}
-      for _, c in ipairs(found[n]) do local m, full = guildie(c.who); bits[#bits + 1] = nameIn(full or c.who, m and m.class) .. DIM .. " (" .. c.prof .. ")|r" end
+      for _, c in ipairs(found[n]) do
+        local m, full = guildie(c.who)
+        local sc = not m and siteChar(c.who)
+        bits[#bits + 1] = nameIn(full or c.who, m and m.class or sc and sc.cls) .. DIM .. " (" .. c.prof .. ")|r"
+      end
       table.sort(bits)
       local id = db.itemIds[n]
       local icon = id and GetItemIcon and GetItemIcon(id)
@@ -981,7 +1004,7 @@ for i = 1, ROWS_DG do
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:AddLine(r.dungeon or "", 1, 1, 1)
     if r.whoText and r.whoText ~= "" then GameTooltip:AddLine("Online and in range: " .. r.whoText, 1, 1, 1, true) end
-    GameTooltip:AddLine(r.marked and "Marked as done. Click to unmark." or r.seen and "The scribe saw you here." or "Done it before? Click to mark it.", 0.75, 0.75, 0.75)
+    GameTooltip:AddLine(r.marked and "Marked as done. Click to unmark." or r.fromSite and "Stamped in your passport on the site." or r.seen and "The scribe saw you here." or "Done it before? Click to mark it.", 0.75, 0.75, 0.75)
     GameTooltip:Show()
   end)
   hit:SetScript("OnLeave", function() GameTooltip:Hide() end)
@@ -1023,7 +1046,10 @@ local function fillDungeons()
   end
   dgCount = #list
   local done = 0
-  for _, d in ipairs(list) do if seenIn(d[1], me) or (db.stamps[me] and db.stamps[me][d[1]]) then done = done + 1 end end
+  local scm = siteChar(me)
+  local onSite = {}
+  if scm and type(scm.dungeons) == "table" then for _, n in ipairs(scm.dungeons) do onSite[n] = true end end
+  for _, d in ipairs(list) do if seenIn(d[1], me) or onSite[d[1]] or (db.stamps[me] and db.stamps[me][d[1]]) then done = done + 1 end end
   if dgBand == "mine" then dgLabel:SetText(GOLD .. "For " .. fullName(me) .. ", level " .. lv .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done|r")
   else local g; for _, x in ipairs(DG_GROUPS) do if x[1] == dgBand then g = x end end
     dgLabel:SetText(GOLD .. g[2] .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done by " .. fullName(me) .. "|r") end
@@ -1035,7 +1061,9 @@ local function fillDungeons()
     if d then
       r.dungeon = d[1]
       r.marked = db.stamps[me] and db.stamps[me][d[1]] and true or false
+      local sc = siteChar(me)
       r.seen = seenIn(d[1], me)
+      if not r.seen and sc and type(sc.dungeons) == "table" then for _, n in ipairs(sc.dungeons) do if n == d[1] then r.seen = true; r.fromSite = true end end end
       r.name:SetText(d[1])
       r.flag:SetText((r.seen or r.marked) and (DIM .. "Been|r") or lv < d[2] and (DIM .. "From level " .. d[2] .. "|r") or (GOLD .. "Not yet|r"))
       local names, off = {}, 0
@@ -1158,7 +1186,8 @@ local function fillScribe()
   local n = 0; for _, m in pairs(db.members) do if not m.gone then n = n + 1 end end
   local hs = ui.heard and ui.heard() or {}
   scribeInfo:SetText(n .. " guildies on the list, " .. #db.kills .. " boss kills noted" .. (firstDay and (", notes back to " .. firstDay) or "") .. ". "
-    .. (not db.ui.share and "Sharing with other scribes is off." or #hs > 0 and ("Sharing with " .. table.concat(hs, ", ") .. ".") or "No other scribes heard from this session."))
+    .. (not db.ui.share and "Sharing with other scribes is off." or #hs > 0 and ("Sharing with " .. table.concat(hs, ", ") .. ".") or "No other scribes heard from this session.")
+    .. (site() and (" Site data from " .. tostring(site().at or "?"):sub(1, 10) .. ".") or " No site data yet: on the site, Roster, Details, Download for the addon."))
   for k, c in pairs(checks) do c:SetChecked(db.ui[k] and true or false) end
   if ui.mainBtn then ui.mainBtn() end
 end
@@ -1574,57 +1603,3 @@ ui.heard = function()
   return list
 end
 
----------------------------------------------------------------------------------------------------------------------
--- Guild info on tooltips: hover a guildie (in the world, a portrait, your party) and the game's own tooltip gets a few
--- Blood and Tears lines from the notes: levels this week, days on lately, dungeons this week, professions.
----------------------------------------------------------------------------------------------------------------------
-local function tooltipLines(tt)
-  if not db or not tt or not tt.GetUnit then return end
-  local _, unit = tt:GetUnit()
-  if not unit or not UnitIsPlayer(unit) then return end
-  local g = GetGuildInfo(unit)
-  if not g or g ~= GetGuildInfo("player") then return end
-  local name = UnitName(unit)
-  local m, full = guildie(name)
-  if not m then return end
-  local week = now() - 7 * 86400
-  local ups = 0
-  for _, t in pairs(m.ups or {}) do if t >= week then ups = ups + 1 end end
-  local days = 0
-  for i = 0, 13 do if m.days and m.days[dayOf(now() - i * 86400)] then days = days + 1 end end
-  local runs, last = 0, nil
-  for _, r in pairs(db.runs) do
-    if r.day >= dayOf(week) and r.who and (r.who[name] or r.who[full]) then runs = runs + 1; if not last or r.day > last.day then last = r end end
-  end
-  local bits1 = {}
-  if db.joined[full] or db.joined[name] then
-    local d = math.floor((now() - (db.joined[full] or db.joined[name])) / 86400)
-    bits1[#bits1 + 1] = d < 14 and ("joined " .. (d == 0 and "today" or d .. (d == 1 and " day ago" or " days ago"))) or ("in the guild " .. math.floor(d / 7) .. " weeks")
-  end
-  if ups > 0 then bits1[#bits1 + 1] = "up " .. ups .. (ups == 1 and " level" or " levels") .. " this week" end
-  bits1[#bits1 + 1] = "on " .. days .. " of the last 14 days"
-  tt:AddLine(" ")
-  tt:AddLine("Blood and Tears", 0.94, 0.76, 0.35)
-  local mn = mainOf(full or name)
-  if mn then tt:AddLine(owns(mn) .. " alt", 1, 1, 1) end
-  tt:AddLine(table.concat(bits1, " · "), 0.75, 0.75, 0.75)
-  tt:AddLine(runs > 0 and (runs .. (runs == 1 and " dungeon" or " dungeons") .. " this week · last: " .. last.zone) or "No dungeons this week", 0.75, 0.75, 0.75)
-  local p = db.profs[name] or db.profs[full]
-  if p and p.ranks then
-    local bits = {}
-    for prof, r in pairs(p.ranks) do bits[#bits + 1] = prof .. " " .. r end
-    table.sort(bits)
-    if #bits > 0 then tt:AddLine(table.concat(bits, " · "), 0.75, 0.75, 0.75) end
-  elseif db.recipes[name] then
-    local bits = {}
-    for prof in pairs(db.recipes[name]) do bits[#bits + 1] = prof end
-    table.sort(bits)
-    if #bits > 0 then tt:AddLine(table.concat(bits, " · "), 0.75, 0.75, 0.75) end
-  end
-  tt:Show()
-end
-if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall and Enum and Enum.TooltipDataType then
-  TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, function(tt) if tt == GameTooltip then pcall(tooltipLines, tt) end end)
-elseif GameTooltip and GameTooltip.HookScript then
-  pcall(GameTooltip.HookScript, GameTooltip, "OnTooltipSetUnit", function(tt) pcall(tooltipLines, tt) end)
-end
