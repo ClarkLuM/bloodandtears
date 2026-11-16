@@ -11,7 +11,10 @@
 --   World of Warcraft\_forever_\WTF\Account\<ACCOUNT>\SavedVariables\BloodAndTearsScribe.lua
 -- when you log out or type /reload. Upload THAT file on the site (Roster > Details > Upload the scribe file),
 -- not this one: this is the addon itself. The notes file starts with "BloodAndTearsScribeDB = {".
--- The addon never sends anything anywhere. From 0.8.0 it keeps out of your chat: a small window (the gingerbread button
+-- From 0.10.0 copies of the addon in the guild share their notes with each other over the game's hidden addon channel
+-- (never outside the game; the Scribe tab can turn it off): hours online, zone time, dungeon runs and boss kills,
+-- last-seen times, and each player's own professions and recipes. So one upload carries what every scribe saw.
+-- From 0.8.0 it keeps out of your chat: a small window (the gingerbread button
 -- on the minimap, or /scribe) shows who's online and where, today's runs, drops and dings, the week's busiest zones
 -- and hours, and what's in the notes file. When you log out it shows a summary of your session (/scribe summary any time).
 
@@ -30,6 +33,7 @@ local PERTH = 8 * 3600        -- the guild's day runs on Perth time
 local f = CreateFrame("Frame")
 local db
 local refresh = function() end   -- redraws the window; set further down, once the window exists
+local shareRecipes = function() end   -- sends a freshly read recipe list to other scribes; set with the sharing below
 
 local function now() return (GetServerTime and GetServerTime()) or time() end
 local function dayOf(t) return date("!%Y-%m-%d", t + PERTH) end
@@ -52,7 +56,10 @@ local function init()
   db.zones = db.zones or {}
   db.zoneSeen = db.zoneSeen or {}
   db.ui = db.ui or {}
+  db.joined = db.joined or {}   -- when the scribe saw each guildie join (for "a month in the guild")
+  db.profs = db.profs or {}     -- professions and skill each scribe shares for its own character
   if db.ui.pip == nil then db.ui.pip = true end
+  if db.ui.share == nil then db.ui.share = true end
   if db.ui.summary == nil then db.ui.summary = true end
   db.quiet = nil
 end
@@ -301,6 +308,8 @@ local function system(msg)
   if not who and REMOVED then who = msg:match(REMOVED); what = "removed" end
   if not who then return end
   note(short(who), what)
+  if what == "joined" then db.joined[short(who)] = now() end
+  refresh()
   askRoster()
 end
 
@@ -350,6 +359,7 @@ local function readRecipes()
   table.sort(names)
   db.recipes[me] = db.recipes[me] or {}
   db.recipes[me][prof] = { at = now(), list = names }
+  shareRecipes(me, prof)
   refresh()
 end
 -- Enchanting (and Beast Training) use the older Craft window, which the trade skill functions don't see.
@@ -366,6 +376,7 @@ local function readCraft()
   table.sort(names)
   db.recipes[me] = db.recipes[me] or {}
   db.recipes[me][prof] = { at = now(), list = names }
+  shareRecipes(me, prof)
   refresh()
 end
 
@@ -401,13 +412,16 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4, a5)
     levelUp(a1)
   elseif event == "PLAYER_CAMPING" or event == "PLAYER_QUITING" then
     if ui.loggingOut then pcall(ui.loggingOut) end
+  elseif event == "CHAT_MSG_ADDON" then
+    if ui.addonMsg then pcall(ui.addonMsg, a1, a2, a3, a4) end
   elseif event == "LOGOUT_CANCEL" then
     if ui.logoutCancelled then pcall(ui.logoutCancelled) end
   end
 end)
 for _, e in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "GUILD_ROSTER_UPDATE", "GROUP_ROSTER_UPDATE", "ZONE_CHANGED_NEW_AREA",
   "CHAT_MSG_SYSTEM", "TRADE_SKILL_SHOW", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_UPDATE", "PLAYER_REGEN_ENABLED", "PLAYER_LEVEL_UP", "PLAYER_ENTERING_WORLD", "ENCOUNTER_END", "CHAT_MSG_LOOT",
-  "PLAYER_CAMPING", "PLAYER_QUITING", "LOGOUT_CANCEL", "CRAFT_SHOW", "CRAFT_UPDATE", "SKILL_LINES_CHANGED" }) do
+  "PLAYER_CAMPING", "PLAYER_QUITING", "LOGOUT_CANCEL", "CRAFT_SHOW", "CRAFT_UPDATE", "SKILL_LINES_CHANGED",
+  "CHAT_MSG_ADDON" }) do
   pcall(f.RegisterEvent, f, e)
 end
 
@@ -419,9 +433,10 @@ end
 local LOGO = "Interface\\AddOns\\" .. (ADDON or "BloodAndTearsScribe") .. "\\logo"
 local GOLD, DIM, INK = "|cfff0c35a", "|cffa8957d", "|cffe9dcc8"
 local QHEX = { [0] = "|cff9d9d9d", "|cffffffff", "|cff1eff00", "|cff0070dd", "|cffa335ee", "|cffff8000", "|cffe6cc80" }
-local W = 400
+local W = 430
 -- Small pictures inside text (the game's fonts have no symbols): a sword for a run, a bag for a drop, light for a ding.
 local IC_RUN, IC_LOOT, IC_DING = "|TInterface\\Icons\\INV_Sword_04:12:12|t", "|TInterface\\Icons\\INV_Misc_Bag_08:12:12|t", "|TInterface\\Icons\\Spell_Holy_InnerFire:12:12|t"
+local IC_JOIN, IC_LEAVE, IC_ANNIV = "|TInterface\\Icons\\INV_Misc_Note_01:12:12|t", "|TInterface\\Icons\\Ability_Rogue_Sprint:12:12|t", "|TInterface\\Icons\\INV_Misc_Gift_01:12:12|t"
 local function dot(cls)
   local c = cls and RAID_CLASS_COLORS and RAID_CLASS_COLORS[cls]
   local r, g, b = c and c.r or 0.9, c and c.g or 0.85, c and c.b or 0.8
@@ -459,6 +474,19 @@ local function todayFeed(since)
   for name, m in pairs(db.members) do
     for lv, t in pairs(m.ups or {}) do
       if dayOf(t) == today and (not since or t > since) and lv == m.level then out[#out + 1] = { kind = "ding", t = t, name = name, class = m.class, level = lv } end
+    end
+  end
+  -- Joins and leaves from the guild's own messages, and month-in-the-guild milestones for anyone the scribe saw join.
+  for _, e in ipairs(db.events) do
+    if dayOf(e.t) == today and (not since or e.t > since) then out[#out + 1] = { kind = e.what == "joined" and "join" or "leave", t = e.t, name = e.who, what = e.what } end
+  end
+  local y, mo, d = today:match("^(%d+)-(%d+)-(%d+)$")
+  for name, jt in pairs(db.joined) do
+    local jy, jm, jd = dayOf(jt):match("^(%d+)-(%d+)-(%d+)$")
+    local months = (tonumber(y) - tonumber(jy)) * 12 + (tonumber(mo) - tonumber(jm))
+    if jd == d and months > 0 and (not since or since < now() - 86400 + 1) then
+      local m = db.members[name]
+      if m and not m.gone then out[#out + 1] = { kind = "anniv", t = now() - 1, name = name, class = m.class, months = months } end
     end
   end
   table.sort(out, function(a, b) return a.t > b.t end)
@@ -739,8 +767,73 @@ local function fillRecipes()
   recEmpty:SetText(#myProfs == 0 and "No crafting professions on this character." or "")
 end
 
+-- Dungeons: the ones for your level (the site's list and ranges), whether you've been (from the dungeon runs), and
+-- which guildies online now are in range, plus how many more are offline.
+local DUNGEONS = { { "Ragefire Chasm", 13, 18 }, { "Hall of Thanes", 13, 20 }, { "Ruins of Lordaeron", 15, 22 }, { "Wailing Caverns", 15, 24 },
+  { "The Deadmines", 17, 26 }, { "Shadowfang Keep", 20, 30 }, { "Blackfathom Deeps", 24, 32 }, { "The Stockade", 25, 29 },
+  { "Excavation Site: Wetlands", 26, 33 }, { "City of Dalaran", 28, 35 }, { "Razorfen Kraul", 29, 38 }, { "Gnomeregan", 29, 38 },
+  { "Scarlet Monastery: Graveyard", 30, 38 }, { "Scarlet Monastery: Library", 33, 41 }, { "The Drowned City", 35, 42 },
+  { "Scarlet Monastery: Armory", 36, 44 }, { "Razorfen Downs", 37, 46 }, { "Scarlet Monastery: Cathedral", 38, 46 },
+  { "Krol'Dok Stronghold", 40, 47 }, { "Uldaman", 41, 51 }, { "Zul'Farrak", 44, 54 }, { "Maraudon", 46, 55 }, { "Alcaz Island Prison", 48, 55 },
+  { "Sunken Temple", 50, 60 }, { "Blackrock Depths", 52, 60 }, { "Dire Maul: East", 54, 60 }, { "Lower Blackrock Spire", 55, 60 },
+  { "Blackmaw Hold", 55, 60 }, { "Upper Blackrock Spire", 55, 60 }, { "Dire Maul: West", 56, 60 }, { "Dire Maul: North", 56, 60 },
+  { "Shaper's Terrace", 58, 60 }, { "Stratholme: Living", 58, 60 }, { "Stratholme: Undead", 58, 60 }, { "Scholomance", 58, 60 } }
+local pDungeons = page("dungeons")
+local dgLabel = label(pDungeons, "DUNGEONS FOR YOUR LEVEL", -6)
+local dgRows = {}
+for i = 1, 5 do
+  local r = CreateFrame("Frame", nil, pDungeons); r:SetSize(W - 28, 54); r:SetPoint("TOPLEFT", 14, -24 - (i - 1) * 58)
+  r.name = text(r, "GameFontHighlight"); r.name:SetPoint("TOPLEFT", 0, -1)
+  r.flag = text(r, "GameFontNormalSmall", "RIGHT"); r.flag:SetPoint("TOPRIGHT", 0, -2)
+  r.range = text(r, "GameFontDisableSmall"); r.range:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3); r.range:SetWidth(W - 28)
+  r.who = text(r, "GameFontHighlightSmall"); r.who:SetPoint("TOPLEFT", r.range, "BOTTOMLEFT", 0, -3); r.who:SetWidth(W - 28)
+  r:Hide(); dgRows[i] = r
+end
+local dgFoot = text(pDungeons, "GameFontDisableSmall"); dgFoot:SetPoint("BOTTOMLEFT", 14, 12); dgFoot:SetWidth(W - 28)
+if dgFoot.SetWordWrap then dgFoot:SetWordWrap(true) end
+dgFoot:SetJustifyV("BOTTOM"); dgFoot:SetHeight(32)
+dgFoot:SetText("In range means their level is inside the dungeon's range. Offline counts guildies seen in the last two weeks. Ask in game.")
+local function beenTo(dname, me)
+  local base = dname:match("^(.-):") or dname
+  for _, r in pairs(db.runs) do
+    local z = r.zone or ""
+    if (z == dname or z == base or z:find(base, 1, true)) and r.who and r.who[me] then return true end
+  end
+  return false
+end
+local function fillDungeons()
+  local me, lv = UnitName("player") or "?", UnitLevel("player") or 1
+  dgLabel:SetText("DUNGEONS FOR YOUR LEVEL  ·  " .. me:upper() .. " " .. lv)
+  local list = {}
+  for _, d in ipairs(DUNGEONS) do if lv >= d[2] and lv <= d[3] then list[#list + 1] = d end end
+  if #list == 0 then for _, d in ipairs(DUNGEONS) do if d[2] > lv then list[#list + 1] = d; if #list >= 2 then break end end end end
+  local on = {}
+  for _, o in ipairs(onlineNow) do on[o.name] = o end
+  local fresh = now() - 14 * 86400
+  for i, r in ipairs(dgRows) do
+    local d = list[i]
+    if d then
+      r.name:SetText(d[1])
+      r.flag:SetText(beenTo(d[1], me) and (DIM .. "Been|r") or (lv >= d[2] and (GOLD .. "You haven't been|r") or (DIM .. "From level " .. d[2] .. "|r")))
+      local names, off = {}, 0
+      for name, m in pairs(db.members) do
+        local l = m.level or 0
+        if not m.gone and l >= d[2] and l <= d[3] and first(name) ~= me then
+          local o = on[name]
+          if o then names[#names + 1] = nameIn(first(name), m.class) .. " " .. DIM .. l .. "|r"
+          elseif (m.last or 0) >= fresh then off = off + 1 end
+        end
+      end
+      table.sort(names)
+      r.range:SetText("Levels " .. d[2] .. "–" .. d[3] .. "  ·  online and in range:")
+      r.who:SetText((#names > 0 and table.concat(names, ",  ") or (DIM .. "nobody online|r")) .. (off > 0 and (DIM .. "   +" .. off .. " offline|r") or ""))
+      r:Show()
+    else r:Hide() end
+  end
+end
+
 -- Tabs along the top
-local TABS = { { "today", "Today" }, { "week", "This week" }, { "recipes", "Recipes" }, { "scribe", "Scribe" } }
+local TABS = { { "today", "Today" }, { "week", "Week" }, { "dungeons", "Dungeons" }, { "recipes", "Recipes" }, { "scribe", "Scribe" } }
 local function show(key)
   current = key
   for k, p in pairs(pages) do if k == key then p:Show() else p:Hide() end end
@@ -753,9 +846,10 @@ local function show(key)
 end
 for i, t in ipairs(TABS) do
   local b = CreateFrame("Button", nil, win, "UIPanelButtonTemplate")
-  local tw = (W - 24 - 3 * 4) / 4
+  local tw = (W - 24 - 4 * 4) / 5
   b:SetSize(tw, 24); b:SetPoint("TOPLEFT", 12 + (i - 1) * (tw + 4), -54)
   b:SetText(t[2]); b.key = t[1]
+  if b.GetFontString and b:GetFontString() then b:GetFontString():SetFontObject("GameFontNormalSmall") end
   b:SetScript("OnClick", function() show(t[1]) end)
   tabs[i] = b
 end
@@ -782,8 +876,14 @@ local function fillToday()
       setRow(r, IC_RUN, INK .. e.zone .. "|r" .. DIM .. "  ·  " .. e.n .. (e.n == 1 and " boss" or " bosses") .. (g > 1 and (", with " .. (g - 1) .. (g == 2 and " guildie" or " guildies")) or "") .. "|r", clock(e.t))
     elseif e.kind == "loot" then
       setRow(r, IC_LOOT, memberName(e.l.who) .. " looted " .. itemText(e.l), clock(e.t))
-    else
+    elseif e.kind == "ding" then
       setRow(r, IC_DING, nameIn(first(e.name), e.class) .. " reached level " .. e.level, clock(e.t))
+    elseif e.kind == "join" then
+      setRow(r, IC_JOIN, INK .. first(e.name) .. "|r joined the guild", clock(e.t))
+    elseif e.kind == "leave" then
+      setRow(r, IC_LEAVE, DIM .. first(e.name) .. (e.what == "removed" and " was removed from the guild" or " left the guild") .. "|r", clock(e.t))
+    else
+      setRow(r, IC_ANNIV, nameIn(first(e.name), e.class) .. " has been in the guild " .. (e.months == 1 and "a month" or e.months % 12 == 0 and (e.months / 12 == 1 and "a year" or (e.months / 12) .. " years") or e.months .. " months"), "today")
     end
   end
   if #feed == 0 then setRow(feedRows[1], "", DIM .. "Nothing yet today. Runs, good drops and dings show here.|r", "") end
@@ -818,14 +918,16 @@ local function fillScribe()
   big[2].n:SetText(nr); big[2].l:SetText(nr == 1 and "dungeon run" or "dungeon runs")
   big[3].n:SetText(#db.loot); big[3].l:SetText(#db.loot == 1 and "good drop" or "good drops")
   local n = 0; for _, m in pairs(db.members) do if not m.gone then n = n + 1 end end
-  scribeInfo:SetText(n .. " guildies on the list, " .. #db.kills .. " boss kills noted" .. (firstDay and (", notes back to " .. firstDay) or "") .. ". The file keeps a rolling few weeks, so uploading every few days loses nothing.")
+  local hs = ui.heard and ui.heard() or {}
+  scribeInfo:SetText(n .. " guildies on the list, " .. #db.kills .. " boss kills noted" .. (firstDay and (", notes back to " .. firstDay) or "") .. ". "
+    .. (not db.ui.share and "Sharing with other scribes is off." or #hs > 0 and ("Sharing with " .. table.concat(hs, ", ") .. ".") or "No other scribes heard from this session."))
   for k, c in pairs(checks) do c:SetChecked(db.ui[k] and true or false) end
 end
 refresh = function()
   if not db then return end
   if pip then pip() end
   if not win:IsShown() then return end
-  if current == "today" then fillToday() elseif current == "week" then fillWeek() elseif current == "recipes" then fillRecipes() else fillScribe() end
+  if current == "today" then fillToday() elseif current == "week" then fillWeek() elseif current == "dungeons" then fillDungeons() elseif current == "recipes" then fillRecipes() else fillScribe() end
   if current == "today" then db.ui.seen = now(); if pip then pip() end end
 end
 win:SetScript("OnShow", function() show(current) end)
@@ -878,6 +980,7 @@ check("pip", "Count new notes on the minimap button", -164, pip)
 check("summary", "Show my session summary when I log out", -188)
 check("lock", "Lock the window in place", -212)
 check("hideButton", "Hide the minimap button (/scribe still opens the window)", -236, function() if db.ui.hideButton then mm:Hide() else mm:Show() end end)
+check("share", "Share notes with guildies who run the scribe too", -260)
 
 -------------------------------------------------------------------- the session summary
 -- What you did since you logged in: levels, time played, zones (counted each minute), bosses, good drops, and the
@@ -893,6 +996,7 @@ local function sessionTick()
   end
 end
 ui.login = function()
+  if ui.sharing then ui.sharing() end
   sess = { t = now(), level = UnitLevel("player"), zones = {}, with = {} }
   C_Timer.NewTicker(60, sessionTick)
   if db.ui.hideButton then mm:Hide() end
@@ -980,6 +1084,275 @@ SlashCmdList.BTSCRIBE = function(arg)
   if arg == "summary" then fillSummary(false); sum:Show(); return end
   if arg == "button" then db.ui.hideButton = not db.ui.hideButton; if db.ui.hideButton then mm:Hide() else mm:Show(); place() end; return end
   if arg == "reset" then win:ClearAllPoints(); win:SetPoint("CENTER", 0, 60); db.ui.angle = 200; place(); win:Show(); return end
-  if arg == "week" then show("week") elseif arg == "recipes" then show("recipes") elseif arg == "files" or arg == "file" then show("scribe") end
+  if arg == "week" then show("week") elseif arg == "dungeons" then show("dungeons") elseif arg == "recipes" then show("recipes") elseif arg == "files" or arg == "file" then show("scribe") end
   if win:IsShown() and arg == "" then win:Hide() else win:Show() end
+end
+
+---------------------------------------------------------------------------------------------------------------------
+-- Sharing between scribes. Every copy in the guild talks over the game's hidden addon channel (prefix BTScribe1), so
+-- whatever one scribe saw reaches the others, and any one upload carries it all. Nothing leaves the game.
+--   D  digest: for each of the last 14 days, a single number summing what this copy holds for it. Sent at login,
+--      every 15 minutes, and in reply to someone else's. A copy that holds more for a day sends that day.
+--   H  hours online, Z zone minutes, K boss kills, U dungeon runs, S last-seen times (one day's worth each).
+--   P  the sender's own level and professions; R its own recipe lists (in pieces).
+-- Everything merges by keeping the larger number (or the newer list), so the same thing heard twice counts once.
+---------------------------------------------------------------------------------------------------------------------
+local PREFIX, SYNC_DAYS = "BTScribe1", 14
+local reg = (C_ChatInfo and C_ChatInfo.RegisterAddonMessagePrefix) or RegisterAddonMessagePrefix
+local sendRaw = (C_ChatInfo and C_ChatInfo.SendAddonMessage) or SendAddonMessage
+if reg then pcall(reg, PREFIX) end
+local heard = {}          -- who we've heard from this session, and when (for the Scribe tab)
+local queue, qset = {}, {}
+local function send(msg)
+  if not (db and db.ui.share and sendRaw and IsInGuild()) then return end
+  if #queue > 600 then return end
+  queue[#queue + 1] = msg:sub(1, 250)
+end
+-- Out a few at a time, so it never adds lag or trips the game's limits.
+C_Timer.NewTicker(0.35, function()
+  if #queue == 0 then return end
+  local m = table.remove(queue, 1)
+  pcall(sendRaw, PREFIX, m, "GUILD")
+end)
+local function num(x, lo, hi) x = tonumber(x); if not x or x ~= x then return nil end if x < lo then x = lo end if x > hi then x = hi end return x end
+local function clean(x, n) x = tostring(x or ""):gsub("[~%^|\r\n]", ""):sub(1, n or 60); return x end
+local function syncDays()
+  local out = {}
+  for i = 0, SYNC_DAYS - 1 do out[#out + 1] = dayOf(now() - i * 86400) end
+  return out
+end
+-- One number for everything this copy holds about a day: if it's bigger than someone else's, we know more.
+local function daySum(d)
+  local n = 0
+  for h = 0, 23 do n = n + (db.hours[("%s %02d"):format(d, h)] or 0) end
+  for _, who in pairs(db.zones[d] or {}) do for _, m in pairs(who) do n = n + m end end
+  for _, k in ipairs(db.kills) do if dayOf(k.t) == d then n = n + 7 end end
+  for _, r in pairs(db.runs) do if r.day == d then for _ in pairs(r.who or {}) do n = n + 3 end end end
+  for _, m in pairs(db.members) do if m.last and dayOf(m.last) == d then n = n + 1 end end
+  return math.floor(n + 0.5)
+end
+local lastDigest = 0
+local function sendDigest(force)
+  if not db or (not force and now() - lastDigest < 120) then return end
+  lastDigest = now()
+  local bits = {}
+  for _, d in ipairs(syncDays()) do local n = daySum(d); if n > 0 then bits[#bits + 1] = d:gsub("-", "") .. ":" .. n end end
+  send("D~1~" .. table.concat(bits, ","))
+end
+-- A list of "key:value" pairs in as few messages as fit.
+local function sendList(head, items)
+  local cur = {}
+  local len = #head
+  for _, it in ipairs(items) do
+    if len + #it + 1 > 240 and #cur > 0 then send(head .. table.concat(cur, ",")); cur, len = {}, #head end
+    cur[#cur + 1] = it; len = len + #it + 1
+  end
+  if #cur > 0 then send(head .. table.concat(cur, ",")) end
+end
+local sentDay = {}
+local function sendDay(d)
+  if sentDay[d] and now() - sentDay[d] < 120 then return end
+  sentDay[d] = now()
+  local hrs = {}
+  for h = 0, 23 do local v = db.hours[("%s %02d"):format(d, h)]; if v then hrs[#hrs + 1] = ("%02d:%d"):format(h, v) end end
+  if #hrs > 0 then send("H~" .. d .. "~" .. table.concat(hrs, ",")) end
+  for zone, who in pairs(db.zones[d] or {}) do
+    local items = {}
+    for name, m in pairs(who) do items[#items + 1] = clean(name, 40) .. ":" .. m end
+    sendList("Z~" .. d .. "~" .. clean(zone, 50) .. "~", items)
+  end
+  for _, k in ipairs(db.kills) do
+    if dayOf(k.t) == d then
+      local w = {}; for n in pairs(k.who or {}) do w[#w + 1] = clean(n, 30) end
+      send("K~" .. k.t .. "~" .. clean(k.zone, 50) .. "~" .. clean(k.boss, 50) .. "~" .. table.concat(w, ","))
+    end
+  end
+  for _, r in pairs(db.runs) do
+    if r.day == d then local w = {}; for n in pairs(r.who or {}) do w[#w + 1] = clean(n, 30) end
+      send("U~" .. d .. "~" .. clean(r.zone, 50) .. "~" .. table.concat(w, ",")) end
+  end
+  local seen = {}
+  for name, m in pairs(db.members) do if m.last and dayOf(m.last) == d then seen[#seen + 1] = clean(name, 40) .. ":" .. m.last end end
+  sendList("S~", seen)
+end
+-- Your own character: level and professions (for other scribes' tooltips), and its recipe lists.
+local function myProfLine()
+  local me = UnitName("player")
+  local ranks = {}
+  if GetNumSkillLines then
+    for i = 1, GetNumSkillLines() do
+      local name, header, _, rank = GetSkillLineInfo(i)
+      if name and not header and (CRAFTS[name] or name == "Herbalism" or name == "Skinning" or name == "Fishing") then ranks[#ranks + 1] = clean(name, 30) .. ":" .. (rank or 0) end
+    end
+  end
+  return me and ("P~" .. clean(me, 40) .. "~" .. (UnitLevel("player") or 0) .. "~" .. table.concat(ranks, ",")) or nil
+end
+local function sendRecipes(me, prof)
+  local r = db.recipes[me] and db.recipes[me][prof]
+  if not r or not r.list then return end
+  local parts, cur, len = {}, {}, 0
+  for _, n in ipairs(r.list) do
+    n = clean(n, 80)
+    if len + #n + 1 > 190 and #cur > 0 then parts[#parts + 1] = table.concat(cur, "^"); cur, len = {}, 0 end
+    cur[#cur + 1] = n; len = len + #n + 1
+  end
+  if #cur > 0 then parts[#parts + 1] = table.concat(cur, "^") end
+  for i, part in ipairs(parts) do send("R~" .. clean(me, 40) .. "~" .. clean(prof, 30) .. "~" .. r.at .. "~" .. i .. "~" .. #parts .. "~" .. part) end
+end
+local function sendMine()
+  local me = UnitName("player")
+  local line = myProfLine(); if line then send(line) end
+  for prof in pairs((me and db.recipes[me]) or {}) do sendRecipes(me, prof) end
+end
+-- A recipe list is only sent again when it changed.
+shareRecipes = function(me, prof)
+  local r = db.recipes[me] and db.recipes[me][prof]
+  if not r then return end
+  local sig = #r.list .. ":" .. (r.list[1] or "") .. (r.list[#r.list] or "")
+  db.ui.recSent = db.ui.recSent or {}
+  if db.ui.recSent[me .. "|" .. prof] == sig then return end
+  db.ui.recSent[me .. "|" .. prof] = sig
+  sendRecipes(me, prof)
+end
+
+local pieces = {}
+local function addKill(t, zone, boss, who)
+  for _, k in ipairs(db.kills) do
+    if k.boss == boss and math.abs((k.t or 0) - t) < 300 then for n in pairs(who) do k.who = k.who or {}; k.who[n] = true end return end
+  end
+  table.insert(db.kills, { t = t, zone = zone, boss = boss, who = who })
+  table.sort(db.kills, function(a, b) return a.t < b.t end)
+end
+ui.addonMsg = function(prefix, msg, channel, sender)
+  if prefix ~= PREFIX or channel ~= "GUILD" or not db or not db.ui.share or type(msg) ~= "string" then return end
+  local from = short(sender)
+  if not from or from == UnitName("player") then return end
+  local firstTime = not heard[from] or now() - heard[from] > 1800
+  heard[from] = now()
+  local f = {}
+  for part in (msg .. "~"):gmatch("(.-)~") do f[#f + 1] = part end
+  local kind = f[1]
+  if kind == "D" then
+    local theirs = {}
+    for ymd, n in (f[3] or ""):gmatch("(%d+):(%d+)") do
+      if #ymd == 8 then theirs[ymd:sub(1, 4) .. "-" .. ymd:sub(5, 6) .. "-" .. ymd:sub(7, 8)] = tonumber(n) end
+    end
+    for _, d in ipairs(syncDays()) do if daySum(d) > (theirs[d] or 0) then sendDay(d) end end
+    sendDigest()
+    if firstTime then sendMine() end
+  elseif kind == "H" and f[2] and f[2]:match("^%d%d%d%d%-%d%d%-%d%d$") then
+    for h, n in (f[3] or ""):gmatch("(%d%d):(%d+)") do
+      local key, v = f[2] .. " " .. h, num(n, 0, 1000)
+      if v and v > (db.hours[key] or 0) then db.hours[key] = v end
+    end
+  elseif kind == "Z" and f[2] and f[2]:match("^%d%d%d%d%-%d%d%-%d%d$") and f[3] and f[3] ~= "" then
+    local zd = db.zones[f[2]] or {}; db.zones[f[2]] = zd
+    local zone = clean(f[3], 50); zd[zone] = zd[zone] or {}
+    for name, m in (f[4] or ""):gmatch("([^:,]+):([%d%.]+)") do
+      local v = num(m, 0, 1440)
+      if v and v > (zd[zone][name] or 0) then zd[zone][name] = v end
+    end
+  elseif kind == "K" then
+    local t = num(f[2], 1e9, 4e9)
+    if t and f[3] ~= "" and f[4] ~= "" then
+      local who = {}; for n in (f[5] or ""):gmatch("[^,]+") do who[clean(n, 30)] = true end
+      addKill(t, clean(f[3], 50), clean(f[4], 50), who)
+    end
+  elseif kind == "U" and f[2] and f[2]:match("^%d%d%d%d%-%d%d%-%d%d$") and f[3] ~= "" then
+    local zone = clean(f[3], 50)
+    local key = f[2] .. " " .. zone
+    local r = db.runs[key] or { zone = zone, day = f[2], who = {} }
+    for n in (f[4] or ""):gmatch("[^,]+") do r.who[clean(n, 30)] = true end
+    db.runs[key] = r
+  elseif kind == "S" then
+    for name, t in (f[2] or ""):gmatch("([^:,]+):(%d+)") do
+      local m, v = db.members[name], num(t, 1e9, now() + 600)
+      if m and v and v > (m.last or 0) then m.last = v; m.days = m.days or {}; m.days[dayOf(v)] = true end
+    end
+  elseif kind == "P" and f[2] and f[2] ~= "" then
+    local p = { lv = num(f[3], 1, 60), at = now(), ranks = {} }
+    for name, r in (f[4] or ""):gmatch("([^:,]+):(%d+)") do p.ranks[clean(name, 30)] = num(r, 0, 300) end
+    db.profs[clean(f[2], 40)] = p
+  elseif kind == "R" then
+    local who, prof, at, i, total = clean(f[2], 40), clean(f[3], 30), num(f[4], 1e9, now() + 600), num(f[5], 1, 40), num(f[6], 1, 40)
+    if who == "" or prof == "" or not at or not i or not total then return end
+    local cur = db.recipes[who] and db.recipes[who][prof]
+    if cur and (cur.at or 0) >= at then return end
+    local key = who .. "|" .. prof .. "|" .. at
+    local b = pieces[key] or { n = 0, parts = {} }; pieces[key] = b
+    if not b.parts[i] then b.parts[i] = f[7] or ""; b.n = b.n + 1 end
+    if b.n >= total then
+      local list = {}
+      for j = 1, total do for n in (b.parts[j] or ""):gmatch("[^%^]+") do if #list < 800 then list[#list + 1] = n end end end
+      table.sort(list)
+      db.recipes[who] = db.recipes[who] or {}
+      db.recipes[who][prof] = { at = at, list = list, from = from }
+      pieces[key] = nil
+    end
+  end
+  refresh()
+end
+ui.sharing = function()
+  C_Timer.After(20, function() sendDigest(true) end)
+  C_Timer.After(35, sendMine)
+  C_Timer.NewTicker(900, function() sendDigest(true) end)
+end
+ui.heard = function()
+  local list = {}
+  for n, t in pairs(heard) do if now() - t < 3600 then list[#list + 1] = n end end
+  table.sort(list)
+  return list
+end
+
+---------------------------------------------------------------------------------------------------------------------
+-- Guild info on tooltips: hover a guildie (in the world, a portrait, your party) and the game's own tooltip gets a few
+-- Blood and Tears lines from the notes: levels this week, days on lately, dungeons this week, professions.
+---------------------------------------------------------------------------------------------------------------------
+local function tooltipLines(tt)
+  if not db or not tt or not tt.GetUnit then return end
+  local _, unit = tt:GetUnit()
+  if not unit or not UnitIsPlayer(unit) then return end
+  local g = GetGuildInfo(unit)
+  if not g or g ~= GetGuildInfo("player") then return end
+  local name = UnitName(unit)
+  local m, full = guildie(name)
+  if not m then return end
+  local week = now() - 7 * 86400
+  local ups = 0
+  for _, t in pairs(m.ups or {}) do if t >= week then ups = ups + 1 end end
+  local days = 0
+  for i = 0, 13 do if m.days and m.days[dayOf(now() - i * 86400)] then days = days + 1 end end
+  local runs, last = 0, nil
+  for _, r in pairs(db.runs) do
+    if r.day >= dayOf(week) and r.who and (r.who[name] or r.who[full]) then runs = runs + 1; if not last or r.day > last.day then last = r end end
+  end
+  local bits1 = {}
+  if db.joined[full] or db.joined[name] then
+    local d = math.floor((now() - (db.joined[full] or db.joined[name])) / 86400)
+    bits1[#bits1 + 1] = d < 14 and ("joined " .. (d == 0 and "today" or d .. (d == 1 and " day ago" or " days ago"))) or ("in the guild " .. math.floor(d / 7) .. " weeks")
+  end
+  if ups > 0 then bits1[#bits1 + 1] = "up " .. ups .. (ups == 1 and " level" or " levels") .. " this week" end
+  bits1[#bits1 + 1] = "on " .. days .. " of the last 14 days"
+  tt:AddLine(" ")
+  tt:AddLine("Blood and Tears", 0.94, 0.76, 0.35)
+  tt:AddLine(table.concat(bits1, " · "), 0.75, 0.75, 0.75)
+  tt:AddLine(runs > 0 and (runs .. (runs == 1 and " dungeon" or " dungeons") .. " this week · last: " .. last.zone) or "No dungeons this week", 0.75, 0.75, 0.75)
+  local p = db.profs[name] or db.profs[full]
+  if p and p.ranks then
+    local bits = {}
+    for prof, r in pairs(p.ranks) do bits[#bits + 1] = prof .. " " .. r end
+    table.sort(bits)
+    if #bits > 0 then tt:AddLine(table.concat(bits, " · "), 0.75, 0.75, 0.75) end
+  elseif db.recipes[name] then
+    local bits = {}
+    for prof in pairs(db.recipes[name]) do bits[#bits + 1] = prof end
+    table.sort(bits)
+    if #bits > 0 then tt:AddLine(table.concat(bits, " · "), 0.75, 0.75, 0.75) end
+  end
+  tt:Show()
+end
+if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall and Enum and Enum.TooltipDataType then
+  TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, function(tt) if tt == GameTooltip then pcall(tooltipLines, tt) end end)
+elseif GameTooltip and GameTooltip.HookScript then
+  pcall(GameTooltip.HookScript, GameTooltip, "OnTooltipSetUnit", function(tt) pcall(tooltipLines, tt) end)
 end

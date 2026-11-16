@@ -1013,7 +1013,8 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
     events.push({ at, what: e.what, name: short(e.who, 40), ...(hit ? { id: hit.id } : {}) });
   }
   events.sort((a, b) => (a.at < b.at ? -1 : 1));
-  // Recipes: only for the uploader's own characters, which is all the game lets the addon see.
+  // Recipes: the uploader's own characters, plus guildies whose own scribes shared theirs over the addon channel (0.10.0).
+  // Several scribes can carry the same list, so a list only replaces the one on the site when it was read more recently.
   let recipeChars = 0;
   // In Forever the game's own "who am I" gives only the first part of a two-part name ("Baz" for Baz Zil), so match on
   // that when it points to exactly one character in the scribe's guild list.
@@ -1023,7 +1024,11 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
   for (const [name, profs] of Object.entries(sv.recipes || {})) {
     const hit = ownChar(name); if (!hit || opt[keyOf(name)] || !profs || typeof profs !== "object") continue;
     const rec = {};
-    for (const [p, v] of Object.entries(profs)) { const list = Array.isArray(v && v.list) ? v.list : []; if (list.length) rec[short(p, 40)] = { at: iso(v.at) || new Date().toISOString(), list: list.map(x => short(x, 80)).slice(0, 800) }; }
+    const have = ((await db().doc(`${hit.coll}/${hit.id}`).get()).data() || {}).recipes || {};
+    for (const [p, v] of Object.entries(profs)) {
+      const list = Array.isArray(v && v.list) ? v.list : [], at = iso(v && v.at) || new Date().toISOString(), k = short(p, 40);
+      if (list.length && !(have[k] && have[k].at && have[k].at > at)) rec[k] = { at, list: list.map(x => short(x, 80)).slice(0, 800) };
+    }
     if (Object.keys(rec).length) { await db().doc(`${hit.coll}/${hit.id}`).set({ recipes: rec }, { merge: true }); recipeChars++; }
   }
   await ref.set({ members, days, hours, raids, runs, zones, zonesOld, kills: kills.slice(-300), loot: loot.slice(-300), events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short((sv.by && listed.filter(n => keyOf(n).startsWith(keyOf(sv.by) + " ")).length === 1 ? listed.find(n => keyOf(n).startsWith(keyOf(sv.by) + " ")) : sv.by), 40), up: new Date().toISOString() });
