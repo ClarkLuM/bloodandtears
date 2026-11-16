@@ -3744,6 +3744,7 @@ function viewChar(coll,id){
         !m.isAlt&&(can||isOfficer())?["Take off the site (opt out)",()=>openOptOut(m)]:null,
         isOfficer()&&!m.isAlt?["",null,"Officers"]:null,
         isOfficer()&&!m.isAlt&&Array.isArray(m.owners)&&!owns(m)?[isOfficerChar(m)?"Remove officer":"Make officer",()=>setOfficer(m,!isOfficerChar(m))]:null,
+        isOfficer()&&!m.isAlt&&Array.isArray(m.owners)&&!owns(m)&&!isOfficerChar(m)?[isScribeChar(m)?"Remove guild scribe":"Make guild scribe (can upload the scribe file)",()=>setScribe(m,!isScribeChar(m))]:null,
         isOfficer()&&!m.isAlt&&Array.isArray(m.owners)&&m.owners.length?["Free up for claiming",()=>freeUp(m)]:null]),
       can?h("button",{class:"btn primary",onclick:()=>openEdit(m)},"Edit character"):null)
       :(!m.isAlt&&!Array.isArray(m.owners))?h("button",{class:"btn primary",onclick:()=>claim(m)},"This is me")
@@ -3875,9 +3876,17 @@ function armoryAllLine(){
         return h("span",{},"Streaks counted"+(sd.at?" "+ago(sd.at):"")+" · "+live.length+" seen today or yesterday"+(top?", longest "+top+(top===1?" day":" days"):""))})(),
       S.user?h("button",{class:"btn sm",disabled:!!busy,onclick:go},busy?"Syncing everyone…":"⟳ Sync everyone"):null,
       scribeLine()):null)}
-// The guild scribe: when its file was last uploaded, and (for officers) the upload button.
-function scribeLine(){const sc=S.scribe;
-  const up=isOfficer()?(()=>{const inp=h("input",{type:"file",accept:".lua,text/plain",class:"visually-hidden",id:"scribe-file",onchange:async e=>{const file=e.target.files&&e.target.files[0];e.target.value="";if(!file)return;
+// The guild scribe: when its file was last uploaded, and (for officers and guild scribes) the upload button.
+// In Chrome and Edge the site remembers the file after the first pick (a handle kept in this browser's IndexedDB), so the
+// next upload is one click; other browsers get the usual file picker every time.
+const SCRIBE_IDB="bt-scribe";
+const scribeIdb=(mode,fn)=>new Promise((ok,no)=>{try{const r=indexedDB.open(SCRIBE_IDB,1);r.onupgradeneeded=()=>r.result.createObjectStore("h");
+  r.onsuccess=()=>{try{const tx=r.result.transaction("h",mode),q=fn(tx.objectStore("h"));tx.oncomplete=()=>ok(q&&q.result);tx.onerror=()=>no(tx.error)}catch(e){no(e)}};r.onerror=()=>no(r.error)}catch(e){no(e)}});
+let scribeHandle=null,scribeHandleAsked=false;
+const loadScribeHandle=()=>{if(scribeHandleAsked||!window.showOpenFilePicker)return;scribeHandleAsked=true;
+  scribeIdb("readonly",st=>st.get("file")).then(h=>{if(h){scribeHandle=h;schedule()}}).catch(()=>{})};
+async function sendScribeFile(file){
+
       if(file.size>3e6){toast("That file is too big to be the scribe file.");return}
       const text=await file.text();
       // Both the addon and its notes are called BloodAndTearsScribe.lua. The notes start with "BloodAndTearsScribeDB =".
@@ -3885,9 +3894,29 @@ function scribeLine(){const sc=S.scribe;
       toast("Reading the scribe file…");
       try{const r=await httpsCallable(fns,"scribeUpload")({text}),d=r.data||{};
         toast("Scribe file read: "+d.matched+(d.matched===1?" guildie":" guildies")+" matched"+(d.recipeChars?", recipes for "+d.recipeChars+(d.recipeChars===1?" character":" characters"):"")+(d.levelled&&d.levelled.length?". Levels updated: "+d.levelled.join(", "):"")+(d.kills?", "+d.kills+(d.kills===1?" boss kill":" boss kills"):"")+(d.runs?", "+d.runs+(d.runs===1?" dungeon run":" dungeon runs"):"")+(d.zoneDays?", zone time for "+d.zoneDays+(d.zoneDays===1?" day":" days"):"")+(d.unknownN?". Not on the site yet: "+d.unknown.join(", ")+(d.unknownN>d.unknown.length?" and more":""):"")+".")}
-      catch(err){toast(err&&err.message?err.message.replace(/^.*?: /,""):"Couldn't read that file.")}}});
-    return[inp,h("label",{for:"scribe-file",class:"btn sm",title:"In your WoW folder: _forever_\WTF\Account\<account>\SavedVariables\BloodAndTearsScribe.lua"},"Upload the scribe file")]})():null;
-  return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):isOfficer()?h("span",{},"No guild scribe file yet"):null,up)}
+      catch(err){toast(err&&err.message?err.message.replace(/^.*?: /,""):"Couldn't read that file.")}}
+async function pickScribeFile(){
+  try{const [fh]=await window.showOpenFilePicker({id:"bt-scribe",types:[{description:"Scribe notes",accept:{"text/plain":[".lua"]}}]});
+    const file=await fh.getFile();
+    scribeIdb("readwrite",st=>st.put(fh,"file")).then(()=>{scribeHandle=fh;schedule()}).catch(()=>{});
+    await sendScribeFile(file)}
+  catch(e){if(e&&e.name!=="AbortError")toast("Couldn't open that file.")}}
+async function uploadAgain(){
+  try{const ok=(await scribeHandle.queryPermission({mode:"read"}))==="granted"||(await scribeHandle.requestPermission({mode:"read"}))==="granted";
+    if(!ok){toast("The browser needs your OK to read the file again.");return}
+    await sendScribeFile(await scribeHandle.getFile())}
+  catch(e){toast("Couldn't find the file again. Pick it once more.");scribeHandle=null;scribeIdb("readwrite",st=>st.delete("file")).catch(()=>{});schedule()}}
+function scribeLine(){const sc=S.scribe,can=isOfficer()||isScribe();
+  if(can)loadScribeHandle();
+  const tip="In your WoW folder: _forever_\\WTF\\Account\\<account>\\SavedVariables\\BloodAndTearsScribe.lua";
+  const up=!can?null:window.showOpenFilePicker?(scribeHandle
+      ?[h("button",{class:"btn sm primary",type:"button",title:"Reads "+scribeHandle.name+" again, from where you picked it last time",onclick:uploadAgain},"Upload the scribe file again"),
+        h("button",{class:"linkish small",type:"button",title:tip,onclick:pickScribeFile},"Pick a different file")]
+      :h("button",{class:"btn sm",type:"button",title:tip,onclick:pickScribeFile},"Upload the scribe file"))
+    :(()=>{const inp=h("input",{type:"file",accept:".lua,text/plain",class:"visually-hidden",id:"scribe-file",onchange:e=>{const file=e.target.files&&e.target.files[0];e.target.value="";if(file)sendScribeFile(file)}});
+      return[inp,h("label",{for:"scribe-file",class:"btn sm",title:tip},"Upload the scribe file")]})();
+  return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):can?h("span",{},"No guild scribe file yet"):null,up,
+    can&&window.showOpenFilePicker&&!scribeHandle?h("span",{class:"small ter"},"The site remembers the file after the first time, so next time it's one click."):null)}
 function armoryLine(m,can){
   const a=m.armory,busy=S.ui.armBusy===m.id;
   const sync=async()=>{if(!fns){toast("Sync isn't switched on yet.");return}S.ui.armBusy=m.id;render();
@@ -3998,6 +4027,13 @@ function openEdit(m,opts={}){
 // Who to ask when a character is stuck on someone else's device.
 const officerNames=()=>{const n=((S.officers&&S.officers.members)||[]).map(memberById).filter(Boolean).map(nameOf);return n.length?n.join(" or "):"an officer"};
 const isOfficerChar=m=>!!(S.officers&&Array.isArray(S.officers.members)&&S.officers.members.includes(m.id));
+// Guild scribes: guildies an officer trusts to upload the addon's file, and nothing else (guild/officers.scribeUids).
+const isScribe=()=>!!S.user&&!!S.officers&&Array.isArray(S.officers.scribeUids)&&S.officers.scribeUids.includes(S.user.uid);
+const isScribeChar=m=>!!(S.officers&&Array.isArray(S.officers.scribes)&&S.officers.scribes.includes(m.id));
+async function setScribe(m,on){
+  if(!fns){toast("That isn't switched on yet.");return}
+  try{await httpsCallable(fns,"setScribe")({id:m.id,on});toast(on?nameOf(m)+" can upload the scribe file now, from any device they've linked.":nameOf(m)+" isn't a guild scribe any more.")}
+  catch(x){toast(x&&x.message&&!/internal/i.test(x.message)?x.message:"Couldn't change that. Try again in a bit.")}}
 async function setOfficer(m,on){
   if(!fns){toast("That isn't switched on yet.");return}
   toast(on?"Making "+nameOf(m)+" an officer…":"Removing "+nameOf(m)+" as an officer…");
@@ -4019,7 +4055,7 @@ function openPrivacy(){
     h("div",{class:"pv"},
       h("h2",{},"What the site keeps"),
       h("p",{},"Character names, class, race, level, professions, gear, talents, honourable kills and when each character was last seen in game. All of it comes from Blizzard's public armory, the same pages anyone can look up. On top of that: dungeon stamps and flavour text people add themselves."),
-      h("p",{},"An officer can also upload notes from the guild scribe, an in-game addon that reads the guild list while they play: when each guildie was last online and in which zone, how many are online each hour, how long people spend in each zone (the map on Records), joins and leaves, who was in a raid, and the uploader's own recipes. It's what anyone in the guild can see in the guild window."),
+      h("p",{},"An officer, or a guild scribe an officer has trusted with it, can also upload notes from the guild scribe, an in-game addon that reads the guild list while they play: when each guildie was last online and in which zone, how many are online each hour, how long people spend in each zone (the map on Records), joins and leaves, who was in a raid, and the uploader's own recipes. It's what anyone in the guild can see in the guild window."),
       h("p",{},"No real names, email addresses, passwords or payment details. There's no sign-up: each browser gets an anonymous ID, used only to remember which characters it can edit."),
       h("h2",{},"Who can see it"),
       h("p",{},"Anyone with the link. Treat it like a public notice board. The site asks search engines not to list it, so it won't turn up when someone searches a character's name."),

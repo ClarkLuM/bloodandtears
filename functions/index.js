@@ -366,10 +366,14 @@ async function updateOfficers() {
     if (match) pinned[n] = match.id; else delete pinned[n];
   }
   // Plus anyone an officer made an officer on the site (guild/officerPicks).
-  const picks = (((await db().doc("guild/officerPicks").get()).data() || {}).ids || []).filter(id => docs.some(d => d.id === id));
+  const pk = (await db().doc("guild/officerPicks").get()).data() || {};
+  const picks = (pk.ids || []).filter(id => docs.some(d => d.id === id));
   const ids = [...new Set([...Object.values(pinned), ...picks])], uids = [...new Set(docs.filter(d => ids.includes(d.id)).flatMap(d => d.owners || []))].sort();
-  if (JSON.stringify([prev.members, prev.uids]) === JSON.stringify([ids.slice().sort(), uids])) return;
-  await ref.set({ pinned, members: ids.slice().sort(), uids, at: new Date().toISOString() });
+  // Guild scribes: guildies an officer has trusted to upload the scribe file, and nothing else (guild/officerPicks.scribes).
+  const scribes = (pk.scribes || []).filter(id => docs.some(d => d.id === id)).sort();
+  const scribeUids = [...new Set(docs.filter(d => scribes.includes(d.id)).flatMap(d => d.owners || []))].sort();
+  if (JSON.stringify([prev.members, prev.uids, prev.scribes || [], prev.scribeUids || []]) === JSON.stringify([ids.slice().sort(), uids, scribes, scribeUids])) return;
+  await ref.set({ pinned, members: ids.slice().sort(), uids, scribes, scribeUids, at: new Date().toISOString() });
 }
 // "Make officer" / "Remove officer" on the site. Only officers can use it, and only on claimed characters,
 // so nobody becomes an officer just by claiming an unclaimed one. Names in OFFICER_NAMES can't be removed here.
@@ -527,7 +531,23 @@ exports.setOfficer = onCall({ region: REGION, maxInstances: 2 }, async req => {
   if (on && !(Array.isArray(c.owners) && c.owners.length)) throw new HttpsError("failed-precondition", "They need to claim their character first.");
   if (!on && Object.values(off.pinned || {}).includes(id)) throw new HttpsError("failed-precondition", "This officer is set in the site's code (OFFICER_NAMES), so they can't be removed here.");
   const ref = db().doc("guild/officerPicks"), cur = ((await ref.get()).data() || {}).ids || [];
-  await ref.set({ ids: on ? [...new Set([...cur, id])] : cur.filter(x => x !== id), at: new Date().toISOString() });
+  await ref.set({ ids: on ? [...new Set([...cur, id])] : cur.filter(x => x !== id), at: new Date().toISOString() }, { merge: true });  // merge keeps the scribe list
+  await updateOfficers();
+  return { ok: true };
+});
+// "Make guild scribe" / "Remove guild scribe" on the site: lets a guildie who runs the addon upload its file, without
+// being an officer. Only officers can use it, and only on claimed characters (the upload is tied to who claimed it).
+exports.setScribe = onCall({ region: REGION, maxInstances: 2 }, async req => {
+  if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
+  const off = (await db().doc("guild/officers").get()).data() || {};
+  if (!(off.uids || []).includes(req.auth.uid)) throw new HttpsError("permission-denied", "Only officers can do that.");
+  const id = String((req.data && req.data.id) || "").slice(0, 60), on = !!(req.data && req.data.on);
+  const snap = await db().doc(`members/${id}`).get();
+  if (!snap.exists) throw new HttpsError("not-found", "Character not found.");
+  const c = snap.data();
+  if (on && !(Array.isArray(c.owners) && c.owners.length)) throw new HttpsError("failed-precondition", "They need to claim their character first.");
+  const ref = db().doc("guild/officerPicks"), cur = ((await ref.get()).data() || {}).scribes || [];
+  await ref.set({ scribes: on ? [...new Set([...cur, id])] : cur.filter(x => x !== id), at: new Date().toISOString() }, { merge: true });
   await updateOfficers();
   return { ok: true };
 });
@@ -871,7 +891,7 @@ const short = (v, n) => String(v ?? "").slice(0, n);
 exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds: 120 }, async req => {
   if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
   const off = (await db().doc("guild/officers").get()).data() || {};
-  if (!(off.uids || []).includes(req.auth.uid)) throw new HttpsError("permission-denied", "Only officers can upload the scribe file.");
+  if (!(off.uids || []).includes(req.auth.uid) && !(off.scribeUids || []).includes(req.auth.uid)) throw new HttpsError("permission-denied", "Only officers and guild scribes can upload the scribe file.");
   const text = String((req.data && req.data.text) || "");
   if (!text || text.length > 3e6) throw new HttpsError("invalid-argument", "That file is empty or too big.");
   if (/SlashCmdList|local ADDON|CreateFrame\(/.test(text) || !/^\s*BloodAndTearsScribeDB\s*=\s*\{/m.test(text)) throw new HttpsError("invalid-argument", /SlashCmdList|local ADDON|CreateFrame\(/.test(text)

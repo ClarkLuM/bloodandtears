@@ -609,8 +609,9 @@ local function check(key, s, y, after)
 end
 local upload = text(pScribe, "GameFontDisableSmall"); upload:SetPoint("BOTTOMLEFT", 14, 12); upload:SetWidth(W - 28)
 if upload.SetWordWrap then upload:SetWordWrap(true) end
-upload:SetJustifyV("BOTTOM"); upload:SetHeight(60)
-upload:SetText("To upload: type /reload (or log out), then on the site open Roster, Details, Upload the scribe file, and pick SavedVariables\\BloodAndTearsScribe.lua.")
+upload:SetJustifyV("BOTTOM"); upload:SetHeight(78)
+upload:SetText("Your notes file is World of Warcraft\\_forever_\\WTF\\Account\\(your account)\\SavedVariables\\BloodAndTearsScribe.lua. "
+  .. "Type /reload (or log out) to save it, then on the site open Roster, Details, Upload the scribe file. In Chrome or Edge the site remembers the file after the first time.")
 
 -- Tabs along the top
 local TABS = { { "today", "Today" }, { "week", "This week" }, { "scribe", "Scribe" } }
