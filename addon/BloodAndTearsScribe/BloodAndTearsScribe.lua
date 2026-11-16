@@ -480,7 +480,8 @@ local function mainOf(name)
   end
   return nil
 end
-local function altTag(name) local mn = mainOf(name); return mn and (DIM .. "  alt of " .. mn .. "|r") or "" end
+local function owns(n) return n:sub(-1) == "s" and (n .. "'") or (n .. "'s") end
+local function altTag(name) local mn = mainOf(name); return mn and (DIM .. "  " .. owns(mn) .. " alt|r") or "" end
 local function itemText(l) return (QHEX[l.q or 2] or QHEX[2]) .. "[" .. (l.name or "?") .. "]|r" end
 local function clock(t) local h, mi = tonumber(date("!%H", t + PERTH)), date("!%M", t + PERTH); return ((h % 12 == 0) and 12 or h % 12) .. ":" .. mi .. (h < 12 and "am" or "pm") end
 local function hrs(min) if min < 60 then return math.floor(min + 0.5) .. "m" elseif min < 600 then return (math.floor(min / 6 + 0.5) / 10) .. "h" else return math.floor(min / 60 + 0.5) .. "h" end end
@@ -1554,7 +1555,7 @@ local function tooltipLines(tt)
   tt:AddLine(" ")
   tt:AddLine("Blood and Tears", 0.94, 0.76, 0.35)
   local mn = mainOf(full or name)
-  if mn then tt:AddLine("Alt of " .. mn, 1, 1, 1) end
+  if mn then tt:AddLine(owns(mn) .. " alt", 1, 1, 1) end
   tt:AddLine(table.concat(bits1, " · "), 0.75, 0.75, 0.75)
   tt:AddLine(runs > 0 and (runs .. (runs == 1 and " dungeon" or " dungeons") .. " this week · last: " .. last.zone) or "No dungeons this week", 0.75, 0.75, 0.75)
   local p = db.profs[name] or db.profs[full]

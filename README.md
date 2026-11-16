@@ -147,7 +147,7 @@ Version 0.10.4 adds:
 - **Who can make it?** A search box on the Recipes tab looks through every recipe list in the notes (your characters', and guildies' whose scribes shared theirs) and lists each match with who can make it and in which profession.
 - **Dungeon marks reach the site:** the marks from the Dungeons tab (`db.stamps`, per character) go up with the upload; `scribeUpload` keeps them in `guild/scribe.stamps` (character id to dungeon to date; a character in the file replaces its own list, so unmarking sticks) and the passport counts them like the scribe's other stamps.
 - **Level-ups grouped:** more than three on Today become one line ("8 guildies levelled up today: ..."), with everyone on hover.
-- **Alts linked to mains:** the addon remembers this account's characters (`db.mine`); you pick your main on the Scribe tab (it starts as your highest level). Other scribes learn it through the shared `P` message (a fifth field older copies ignore). For guildies without the addon, a guild note that says "alt" and names a guildie counts. Tooltips say "Alt of ...", and Today's online list and dings add "alt of ...".
+- **Alts linked to mains:** the addon remembers this account's characters (`db.mine`); you pick your main on the Scribe tab (it starts as your highest level). Other scribes learn it through the shared `P` message (a fifth field older copies ignore). For guildies without the addon, a guild note that says "alt" and names a guildie counts. Tooltips and Today's online list and dings say "Clark Clark's alt" (a guild note like "Clark's alt" works too).
 
 Version 0.10.0 adds **sharing between scribes**, guild info on tooltips, a Dungeons tab, and joins, leaves and month milestones on Today:
 
