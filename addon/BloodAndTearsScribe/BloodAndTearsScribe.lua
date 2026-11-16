@@ -544,7 +544,10 @@ local function mainOf(name)
 end
 local function owns(n) return n:sub(-1) == "s" and (n .. "'") or (n .. "'s") end
 local function altTag(name) local mn = mainOf(name); return mn and (DIM .. "  " .. owns(mn) .. " alt|r") or "" end
-local function itemText(l) return (QHEX[l.q or 2] or QHEX[2]) .. "[" .. (l.name or "?") .. "]|r" end
+local function itemText(l)
+  local n = "[" .. (l.name or "?") .. "]"
+  return (QHEX[l.q or 2] or QHEX[2]) .. (l.id and ("|Hitem:" .. l.id .. "|h" .. n .. "|h") or n) .. "|r"
+end
 local function clock(t) local h, mi = tonumber(date("!%H", t + PERTH)), date("!%M", t + PERTH); return ((h % 12 == 0) and 12 or h % 12) .. ":" .. mi .. (h < 12 and "am" or "pm") end
 local function hrs(min) if min < 60 then return math.floor(min + 0.5) .. "m" elseif min < 600 then return (math.floor(min / 6 + 0.5) / 10) .. "h" else return math.floor(min / 60 + 0.5) .. "h" end end
 local function dur(sec) local m = math.floor(sec / 60); if m < 60 then return m .. "m" end return math.floor(m / 60) .. "h " .. (m % 60 < 10 and "0" or "") .. (m % 60) .. "m" end
@@ -821,7 +824,7 @@ local search = CreateFrame("EditBox", nil, pRecipes, "InputBoxTemplate")
 search:SetSize(W - 40, 22); search:SetPoint("TOPLEFT", 20, -6); search:SetAutoFocus(false)
 search:SetMaxLetters(60)
 local searchHint = text(pRecipes, "GameFontDisableSmall"); searchHint:SetPoint("LEFT", search, "LEFT", 2, 0)
-searchHint:SetText("Who can make it? Type a name, or shift-click an item")
+searchHint:SetText("Who can make it? Type a name, or alt-click any item")
 search:SetScript("OnEscapePressed", function(self) self:SetText(""); self:ClearFocus() end)
 search:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
 search:SetScript("OnTextChanged", function() refresh() end)
@@ -1358,6 +1361,20 @@ for i = 1, 16 do
   local fs = text(sum, "GameFontHighlightSmall"); fs:SetPoint("TOPLEFT", 16, -114 - (i - 1) * 16); fs:SetWidth(W + 8)
   sumLines[i] = fs
 end
+-- Items named in the summary: hover for the tooltip, shift-click to link in chat.
+pcall(function()
+  sum:SetHyperlinksEnabled(true)
+  sum:SetScript("OnHyperlinkEnter", function(self, link)
+    GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+    if pcall(GameTooltip.SetHyperlink, GameTooltip, link) then GameTooltip:Show() end
+  end)
+  sum:SetScript("OnHyperlinkLeave", function() GameTooltip:Hide() end)
+  sum:SetScript("OnHyperlinkClick", function(_, link)
+    if not (IsModifiedClick and IsModifiedClick("CHATLINK") and ChatEdit_InsertLink) then return end
+    local l = Item.link(link)
+    if l then ChatEdit_InsertLink(l) end
+  end)
+end)
 local keep = wowButton(CreateFrame("Button", nil, sum, "UIPanelButtonTemplate"), 120, 24, "Keep playing"); keep:SetPoint("BOTTOMRIGHT", -14, 12)
 local close = wowButton(CreateFrame("Button", nil, sum, "UIPanelButtonTemplate"), 90, 24, "Close"); close:SetPoint("RIGHT", keep, "LEFT", -6, 0)
 keep:SetScript("OnClick", function() if CancelLogout then pcall(CancelLogout) end sum:Hide() end)
@@ -1426,17 +1443,16 @@ SlashCmdList.BTSCRIBE = function(arg)
   if win:IsShown() and arg == "" then win:Hide() else win:Show() end
 end
 
--- With the scribe's window open, shift-click any item (in your bags, a chat link, a vendor, the auction house) to
--- look up who can make it. With the chat box open the shift-click links the item as usual, and nothing happens here.
+-- Alt-click any item (in your bags, a chat link, a vendor, the auction house) to look up who can make it: the
+-- scribe's window opens on the recipe search with that item's name. Shift-click is left alone (it links to chat).
 if hooksecurefunc and HandleModifiedItemClick then
   pcall(hooksecurefunc, "HandleModifiedItemClick", function(link)
     pcall(function()
-      if not db or not win:IsShown() or type(link) ~= "string" then return end
-      if not (IsModifiedClick and IsModifiedClick("CHATLINK")) then return end
-      if ChatEdit_GetActiveWindow and ChatEdit_GetActiveWindow() then return end
+      if not db or type(link) ~= "string" then return end
+      if not (IsAltKeyDown and IsAltKeyDown()) or (IsShiftKeyDown and IsShiftKeyDown()) or (IsControlKeyDown and IsControlKeyDown()) then return end
       local name = link:match("%[(.-)%]")
       if not name or name == "" then return end
-      show("recipes")
+      show("recipes"); win:Show()
       searchHint:Hide()
       search:SetText(name:sub(1, 60))
     end)
