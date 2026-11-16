@@ -674,14 +674,28 @@ recFoot:SetText(GOLD .. "How recipes get to the site|r\n"
   .. INK .. "3.|r Type /reload or log out to save, then upload the file on the site.\n"
   .. "The game only shares a recipe list while its window is open, so the scribe can't read them by itself.")
 local myProfs = {}
--- Your professions from the skill list (the game's own names; English clients).
+-- Your professions. Three places, because each can miss some: the skill list (it hides everything under a folded
+-- header, like a collapsed "Professions" in the Skills tab), the spellbook (a profession's spell is only there if
+-- you know it), and any profession the scribe has already read for this character. English clients.
+local function knowsSpell(name)
+  local ok, n = pcall(GetSpellInfo, name)
+  if ok and n then return true end
+  if C_Spell and C_Spell.GetSpellInfo then local ok2, i = pcall(C_Spell.GetSpellInfo, name); if ok2 and i then return true end end
+  return false
+end
 local function readSkills()
   wipe(myProfs)
-  if not GetNumSkillLines then return end
-  for i = 1, GetNumSkillLines() do
-    local name, header, _, rank, _, _, max = GetSkillLineInfo(i)
-    if name and not header and CRAFTS[name] then myProfs[#myProfs + 1] = { name = name, rank = rank, max = max } end
+  local seen = {}
+  local function add(name, rank, max) if CRAFTS[name] and not seen[name] then seen[name] = true; myProfs[#myProfs + 1] = { name = name, rank = rank, max = max } end end
+  if GetNumSkillLines then
+    for i = 1, GetNumSkillLines() do
+      local name, header, _, rank, _, _, max = GetSkillLineInfo(i)
+      if name and not header then add(name, rank, max) end
+    end
   end
+  for name, spell in pairs(CRAFTS) do if not seen[name] and knowsSpell(spell) then add(name) end end
+  local me = UnitName("player")
+  for name in pairs((db and me and db.recipes[me]) or {}) do add(name) end
   table.sort(myProfs, function(a, b) return a.name < b.name end)
   -- The buttons' spells can only be set out of combat.
   if not InCombatLockdown() then
@@ -708,7 +722,7 @@ end
 local function fillRecipes()
   local me = UnitName("player") or "?"
   recLabel:SetText("YOUR PROFESSIONS  ·  " .. me:upper())
-  if #myProfs == 0 then readSkills() end
+  readSkills()
   local mine, learned = db.recipes[me] or {}, db.ui.learned and db.ui.learned[me]
   -- Mining's window is Smelting, but the game files its recipes under Mining.
   for i, r in ipairs(recRows) do
