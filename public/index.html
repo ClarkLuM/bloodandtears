@@ -1376,6 +1376,24 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 .rec-a>:first-child{grid-area:week}.rec-a>.lb{grid-area:lb}.rec-a>.rec-links{grid-area:links;grid-template-columns:minmax(0,1fr);gap:.75rem}
 @media (max-width:960px){.rec-a{grid-template-areas:"week" "lb" "links";grid-template-rows:auto}}
 .rec-a .rec-link{flex-direction:column;align-items:flex-start;gap:.25rem}
+
+/* When the Guild Plays: the zone map's five shades, the busiest hour in gold, now in white */
+.wwp{gap:3px}
+.wwp-c{height:1.25rem;border-radius:4px;background:var(--subtle)}
+.wwp-c.q1{background:var(--zm-1)}.wwp-c.q2{background:var(--zm-2)}.wwp-c.q3{background:var(--zm-3)}.wwp-c.q4{background:var(--zm-4)}.wwp-c.q5{background:var(--zm-5)}
+.wwp-c.none{background:transparent;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--sep) 60%,transparent)}
+.wwp-c.peak{box-shadow:0 0 0 2px var(--gold-hi);position:relative;z-index:1}
+.wwp-c.now{box-shadow:0 0 0 2px var(--text);position:relative;z-index:2}
+.wwp-key{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem .375rem}
+.wwp-key>i.wwp-c{display:inline-block;width:1rem;height:.75rem}
+.wwp-k2{display:inline-flex;align-items:center;gap:.375rem;margin-left:.75rem}.wwp-k2 i.wwp-c{display:inline-block;width:.875rem;height:.75rem}
+@media (max-width:640px){.wwp{gap:2px}.wwp-c{height:.875rem;border-radius:2px}}
+/* Busiest zones numbered */
+.zm-top{counter-reset:zr}
+.zm-top li{counter-increment:zr}
+.zm-top button{position:relative;padding-left:2rem}
+.zm-top button::before{content:counter(zr);position:absolute;left:.25rem;top:.4375rem;font:400 1.125rem/1.25rem var(--display);color:var(--ter);width:1.25rem;text-align:center}
+.zm-top li:first-child button::before{color:var(--gold-hi)}
 </style>
 </head>
 <body>
@@ -3279,12 +3297,16 @@ function whenWePlay(){const hrs=(S.scribe&&S.scribe.hours)||{},keys=Object.keys(
   const hourName=hr=>(hr%12||12)+(hr<12?"am":"pm");
   const head=h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"wwp-h"},"When the Guild Plays"),h("span",{class:"small ter"},days.size+(days.size===1?" day":" days")+" of notes"));
   if(days.size<3)return h("section",{class:"card","aria-labelledby":"wwp-h",style:"gap:.5rem"},head,h("p",{class:"small ter",style:"margin:0"},"Building up. This fills in once the guild scribe has a few days of notes."));
-  const cell=(d,hr)=>{const v=avg[d][hr];return h("span",{class:"wwp-c"+(v==null?" none":""),style:v==null?"":`--a:${(.12+.88*v/max).toFixed(2)}`,title:DOW[d]+" "+hourName(hr)+": "+(v==null?"not watched":(Math.round(v*10)/10)+" online on average")})};
+  // Five shades, the same as the zone map's. The busiest hour is outlined in gold and the hour it is now in white.
+  const pn=new Date(Date.now()+8*36e5),nowD=(pn.getUTCDay()+6)%7,nowH=pn.getUTCHours();
+  const cell=(d,hr)=>{const v=avg[d][hr],q=v==null?0:Math.max(1,Math.ceil(v/max*5)),pk=best&&best[0]===d&&best[1]===hr,nw=d===nowD&&hr===nowH;
+    return h("span",{class:"wwp-c"+(v==null?" none":" q"+q)+(pk?" peak":"")+(nw?" now":""),title:DOW[d]+" "+hourName(hr)+": "+(v==null?"not watched":(Math.round(v*10)/10)+" online on average")+(nw?" (now)":"")})};
   return h("section",{class:"card","aria-labelledby":"wwp-h",style:"gap:.75rem"},head,
     best?h("p",{style:"margin:0"},"Busiest: ",h("b",{},DOW[best[0]]+"s around "+hourName(best[1])),", with "+(Math.round(best[2]*10)/10)+" online on average."):null,
     h("div",{class:"wwp",role:"img","aria-label":best?"Chart of guildies online by day and hour. Busiest is "+DOW[best[0]]+"s around "+hourName(best[1])+".":"Chart of guildies online by day and hour."},
       h("span",{}),...Array.from({length:24},(_,hr)=>h("span",{class:"wwp-h"},hr%6===0?hourName(hr):"")),
       ...DOW.flatMap((n,d)=>[h("span",{class:"wwp-d"},n.slice(0,3)),...Array.from({length:24},(_,hr)=>cell(d,hr))])),
+    h("div",{class:"wwp-key small ter"},"Fewer",[1,2,3,4,5].map(q=>h("i",{class:"wwp-c q"+q})),"More",h("span",{class:"wwp-k2"},h("i",{class:"wwp-c q3 peak"}),"Busiest"),h("span",{class:"wwp-k2"},h("i",{class:"wwp-c q1 now"}),"Now")),
     h("p",{class:"small ter",style:"margin:0"},"Perth time. Counted every five minutes while the guild scribe is online, plus the hour each guildie was last on, so blank hours just weren't watched."))}
 // Where the Guild Plays: at each five-minute read the guild scribe notes the zone of every guildie online, as minutes per
 // zone per day (guild/scribe zones: day → zone → character id → minutes, "_" for guildies the site doesn't know; days
