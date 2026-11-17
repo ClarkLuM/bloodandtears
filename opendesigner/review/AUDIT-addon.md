@@ -12,3 +12,7 @@ Read from `addon/BloodAndTearsScribe/BloodAndTearsScribe.lua`. Not measured in t
 | 6 | Foot lines: heights 28, 30, 32, 44 and 92; bottom offsets 10 and 12 | Each tab's foot note sits and wraps differently | One line, 10 from the bottom, on every tab | My own idea |
 
 Not changed: colours, fonts, the header, the tab row, the minimap button, the session summary.
+
+## Status (17 Nov)
+
+All six rows applied in addon 0.15.0 after a yes on the drawn sheet, plus class icons (Online list, Alts) and profession icons (Recipes, crafters in the search, Alts) at Clark's request. Run in the Lua test harness only; not yet seen in the game.
