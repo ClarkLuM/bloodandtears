@@ -351,6 +351,25 @@ exports.armoryLookup = onCall({ region: REGION, maxInstances: 2 }, async req => 
   return { found: true, first: a.first || "", last: a.last || "", level: Math.max(1, Math.min(60, a.level || 1)), cls: a.cls || "", race: a.race || "",
     spec: a.spec || "", profs: a.profs || {}, guild: a.guild || "", avatar: a.avatar || "" };
 });
+// "Copy for Discord" draws the card into an image in the browser. Blizzard's picture server doesn't let other sites read
+// a character's own picture that way (it only allows the generic race pictures), so the card image showed the black
+// stand-in. This hands the browser a copy of the picture instead. Only Blizzard's render server, only images, kept small.
+const picCache = new Map();
+exports.cardPicture = onCall({ region: REGION, maxInstances: 2, timeoutSeconds: 30, memory: "256MiB" }, async req => {
+  if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
+  const url = pic(String((req.data && req.data.url) || "").split("?")[0]);
+  if (!url) throw new HttpsError("invalid-argument", "Not a character picture.");
+  if (picCache.has(url)) return { data: picCache.get(url) };
+  const res = await fetch(url, { headers: { "user-agent": "Mozilla/5.0 (compatible; BloodAndTearsGuildSite/1.0)" } });
+  const type = res.headers.get("content-type") || "";
+  if (!res.ok || !/^image\/(png|jpeg|webp)$/.test(type)) throw new HttpsError("not-found", "No picture there.");
+  const buf = Buffer.from(await res.arrayBuffer());
+  if (buf.length > 4e6) throw new HttpsError("failed-precondition", "That picture is too big.");
+  const data = "data:" + type + ";base64," + buf.toString("base64");
+  picCache.set(url, data);
+  while (picCache.size > 24) picCache.delete(picCache.keys().next().value);
+  return { data };
+});
 // Check every character (mains and alts) against the armory, then note when it finished in guild/armory.
 // Officers can fix anyone's character, remove leavers and edit the guild basics.
 // Add officers by character name here. Each name is tied to the first character on the site with that name,

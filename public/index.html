@@ -2550,7 +2550,10 @@ async function cardPng(m){
   try{await document.fonts.ready}catch(e){}
   const d=cardData(m),[,,f,edge]=d.tier,K=2,W=260*K,H=380*K,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
   const rr=(X,Y,w,hh,r)=>{x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+hh,r);x.arcTo(X+w,Y+hh,X,Y+hh,r);x.arcTo(X,Y+hh,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath()};
-  const loadImg=src=>src?new Promise(ok=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>ok(im);im.onerror=()=>ok(null);im.src=src;setTimeout(()=>ok(null),4000)}):Promise.resolve(null);
+  // Blizzard lets the site draw its generic race pictures but not a character's own, so those come through cardPicture.
+  const load1=src=>new Promise(ok=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>ok(im);im.onerror=()=>ok(null);im.src=src;setTimeout(()=>ok(null),6000)});
+  const loadImg=async src=>{if(!src)return null;const im=await load1(src);if(im||!fns||!/^https:\/\/render\.worldofwarcraft\.com\//.test(src))return im;
+    try{const r=await httpsCallable(fns,"cardPicture")({url:src});return r.data&&r.data.data?await load1(r.data.data):null}catch(e){return null}};
   const cover=(im,X,Y,w,hh,sc=1,py=.5)=>{const k=Math.max(w/im.width,hh/im.height)*sc;x.drawImage(im,X+(w-im.width*k)/2,Y+(hh-im.height*k)*py,im.width*k,im.height*k)};
   const disp=`700 SZpx "Alegreya Sans SC", Figtree, sans-serif`,body=(wt,sz)=>`${wt} ${sz*K}px Figtree, sans-serif`;
   // Frame and card
@@ -2611,9 +2614,14 @@ async function cardPng(m){
   if(d.lv>=60){g=x.createLinearGradient(0,0,W,H);g.addColorStop(.3,"rgba(255,255,255,0)");g.addColorStop(.45,"rgba(255,230,170,.22)");g.addColorStop(.55,"rgba(170,220,255,.18)");g.addColorStop(.7,"rgba(255,255,255,0)");x.fillStyle=g;x.fillRect(0,0,W,H)}
   x.restore();return new Promise(res=>c.toBlob(res,"image/png"))}
 async function copyCard(m){
-  const blob=await cardPng(m);if(!blob){toast("Couldn't make the card image.");return}
-  try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);toast("Card copied. Paste it in Discord with Ctrl+V.")}
-  catch(e){const a=h("a",{href:URL.createObjectURL(blob),download:nameOf(m).replace(/\s+/g,"-")+"-card.png"});document.body.append(a);a.click();a.remove();toast("Card saved as a picture. Drag it into Discord.")}}
+  toast("Making the card picture…");
+  // The copy is started straight away with the picture still being made, so the browser still counts it as the click's
+  // copy (fetching a character's picture can take a few seconds, and a late copy is refused).
+  const made=cardPng(m);
+  try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;await navigator.clipboard.write([new ClipboardItem({"image/png":made.then(b=>b||Promise.reject(new Error("no image")))})]);toast("Card copied. Paste it in Discord with Ctrl+V.");return}
+  catch(e){}
+  const blob=await made;if(!blob){toast("Couldn't make the card image.");return}
+  const a=h("a",{href:URL.createObjectURL(blob),download:nameOf(m).replace(/\s+/g,"-")+"-card.png"});document.body.append(a);a.click();a.remove();toast("Card saved as a picture. Drag it into Discord.")}
 function cardSection(m){
   const d=cardData(m),[min,tname]=d.tier,next=TIERS.slice().reverse().find(x=>x[0]>d.lv);
   let flav=null;
