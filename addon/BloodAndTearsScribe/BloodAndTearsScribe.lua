@@ -627,11 +627,11 @@ end
 
 -- Minutes per zone over the last n days, biggest first.
 local function zoneTotals(days)
-  local cut, tot, list = dayOf(now() - (days - 1) * 86400), {}, {}
+  local cut, tot, list, ppl = dayOf(now() - (days - 1) * 86400), {}, {}, {}
   for d, zs in pairs(db.zones) do
-    if d >= cut then for zone, who in pairs(zs) do for _, mins in pairs(who) do tot[zone] = (tot[zone] or 0) + mins end end end
+    if d >= cut then for zone, who in pairs(zs) do for name, mins in pairs(who) do tot[zone] = (tot[zone] or 0) + mins; ppl[zone] = ppl[zone] or {}; ppl[zone][name] = true end end end
   end
-  for zone, m in pairs(tot) do list[#list + 1] = { zone, m } end
+  for zone, m in pairs(tot) do local n = 0; for _ in pairs(ppl[zone]) do n = n + 1 end; list[#list + 1] = { zone, m, n } end
   table.sort(list, function(a, b) return a[2] > b[2] end)
   return list
 end
@@ -779,6 +779,33 @@ local function wowButton(b, w, h, label)
 end
 
 -------------------------------------------------------------------- the main window
+-- A drop-down: a button showing the current choice, and a small list under it. opts is { { key, label }, ... };
+-- pick(key) is called with the choice; button:set(key) shows a choice.
+ui.dropdown = function(parent, w, prefix, opts, pick)
+  local b = wowButton(CreateFrame("Button", nil, parent, "UIPanelButtonTemplate"), w, 20, "")
+  local arrow = b:CreateTexture(nil, "OVERLAY"); arrow:SetSize(10, 10); arrow:SetPoint("RIGHT", -6, 0)
+  arrow:SetTexture("Interface\\ChatFrame\\ChatFrameExpandArrow")
+  pcall(function() arrow:SetRotation(-math.pi / 2) end)
+  local drop = CreateFrame("Frame", nil, parent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+  drop:SetSize(w, #opts * 20 + 10); drop:SetPoint("TOPRIGHT", b, "BOTTOMRIGHT", 0, -1)
+  drop:SetFrameLevel((parent:GetFrameLevel() or 1) + 40); drop:EnableMouse(true); drop:Hide()
+  if drop.SetBackdrop then
+    drop:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+      tile = true, tileSize = 16, edgeSize = 12, insets = { left = 3, right = 3, top = 3, bottom = 3 } })
+    drop:SetBackdropColor(0.086, 0.063, 0.063, 1); drop:SetBackdropBorderColor(0.36, 0.27, 0.25, 1)
+  end
+  for i, o in ipairs(opts) do
+    local ob = CreateFrame("Button", nil, drop); ob:SetSize(w - 8, 20); ob:SetPoint("TOPLEFT", 4, -5 - (i - 1) * 20)
+    local hl = tex(ob, "HIGHLIGHT", 1, 1, 1, 0.08); hl:SetAllPoints()
+    local t = text(ob, "GameFontHighlightSmall"); t:SetPoint("LEFT", 8, 0); t:SetText(o[2])
+    ob.pick = o[2]
+    ob:SetScript("OnClick", function() drop:Hide(); pick(o[1]) end)
+  end
+  b:SetScript("OnClick", function() if drop:IsShown() then drop:Hide() else drop:Show() end end)
+  parent:HookScript("OnHide", function() drop:Hide() end)
+  b.set = function(self, key) for _, o in ipairs(opts) do if o[1] == key then self:SetText(prefix .. o[2]) end end end
+  return b
+end
 local win = panel("BloodAndTearsScribeWindow", W, 490)
 win:SetPoint("CENTER", 0, 60)
 win.title:SetText("Blood and Tears")
@@ -803,7 +830,12 @@ todayFoot:SetJustifyV("BOTTOM"); todayFoot:SetHeight(30)
 
 -- This week
 local pWeek = page("week")
-label(pWeek, "Busiest zones this week", -6)
+label(pWeek, "Zones this week", -6)
+-- Sort the zones (and scroll them with the mouse wheel).
+ui.zoneDD = ui.dropdown(pWeek, 150, "Sort: ", { { "time", "Most time" }, { "people", "Most guildies" }, { "name", "A to Z" } }, function(k) db.ui.zoneSort = k; ui.zoneOff = 0; refresh() end)
+ui.zoneDD:SetPoint("TOPRIGHT", -14, -2)
+pWeek:EnableMouseWheel(true)
+pWeek:SetScript("OnMouseWheel", function(_, d) ui.zoneOff = math.max(0, (ui.zoneOff or 0) - d); refresh() end)
 local zoneRows = rows(pWeek, 5, -24)
 for _, r in ipairs(zoneRows) do r:SetHeight(24) end
 for i, r in ipairs(zoneRows) do r:ClearAllPoints(); r:SetPoint("TOPLEFT", 14, -24 - (i - 1) * 24) end
@@ -1158,15 +1190,12 @@ local dgBand, dgScroll = "mine", 0
 local dgLabel = text(pDungeons, "GameFontNormalSmall"); dgLabel:SetPoint("TOPLEFT", 14, -36); dgLabel:SetWidth(W - 28)
 -- Which dungeons to show: the ones for your level, or one of the site's achievement groups.
 local dgBtns = {}
-local BANDS = { { "mine", "Your level" }, { "Novice", "Novice" }, { "Experienced", "Experienced" }, { "Master", "Master" } }
-for i, bd in ipairs(BANDS) do
-  local b = CreateFrame("Button", nil, pDungeons, "UIPanelButtonTemplate")
-  local bw = (W - 28 - 3 * 4) / 4
-  wowButton(b, bw, 20, bd[2]); b:SetPoint("TOPLEFT", 14 + (i - 1) * (bw + 4), -8)
-  b.band = bd[1]
-  b:SetScript("OnClick", function() dgBand, dgScroll = bd[1], 0; refresh() end)
-  dgBtns[i] = b
-end
+ui.dgShow = ui.dropdown(pDungeons, 190, "Show: ", { { "mine", "For your level" }, { "Novice", "Novice" }, { "Experienced", "Experienced" }, { "Master", "Master" }, { "all", "Every dungeon" } },
+  function(k) dgBand, dgScroll = k, 0; refresh() end)
+ui.dgShow:SetPoint("TOPLEFT", 14, -8)
+ui.dgSortDD = ui.dropdown(pDungeons, 190, "Sort: ", { { "level", "By level" }, { "name", "A to Z" }, { "todo", "Not done first" }, { "online", "Most guildies online" } },
+  function(k) db.ui.dgSort = k; dgScroll = 0; refresh() end)
+ui.dgSortDD:SetPoint("TOPRIGHT", -14, -8)
 local ROWS_DG, ROW_H = 8, 34
 local dgRows = {}
 for i = 1, ROWS_DG do
@@ -1221,9 +1250,11 @@ pDungeons:SetScript("OnMouseWheel", function(_, delta)
 end)
 local function fillDungeons()
   local me, lv = UnitName("player") or "?", UnitLevel("player") or 1
-  for _, b in ipairs(dgBtns) do b:setOn(b.band == dgBand) end
+  ui.dgShow:set(dgBand); ui.dgSortDD:set(db.ui.dgSort or "level")
   local list = {}
-  if dgBand == "mine" then
+  if dgBand == "all" then
+    for _, d in ipairs(DUNGEONS) do list[#list + 1] = d end
+  elseif dgBand == "mine" then
     for _, d in ipairs(DUNGEONS) do if lv >= d[2] and lv <= d[3] then list[#list + 1] = d end end
     if #list == 0 then for _, d in ipairs(DUNGEONS) do if d[2] > lv then list[#list + 1] = d; if #list >= 3 then break end end end end
   else
@@ -1234,8 +1265,29 @@ local function fillDungeons()
   local scm = siteChar(me)
   local onSite = {}
   if scm and type(scm.dungeons) == "table" then for _, n in ipairs(scm.dungeons) do onSite[n] = true end end
-  for _, d in ipairs(list) do if seenIn(d[1], me) or onSite[d[1]] or (db.stamps[me] and db.stamps[me][d[1]]) then done = done + 1 end end
-  if dgBand == "mine" then dgLabel:SetText(GOLD .. "For " .. fullName(me) .. ", level " .. lv .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done|r")
+  local isDone = {}
+  for _, d in ipairs(list) do if seenIn(d[1], me) or onSite[d[1]] or (db.stamps[me] and db.stamps[me][d[1]]) then done = done + 1; isDone[d[1]] = true end end
+  do
+    local by = db.ui.dgSort or "level"
+    local inRange = {}
+    if by == "online" then
+      for _, d in ipairs(list) do
+        local n = 0
+        for _, o in ipairs(onlineNow) do local l = tonumber(o.level) or 0; if l >= d[2] and l <= d[3] and first(o.name) ~= me then n = n + 1 end end
+        inRange[d[1]] = n
+      end
+    end
+    local pos = {}
+    for i, d in ipairs(list) do pos[d[1]] = i end
+    table.sort(list, function(x, y)
+      if by == "name" then return x[1] < y[1] end
+      if by == "todo" and (isDone[x[1]] or false) ~= (isDone[y[1]] or false) then return not isDone[x[1]] end
+      if by == "online" and inRange[x[1]] ~= inRange[y[1]] then return inRange[x[1]] > inRange[y[1]] end
+      return pos[x[1]] < pos[y[1]]
+    end)
+  end
+  if dgBand == "all" then dgLabel:SetText(GOLD .. "Every dungeon|r" .. DIM .. "   " .. done .. " of " .. #list .. " done by " .. fullName(me) .. "|r")
+  elseif dgBand == "mine" then dgLabel:SetText(GOLD .. "For " .. fullName(me) .. ", level " .. lv .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done|r")
   else local g; for _, x in ipairs(DG_GROUPS) do if x[1] == dgBand then g = x end end
     dgLabel:SetText(GOLD .. g[2] .. "|r" .. DIM .. "   " .. done .. " of " .. #list .. " done by " .. fullName(me) .. "|r") end
   local on = {}
@@ -1593,9 +1645,14 @@ end
 local function fillWeek()
   local list = zoneTotals(7)
   local top = list[1] and list[1][2] or 1
+  local by = db.ui.zoneSort or "time"
+  ui.zoneDD:set(by)
+  if by == "people" then table.sort(list, function(a, b) if a[3] ~= b[3] then return a[3] > b[3] end return a[2] > b[2] end)
+  elseif by == "name" then table.sort(list, function(a, b) return a[1] < b[1] end) end
+  local off = math.max(0, math.min(ui.zoneOff or 0, #list - #zoneRows)); ui.zoneOff = off
   for i, r in ipairs(zoneRows) do
-    local z = list[i]
-    if z then setRow(r, GOLD .. i .. "|r", INK .. z[1] .. "|r", hrs(z[2]), z[2] / top) else r:Hide() end
+    local z = list[i + off]
+    if z then setRow(r, GOLD .. (i + off) .. "|r", INK .. z[1] .. "|r" .. DIM .. "  " .. z[3] .. (z[3] == 1 and " guildie" or " guildies") .. "|r", hrs(z[2]), z[2] / top) else r:Hide() end
   end
   if not list[1] then setRow(zoneRows[1], "", DIM .. "No zone time noted this week yet.|r", "") end
   local avg, max, best = hourGrid()
