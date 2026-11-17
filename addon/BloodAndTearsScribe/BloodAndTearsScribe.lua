@@ -1699,9 +1699,7 @@ pcall(function()
     if l then ChatEdit_InsertLink(l) end
   end)
 end)
-local keep = wowButton(CreateFrame("Button", nil, sum, "UIPanelButtonTemplate"), 120, 24, "Keep playing"); keep:SetPoint("BOTTOMRIGHT", -14, 12)
-local close = wowButton(CreateFrame("Button", nil, sum, "UIPanelButtonTemplate"), 90, 24, "Close"); close:SetPoint("RIGHT", keep, "LEFT", -6, 0)
-keep:SetScript("OnClick", function() if CancelLogout then pcall(CancelLogout) end sum:Hide() end)
+local close = wowButton(CreateFrame("Button", nil, sum, "UIPanelButtonTemplate"), 90, 24, "Close"); close:SetPoint("BOTTOMRIGHT", -14, 12)
 close:SetScript("OnClick", function() sum:Hide() end)
 
 local function fillSummary(leaving)
@@ -1710,7 +1708,6 @@ local function fillSummary(leaving)
   local lv = UnitLevel("player")
   sum.title:SetText(fullName(me) .. "'s session")
   sum.sub:SetText("Level " .. (sess.level or lv) .. (lv ~= sess.level and (" to " .. lv) or "") .. "  ·  " .. clock(sess.t) .. " to " .. clock(t))
-  keep:SetShown(leaving and true or false)
   local bosses, drops = {}, {}
   for _, k in ipairs(db.kills) do if k.t >= sess.t then bosses[#bosses + 1] = k end end
   for _, l in ipairs(db.loot) do if l.t >= sess.t and l.who == short(me) then drops[#drops + 1] = l end end
