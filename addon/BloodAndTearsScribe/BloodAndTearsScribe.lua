@@ -486,6 +486,10 @@ f:SetScript("OnEvent", function(_, event, ...)
     pcall(readCraft)
   elseif event == "SKILL_LINES_CHANGED" then
     if ui.skills then pcall(ui.skills) end
+  elseif event == "TIME_PLAYED_MSG" then
+    if ui.played then ui.played(a1) end
+  elseif event == "PLAYER_MONEY" then
+    if ui.noteMe then ui.noteMe() end
   elseif event == "PLAYER_REGEN_DISABLED" then
     if ui.combat then ui.combat() end
   elseif event == "PLAYER_REGEN_ENABLED" then
@@ -508,7 +512,7 @@ f:SetScript("OnEvent", function(_, event, ...)
   end
 end)
 for _, e in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "GUILD_ROSTER_UPDATE", "GROUP_ROSTER_UPDATE", "ZONE_CHANGED_NEW_AREA",
-  "CHAT_MSG_SYSTEM", "TRADE_SKILL_SHOW", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_UPDATE", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED", "PLAYER_LEVEL_UP", "PLAYER_ENTERING_WORLD", "ENCOUNTER_END", "CHAT_MSG_LOOT",
+  "CHAT_MSG_SYSTEM", "TRADE_SKILL_SHOW", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_UPDATE", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED", "TIME_PLAYED_MSG", "PLAYER_MONEY", "PLAYER_LEVEL_UP", "PLAYER_ENTERING_WORLD", "ENCOUNTER_END", "CHAT_MSG_LOOT",
   "PLAYER_CAMPING", "PLAYER_QUITING", "LOGOUT_CANCEL", "CRAFT_SHOW", "CRAFT_UPDATE", "SKILL_LINES_CHANGED",
   "CHAT_MSG_ADDON" }) do
   pcall(f.RegisterEvent, f, e)
@@ -1272,24 +1276,50 @@ do
   local p = page("loot")
   local head = label(p, "Loot history", -6)
   local list = rows(p, 16, -50)
-  -- Filter by quality.
-  local QUAL, qb = { { 0, "All" }, { 2, "Uncommon" }, { 3, "Rare" }, { 4, "Epic" }, { 5, "Legendary" } }, {}
-  for i, q in ipairs(QUAL) do
-    local bw = (W - 28 - 16) / 5
-    local b = wowButton(CreateFrame("Button", nil, p, "UIPanelButtonTemplate"), bw, 20, q[2]); b:SetPoint("TOPLEFT", 14 + (i - 1) * (bw + 4), -24)
-    b:SetScript("OnClick", function() db.ui.lootQ = q[1]; ui.lootOff = 0; refresh() end)
-    qb[i] = b
+  -- Search by item or by who got it.
+  local find = CreateFrame("EditBox", nil, p, "InputBoxTemplate")
+  find:SetSize(W - 28 - 150, 20); find:SetPoint("TOPLEFT", 20, -24); find:SetAutoFocus(false); find:SetMaxLetters(40)
+  local findHint = text(p, "GameFontDisableSmall"); findHint:SetPoint("LEFT", find, "LEFT", 2, 0); findHint:SetText("Search by item or guildie")
+  find:SetScript("OnEscapePressed", function(self) self:SetText(""); self:ClearFocus() end)
+  find:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
+  find:SetScript("OnEditFocusGained", function() findHint:Hide() end)
+  find:SetScript("OnEditFocusLost", function(self) if self:GetText() == "" then findHint:Show() end end)
+  find:SetScript("OnTextChanged", function() ui.lootOff = 0; refresh() end)
+  -- Filter by quality: a drop-down.
+  local QUAL = { { 0, "All" }, { 2, "Uncommon" }, { 3, "Rare" }, { 4, "Epic" }, { 5, "Legendary" } }
+  local qbtn = wowButton(CreateFrame("Button", nil, p, "UIPanelButtonTemplate"), 136, 20, ""); qbtn:SetPoint("TOPRIGHT", -14, -24)
+  local arrow = qbtn:CreateTexture(nil, "OVERLAY"); arrow:SetSize(10, 10); arrow:SetPoint("RIGHT", -6, 0)
+  arrow:SetTexture("Interface\\ChatFrame\\ChatFrameExpandArrow")
+  pcall(function() arrow:SetRotation(-math.pi / 2) end)
+  local drop = CreateFrame("Frame", nil, p, BackdropTemplateMixin and "BackdropTemplate" or nil)
+  drop:SetSize(136, #QUAL * 20 + 10); drop:SetPoint("TOPRIGHT", qbtn, "BOTTOMRIGHT", 0, -1); drop:SetFrameLevel((p:GetFrameLevel() or 1) + 40); drop:EnableMouse(true); drop:Hide()
+  if drop.SetBackdrop then
+    drop:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+      tile = true, tileSize = 16, edgeSize = 12, insets = { left = 3, right = 3, top = 3, bottom = 3 } })
+    drop:SetBackdropColor(0.086, 0.063, 0.063, 1); drop:SetBackdropBorderColor(0.36, 0.27, 0.25, 1)
   end
+  for i, q in ipairs(QUAL) do
+    local o = CreateFrame("Button", nil, drop); o:SetSize(128, 20); o:SetPoint("TOPLEFT", 4, -5 - (i - 1) * 20)
+    local hl = tex(o, "HIGHLIGHT", 1, 1, 1, 0.08); hl:SetAllPoints()
+    local t = text(o, "GameFontHighlightSmall"); t:SetPoint("LEFT", 8, 0); t:SetText((QHEX[q[1]] or INK) .. q[2] .. "|r")
+    o:SetScript("OnClick", function() db.ui.lootQ = q[1]; ui.lootOff = 0; drop:Hide(); refresh() end)
+  end
+  qbtn:SetScript("OnClick", function() if drop:IsShown() then drop:Hide() else drop:Show() end end)
+  p:HookScript("OnHide", function() drop:Hide() end)
   local foot = text(p, "GameFontDisableSmall"); foot:SetPoint("BOTTOMLEFT", 14, 10); foot:SetWidth(W - 28)
   p:EnableMouseWheel(true)
   p:SetScript("OnMouseWheel", function(_, d) ui.lootOff = math.max(0, (ui.lootOff or 0) - d * 3); refresh() end)
   ui.fillLoot = function()
     local me = short(UnitName("player"))
     local items, want = {}, tonumber(db.ui.lootQ) or 0
-    for i, b in ipairs(qb) do b:setOn(QUAL[i][1] == want) end
+    local q = (find:GetText() or ""):lower():gsub("^%s+", ""):gsub("%s+$", "")
+    for _, o in ipairs(QUAL) do if o[1] == want then qbtn:SetText("Quality: " .. o[2]) end end
     for i = #db.loot, 1, -1 do
       local l = db.loot[i]
-      if (l.who == me or guildie(l.who)) and (want == 0 or (l.q or 2) == want) then items[#items + 1] = l end
+      if (l.who == me or guildie(l.who)) and (want == 0 or (l.q or 2) == want) then
+        local _, full = guildie(l.who)
+        if q == "" or (l.name or ""):lower():find(q, 1, true) or (full or l.who or ""):lower():find(q, 1, true) then items[#items + 1] = l end
+      end
     end
     local off = math.max(0, math.min(ui.lootOff or 0, #items - #list)); ui.lootOff = off
     head:SetText("Loot history  ·  " .. #items)
@@ -1302,8 +1332,110 @@ do
         r.item = l.id; r.itemName = l.name
       else r:Hide() end
     end
-    if #items == 0 then setRow(list[1], "", DIM .. (want == 0 and "No drops noted yet. Good loot guildies get in dungeons shows here." or "Nothing of that quality noted yet.") .. "|r", "") end
+    if #items == 0 then setRow(list[1], "", DIM .. ((want == 0 and q == "") and "No drops noted yet. Good loot guildies get in dungeons shows here." or "Nothing matches.") .. "|r", "") end
     foot:SetText(#items > #list and ((off + 1) .. "–" .. math.min(#items, off + #list) .. " of " .. #items .. "  ·  scroll for more") or (#items > 0 and "Hover an item for its tooltip. Shift-click to link it in chat." or ""))
+  end
+end
+-- Your characters (the Alts button in the header): level, professions, gold and time played for every character you
+-- have logged in on with the scribe running. Kept in the notes file; the site doesn't read it and it isn't shared.
+do
+  local p = page("alts")
+  local head = label(p, "Your characters", -6)
+  local list = {}
+  for i = 1, 9 do
+    local r = CreateFrame("Frame", nil, p); r:SetSize(W - 28, 34); r:SetPoint("TOPLEFT", 14, -28 - (i - 1) * 37)
+    r.sep = tex(r, "BACKGROUND", 1, 1, 1, 0.045); r.sep:SetPoint("BOTTOMLEFT", 0, -2); r.sep:SetPoint("BOTTOMRIGHT", 0, -2); r.sep:SetHeight(1)
+    r.right = text(r, "GameFontHighlightSmall", "RIGHT"); r.right:SetPoint("TOPRIGHT", 0, -2)
+    r.name = text(r, "GameFontHighlight"); r.name:SetPoint("TOPLEFT", 0, -2); r.name:SetPoint("RIGHT", r.right, "LEFT", -6, 0)
+    r.right2 = text(r, "GameFontDisableSmall", "RIGHT"); r.right2:SetPoint("BOTTOMRIGHT", 0, 3)
+    r.info = text(r, "GameFontDisableSmall"); r.info:SetPoint("BOTTOMLEFT", 0, 3); r.info:SetPoint("RIGHT", r.right2, "LEFT", -6, 0)
+    r:Hide(); list[i] = r
+  end
+  local foot = text(p, "GameFontDisableSmall"); foot:SetPoint("BOTTOMLEFT", 14, 10); foot:SetWidth(W - 28)
+  if foot.SetWordWrap then foot:SetWordWrap(true) end
+  foot:SetJustifyV("BOTTOM"); foot:SetHeight(28)
+  local PROFS = { Alchemy = 1, Blacksmithing = 1, Cooking = 1, Enchanting = 1, Engineering = 1, ["First Aid"] = 1, Fishing = 1, Herbalism = 1,
+    Leatherworking = 1, Mining = 1, Skinning = 1, Tailoring = 1 }
+  local function coins(c)
+    c = math.floor(tonumber(c) or 0)
+    local g, sv = math.floor(c / 10000), math.floor(c / 100) % 100
+    return GOLD .. g .. "g|r " .. INK .. sv .. "s|r"
+  end
+  local function played(sec)
+    sec = tonumber(sec)
+    if not sec then return "" end
+    local d, h = math.floor(sec / 86400), math.floor(sec / 3600) % 24
+    if d > 0 then return d .. "d " .. h .. "h played" end
+    return h .. "h " .. (math.floor(sec / 60) % 60) .. "m played"
+  end
+  -- Note this character as it is now. Called at login, when your money changes, and each minute.
+  ui.noteMe = function()
+    local me = UnitName("player")
+    if not db or not me then return end
+    db.alts = db.alts or {}
+    local a = db.alts[me] or {}
+    db.alts[me] = a
+    a.lv = UnitLevel("player"); a.class = select(2, UnitClass("player")); a.at = now()
+    if GetMoney then a.gold = GetMoney() end
+    if GetRealZoneText then local z = GetRealZoneText(); if z and z ~= "" then a.zone = z end end
+    if GetNumSkillLines then
+      local profs, any = {}, false
+      for i = 1, GetNumSkillLines() do
+        local name, header, _, rank = GetSkillLineInfo(i)
+        if name and not header and PROFS[name] then profs[name] = rank; any = true end
+      end
+      if any or not a.profs then a.profs = profs end
+    end
+  end
+  -- Time played: asked once at login. The game answers in chat as well, so that line is held back just for this ask.
+  ui.askPlayed = function()
+    if not RequestTimePlayed then return end
+    local orig = ChatFrame_DisplayTimePlayed
+    if orig then
+      ui.playedQuiet = true
+      ChatFrame_DisplayTimePlayed = function(...) if ui.playedQuiet then ui.playedQuiet = nil; ChatFrame_DisplayTimePlayed = orig; return end return orig(...) end
+      C_Timer.After(8, function() if ui.playedQuiet then ui.playedQuiet = nil; ChatFrame_DisplayTimePlayed = orig end end)
+    end
+    RequestTimePlayed()
+  end
+  ui.played = function(total)
+    local me = UnitName("player")
+    if not db or not me or not tonumber(total) then return end
+    ui.noteMe()
+    db.alts[me].played = tonumber(total); db.alts[me].playedAt = now()
+    refresh()
+  end
+  ui.fillAlts = function()
+    ui.noteMe()
+    local me = UnitName("player")
+    local names = {}
+    for n in pairs(db.alts or {}) do names[#names + 1] = n end
+    table.sort(names, function(x, y)
+      local ax, ay = db.alts[x], db.alts[y]
+      if (ax.lv or 0) ~= (ay.lv or 0) then return (ax.lv or 0) > (ay.lv or 0) end
+      return x < y
+    end)
+    local gold, secs = 0, 0
+    for i, r in ipairs(list) do
+      local n = names[i]
+      local a = n and db.alts[n]
+      if a then
+        local bits = {}
+        for prof, rank in pairs(a.profs or {}) do bits[#bits + 1] = prof .. " " .. (rank or "") end
+        table.sort(bits)
+        -- This character's time keeps counting while you're on it.
+        local sec = a.played and (a.played + (n == me and a.playedAt and (now() - a.playedAt) or 0)) or nil
+        r.name:SetText(nameIn(fullName(n), a.class) .. "  " .. DIM .. (a.lv or "") .. "|r" .. (n == me and (DIM .. "  ·  playing now|r") or ""))
+        r.right:SetText(a.gold and coins(a.gold) or "")
+        r.info:SetText(#bits > 0 and table.concat(bits, ", ") or "No professions noted")
+        r.right2:SetText(played(sec))
+        r:Show()
+      else r:Hide() end
+    end
+    for _, n in ipairs(names) do gold = gold + (db.alts[n].gold or 0); secs = secs + (db.alts[n].played or 0) end
+    head:SetText("Your characters  ·  " .. #names)
+    foot:SetText("All together: " .. coins(gold) .. DIM .. (secs > 0 and ("  ·  " .. played(secs)) or "") .. "|r\n"
+      .. "A character shows here once you've logged in on it. Only you see this; the site doesn't read it." .. (#names > #list and ("  Showing the " .. #list .. " highest.") or ""))
   end
 end
 -- Right-click a guildie in the Online list: whisper or invite.
@@ -1362,7 +1494,7 @@ do
 end
 local function show(key)
   current = key
-  if key ~= "settings" then ui.back = key; if db then db.ui.tab = key end end
+  if key ~= "settings" and key ~= "alts" then ui.back = key; if db then db.ui.tab = key end end
   for k, p in pairs(pages) do if k == key then p:Show() else p:Hide() end end
   local nr = ui.needReading and ui.needReading() or 0
   for _, t in ipairs(tabs) do
@@ -1399,6 +1531,8 @@ end
 do
   local b = wowButton(CreateFrame("Button", nil, win, "UIPanelButtonTemplate"), 68, 20, "Settings"); b:SetPoint("TOPRIGHT", -38, -16)
   b:SetScript("OnClick", function() show(current == "settings" and (ui.back or "today") or "settings") end)
+  local a = wowButton(CreateFrame("Button", nil, win, "UIPanelButtonTemplate"), 48, 20, "Alts"); a:SetPoint("RIGHT", b, "LEFT", -4, 0)
+  a:SetScript("OnClick", function() show(current == "alts" and (ui.back or "today") or "alts") end)
 end
 
 
@@ -1494,7 +1628,7 @@ refresh = function()
   if not db then return end
   if pip then pip() end
   if not win:IsShown() then ui.readSync(); return end
-  if current == "today" then fillToday() elseif current == "week" then fillWeek() elseif current == "dungeons" then fillDungeons() elseif current == "recipes" then fillRecipes() elseif current == "loot" then ui.fillLoot() elseif current == "settings" then ui.fillSettings() else fillScribe() end
+  if current == "today" then fillToday() elseif current == "week" then fillWeek() elseif current == "dungeons" then fillDungeons() elseif current == "recipes" then fillRecipes() elseif current == "loot" then ui.fillLoot() elseif current == "settings" then ui.fillSettings() elseif current == "alts" then ui.fillAlts() else fillScribe() end
   if current == "today" then db.ui.seen = now(); if pip then pip() end end
   ui.readSync()
 end
@@ -1630,11 +1764,12 @@ do
   local head = label(pScribe, "What's new", -146)
   local t = text(pScribe, "GameFontHighlightSmall"); t:SetPoint("TOPLEFT", 14, -164); t:SetWidth(W - 28)
   if t.SetWordWrap then t:SetWordWrap(true) end
-  t:SetJustifyV("TOP"); t:SetHeight(170)
+  t:SetJustifyV("TOP"); t:SetHeight(186)
   if t.SetSpacing then t:SetSpacing(3) end
   head:SetText("What's new in " .. ui.ver)
-  t:SetText(GOLD .. "Works in combat|r  The window opens and updates in a fight now (only the Read buttons wait).\n"
-    .. GOLD .. "Loot tab|r  Every good drop guildies got, with the boss. Filter by quality, hover for the tooltip, shift-click to link.\n"
+  t:SetText(GOLD .. "Alts|r  A button at the top: your characters' levels, professions, gold and time played.\n"
+    .. GOLD .. "Works in combat|r  The window opens and updates in a fight now (only the Read buttons wait).\n"
+    .. GOLD .. "Loot tab|r  Every good drop guildies got, with the boss. Search it, filter by quality, hover for the tooltip, shift-click to link.\n"
     .. GOLD .. "Recipes|r  Tooltips list what a recipe needs. Crafters who are online come first, with a green dot. Missing shows what you can't make yet. Scroll long lists.\n"
     .. GOLD .. "Online list|r  Sort it by zone, level, name or class. Right-click a guildie to whisper or invite. Scroll if it's long.\n"
     .. GOLD .. "Settings|r  Their own page (button at the top). Resize the window there, or drag its bottom-right corner.\n"
@@ -1647,6 +1782,7 @@ end
 local sess
 local function sessionTick()
   if not sess then return end
+  if ui.noteMe then ui.noteMe() end
   local z = GetRealZoneText and GetRealZoneText() or nil
   if z and z ~= "" then sess.zones[z] = (sess.zones[z] or 0) + 1 end
   local me = UnitName("player")
@@ -1663,6 +1799,8 @@ ui.login = function()
   if db.ui.tab and pages[db.ui.tab] then current = db.ui.tab end
   ui.applyScale()
   ui.news = db.ui.ver ~= ui.ver
+  if ui.noteMe then ui.noteMe() end
+  if ui.askPlayed then C_Timer.After(6, function() pcall(ui.askPlayed) end) end
   C_Timer.NewTicker(60, sessionTick)
   if db.ui.hideButton then mm:Hide() end
   readSkills()
