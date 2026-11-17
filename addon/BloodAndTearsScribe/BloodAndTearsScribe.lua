@@ -163,7 +163,7 @@ local function askRoster()
 end
 
 local function readRoster()
-  if not db or not IsInGuild() or InCombatLockdown() then return end
+  if not db or not IsInGuild() then return end
   local n = GetNumGuildMembers() or 0
   if n == 0 then return end
   -- A list without the offline guildies is only half the picture: note the people online, but don't mark anyone gone.
@@ -486,8 +486,11 @@ f:SetScript("OnEvent", function(_, event, ...)
     pcall(readCraft)
   elseif event == "SKILL_LINES_CHANGED" then
     if ui.skills then pcall(ui.skills) end
+  elseif event == "PLAYER_REGEN_DISABLED" then
+    if ui.combat then ui.combat() end
   elseif event == "PLAYER_REGEN_ENABLED" then
     askRoster()
+    refresh()
   elseif event == "PLAYER_LEVEL_UP" then
     levelUp(a1)
   elseif event == "PLAYER_CAMPING" or event == "PLAYER_QUITING" then
@@ -505,7 +508,7 @@ f:SetScript("OnEvent", function(_, event, ...)
   end
 end)
 for _, e in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "GUILD_ROSTER_UPDATE", "GROUP_ROSTER_UPDATE", "ZONE_CHANGED_NEW_AREA",
-  "CHAT_MSG_SYSTEM", "TRADE_SKILL_SHOW", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_UPDATE", "PLAYER_REGEN_ENABLED", "PLAYER_LEVEL_UP", "PLAYER_ENTERING_WORLD", "ENCOUNTER_END", "CHAT_MSG_LOOT",
+  "CHAT_MSG_SYSTEM", "TRADE_SKILL_SHOW", "TRADE_SKILL_LIST_UPDATE", "TRADE_SKILL_UPDATE", "PLAYER_REGEN_ENABLED", "PLAYER_REGEN_DISABLED", "PLAYER_LEVEL_UP", "PLAYER_ENTERING_WORLD", "ENCOUNTER_END", "CHAT_MSG_LOOT",
   "PLAYER_CAMPING", "PLAYER_QUITING", "LOGOUT_CANCEL", "CRAFT_SHOW", "CRAFT_UPDATE", "SKILL_LINES_CHANGED",
   "CHAT_MSG_ADDON" }) do
   pcall(f.RegisterEvent, f, e)
@@ -879,6 +882,27 @@ local recLabel = label(pRecipes, "Your professions", -38)
 local CRAFTS = { Alchemy = "Alchemy", Blacksmithing = "Blacksmithing", Cooking = "Cooking", Enchanting = "Enchanting", Engineering = "Engineering",
   ["First Aid"] = "First Aid", Leatherworking = "Leatherworking", Tailoring = "Tailoring", Mining = "Smelting" }
 local recRows = {}
+-- The Read buttons cast a spell, which makes them (and anything they sit in) locked during combat: a window holding
+-- them can't open, close or change tabs in a fight. So they live in a holder of their own that is laid over the
+-- Recipes tab out of combat, and is unhooked and hidden the moment combat starts.
+ui.readHold = CreateFrame("Frame", nil, UIParent)
+ui.readHold:SetSize(W - 8, 250); ui.readHold:SetFrameStrata("DIALOG"); ui.readHold:SetFrameLevel(60); ui.readHold:Hide()
+ui.readSync = function()
+  if InCombatLockdown() then return end
+  local h = ui.readHold
+  h:ClearAllPoints()
+  if win:IsShown() and current == "recipes" and not ui.readHide then
+    h:SetScale(win:GetScale())
+    h:SetPoint("TOPLEFT", pRecipes, "TOPLEFT"); h:SetPoint("TOPRIGHT", pRecipes, "TOPRIGHT")
+    h:Show()
+  else
+    h:SetPoint("CENTER", UIParent, "CENTER"); h:Hide()
+  end
+end
+ui.combat = function()
+  local h = ui.readHold
+  h:ClearAllPoints(); h:SetPoint("CENTER", UIParent, "CENTER"); h:Hide()
+end
 for i = 1, 5 do
   local r = CreateFrame("Frame", nil, pRecipes); r:SetSize(W - 28, 34); r:SetPoint("TOPLEFT", 14, -58 - (i - 1) * 38)
   r.name = text(r, "GameFontHighlight"); r.name:SetPoint("TOPLEFT", 0, -2)
@@ -887,9 +911,9 @@ for i = 1, 5 do
   r.miss:SetScript("OnClick", function() ui.missing = r.prof; ui.hitOff = 0; refresh() end)
   r.miss:SetScript("OnEnter", function(self) GameTooltip:SetOwner(self, "ANCHOR_RIGHT"); GameTooltip:AddLine("Recipes you don't know yet", 1, 1, 1); GameTooltip:Show() end)
   r.miss:SetScript("OnLeave", function() GameTooltip:Hide() end)
-  local ok, b = pcall(CreateFrame, "Button", nil, r, "SecureActionButtonTemplate,UIPanelButtonTemplate")
+  local ok, b = pcall(CreateFrame, "Button", nil, ui.readHold, "SecureActionButtonTemplate,UIPanelButtonTemplate")
   if ok and b then
-    wowButton(b, 76, 22, "Read"); b:SetPoint("RIGHT", 0, 0)
+    wowButton(b, 76, 22, "Read"); b:SetPoint("TOPRIGHT", ui.readHold, "TOPRIGHT", -6, -64 - (i - 1) * 38)
     if b.RegisterForClicks then b:RegisterForClicks("AnyUp", "AnyDown") end
     b:SetAttribute("type", "spell")
     r.btn = b
@@ -959,7 +983,7 @@ local function readSkills()
   table.sort(myProfs, function(a, b) return a.name < b.name end)
   -- The buttons' spells can only be set out of combat.
   if not InCombatLockdown() then
-    for i, r in ipairs(recRows) do local p = myProfs[i]; if r.btn and p then r.btn:SetAttribute("spell", CRAFTS[p.name]) end end
+    for i, r in ipairs(recRows) do local p = myProfs[i]; if r.btn then if p then r.btn:SetAttribute("spell", CRAFTS[p.name]); r.btn:Show() else r.btn:Hide() end end end
   end
 end
 ui.skills = function() readSkills(); refresh() end
@@ -1077,6 +1101,7 @@ do
 end
 local function fillRecipes()
   ui.backBtn:Hide()
+  ui.readHide = true
   local me = UnitName("player") or "?"
   local q = search:GetText() or ""
   if q:gsub("%s", "") ~= "" and #q >= 2 then fillSearch(q:gsub("^%s+", ""):gsub("%s+$", "")); return end
@@ -1085,6 +1110,7 @@ local function fillRecipes()
   readSkills()
   local mine, learned = db.recipes[me] or {}, db.ui.learned and db.ui.learned[me]
   if ui.missing and ui.fillMissing(mine) then return end
+  ui.readHide = false
   -- Mining's window is Smelting, but the game files its recipes under Mining.
   for i, r in ipairs(recRows) do
     local p = myProfs[i]
@@ -1099,7 +1125,7 @@ local function fillRecipes()
       r:Show()
     else r:Hide() end
   end
-  recEmpty:SetText(#myProfs == 0 and "No crafting professions on this character." or "")
+  recEmpty:SetText(#myProfs == 0 and "No crafting professions on this character." or (InCombatLockdown() and (DIM .. "The Read buttons come back when you leave combat.|r") or ""))
 end
 
 -- Dungeons: the ones for your level (the site's list and ranges), whether you've been (from the dungeon runs), and
@@ -1245,21 +1271,27 @@ local TABS = { { "today", "Today" }, { "week", "Week" }, { "dungeons", "Dungeons
 do
   local p = page("loot")
   local head = label(p, "Loot history", -6)
-  local list = rows(p, 17, -28)
-  local rare = wowButton(CreateFrame("Button", nil, p, "UIPanelButtonTemplate"), 120, 18, ""); rare:SetPoint("TOPRIGHT", -14, -2)
-  rare:SetScript("OnClick", function() db.ui.lootRare = not db.ui.lootRare; ui.lootOff = 0; refresh() end)
+  local list = rows(p, 16, -50)
+  -- Filter by quality.
+  local QUAL, qb = { { 0, "All" }, { 2, "Uncommon" }, { 3, "Rare" }, { 4, "Epic" }, { 5, "Legendary" } }, {}
+  for i, q in ipairs(QUAL) do
+    local bw = (W - 28 - 16) / 5
+    local b = wowButton(CreateFrame("Button", nil, p, "UIPanelButtonTemplate"), bw, 20, q[2]); b:SetPoint("TOPLEFT", 14 + (i - 1) * (bw + 4), -24)
+    b:SetScript("OnClick", function() db.ui.lootQ = q[1]; ui.lootOff = 0; refresh() end)
+    qb[i] = b
+  end
   local foot = text(p, "GameFontDisableSmall"); foot:SetPoint("BOTTOMLEFT", 14, 10); foot:SetWidth(W - 28)
   p:EnableMouseWheel(true)
   p:SetScript("OnMouseWheel", function(_, d) ui.lootOff = math.max(0, (ui.lootOff or 0) - d * 3); refresh() end)
   ui.fillLoot = function()
     local me = short(UnitName("player"))
-    local items = {}
+    local items, want = {}, tonumber(db.ui.lootQ) or 0
+    for i, b in ipairs(qb) do b:setOn(QUAL[i][1] == want) end
     for i = #db.loot, 1, -1 do
       local l = db.loot[i]
-      if (l.who == me or guildie(l.who)) and (not db.ui.lootRare or (l.q or 0) >= 3) then items[#items + 1] = l end
+      if (l.who == me or guildie(l.who)) and (want == 0 or (l.q or 2) == want) then items[#items + 1] = l end
     end
     local off = math.max(0, math.min(ui.lootOff or 0, #items - #list)); ui.lootOff = off
-    rare:SetText(db.ui.lootRare and "Rare and better" or "All good drops")
     head:SetText("Loot history  ·  " .. #items)
     for i, r in ipairs(list) do
       local l = items[i + off]
@@ -1270,7 +1302,7 @@ do
         r.item = l.id; r.itemName = l.name
       else r:Hide() end
     end
-    if #items == 0 then setRow(list[1], "", DIM .. "No drops noted yet. Good loot guildies get in dungeons shows here.|r", "") end
+    if #items == 0 then setRow(list[1], "", DIM .. (want == 0 and "No drops noted yet. Good loot guildies get in dungeons shows here." or "Nothing of that quality noted yet.") .. "|r", "") end
     foot:SetText(#items > #list and ((off + 1) .. "–" .. math.min(#items, off + #list) .. " of " .. #items .. "  ·  scroll for more") or (#items > 0 and "Hover an item for its tooltip. Shift-click to link it in chat." or ""))
   end
 end
@@ -1334,8 +1366,11 @@ local function show(key)
   for k, p in pairs(pages) do if k == key then p:Show() else p:Hide() end end
   local nr = ui.needReading and ui.needReading() or 0
   for _, t in ipairs(tabs) do
-    if t.key == "recipes" then t:SetText(nr > 0 and ("Recipes (" .. nr .. ")") or "Recipes") end
-    if t.key == "scribe" then t:SetText(ui.news and key ~= "scribe" and "Scribe (new)" or "Scribe") end
+    -- A tab glows when it has something for you: professions to read, or what's new after an update.
+    if t.setGlow then
+      if t.key == "recipes" then t:setGlow(nr > 0 and key ~= "recipes") end
+      if t.key == "scribe" then t:setGlow(ui.news and key ~= "scribe" and true or false) end
+    end
     t:setOn(t.key == key)
   end
   if key == "scribe" and ui.news and db then ui.news = nil; db.ui.ver = ui.ver end
@@ -1347,6 +1382,18 @@ for i, t in ipairs(TABS) do
   wowButton(b, tw, 24, t[2]); b:SetPoint("TOPLEFT", 14 + (i - 1) * (tw + 4), -56)
   b.key = t[1]
   b:SetScript("OnClick", function() show(t[1]) end)
+  local g = b:CreateTexture(nil, "OVERLAY"); g:SetPoint("TOPLEFT", 3, -3); g:SetPoint("BOTTOMRIGHT", -3, 3); g:SetColorTexture(1, 0.78, 0.25, 0.30)
+  if g.SetBlendMode then g:SetBlendMode("ADD") end
+  g:Hide()
+  local ag
+  pcall(function()
+    ag = g:CreateAnimationGroup(); ag:SetLooping("BOUNCE")
+    local a = ag:CreateAnimation("Alpha"); a:SetFromAlpha(0.25); a:SetToAlpha(1); a:SetDuration(0.9)
+  end)
+  b.setGlow = function(_, on)
+    if on then g:Show() else g:Hide() end
+    if ag and ag.Play then pcall(on and ag.Play or ag.Stop, ag) end
+  end
   tabs[i] = b
 end
 do
@@ -1446,11 +1493,13 @@ end
 refresh = function()
   if not db then return end
   if pip then pip() end
-  if not win:IsShown() then return end
+  if not win:IsShown() then ui.readSync(); return end
   if current == "today" then fillToday() elseif current == "week" then fillWeek() elseif current == "dungeons" then fillDungeons() elseif current == "recipes" then fillRecipes() elseif current == "loot" then ui.fillLoot() elseif current == "settings" then ui.fillSettings() else fillScribe() end
   if current == "today" then db.ui.seen = now(); if pip then pip() end end
+  ui.readSync()
 end
 win:SetScript("OnShow", function() show(current) end)
+win:HookScript("OnHide", function() ui.readSync() end)
 
 -------------------------------------------------------------------- the minimap button
 local mm = CreateFrame("Button", "BloodAndTearsScribeMinimapButton", Minimap)
@@ -1533,6 +1582,7 @@ do
     dirty = false
     db.ui.scale = pct() / 100
     win:SetScale(db.ui.scale)
+    ui.readSync()
   end
   sl:SetScript("OnValueChanged", function() l:SetText("Window size: " .. pct() .. "%"); if db and pct() / 100 ~= (db.ui.scale or 1) then dirty = true end end)
   -- Resizing while the thumb is held would move the slider under the cursor, so wait for the button to come up.
@@ -1546,6 +1596,33 @@ do
     sl:SetValue(math.floor((db.ui.scale or 1) * 100 + 0.5)); l:SetText("Window size: " .. pct() .. "%")
     if ui.mainBtn then ui.mainBtn() end
   end
+  -- The same from the window's bottom-right corner: drag the grip to resize (the top-left corner stays put).
+  local grip = CreateFrame("Button", nil, win)
+  grip:SetSize(16, 16); grip:SetPoint("BOTTOMRIGHT", -5, 5); grip:SetFrameLevel((win:GetFrameLevel() or 1) + 30)
+  grip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+  grip:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+  grip:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+  grip:SetScript("OnEnter", function(self) GameTooltip:SetOwner(self, "ANCHOR_RIGHT"); GameTooltip:AddLine("Drag to resize the window", 1, 1, 1); GameTooltip:Show() end)
+  grip:SetScript("OnLeave", function() GameTooltip:Hide() end)
+  grip:SetScript("OnMouseDown", function(self)
+    local x0, y0 = GetCursorPosition()
+    local s0 = win:GetScale() or 1
+    local L, T = (win:GetLeft() or 0) * s0, (win:GetTop() or 0) * s0
+    self:SetScript("OnUpdate", function()
+      local x, y = GetCursorPosition()
+      local d = ((x - x0) + (y0 - y)) / 2 / (UIParent:GetEffectiveScale() or 1)
+      local sc = math.max(0.7, math.min(1.5, math.floor((s0 + d / W) * 20 + 0.5) / 20))
+      if sc ~= win:GetScale() then
+        win:SetScale(sc); win:ClearAllPoints(); win:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", L / sc, T / sc)
+      end
+    end)
+  end)
+  grip:SetScript("OnMouseUp", function(self)
+    self:SetScript("OnUpdate", nil)
+    db.ui.scale = win:GetScale() or 1
+    sl:SetValue(math.floor(db.ui.scale * 100 + 0.5))
+    ui.readSync()
+  end)
   ui.applyScale = function() local sc = tonumber(db.ui.scale) or 1; if sc < 0.7 or sc > 1.5 then sc = 1 end; db.ui.scale = sc; win:SetScale(sc) end
 end
 -- What's new, on the Scribe tab. The tab says "(new)" after an update until it's been looked at.
@@ -1553,13 +1630,14 @@ do
   local head = label(pScribe, "What's new", -146)
   local t = text(pScribe, "GameFontHighlightSmall"); t:SetPoint("TOPLEFT", 14, -164); t:SetWidth(W - 28)
   if t.SetWordWrap then t:SetWordWrap(true) end
-  t:SetJustifyV("TOP"); t:SetHeight(150)
+  t:SetJustifyV("TOP"); t:SetHeight(170)
   if t.SetSpacing then t:SetSpacing(3) end
   head:SetText("What's new in " .. ui.ver)
-  t:SetText(GOLD .. "Loot tab|r  Every good drop guildies got, with the boss. Hover for the tooltip, shift-click to link.\n"
+  t:SetText(GOLD .. "Works in combat|r  The window opens and updates in a fight now (only the Read buttons wait).\n"
+    .. GOLD .. "Loot tab|r  Every good drop guildies got, with the boss. Filter by quality, hover for the tooltip, shift-click to link.\n"
     .. GOLD .. "Recipes|r  Tooltips list what a recipe needs. Crafters who are online come first, with a green dot. Missing shows what you can't make yet. Scroll long lists.\n"
     .. GOLD .. "Online list|r  Sort it by zone, level, name or class. Right-click a guildie to whisper or invite. Scroll if it's long.\n"
-    .. GOLD .. "Settings|r  Their own page (button at the top), with a window size slider.\n"
+    .. GOLD .. "Settings|r  Their own page (button at the top). Resize the window there, or drag its bottom-right corner.\n"
     .. GOLD .. "Also|r  The window reopens on the tab you left, and alt-click any item to see who can make it.")
 end
 

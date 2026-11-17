@@ -2,7 +2,7 @@
 ## Title: Blood and Tears Scribe
 ## Notes: Notes who in the guild has been online and when, for the Blood and Tears guild site, and shows it in a small window (minimap button or /scribe). Copies in the guild share their notes with each other inside the game; nothing goes anywhere else.
 ## Author: Blood and Tears
-## Version: 0.13.0
+## Version: 0.13.1
 ## SavedVariables: BloodAndTearsScribeDB
 ## IconTexture: Interface\Icons\INV_Misc_Book_09
 
