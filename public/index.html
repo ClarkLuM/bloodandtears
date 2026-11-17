@@ -635,8 +635,33 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 :root[data-theme="light"] .title-tag{color:#7a5410;background:rgb(226 181 82/.18);border-color:rgb(184 140 40/.5)}
 .title-tag:hover{text-decoration:underline}
 .title-ic{width:.625rem;height:.625rem;background:currentColor;clip-path:polygon(0 100%,0 25%,25% 55%,50% 0,75% 55%,100% 25%,100% 100%)}
-@media (max-width:430px){nav.bottom a{font-size:.6875rem;letter-spacing:-.01em;padding:.25rem .0625rem}}
-@media (max-width:360px){nav.bottom a{font-size:.6875rem}.brand b{font-size:1.25rem;line-height:1.5rem}.brand-logo{width:2rem;height:2rem}}
+/* Phones: the bottom bar has an icon over each label, and taller buttons to hit. Narrow phones use short labels. */
+nav.bottom .nb-ic{display:flex}nav.bottom .nb-s{display:none}
+@media (max-width:700px){
+  nav.bottom a{flex-direction:column;gap:.1875rem;min-height:3.75rem;padding:.375rem .125rem .3125rem;font-size:.6875rem;line-height:.875rem;letter-spacing:-.005em;min-width:0}
+  nav.bottom a .nb-l,nav.bottom a .nb-s{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  nav.bottom a[aria-current="page"] .nb-ic{color:var(--accent-text)}
+  /* Search reads as a search field that takes the header's spare room; the guild's name stays on each page's heading. */
+  .brand b{display:none}
+  .hdr-tools{flex:1;min-width:0;margin-left:.25rem}
+  .srch-btn{flex:1;min-width:0;justify-content:flex-start;gap:.5rem;font-weight:400;color:var(--ter);background:var(--sunken);border-color:var(--b-def)}
+  .hdr-tools .btn{height:2.5rem}
+  .srch-ph{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .dc-l{display:none}.dc-btn{gap:.3125rem}
+  .wn-btn,.theme-btn{min-width:2.5rem}
+  /* Nothing on a phone page may push it sideways. */
+  body{overflow-x:clip}
+}
+@media (min-width:701px){.srch-ph{display:none}.dc-ic{display:none}}
+@keyframes swNext{from{opacity:.4;transform:translateX(2.5rem)}to{opacity:1;transform:none}}
+@keyframes swPrev{from{opacity:.4;transform:translateX(-2.5rem)}to{opacity:1;transform:none}}
+html[data-swipe="next"] #app main{animation:swNext .22s ease-out}html[data-swipe="prev"] #app main{animation:swPrev .22s ease-out}
+@media (prefers-reduced-motion:reduce){html[data-swipe] #app main{animation:none}}
+.sp-short{display:none}
+@media (max-width:430px){nav.bottom .nb-l{display:none}nav.bottom .nb-s{display:inline}}
+@media (max-width:380px){.sp-long{display:none}.sp-short{display:inline}}
+@media (max-width:360px){nav.bottom a{font-size:.625rem;letter-spacing:-.01em}}
+@media (max-width:360px){nav.bottom a{font-size:.625rem;letter-spacing:-.02em;padding-inline:0}.brand b{font-size:1.25rem;line-height:1.5rem}.brand-logo{width:2rem;height:2rem}}
 @media (max-width:480px){.brand{gap:.5rem;min-width:0}.brand b{font-size:1rem;line-height:1.5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.hdr-tools{gap:.25rem}.hdr-tools .btn{padding:0 .5rem}header.top .wrap{column-gap:.5rem}.brand-logo{width:2.25rem;height:2.25rem}}
 @media (max-width:360px){.brand{gap:.375rem}.brand b{font-size:.875rem}.brand-logo{width:1.875rem;height:1.875rem}}
 .tab-empty{display:none}
@@ -1011,7 +1036,7 @@ a.r-name:hover{color:var(--accent-text)}
 .zm-top button[aria-pressed="true"] b{color:var(--accent-text)}
 .zm-bar{grid-column:1/-1;height:5px;border-radius:4px;background:var(--sunken);overflow:hidden}.zm-bar i{display:block;height:100%;background:var(--ginger)}
 .zm-who{display:flex;flex-wrap:wrap;gap:.375rem .75rem}
-.zm-key{display:flex;align-items:center;gap:.25rem;font-size:.75rem;color:var(--ter)}
+.zm-key{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem;font-size:.75rem;color:var(--ter)}
 .zm-key i{width:1.25rem;height:.625rem;border-radius:4px;display:inline-block;border:1px solid var(--sep)}
 @media (max-width:900px){.zm{grid-template-columns:minmax(0,1fr)}.zm:not(.world) .zm-map{max-width:30rem;margin:0 auto;width:100%}}
 .zm.world{grid-template-columns:minmax(0,1fr) minmax(0,19rem)}
@@ -1702,6 +1727,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-18","Easier on phones","Swipe left or right to move between pages, the bottom bar has icons and bigger buttons, search sits in the header as a search box, and pages no longer slide sideways.",null],
   ["2026-11-16","Levelling timelines","Each character page now charts their level over time, with their best week and milestones. Compare with a guildie to watch a level race.",null],
   ["2026-11-16","The week in motion","Press play under the Activity map to watch where the guild went, a day at a time, or tap a day to see just that day.","#activity"],
   ["2026-11-16","Anniversaries","A month, three months, six months and a year in the guild show in Guild History, with a cake badge by the name on the day.","#history"],
@@ -1727,23 +1753,34 @@ function header(page){
     h("a",{class:"brand",href:"#roster"},h("img",{class:"brand-logo",src:"logo.svg",alt:"",width:"40",height:"40"}),h("b",{},"Blood and Tears"),h("span",{},"Horde · WoW Forever")),
     h("nav",{class:"main","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null},l))),
     // On phones the menu moves to a bar along the bottom.
-    h("nav",{class:"bottom","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null},l))),
+    h("nav",{class:"bottom","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null},navIcon(k),h("span",{class:"nb-l"},l),h("span",{class:"nb-s","aria-hidden":"true"},NAV_SHORT[k]||l)))),
     h("div",{class:"hdr-tools"},
       h("button",{class:"btn quiet srch-btn",type:"button",onclick:openSearch,"aria-label":"Search the site",title:"Search (press /)"},
-        srchIcon(),h("span",{class:"srch-l"},"Search"),h("kbd",{class:"srch-k"},"/")),
+        srchIcon(),h("span",{class:"srch-l"},"Search"),h("span",{class:"srch-ph","aria-hidden":"true"},h("span",{class:"sp-long"},"Search guildies, items, recipes"),h("span",{class:"sp-short"},"Search")),h("kbd",{class:"srch-k"},"/")),
       h("button",{class:"btn quiet wn-btn",type:"button",onclick:openWhatsNew,"aria-label":wnFresh().length?"What's new (new things to see)":"What's new",title:"What's new on the site"},
         h("span",{class:"wn-ic","aria-hidden":"true"},"✦"),h("span",{class:"wn-l"},"What's new"),wnFresh().length?h("span",{class:"wn-pip","aria-hidden":"true"}):null),
       h("button",{class:"btn quiet theme-btn",onclick:toggleTheme,"aria-label":isDark()?"Light mode":"Dark mode",title:isDark()?"Light mode":"Dark mode"},
         h("span",{class:"theme-ic","aria-hidden":"true"},isDark()?"\u2600":"\u263E"),
         // Both labels take the same cell, the unused one hidden, so the button keeps one width and the header doesn't shift.
         h("span",{class:"theme-l","aria-hidden":"true"},h("span",{class:isDark()?"":"off"},"Light mode"),h("span",{class:isDark()?"off":""},"Dark mode"))),
-      (dc||S.widget&&S.widget.instant_invite)?h("a",{class:"btn quiet",href:dc||S.widget.instant_invite,target:"_blank",rel:"noopener"},"Discord",S.widget?h("span",{style:"display:inline-flex;align-items:center;gap:.25rem;font-weight:400"},h("i",{class:"dot",style:"width:.5rem;height:.5rem;background:#3ba55d"}),S.widget.presence_count||0):null):null,
+      (dc||S.widget&&S.widget.instant_invite)?h("a",{class:"btn quiet dc-btn",href:dc||S.widget.instant_invite,target:"_blank",rel:"noopener","aria-label":"Discord"},chatIcon(),h("span",{class:"dc-l"},"Discord"),S.widget?h("span",{style:"display:inline-flex;align-items:center;gap:.25rem;font-weight:400"},h("i",{class:"dot",style:"width:.5rem;height:.5rem;background:#3ba55d"}),S.widget.presence_count||0):null):null,
     )))}
 
 /* ---------- One search for the whole site ---------- */
 // The Search button in the header (or "/" anywhere) finds characters, zones and capitals, dungeons and raids, recipes,
 // dungeon drops and pages, and goes
 // straight there. Recipes are loaded the first time it opens.
+// The bottom bar's icons on phones (simple line drawings in the text colour).
+const NAV_SHORT={professions:"Crafts"};
+const NAV_IC={
+  roster:'<circle cx="8" cy="7" r="3"/><path d="M2.5 17c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="14.5" cy="6.5" r="2.25"/><path d="M14 11.2c2 .1 3.5 1.6 4 4.3"/>',
+  lfg:'<path d="M4 18V8a6 6 0 0 1 12 0v10"/><path d="M2.5 18h15"/><path d="M8 18v-5h4v5"/>',
+  cards:'<rect x="6.5" y="3" width="10" height="13.5" rx="1.5" transform="rotate(8 11.5 9.75)"/><rect x="3.5" y="4" width="10" height="13.5" rx="1.5" transform="rotate(-6 8.5 10.75)"/>',
+  professions:'<path d="M3 17 11 9"/><path d="M10 4.5 15.5 10l2-2-5.5-5.5z"/><path d="M12 6.5l-2.5 2.5"/>',
+  records:'<path d="M6 3h8v4a4 4 0 0 1-8 0z"/><path d="M6 4.5H3.5a2.5 2.5 0 0 0 2.6 3M14 4.5h2.5a2.5 2.5 0 0 1-2.6 3"/><path d="M10 11v3.5M6.5 17.5h7l-.6-3h-5.8z"/>',
+  activity:'<path d="M2.5 16.5h15"/><path d="M5 13.5V10M8.5 13.5V6M12 13.5V8.5M15.5 13.5V4"/>'};
+const navIcon=k=>{const x=h("span",{class:"nb-ic","aria-hidden":"true"});x.innerHTML=`<svg viewBox="0 0 20 20" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${NAV_IC[k]||""}</svg>`;return x};
+const chatIcon=()=>{const x=h("span",{class:"dc-ic","aria-hidden":"true"});x.innerHTML='<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 4.5h13v9h-7l-4 3v-3h-2z"/></svg>';return x};
 const srchIcon=()=>{const x=h("span",{class:"srch-ic","aria-hidden":"true"});x.innerHTML='<svg viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m13 13 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';return x};
 const SRCH_PAGES=[["Roster","#roster"],["Dungeons","#lfg"],["Raids","#raids"],["Cards","#cards"],["Professions","#professions"],["Records","#records"],["Activity","#activity"],["Guild History","#history"]];
 function searchIndex(){
@@ -4345,6 +4382,21 @@ addEventListener("hashchange",()=>{if(/^#link\//.test(location.hash))return chec
   const y=history.state&&typeof history.state.y==="number"?history.state.y:0;render();
   if(y)requestAnimationFrame(()=>scrollTo(0,y));else scrollTo(0,0)});
 if("scrollRestoration" in history)history.scrollRestoration="manual";
+// On phones, swipe left or right across a page to go to the next or previous page in the bottom bar. A swipe that starts
+// in a field, on something that scrolls sideways itself, or while a dialog is open is left alone, and so is anything
+// more up-and-down than sideways.
+(()=>{let st=null;
+  const phone=()=>matchMedia("(max-width:700px)").matches;
+  const sideScroll=el=>{for(let x=el;x&&x!==document.body;x=x.parentElement){if(x.matches&&x.matches("input,textarea,select,[contenteditable],.no-swipe,dialog"))return true;
+    const o=getComputedStyle(x).overflowX;if((o==="auto"||o==="scroll")&&x.scrollWidth>x.clientWidth+2)return true}return false};
+  addEventListener("touchstart",e=>{st=null;if(!phone()||e.touches.length!==1||document.querySelector("dialog[open]")||sideScroll(e.target))return;
+    const t=e.touches[0];st={x:t.clientX,y:t.clientY,at:Date.now()}},{passive:true});
+  addEventListener("touchend",e=>{if(!st)return;const t=e.changedTouches[0],dx=t.clientX-st.x,dy=t.clientY-st.y,dt=Date.now()-st.at;st=null;
+    if(dt>700||Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*2)return;
+    const here=route().page,i=PAGES.findIndex(p=>p[0]===here);if(i<0)return;
+    const j=i+(dx<0?1:-1);if(j<0||j>=PAGES.length)return;
+    document.documentElement.dataset.swipe=dx<0?"next":"prev";setTimeout(()=>{delete document.documentElement.dataset.swipe},400);
+    location.hash="#"+PAGES[j][0]},{passive:true})})();
 // No sign-in screen: each browser quietly gets its own anonymous ID, and characters remember which IDs can edit them.
 if(configured){onAuthStateChanged(auth,u=>{S.user=u;
   if(u){subscribe();render()}
