@@ -662,6 +662,9 @@ nav.main a[data-wc]{position:relative}
 nav.main a[data-wc]::after{content:"";position:absolute;top:.3125rem;right:.25rem;width:.5rem;height:.5rem;border-radius:50%;background:var(--accent-text);box-shadow:0 0 0 2px var(--sunken)}
 nav.bottom a[data-wc] .nb-ic{position:relative}
 nav.bottom a[data-wc] .nb-ic::after{content:"";position:absolute;top:-.125rem;right:-.3125rem;width:.5rem;height:.5rem;border-radius:50%;background:var(--accent-text);box-shadow:0 0 0 2px var(--sunken)}
+.preview-strip{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25rem .75rem;padding:.5rem 1rem;background:#a50d2c;color:#fff;font-size:.875rem;text-align:center}
+.preview-strip a{color:#ffe1a8;font-weight:600}
+.test-mark{color:var(--accent-text)}
 @keyframes swNext{from{opacity:.4;transform:translateX(2.5rem)}to{opacity:1;transform:none}}
 @keyframes swPrev{from{opacity:.4;transform:translateX(-2.5rem)}to{opacity:1;transform:none}}
 html[data-swipe="next"] #app main{animation:swNext .22s ease-out}html[data-swipe="prev"] #app main{animation:swPrev .22s ease-out}
@@ -1827,6 +1830,11 @@ function wcDots(page){if(!S.loaded||!S.members.length)return{};const seen=wcRead
     if(!seen[k]||k===page){if(JSON.stringify(seen[k])!==JSON.stringify(now[k])){seen[k]=now[k];dirty=true}continue}
     const what=wcWhat(k,seen[k],now[k]);if(what.length)dots[k]=what}
   if(dirty)wcSave();return dots}
+
+// A preview copy (a Firebase preview link, not the real site) says so in a red strip along the top, so the two can't
+// be mixed up. The guild data is the same real data.
+const IS_PREVIEW=/--[a-z0-9-]+\.web\.app$/.test(location.hostname);
+const previewStrip=()=>IS_PREVIEW?h("div",{class:"preview-strip",role:"note"},h("b",{},"Preview copy"),h("span",{}," · not the live site. Same guild data: changes here are real."),h("a",{href:"https://bloodandtears.web.app"+location.hash},"Open the live site")):null;
 
 /* ---------- header ---------- */
 function header(page){
@@ -4454,14 +4462,14 @@ function render(){
   const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():views[r.page]();
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
-  app.replaceChildren(...[header(r.page==="char"?"":r.page==="history"?"roster":r.page==="raids"?"lfg":r.page),
+  app.replaceChildren(...[previewStrip(),header(r.page==="char"?"":r.page==="history"?"roster":r.page==="raids"?"lfg":r.page),
     net?h("div",{class:"netbar",role:"status"},net):null,winterVeil(),
     h("main",{class:"wrap"},
     S.error?h("div",{class:"note warn"},S.error):null,
     S.saveErr?h("div",{class:"note warn spread",role:"alert"},h("span",{},S.saveErr),h("button",{class:"btn sm",onclick:()=>{S.saveErr="";render()}},"OK")):null,
     !S.loaded&&!S.error?h("div",{class:"note"},"Loading the roster…"):null,
     body),
-    h("footer",{class:"site-foot wrap"},h("span",{},"Blood and Tears · a guild site, made by guildies"),h("button",{type:"button",class:"foot-link",onclick:openPrivacy},"Privacy and opting out"))].filter(Boolean));
+    h("footer",{class:"site-foot wrap"},h("span",{},"Blood and Tears · a guild site, made by guildies",h("b",{class:"test-mark"}," · Hello from the new deploy button! (test, 18 Nov)")),h("button",{type:"button",class:"foot-link",onclick:openPrivacy},"Privacy and opting out"))].filter(Boolean));
   for(const[id,v]of Object.entries(typed)){const el=document.getElementById(id);if(!el||el.closest("dialog"))continue;el.value=v}
   if(keep){const el=document.getElementById(keep);if(el)el.focus()}
   // The loading screen goes once the roster is in (or something's gone wrong, or it's taking too long).
