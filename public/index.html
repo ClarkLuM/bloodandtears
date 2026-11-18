@@ -4065,7 +4065,39 @@ function scribeLine(){const sc=S.scribe,can=isOfficer()||isScribe();
   const up=!can?null:(()=>{const inp=h("input",{type:"file",accept:".lua,text/plain",class:"visually-hidden",id:"scribe-file",onchange:e=>{const file=e.target.files&&e.target.files[0];e.target.value="";if(file)sendScribeFile(file)}});
       return[inp,h("label",{for:"scribe-file",class:"btn sm",title:tip},"Upload the scribe file")]})();
   return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):can?h("span",{},"No guild scribe file yet"):null,up,
-    h("button",{class:"btn sm ghost",type:"button",title:"A snapshot of the site for the Scribe addon: passports, professions, recipes, alts, titles",onclick:downloadAddonFile},"Download for the addon"))}
+    h("button",{class:"btn sm ghost",type:"button",title:"A snapshot of the site for the Scribe addon: passports, professions, recipes, alts, titles",onclick:downloadAddonFile},"Download for the addon"),
+    can?h("button",{class:"btn sm ghost",type:"button",title:"A small helper for your Windows computer that uploads the scribe file and fetches the addon's site data by itself",onclick:openAutoUpload},"Set up automatic upload"):null)}
+// Automatic upload: a small helper for a scribe's Windows computer (public/scribe-helper.txt, made into a .cmd file
+// with their own upload key). Every 15 minutes it uploads the notes file if it changed and saves the site's latest
+// data as SiteData.lua. The key comes from scribeKey and is shown only inside the file; making a new one replaces it.
+const SCRIBE_AUTO_URL="https://australia-southeast1-loot-goblins-roster.cloudfunctions.net/scribeAuto";
+function openAutoUpload(){
+  const dlg=$("#dlg"),f=$("#dlgForm");if(dlg.open)return;
+  const go=async btn=>{btn.disabled=true;btn.textContent="Making your helper…";
+    try{const tpl=await fetch("scribe-helper.txt",{cache:"no-store"}).then(r=>r.ok?r.text():Promise.reject(new Error(r.status)));
+      const key=((await httpsCallable(fns,"scribeKey")({})).data||{}).key;if(!key)throw new Error("no key");
+      const text=tpl.replace("__ENDPOINT__",SCRIBE_AUTO_URL).replace("__KEY__",key);
+      const blob=new Blob([text],{type:"application/octet-stream"}),a=h("a",{href:URL.createObjectURL(blob),download:"BloodAndTears-AutoUpload.cmd"});
+      document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+      btn.textContent="Downloaded";toast("Saved BloodAndTears-AutoUpload.cmd. Double-click it to set it up.")}
+    catch(e){btn.disabled=false;btn.textContent="Download the helper";toast(e&&e.message&&/permission/i.test(e.message)?"Only officers and guild scribes can set this up.":"Couldn't make the helper. Try again in a moment.")}};
+  const btn=h("button",{type:"button",class:"btn primary",onclick:e=>go(e.currentTarget)},"Download the helper");
+  f.replaceChildren(h("div",{class:"wn"},h("h2",{style:"margin:0"},"Automatic scribe upload"),
+    h("p",{},"A small helper for your Windows computer. Every 15 minutes, while you're signed in to Windows, it:"),
+    h("ul",{},h("li",{},"uploads the scribe file if it changed (WoW writes it when you log out or /reload)"),h("li",{},"saves the site's latest data for the addon, so you never press Download for the addon")),
+    h("ol",{},h("li",{},"Download the helper and double-click it. Windows may warn about a downloaded file: choose More info, then Run anyway."),
+      h("li",{},"It finds your WoW folder, sets itself up and tries an upload straight away."),
+      h("li",{},"To remove it, double-click it again and type U.")),
+    h("p",{class:"small ter"},"The file has your own upload key in it, so keep it to yourself. Downloading a new one switches the old one off. It only reads the scribe file and writes SiteData.lua, and only talks to this site."),
+    h("div",{class:"row",style:"justify-content:flex-end"},h("button",{type:"button",class:"btn",onclick:()=>dlg.close()},"Close"),btn)));
+  f.onsubmit=e=>e.preventDefault();dlg.showModal()}
+// Officers and scribes keep the server's copy of the addon's site data fresh while they have the site open (at most
+// every 30 minutes from one browser), so the helper always has something recent to bring to the addon.
+let siteDataBusy=false;
+function keepSiteData(){if(siteDataBusy||!fns||!S.loaded||!S.members.length||!(isOfficer()||isScribe()))return;
+  let last=0;try{last=+localStorage.getItem("lg-sd")||0}catch(e){}
+  if(Date.now()-last<30*60e3)return;siteDataBusy=true;
+  setTimeout(async()=>{try{await httpsCallable(fns,"saveSiteData")({text:addonFile()});try{localStorage.setItem("lg-sd",String(Date.now()))}catch(e){}}catch(e){}siteDataBusy=false},4000)}
 function armoryLine(m,can){
   const a=m.armory,busy=S.ui.armBusy===m.id;
   const sync=async()=>{if(!fns){toast("Sync isn't switched on yet.");return}S.ui.armBusy=m.id;render();
@@ -4417,6 +4449,7 @@ function render(){
   if(S.authError){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("div",{class:"note warn"},S.authError)));return}
   if(!S.user){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("p",{class:"ter"},"Loading…")));return}
   const r=route();
+  keepSiteData();
   const views={roster:viewRoster,lfg:viewLfg,raids:viewRaids,cards:viewCards,professions:viewProfessions,records:viewRecords,activity:viewActivity};
   const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():views[r.page]();
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.

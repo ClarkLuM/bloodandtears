@@ -173,7 +173,7 @@ exports.dailyDigest = onSchedule({ schedule: "0 21 * * *", timeZone: "Australia/
   await post({ title: "Today in Blood and Tears", url: SITE, description: text.trim() });
   await ref.set({ lines: [], at: new Date().toISOString() });
 });
-const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { onCall, onRequest, HttpsError } = require("firebase-functions/v2/https");
 
 // ---------- Armory sync ----------
 // The WoW Forever armory page for a character (worldofwarcraft.blizzard.com/en-us/forever/us/armory/character/<name>)
@@ -369,6 +369,50 @@ exports.cardPicture = onCall({ region: REGION, maxInstances: 2, timeoutSeconds: 
   picCache.set(url, data);
   while (picCache.size > 24) picCache.delete(picCache.keys().next().value);
   return { data };
+});
+// Uploading by itself: a small helper on a scribe's computer sends the notes file after they play, and fetches the
+// site's latest data for the addon. It proves who it is with an upload key: made on the site by an officer or scribe
+// (scribeKey), shown once inside the helper they download, and kept here only as a fingerprint (scribeKeys/<uid>.hash),
+// in a collection the site itself can't read. Making a new key replaces the old one.
+const crypto = require("crypto");
+const keyHash = k => crypto.createHash("sha256").update(String(k)).digest("hex");
+exports.scribeKey = onCall({ region: REGION, maxInstances: 2 }, async req => {
+  if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
+  if (!(await canScribe(req.auth.uid))) throw new HttpsError("permission-denied", "Only officers and guild scribes can set up automatic uploads.");
+  const key = crypto.randomBytes(24).toString("base64url");
+  await db().collection("scribeKeys").doc(req.auth.uid).set({ hash: keyHash(key), at: new Date().toISOString() });
+  return { key };
+});
+// What the helper calls: POST the notes file as the body (or nothing, just to fetch the site data), with the key in
+// the x-scribe-key header. It answers with what the upload did and the site's latest data for SiteData.lua.
+exports.scribeAuto = onRequest({ region: REGION, maxInstances: 1, timeoutSeconds: 120, memory: "512MiB" }, async (req, res) => {
+  res.set("Cache-Control", "no-store");
+  if (req.method !== "POST") { res.status(405).json({ error: "Use POST." }); return; }
+  const key = String(req.get("x-scribe-key") || "");
+  if (key.length < 20) { res.status(401).json({ error: "No upload key." }); return; }
+  const q = await db().collection("scribeKeys").where("hash", "==", keyHash(key)).limit(1).get();
+  if (q.empty) { res.status(401).json({ error: "That upload key isn't known any more. Download a new helper from the site." }); return; }
+  const uid = q.docs[0].id;
+  if (!(await canScribe(uid))) { res.status(403).json({ error: "This key's owner isn't an officer or guild scribe any more." }); return; }
+  const text = req.rawBody ? req.rawBody.toString("utf8") : "";
+  let result = null;
+  if (text.trim()) {
+    try { result = await scribeUploadAs(uid, text); }
+    catch (e) { res.status(400).json({ error: e.message || "Upload failed." }); return; }
+    await q.docs[0].ref.set({ used: new Date().toISOString() }, { merge: true });
+  }
+  const sd = (await db().doc("guild/sitedata").get()).data() || {};
+  res.json({ ok: true, result, siteData: sd.text || "", siteAt: sd.at || "" });
+});
+// The site keeps a copy of its "Download for the addon" file here (refreshed when an officer or scribe has the site
+// open), so the helper can bring it to the addon without anyone pressing the button.
+exports.saveSiteData = onCall({ region: REGION, maxInstances: 2 }, async req => {
+  if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
+  if (!(await canScribe(req.auth.uid))) throw new HttpsError("permission-denied", "Only officers and guild scribes.");
+  const text = String((req.data && req.data.text) || "");
+  if (!/^-- Blood and Tears: a snapshot of the guild site/.test(text) || text.length > 400000) throw new HttpsError("invalid-argument", "That isn't the site's addon file.");
+  await db().doc("guild/sitedata").set({ text, at: new Date().toISOString() });
+  return { ok: true };
 });
 // Check every character (mains and alts) against the armory, then note when it finished in guild/armory.
 // Officers can fix anyone's character, remove leavers and edit the guild basics.
@@ -909,9 +953,16 @@ const isDay = d => /^\d{4}-\d{2}-\d{2}$/.test(d), isHour = h => /^\d{4}-\d{2}-\d
 const short = (v, n) => String(v ?? "").slice(0, n);
 exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds: 120 }, async req => {
   if (!req.auth) throw new HttpsError("unauthenticated", "Open the site first.");
+  return scribeUploadAs(req.auth.uid, String((req.data && req.data.text) || ""));
+});
+// Who may upload: officers and the guild scribes the officers picked.
+async function canScribe(uid) {
   const off = (await db().doc("guild/officers").get()).data() || {};
-  if (!(off.uids || []).includes(req.auth.uid) && !(off.scribeUids || []).includes(req.auth.uid)) throw new HttpsError("permission-denied", "Only officers and guild scribes can upload the scribe file.");
-  const text = String((req.data && req.data.text) || "");
+  return (off.uids || []).includes(uid) || (off.scribeUids || []).includes(uid);
+}
+// The upload itself, shared by the site's upload button (scribeUpload) and the helper on a scribe's computer (scribeAuto).
+async function scribeUploadAs(uid, text) {
+  if (!(await canScribe(uid))) throw new HttpsError("permission-denied", "Only officers and guild scribes can upload the scribe file.");
   if (!text || text.length > 3e6) throw new HttpsError("invalid-argument", "That file is empty or too big.");
   if (/SlashCmdList|local ADDON|CreateFrame\(/.test(text) || !/^\s*BloodAndTearsScribeDB\s*=\s*\{/m.test(text)) throw new HttpsError("invalid-argument", /SlashCmdList|local ADDON|CreateFrame\(/.test(text)
     ? "That's the addon itself, not its notes. Upload the one in WTF\\Account\\<account>\\SavedVariables instead." : "That isn't the scribe file. Look in WTF\\Account\\<account>\\SavedVariables.");
@@ -1064,7 +1115,7 @@ exports.scribeUpload = onCall({ region: REGION, maxInstances: 1, timeoutSeconds:
   if (levelled.length) await updateFirsts().catch(err => logger.warn("firsts", err.message));
   return { matched, unknown: unknown.slice(0, 20), unknownN: unknown.length, raids: Object.keys(sv.raids || {}).length, recipeChars, levelled: levelled.slice(0, 20),
     runs: Object.keys(sv.runs || {}).length, zoneDays, kills: (Array.isArray(sv.kills) ? sv.kills : Object.values(sv.kills || {})).length };
-});
+}
 async function syncAll() {
   let n = 0, changed = 0; const missing = [];
   await moveAlts().catch(err => logger.warn("moving alts", err.message));

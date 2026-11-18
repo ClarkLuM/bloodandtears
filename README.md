@@ -193,3 +193,14 @@ The data the site uploads is unchanged, so 0.8.0 needs no server or site change.
 ## The design system drives the colours
 
 Every colour on the site comes from the design system in `opendesigner/` (OpenDesigner). The site loads `public/ds-tokens.css`, and the short names in `index.html` (`--raised`, `--accent`, `--ginger`…) are aliases for its tokens, switching with the theme on their own. To change a colour: `python3 <opendesigner>/scripts/engine.py set overrides.dark:color.surface.raised '"#..."' --why "..."` (and `light:` for the light theme), then `engine.py build`, then `sh tools/ds-tokens.sh`, then deploy. Site-only colours (gold, ginger, trim, item qualities) are `color.site.*` tokens.
+
+## Automatic deploys (GitHub Actions)
+
+- **Preview:** every push to `main` that touches `public/` or `firebase.json` builds a private preview copy of the site (Firebase Hosting channel `preview`, kept 30 days). The link is in the run summary under Actions, "Preview the site".
+- **Live:** Actions, "Deploy the site", Run workflow. It publishes `public/` from `main`. Nothing goes live without pressing it.
+- **Server code** (functions) is still deployed by hand from a copy outside OneDrive, as it changes rarely: `firebase deploy --only functions`.
+- **One-time setup:** in the project folder run `firebase init hosting:github` and give it `ClarkLuM/bloodandtears`. Answer No to its build script and its own workflows; it only needs to make the service account and the `FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER` secret these workflows use.
+
+## Automatic scribe upload
+
+Officers and guild scribes can press "Set up automatic upload" on the Roster (Details). It makes a personal upload key (`scribeKey`; only its SHA-256 is kept, in `scribeKeys/<uid>`) and downloads `BloodAndTears-AutoUpload.cmd`, built from `public/scribe-helper.txt`. Double-clicked on Windows, it finds the WoW Forever folder, copies itself to `%LOCALAPPDATA%\BloodAndTears` and adds a scheduled task ("Blood and Tears scribe upload") that runs hidden every 15 minutes: it posts the notes file to `scribeAuto` when it has changed, and writes the site's latest addon data (kept in `guild/sitedata` by `saveSiteData`, refreshed while an officer or scribe has the site open) to `SiteData.lua`. Double-click it again to remove it. A new key switches the old one off.

@@ -1,0 +1,142 @@
+<# :
+@echo off
+rem Blood and Tears: automatic scribe upload. Double-click to set it up (or to remove it).
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$env:BT_SELF='%~f0'; iex ([IO.File]::ReadAllText('%~f0'))"
+exit /b
+#>
+# ---------------------------------------------------------------------------------------------------------------------
+# Blood and Tears: automatic scribe upload
+#
+# What it does, every 15 minutes while you're signed in to Windows (hidden, no window):
+#   1. If the Scribe addon's notes file has changed (WoW writes it when you log out or /reload), it sends it to the
+#      guild site, the same as the "Upload the scribe file" button.
+#   2. It fetches the site's latest data for the addon and saves it as SiteData.lua in the addon's folder, the same as
+#      the "Download for the addon" button. WoW reads it the next time you log in or /reload.
+#
+# It only ever reads the notes file and writes SiteData.lua. It talks to nothing but the guild site. The upload key
+# below is yours: it lets this computer upload as you. Making a new helper on the site replaces it.
+# A short log is kept in %LOCALAPPDATA%\BloodAndTears\log.txt. Double-click this file again to remove it.
+# ---------------------------------------------------------------------------------------------------------------------
+$ErrorActionPreference = 'Stop'
+$Endpoint = '__ENDPOINT__'
+$Key = '__KEY__'
+$Dir = Join-Path $env:LOCALAPPDATA 'BloodAndTears'
+$CfgPath = Join-Path $Dir 'config.json'
+$LogFile = Join-Path $Dir 'log.txt'
+$TaskName = 'Blood and Tears scribe upload'
+
+function Log($m) {
+  try {
+    if (-not (Test-Path $Dir)) { New-Item -ItemType Directory -Path $Dir | Out-Null }
+    Add-Content -Path $LogFile -Value ((Get-Date -Format 'yyyy-MM-dd HH:mm') + '  ' + $m) -Encoding UTF8
+    $all = @(Get-Content -Path $LogFile -Encoding UTF8)
+    if ($all.Count -gt 300) { $all[-200..-1] | Set-Content -Path $LogFile -Encoding UTF8 }
+  } catch {}
+}
+function Load-Cfg { if (Test-Path $CfgPath) { try { return Get-Content $CfgPath -Raw | ConvertFrom-Json } catch {} } return $null }
+function Save-Cfg($c) { $c | ConvertTo-Json | Set-Content -Path $CfgPath -Encoding UTF8 }
+function Set-Prop($o, $n, $v) { if ($o.PSObject.Properties[$n]) { $o.$n = $v } else { $o | Add-Member -NotePropertyName $n -NotePropertyValue $v } }
+
+# The WoW Forever folder: the one with Interface\AddOns\BloodAndTearsScribe in it.
+function Find-Forever {
+  $tails = @('Program Files (x86)\World of Warcraft\_forever_', 'Program Files\World of Warcraft\_forever_',
+             'World of Warcraft\_forever_', 'Games\World of Warcraft\_forever_', 'Blizzard\World of Warcraft\_forever_')
+  foreach ($d in (Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Root })) {
+    foreach ($t in $tails) { $p = Join-Path $d.Root $t; if (Test-Path (Join-Path $p 'Interface\AddOns\BloodAndTearsScribe')) { return $p } }
+  }
+  return $null
+}
+function Notes-File($forever) {
+  Get-ChildItem -Path (Join-Path $forever 'WTF\Account\*\SavedVariables\BloodAndTearsScribe.lua') -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTime -Descending | Select-Object -First 1
+}
+
+# One run: upload if the notes changed, then bring the site's data to the addon.
+function Run-Once($cfg, [switch]$Loud) {
+  $notes = Notes-File $cfg.forever
+  $body = [byte[]]@()
+  $stamp = ''
+  if ($notes) {
+    $stamp = [string]$notes.LastWriteTimeUtc.Ticks
+    # Upload when it changed since the last upload and WoW has finished writing it (a minute old).
+    if ($stamp -ne [string]$cfg.uploaded -and ((Get-Date) - $notes.LastWriteTime).TotalSeconds -gt 60) { $body = [IO.File]::ReadAllBytes($notes.FullName) }
+  }
+  $askSite = ($body.Length -gt 0) -or (-not $cfg.siteAsked) -or (((Get-Date) - [datetime]$cfg.siteAsked).TotalMinutes -ge 60)
+  if (-not $askSite) { return }
+  try {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $r = Invoke-RestMethod -Uri $Endpoint -Method Post -Headers @{ 'x-scribe-key' = $Key } -ContentType 'text/plain; charset=utf-8' -Body $body -TimeoutSec 110
+  } catch {
+    $msg = $_.Exception.Message
+    try { $msg = ($_.ErrorDetails.Message | ConvertFrom-Json).error } catch {}
+    Log ('Could not reach the site: ' + $msg); if ($Loud) { Write-Host ('  Could not reach the site: ' + $msg) -ForegroundColor Yellow }
+    return
+  }
+  Set-Prop $cfg 'siteAsked' (Get-Date).ToString('o')
+  if ($body.Length -gt 0) {
+    Set-Prop $cfg 'uploaded' $stamp
+    $res = $r.result; $line = 'Uploaded the notes'
+    if ($res) { $line += ': ' + $res.matched + ' guildies matched' + $(if ($res.levelled -and $res.levelled.Count) { ', levels: ' + ($res.levelled -join ', ') } else { '' }) }
+    Log $line; if ($Loud) { Write-Host ('  ' + $line) -ForegroundColor Green }
+  }
+  if ($r.siteData -and [string]$r.siteAt -ne [string]$cfg.siteAt) {
+    $dest = Join-Path $cfg.forever 'Interface\AddOns\BloodAndTearsScribe\SiteData.lua'
+    [IO.File]::WriteAllText($dest, [string]$r.siteData, (New-Object Text.UTF8Encoding $false))
+    Set-Prop $cfg 'siteAt' ([string]$r.siteAt)
+    Log ('Saved the site data from ' + $r.siteAt); if ($Loud) { Write-Host '  Saved the latest site data for the addon.' -ForegroundColor Green }
+  }
+  Save-Cfg $cfg
+}
+
+if ($env:BT_MODE -eq 'run') {
+  $cfg = Load-Cfg
+  if (-not $cfg -or -not (Test-Path $cfg.forever)) { Log 'Not set up (or the WoW folder moved). Double-click the helper again.'; return }
+  try { Run-Once $cfg } catch { Log ('Error: ' + $_.Exception.Message) }
+  return
+}
+
+# ---- Double-clicked: set up, or remove ----
+Write-Host ''
+Write-Host '  Blood and Tears: automatic scribe upload' -ForegroundColor Yellow
+Write-Host ''
+$existing = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
+if ($existing) {
+  $a = Read-Host '  It is already set up on this computer. Type R to set it up again, U to remove it, or press Enter to leave it'
+  if ($a -match '^[Uu]') {
+    Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false
+    Remove-Item -Recurse -Force $Dir -ErrorAction SilentlyContinue
+    Write-Host '  Removed. Nothing uploads by itself any more.' -ForegroundColor Green
+    Read-Host '  Press Enter to close' | Out-Null; return
+  }
+  if ($a -notmatch '^[Rr]') { return }
+}
+$forever = Find-Forever
+if ($forever) { Write-Host ('  Found WoW Forever at ' + $forever) }
+else {
+  Write-Host '  Could not find your WoW Forever folder (the _forever_ folder with the Scribe addon in Interface\AddOns).' -ForegroundColor Yellow
+  $forever = (Read-Host '  Paste its full path').Trim('" ')
+  if (-not (Test-Path (Join-Path $forever 'Interface\AddOns\BloodAndTearsScribe'))) {
+    Write-Host '  The Scribe addon is not in that folder. Nothing was set up.' -ForegroundColor Red
+    Read-Host '  Press Enter to close' | Out-Null; return
+  }
+}
+if (-not (Test-Path $Dir)) { New-Item -ItemType Directory -Path $Dir | Out-Null }
+$self = Join-Path $Dir 'helper.cmd'
+if ($env:BT_SELF -and ((Resolve-Path $env:BT_SELF).Path -ne $self)) { Copy-Item -LiteralPath $env:BT_SELF -Destination $self -Force }
+$cfg = [pscustomobject]@{ forever = $forever; uploaded = ''; siteAt = ''; siteAsked = '' }
+Save-Cfg $cfg
+# A tiny launcher so the 15-minute run never opens a window.
+$vbs = Join-Path $Dir 'run.vbs'
+$cmdLine = 'powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command "$env:BT_MODE=''run''; iex ([IO.File]::ReadAllText(''' + $self + '''))"'
+Set-Content -Path $vbs -Encoding ASCII -Value ('CreateObject("WScript.Shell").Run "' + $cmdLine.Replace('"', '""') + '", 0, False')
+$action = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument ('"' + $vbs + '"')
+$every = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 15)
+$set = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 5) -MultipleInstances IgnoreNew
+Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger $every -Settings $set -Description 'Uploads the Blood and Tears Scribe notes and fetches the site data for the addon.' -Force | Out-Null
+Write-Host '  Set up. It checks every 15 minutes while you are signed in to Windows.' -ForegroundColor Green
+Write-Host '  Trying it now...'
+try { Run-Once $cfg -Loud } catch { Write-Host ('  ' + $_.Exception.Message) -ForegroundColor Yellow }
+Write-Host ''
+Write-Host ('  A short log is kept in ' + $LogFile)
+Write-Host '  To remove it later, double-click this file again and type U.'
+Read-Host '  Press Enter to close' | Out-Null

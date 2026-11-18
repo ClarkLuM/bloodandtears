@@ -1,0 +1,23 @@
+# Puts the site live: GitHub, Actions, "Deploy the site", Run workflow. Only runs when someone presses the button.
+# It publishes the site files (hosting) from main. Server code (functions) is still deployed by hand, as it changes rarely.
+# Needs the FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER secret (made by `firebase init hosting:github`).
+name: Deploy the site
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: deploy-live
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER }}
+          projectId: loot-goblins-roster
+          channelId: live
+      - run: echo "Live at https://bloodandtears.web.app" >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,28 @@
+# Every change to the site that lands on main is built into a private preview copy (not the real site), so it can be
+# checked on a phone first. The link is in the run's summary on GitHub (Actions, "Preview the site").
+# Needs the FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER secret (made by `firebase init hosting:github`).
+name: Preview the site
+on:
+  push:
+    branches: [main]
+    paths: ["public/**", "firebase.json"]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: preview
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER }}
+          projectId: loot-goblins-roster
+          channelId: preview
+          expires: 30d
+      - run: echo "Preview of this version (not the real site) ${{ steps.deploy.outputs.details_url }}" >> "$GITHUB_STEP_SUMMARY"
