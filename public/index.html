@@ -3013,7 +3013,7 @@ function viewRecap(){
   const{weeks,launchOn}=recapWeeks(),valid=k=>k==="launch"?launchOn:!!(S.recapWeeks||{})[k],key=S.ui.recapWk&&valid(S.ui.recapWk)?S.ui.recapWk:"";
   const{data,since,until,live}=recapPick(key),dm=t=>new Date(t).toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long"}),ds=t=>new Date(t).toLocaleDateString("en-AU",{day:"numeric",month:"short"});
   const pick=h("select",{id:"recap-week","aria-label":"Week",onchange:e=>setUi({recapWk:e.target.value})},h("option",{value:"",selected:!key},"This week so far"),
-    weeks.map(([k,r])=>h("option",{value:k,selected:key===k},(r.partial?"Part week: ":"")+ds(r.from)+" to "+ds(Date.parse(r.to)-1))),launchOn?h("option",{value:"launch",selected:key==="launch"},"Launch week"):null);
+    weeks.map(([k,r])=>h("option",{value:k,selected:key===k},ds(r.from)+" to "+ds(Date.parse(r.to)-1)+(r.partial?" (short week)":""))),launchOn?h("option",{value:"launch",selected:key==="launch"},"Launch week"):null);
   const kg=killGroups(since,until),dg=new Map();for(const g of kg)dg.set(g.name,(dg.get(g.name)||0)+1);
   const topDg=[...dg.entries()].sort((a,b)=>b[1]-a[1])[0],zsp=zoneSpan(since,until),hours=zsp.days.reduce((a,x)=>a+x[1],0)/60;
   const fresh=S.members.filter(m=>{const t=Date.parse(m.createdAt||"");return t>=since&&t<until});
@@ -3178,7 +3178,7 @@ async function recapPng(data=liveRecap()){
   let y=PAD;if(icon){x.save();rr(PAD,y,112,112,24);x.clip();x.drawImage(icon,PAD,y,112,112);x.restore()}
   const from=new Date(data.from),to=new Date(data.to-1),dm=d=>d.toLocaleDateString("en-AU",{day:"numeric",month:"short"});
   x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e2";x.font=disp(64);x.fillText("Blood and Tears",PAD+140,y+62);
-  x.fillStyle="#a6948e";x.font=body(400,26);x.fillText((data.label?data.label+" · ":data.partial?"Part week · ":"Week recap · ")+dm(from)+" to "+dm(to),PAD+140,y+100);
+  x.fillStyle="#a6948e";x.font=body(400,26);x.fillText((data.label?data.label+" · ":data.partial?"Short week · ":"Week recap · ")+dm(from)+" to "+dm(to),PAD+140,y+100);
   y+=112+48;
   const tw=(W-PAD*2)/4;rr(PAD,y,W-PAD*2,132,16);x.fillStyle="#161010";x.fill();x.strokeStyle="#312625";x.lineWidth=1;x.stroke();
   totals.forEach(([v,l],i)=>{const X=PAD+i*tw;if(i){x.beginPath();x.moveTo(X,y);x.lineTo(X,y+132);x.stroke()}
