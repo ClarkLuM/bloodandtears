@@ -1252,6 +1252,13 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
  .page-head.ph-logo .sync-all .row{gap:.25rem .5rem!important}
  .page-head.ph-logo .sync-more{height:auto;padding:0;border:0;background:none;text-decoration:underline;font-weight:400;color:var(--accent-text)}
 }
+/* Phones: when the heading has more than one button (officers get three on the Roster), the buttons get their own row
+   under the title, wrapping if they must, instead of squeezing the title. */
+@media (max-width:640px){
+ .page-head.ph-logo:has(>.row>.btn:nth-of-type(2)){flex-wrap:wrap}
+ .page-head.ph-logo:has(>.row>.btn:nth-of-type(2))>.row{flex:1 1 100%;flex-wrap:wrap;gap:.5rem}
+ .page-head.ph-logo:has(>.row>.btn:nth-of-type(2))>.row .btn{flex:1 1 auto}
+}
 /* Your own character, pinned to the top */
 .roster-t tr.r-row.mine:not(.lvup){border-color:color-mix(in srgb,var(--accent-text) 45%,transparent)}
 /* By class: each group headed with its colour */
