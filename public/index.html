@@ -653,6 +653,11 @@ nav.bottom .nb-ic{display:flex}nav.bottom .nb-s{display:none}
   body{overflow-x:clip}
 }
 @media (min-width:701px){.srch-ph{display:none}.dc-ic{display:none}}
+.ptr{position:fixed;top:0;left:50%;z-index:40;width:2.5rem;height:2.5rem;display:grid;place-items:center;border-radius:50%;background:var(--raised,#2a1d1b);color:var(--ter);
+  box-shadow:0 2px 8px rgb(0 0 0/.35);transform:translate(-50%,-48px);opacity:0;transition:opacity .15s;pointer-events:none}
+.ptr.full{color:var(--accent-text)}.ptr.spin svg{animation:ptrSpin .8s linear infinite}
+@keyframes ptrSpin{to{transform:rotate(360deg)}}
+html.ptr-on,html.ptr-on body{overscroll-behavior-y:contain}
 @keyframes swNext{from{opacity:.4;transform:translateX(2.5rem)}to{opacity:1;transform:none}}
 @keyframes swPrev{from{opacity:.4;transform:translateX(-2.5rem)}to{opacity:1;transform:none}}
 html[data-swipe="next"] #app main{animation:swNext .22s ease-out}html[data-swipe="prev"] #app main{animation:swPrev .22s ease-out}
@@ -4389,6 +4394,19 @@ addEventListener("hashchange",()=>{if(/^#link\//.test(location.hash))return chec
   const y=history.state&&typeof history.state.y==="number"?history.state.y:0;render();
   if(y)requestAnimationFrame(()=>scrollTo(0,y));else scrollTo(0,0)});
 if("scrollRestoration" in history)history.scrollRestoration="manual";
+// Pull down to refresh, for the site added to a phone's home screen (a browser tab has its own already). Pulling from
+// the very top shows a ring that fills as you pull; let go once it's full and the page reloads with the newest version.
+(()=>{const app=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;if(!app)return;
+  document.documentElement.classList.add("ptr-on");
+  const ring=document.createElement("div");ring.className="ptr";ring.setAttribute("aria-hidden","true");ring.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100"/></svg>';
+  document.body.append(ring);const arc=ring.querySelector("circle");let y0=null,pull=0;const FULL=90;
+  addEventListener("touchstart",e=>{y0=(scrollY<=0&&e.touches.length===1&&!document.querySelector("dialog[open]"))?e.touches[0].clientY:null;pull=0},{passive:true});
+  addEventListener("touchmove",e=>{if(y0===null)return;pull=Math.max(0,e.touches[0].clientY-y0);if(scrollY>0){y0=null;pull=0}
+    const k=Math.min(1,pull/FULL);ring.style.transform=`translate(-50%,${Math.min(pull*.5,56)-48}px) rotate(${k*270}deg)`;ring.style.opacity=String(Math.min(1,k*1.5));
+    arc.setAttribute("stroke-dasharray",`${Math.round(k*90)} 100`);ring.classList.toggle("full",k>=1)},{passive:true});
+  addEventListener("touchend",()=>{if(y0===null)return;y0=null;
+    if(pull>=FULL){ring.classList.add("spin");ring.style.transform="translate(-50%,8px)";location.reload()}
+    else{ring.style.transform="";ring.style.opacity="0";arc.setAttribute("stroke-dasharray","0 100")}},{passive:true})})();
 // On phones, swipe left or right across a page to go to the next or previous page in the bottom bar. A swipe that starts
 // in a field, on something that scrolls sideways itself, or while a dialog is open is left alone, and so is anything
 // more up-and-down than sideways.
