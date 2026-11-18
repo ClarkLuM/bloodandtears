@@ -658,6 +658,10 @@ nav.bottom .nb-ic{display:flex}nav.bottom .nb-s{display:none}
 .ptr.full{color:var(--accent-text)}.ptr.spin svg{animation:ptrSpin .8s linear infinite}
 @keyframes ptrSpin{to{transform:rotate(360deg)}}
 html.ptr-on,html.ptr-on body{overscroll-behavior-y:contain}
+nav.main a[data-wc]{position:relative}
+nav.main a[data-wc]::after{content:"";position:absolute;top:.3125rem;right:.25rem;width:.5rem;height:.5rem;border-radius:50%;background:var(--accent-text);box-shadow:0 0 0 2px var(--sunken)}
+nav.bottom a[data-wc] .nb-ic{position:relative}
+nav.bottom a[data-wc] .nb-ic::after{content:"";position:absolute;top:-.125rem;right:-.3125rem;width:.5rem;height:.5rem;border-radius:50%;background:var(--accent-text);box-shadow:0 0 0 2px var(--sunken)}
 @keyframes swNext{from{opacity:.4;transform:translateX(2.5rem)}to{opacity:1;transform:none}}
 @keyframes swPrev{from{opacity:.4;transform:translateX(-2.5rem)}to{opacity:1;transform:none}}
 html[data-swipe="next"] #app main{animation:swNext .22s ease-out}html[data-swipe="prev"] #app main{animation:swPrev .22s ease-out}
@@ -1414,6 +1418,33 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 @media (max-width:960px){.rec-a{grid-template-areas:"week" "lb" "links";grid-template-rows:auto}}
 .rec-a .rec-link{flex-direction:column;align-items:flex-start;gap:.25rem}
 
+/* Phones vs wider screens: some parts come in two versions and only one shows. */
+.phone-only{display:none}
+@media (max-width:640px){.phone-only{display:revert}.wide-only{display:none!important}div.phone-only{display:block}}
+.seg-sel{display:flex;align-items:center;gap:.375rem;min-width:0;flex:1;height:2.75rem;padding:0 .75rem;border:1px solid var(--b-def);border-radius:10px;background:var(--sunken)}
+.seg-sel span{font-size:.8125rem;color:var(--ter)}
+.seg-sel select{all:unset;flex:1;min-width:0;font-weight:600;color:var(--text);cursor:pointer;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23a6948e' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right center/.75rem;padding-right:1.25rem}
+.zm-dds{display:flex!important;gap:.5rem}
+@media (min-width:641px){.zm-dds{display:none!important}}
+.zm-pd .zm-detail{border:1px solid color-mix(in srgb,var(--accent) 55%,transparent);border-radius:12px;background:var(--raised);padding:.75rem .875rem}
+.zm-all{width:100%;margin-top:.5rem;justify-content:center;color:var(--accent-text)}
+@media (max-width:640px){
+  .zm-cut li:nth-child(n+4){display:none}
+  .zm-top .zm-bar{display:none}.zm-top .zm-nm .tag{display:none}
+  .zm-top button{padding-top:.625rem;padding-bottom:.625rem}
+  .zm-top .zm-who>.row:nth-child(n+3){display:none}
+  .zm-key .zm-dgi,.zm-key .zm-dgt{display:none}
+}
+.wwpq{display:grid;grid-template-columns:2.25rem repeat(4,minmax(0,1fr));gap:.375rem;align-items:center}
+.wwpq-h{font-size:.75rem;line-height:1.15;color:var(--ter);text-align:center}
+.wwpq-d{font-size:.8125rem;font-weight:600;color:var(--sec)}
+.wwpq-c{all:unset;box-sizing:border-box;height:2.5rem;border-radius:8px;display:grid;place-items:center;font:600 .8125rem/1 var(--body);color:#fff;background:var(--subtle);cursor:pointer;font-variant-numeric:tabular-nums}
+.wwpq-c.q1{background:var(--zm-1)}.wwpq-c.q2{background:var(--zm-2)}.wwpq-c.q3{background:var(--zm-3)}.wwpq-c.q4{background:var(--zm-4)}.wwpq-c.q5{background:var(--zm-5)}
+.wwpq-c.none{background:transparent;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--sep) 60%,transparent)}
+.wwpq-c.peak{box-shadow:0 0 0 2px var(--gold-hi)}.wwpq-c.now{box-shadow:0 0 0 2px var(--text)}
+.wwpq-c.on{outline:2px solid var(--accent-text);outline-offset:2px}
+.wwpq-c:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.wwpq-tip{margin:.75rem 0 0}
 /* When the Guild Plays: the zone map's five shades, the busiest hour in gold, now in white */
 .wwp{gap:3px}
 .wwp-c{height:1.25rem;border-radius:4px;background:var(--subtle)}
@@ -1700,6 +1731,9 @@ function profBar(p,sk){sk=Math.max(0,Math.min(300,+sk||0));const cls=!!CLASS_SKI
   return h("div",{class:"pbar"},h("span",{class:"lbl"},h("span",{},p),cls?null:h("span",{class:"r"},rankOf(sk))),
     h("span",{class:"track","aria-hidden":"true"},h("i",{class:sk>=300?"max":"",style:`width:${(sk/300*100).toFixed(1)}%`}),cls?[]:[75,150,225].map(c=>h("b",{style:`left:${(c/300*100).toFixed(1)}%`}))),
     h("span",{class:"num"+(sk>=300?" max":"")},sk+" / 300"))}
+// On phones a row of choices can show as a drop-down instead (same choices, same pick), to keep the page short.
+const segSel=(label,opts,cur,pick,cls)=>h("label",{class:"seg-sel "+(cls||"")},h("span",{},label),h("select",{"aria-label":label,onchange:e=>pick(e.target.value)},
+  opts.map(([k,l])=>h("option",{value:k,selected:cur===k?"":null},l))));
 const seg=(label,opts,cur,pick)=>h("div",{class:"seg",role:"group","aria-label":label},opts.map(([k,l,n])=>h("button",{type:"button","aria-pressed":String(cur===k),onclick:()=>pick(k)},l,n!=null?h("span",{}," "+n):null)));
 
 /* ---------- Winter Veil ---------- */
@@ -1739,6 +1773,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-18","What changed, at a glance","A gold dot on Dungeons, Cards, Records or Activity means something changed there since you last looked. Hover it to see what. On phones, Activity is shorter: drop-downs, the top three in each list, and the week in four parts of the day.",null],
   ["2026-11-18","Easier on phones","Swipe left or right to move between pages, the bottom bar has icons and bigger buttons, search sits in the header as a search box, and pages no longer slide sideways.",null],
   ["2026-11-16","Levelling timelines","Each character page now charts their level over time, with their best week and milestones. Compare with a guildie to watch a level race.",null],
   ["2026-11-16","The week in motion","Press play under the Activity map to watch where the guild went, a day at a time, or tap a day to see just that day.","#activity"],
@@ -1758,14 +1793,45 @@ function openWhatsNew(){const dlg=$("#dlg"),f=$("#dlgForm");if(dlg.open)return;c
     h("div",{class:"row",style:"justify-content:flex-end"},h("button",{type:"button",class:"btn primary",onclick:done},"Got it"))));
   f.onsubmit=e=>e.preventDefault();dlg.showModal()}
 
+/* ---------- What changed since you last looked ---------- */
+// Each page remembers (in this browser) what it looked like the last time you opened it. When the guild has moved on
+// since, its menu item gets a gold dot, and hovering it says what changed. Opening the page clears the dot. The Roster
+// has its own "Since you were last here" bar, and What's new is for new things on the site, so neither gets a dot.
+const WC_PAGES=["lfg","cards","records","activity"];
+function wcNow(){const pool=recPool(),out={};
+  out.lfg={n:pool.reduce((a,m)=>a+passportOf(m).length,0)};
+  out.cards={t:Object.fromEntries(pool.map(m=>[m.id,tierOf(+m.level||1)[1]]))};
+  out.records={lead:Object.fromEntries(REC_BOARDS.map(b=>{const r=ranked(b[2]);return[b[0],r[0]?r[0][0].id:null]})),titles:pool.reduce((a,m)=>a+titlesOf(m).length,0)};
+  if(S.scribe!==undefined)out.activity={at:(S.scribe&&S.scribe.at)||""};
+  return out}
+function wcWhat(k,was,now){const out=[];if(!was||!now)return out;
+  if(k==="lfg"&&now.n>was.n)out.push((now.n-was.n)+(now.n-was.n===1?" new dungeon stamp":" new dungeon stamps"));
+  if(k==="cards"){const nw=Object.keys(now.t).filter(id=>!(id in was.t)).length,up=Object.keys(now.t).filter(id=>id in was.t&&was.t[id]!==now.t[id]).length;
+    if(nw)out.push(nw+(nw===1?" new card":" new cards"));if(up)out.push(up+(up===1?" card moved up a metal":" cards moved up a metal"))}
+  if(k==="records"){for(const b of REC_BOARDS){const id=now.lead[b[0]];if(id&&id!==was.lead[b[0]]){const m=anyById(id);if(m)out.push(nameOf(m)+" took first in "+b[1].toLowerCase())}}
+    if(now.titles>was.titles)out.push((now.titles-was.titles)+(now.titles-was.titles===1?" new title":" new titles"))}
+  if(k==="activity"&&now.at&&now.at!==was.at)out.push("New notes from the guild scribe");
+  return out}
+let WC=null;
+function wcRead(){if(WC)return WC;try{WC=JSON.parse(localStorage.getItem("lg-wc")||"{}")||{}}catch(e){WC={}}return WC}
+function wcSave(){try{localStorage.setItem("lg-wc",JSON.stringify(WC))}catch(e){}}
+// Called on every render once the guild has loaded: notes the page you're on as seen, and first-time pages silently.
+function wcDots(page){if(!S.loaded||!S.members.length)return{};const seen=wcRead(),now=wcNow(),dots={};let dirty=false;
+  for(const k of WC_PAGES){if(!now[k])continue;
+    if(!seen[k]||k===page){if(JSON.stringify(seen[k])!==JSON.stringify(now[k])){seen[k]=now[k];dirty=true}continue}
+    const what=wcWhat(k,seen[k],now[k]);if(what.length)dots[k]=what}
+  if(dirty)wcSave();return dots}
+
 /* ---------- header ---------- */
 function header(page){
+  const dots=wcDots(page),dotted=k=>dots[k]?{"data-wc":"",title:"Since you last looked: "+dots[k].join(", ")}:{};
+  const navLabel=(k,l)=>dots[k]?l+" (something new)":null;
   const dc=S.guild.discord&&DISCORD_RE.test(S.guild.discord)?S.guild.discord:"";
   return h("header",{class:"top"},h("div",{class:"wrap"},
     h("a",{class:"brand",href:"#roster"},h("img",{class:"brand-logo",src:"logo.svg",alt:"",width:"40",height:"40"}),h("b",{},"Blood and Tears"),h("span",{},"Horde · WoW Forever")),
-    h("nav",{class:"main","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null},l))),
+    h("nav",{class:"main","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null,"aria-label":navLabel(k,l),...dotted(k)},l))),
     // On phones the menu moves to a bar along the bottom.
-    h("nav",{class:"bottom","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null},navIcon(k),h("span",{class:"nb-l"},l),h("span",{class:"nb-s","aria-hidden":"true"},NAV_SHORT[k]||l)))),
+    h("nav",{class:"bottom","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null,"aria-label":navLabel(k,l),...dotted(k)},navIcon(k),h("span",{class:"nb-l"},l),h("span",{class:"nb-s","aria-hidden":"true"},NAV_SHORT[k]||l)))),
     h("div",{class:"hdr-tools"},
       h("button",{class:"btn quiet srch-btn",type:"button",onclick:openSearch,"aria-label":"Search the site",title:"Search (press /)"},
         srchIcon(),h("span",{class:"srch-l"},"Search"),h("span",{class:"srch-ph","aria-hidden":"true"},h("span",{class:"sp-long"},"Search guildies, items, recipes"),h("span",{class:"sp-short"},"Search")),h("kbd",{class:"srch-k"},"/")),
@@ -3348,6 +3414,21 @@ function viewRecords(){
 // When the guild plays: how many guildies are online by day of the week and hour (Perth), from the guild scribe's
 // five-minute checks. It only knows hours when the scribe was online, so blank cells are "not watched", not "empty".
 const DOW=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+// Phones: the week as four parts of the day, big enough to tap, each showing how many are on on average.
+const QUARTERS=[["Night","12–6am"],["Morning","6–12"],["Arvo","12–6pm"],["Evening","6–12pm"]];
+function wwpQuarters(avg,best,nowD,nowH,hourName){
+  const q=avg.map(r=>QUARTERS.map((_,k)=>{const v=r.slice(k*6,k*6+6).filter(x=>x!=null);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null}));
+  const max=Math.max(1,...q.flat().filter(v=>v!=null)),pk=best?[best[0],Math.floor(best[1]/6)]:null,nw=[nowD,Math.floor(nowH/6)];
+  const sel=S.ui.wwpQ||(pk?pk.join(","):null),[sd,sk]=sel?sel.split(",").map(Number):[null,null];
+  const tip=sel!=null&&q[sd]?(()=>{const hrs=avg[sd].slice(sk*6,sk*6+6),v=q[sd][sk];if(v==null)return h("p",{class:"wwpq-tip"},h("b",{},DOW[sd]+" "+QUARTERS[sk][0].toLowerCase()),", not watched yet.");
+    let bh=0;hrs.forEach((x,i)=>{if(x!=null&&x>(hrs[bh]??-1))bh=i});
+    return h("p",{class:"wwpq-tip"},h("b",{},DOW[sd]+" "+QUARTERS[sk][0].toLowerCase()),` · ${Math.round(v*10)/10} on average, busiest around ${hourName(sk*6+bh)}.`)})():null;
+  return h("div",{class:"phone-only"},
+    h("div",{class:"wwpq",role:"group","aria-label":"Guildies online by day and part of the day"},h("span",{}),QUARTERS.map(([n,t])=>h("span",{class:"wwpq-h"},n,h("br"),t)),
+      DOW.flatMap((d,di)=>[h("span",{class:"wwpq-d"},d.slice(0,3)),...q[di].map((v,k)=>h("button",{type:"button",
+        class:"wwpq-c"+(v==null?" none":" q"+Math.max(1,Math.ceil(v/max*5)))+(pk&&pk[0]===di&&pk[1]===k?" peak":"")+(nw[0]===di&&nw[1]===k?" now":"")+(sd===di&&sk===k?" on":""),
+        "aria-label":DOW[di]+" "+QUARTERS[k][0]+": "+(v==null?"not watched":Math.round(v*10)/10+" on average"),onclick:()=>setUi({wwpQ:di+","+k})},v==null?"":String(Math.round(v))))])),
+    tip,h("p",{class:"small ter",style:"margin:.25rem 0 0"},"The number in each square is how many are on, on average. Gold is the busiest, white is now."))}
 function whenWePlay(){const hrs=(S.scribe&&S.scribe.hours)||{},keys=Object.keys(hrs);if(!keys.length)return null;
   const days=new Set(keys.map(k=>k.slice(0,10))),sum=Array.from({length:7},()=>Array(24).fill(0)),cnt=Array.from({length:7},()=>Array(24).fill(0));
   for(const k of keys){const d=(new Date(k.slice(0,10)+"T00:00:00Z").getUTCDay()+6)%7,hr=+k.slice(11,13);sum[d][hr]+=+hrs[k]||0;cnt[d][hr]++}
@@ -3362,10 +3443,11 @@ function whenWePlay(){const hrs=(S.scribe&&S.scribe.hours)||{},keys=Object.keys(
     return h("span",{class:"wwp-c"+(v==null?" none":" q"+q)+(pk?" peak":"")+(nw?" now":""),title:DOW[d]+" "+hourName(hr)+": "+(v==null?"not watched":(Math.round(v*10)/10)+" online on average")+(nw?" (now)":"")})};
   return h("section",{class:"card","aria-labelledby":"wwp-h",style:"gap:.75rem"},head,
     best?h("p",{style:"margin:0"},"Busiest: ",h("b",{},DOW[best[0]]+"s around "+hourName(best[1])),", with "+(Math.round(best[2]*10)/10)+" online on average."):null,
-    h("div",{class:"wwp",role:"img","aria-label":best?"Chart of guildies online by day and hour. Busiest is "+DOW[best[0]]+"s around "+hourName(best[1])+".":"Chart of guildies online by day and hour."},
+    h("div",{class:"wwp wide-only",role:"img","aria-label":best?"Chart of guildies online by day and hour. Busiest is "+DOW[best[0]]+"s around "+hourName(best[1])+".":"Chart of guildies online by day and hour."},
       h("span",{}),...Array.from({length:24},(_,hr)=>h("span",{class:"wwp-h"},hr%6===0?hourName(hr):"")),
       ...DOW.flatMap((n,d)=>[h("span",{class:"wwp-d"},n.slice(0,3)),...Array.from({length:24},(_,hr)=>cell(d,hr))])),
-    h("div",{class:"wwp-key small ter"},"Fewer",[1,2,3,4,5].map(q=>h("i",{class:"wwp-c q"+q})),"More",h("span",{class:"wwp-k2"},h("i",{class:"wwp-c q3 peak"}),"Busiest"),h("span",{class:"wwp-k2"},h("i",{class:"wwp-c q1 now"}),"Now")),
+    wwpQuarters(avg,best,nowD,nowH,hourName),
+    h("div",{class:"wwp-key small ter wide-only"},"Fewer",[1,2,3,4,5].map(q=>h("i",{class:"wwp-c q"+q})),"More",h("span",{class:"wwp-k2"},h("i",{class:"wwp-c q3 peak"}),"Busiest"),h("span",{class:"wwp-k2"},h("i",{class:"wwp-c q1 now"}),"Now")),
     h("p",{class:"small ter",style:"margin:0"},"Perth time. Counted every five minutes while the guild scribe is online, plus the hour each guildie was last on, so blank hours just weren't watched."))}
 // Where the Guild Plays: at each five-minute read the guild scribe notes the zone of every guildie online, as minutes per
 // zone per day (guild/scribe zones: day → zone → character id → minutes, "_" for guildies the site doesn't know; days
@@ -3471,8 +3553,9 @@ function weekStrip(){const sc=S.scribe||{},days=[...Array(7)].map((_,i)=>new Dat
       title:mins[i]?zHours(mins[i])+" of guild time":"Nobody noted",onclick:()=>{zmStop();setUi({zmDay:cur===d?null:d},true)}},nm(d),h("em",{style:`width:${mins[i]?Math.max(12,Math.round(mins[i]/max*100)):0}%`})))))}
 function wherePlays(){const sc=S.scribe;if(!sc)return null;
   const day=S.ui.zmDay||null,dayName=day?new Date(day+"T12:00:00+08:00").toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"short"}):"",range=S.ui.zmRange||"week",tot=zoneTotals(range,day),any=Object.keys(sc.zones||{}).length||Object.keys(sc.zonesOld||{}).length;
+  const SPANS=[["week","This week"],["month","4 weeks"],["all","All time"]],pickSpan=k=>{zmStop();setUi({zmRange:k,zmSel:null,zmDay:null},true)};
   const head=h("div",{class:"spread",style:"align-items:baseline;flex-wrap:wrap;gap:.5rem"},h("h2",{id:"zm-h"},"Where the Guild Plays"),
-    any?seg("Time span",[["week","This week"],["month","4 weeks"],["all","All time"]],day?"":range,k=>{zmStop();setUi({zmRange:k,zmSel:null,zmDay:null},true)}):null);
+    any?h("div",{class:"wide-only"},seg("Time span",SPANS,day?"":range,pickSpan)):null);
   if(!any)return h("section",{class:"card","aria-labelledby":"zm-h",style:"gap:.5rem"},head,h("p",{class:"small ter",style:"margin:0"},"Building up. Once the guild scribe has noted where people are (version 0.7 or later), the time guildies spend in each zone shows here on a map."));
   if(!ZMAPS){loadZoneMaps();return h("section",{class:"card","aria-labelledby":"zm-h",style:"gap:.5rem"},head,h("p",{class:"small ter",style:"margin:0"},"Drawing the map…"))}
   // Zones on the map, dungeons and raids (merged by entrance, so Scarlet Monastery's wings are one row), and anywhere else.
@@ -3498,21 +3581,26 @@ function wherePlays(){const sc=S.scribe;if(!sc)return null;
     return h("span",{class:"zm-who small"},shown.map(([m,v])=>h("span",{class:"row",style:"gap:.25rem"},classIcon(m.cls),nameOf(m),h("span",{class:"ter"},zHours(v)))),
       bits.length?h("span",{class:"ter"},(shown.length?"and ":"")+bits.join(" and ")):null)};
   const span=day?dayName:range==="week"?"this week":range==="month"?"last 4 weeks":"all time";
-  const barList=(list,max,extra,nWho=3)=>h("ul",{class:"zm-top"},list.map(r=>{const n=nameOf2(r);return h("li",{},h("button",{type:"button","aria-pressed":String(sel===n),onclick:()=>pick(n)},
-      h("span",{class:"zm-nm"},h("b",{},n),extra?extra(r):null),h("span",{class:"small ter"},zHours(r.min)),h("span",{class:"zm-bar","aria-hidden":"true"},h("i",{style:`width:${Math.max(4,Math.round(r.min/max*100))}%`})),whoLine(r,nWho)))}));
+  // On phones each list shows its top three until "Show all" is pressed.
+  const barList=(list,max,extra,nWho=3,key)=>{const open=key&&(S.ui.zmAll||{})[key];return[h("ul",{class:"zm-top"+(key&&!open?" zm-cut":"")},list.map(r=>{const n=nameOf2(r);return h("li",{},h("button",{type:"button","aria-pressed":String(sel===n),onclick:()=>pick(n)},
+      h("span",{class:"zm-nm"},h("b",{},n),extra?extra(r):null),h("span",{class:"small ter"},zHours(r.min)),h("span",{class:"zm-bar","aria-hidden":"true"},h("i",{style:`width:${Math.max(4,Math.round(r.min/max*100))}%`})),whoLine(r,nWho)))})),
+    key&&list.length>3?h("button",{type:"button",class:"btn zm-all phone-only",onclick:()=>setUi({zmAll:{...(S.ui.zmAll||{}),[key]:!open}})},open?"Show fewer":"Show all "+list.length):null]};
   const busiest=h("div",{class:"card zm-card"},h("div",{class:"spread"},h("h3",{},"Busiest zones"),h("span",{class:"small ter"},span)),
-    rows.length?barList(rows.slice(0,5),rows[0].min,null,2):h("p",{class:"small ter",style:"margin:0"},"Nobody noted in a zone in this span."));
+    rows.length?barList(rows.slice(0,5),rows[0].min,null,2,"zones"):h("p",{class:"small ter",style:"margin:0"},"Nobody noted in a zone in this span."));
   const dgCard=dgRows.length?h("div",{class:"card zm-card zm-dgl"},h("div",{class:"spread"},h("h3",{},h("span",{class:"zm-dgi","aria-hidden":"true"}),"Dungeons and raids"),h("span",{class:"small ter"},span)),
-    barList(dgRows.slice(0,6),dgRows[0].min,r=>h("span",{class:"tag small"},dgLevels(r.dg)))):null;
-  const detail=selRow?h("div",{class:"zm-detail"},
+    barList(dgRows.slice(0,6),dgRows[0].min,r=>h("span",{class:"tag small"},dgLevels(r.dg)),3,"dg")):null;
+  const detail=()=>selRow?h("div",{class:"zm-detail"},
       h("div",{class:"spread"},h("b",{},nameOf2(selRow)),h("span",{class:"small ter"},zHours(selRow.min)+(selRow.dg?" · "+dgLevels(selRow.dg):""))),whoLine(selRow,12)):
     sel?h("p",{class:"small ter zm-detail"},sel+": nobody noted there "+(day?"on "+dayName:range==="week"?"this week":range==="month"?"in the last 4 weeks":"yet")+"."):null;
-  const key=h("div",{class:"zm-key"},"Less",[1,2,3,4,5].map(i=>h("i",{style:`background:var(--zm-${i})`})),"More",h("span",{class:"zm-dgi","aria-hidden":"true",style:"margin-left:.75rem"}),"Dungeon or raid guildies were in",h("span",{class:"zm-dgi off","aria-hidden":"true",style:"margin-left:.5rem"}),"Not visited");
+  const MAPS=[["world","World"],["kalimdor","Kalimdor"],["ek","Eastern Kingdoms"]],pickMap=k=>setUi({zmCont:k},true);
+  const key=h("div",{class:"zm-key"},"Less",[1,2,3,4,5].map(i=>h("i",{style:`background:var(--zm-${i})`})),"More",h("span",{class:"zm-dgi","aria-hidden":"true",style:"margin-left:.75rem"}),h("span",{class:"zm-dgt"},"Dungeon or raid guildies were in"),h("span",{class:"zm-dgi off","aria-hidden":"true",style:"margin-left:.5rem"}),h("span",{class:"zm-dgt"},"Not visited"));
   return h("section",{class:"card","aria-labelledby":"zm-h",style:"gap:.75rem"},head,
     h("div",{class:"zm"+(cont==="world"?" world":"")},h("div",{style:"display:flex;flex-direction:column;gap:.5rem;min-width:0"},
-        seg("Map",[["world","World"],["kalimdor","Kalimdor"],["ek","Eastern Kingdoms"]],cont,k=>setUi({zmCont:k},true)),map,strip,
+        h("div",{class:"wide-only"},seg("Map",MAPS,cont,pickMap)),
+        h("div",{class:"zm-dds phone-only"},segSel("When",[...(day?[["",dayName]]:[]),...SPANS],day?"":range,k=>k&&pickSpan(k)),segSel("Map",MAPS,cont,pickMap)),
+        map,strip,h("div",{class:"phone-only zm-pd"},detail()),
         h("div",{class:"spread",style:"flex-wrap:wrap;gap:.25rem .75rem"},key,h("span",{class:"small ter"},"Tap a zone or entrance for who was there.")),dgCard),
-      h("div",{class:"zm-side"},detail,busiest,
+      h("div",{class:"zm-side"},h("div",{class:"wide-only"},detail()),busiest,
         off.length?h("p",{class:"small",style:"margin:0"},h("span",{class:"ter"},"Also: "),off.slice(0,6).map((r,i)=>[i?", ":"",r.name+" "+zHours(r.min)])):null,
         h("p",{class:"small ter",style:"margin:0"},"Hours are guildie-time (two people for an hour is 2h), counted while the guild scribe is online. Cities count on their own."))))}
 // "2nd of 6 in the guild": a line under each profession and the honourable kills on a character's page.

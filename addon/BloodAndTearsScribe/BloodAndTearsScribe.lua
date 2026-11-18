@@ -1656,7 +1656,8 @@ do
   t:SetJustifyV("TOP"); t:SetHeight(200)
   if t.SetSpacing then t:SetSpacing(3) end
   head:SetText("What's new in " .. ui.ver)
-  t:SetText(GOLD .. "Tidier|r  Controls sit in the same place on every tab, with class and profession icons.\n"
+  t:SetText(GOLD .. "While you were away|r  After a while off, a panel at login shows who levelled, joined, and what dropped. Off in Settings.\n"
+    .. GOLD .. "Tidier|r  Controls sit in the same place on every tab, with class and profession icons.\n"
     .. GOLD .. "Alts|r  A button at the top: your characters' levels, professions, gold and time played.\n"
     .. GOLD .. "Works in combat|r  The window opens and updates in a fight now (only the Read buttons wait).\n"
     .. GOLD .. "Loot tab|r  Every good drop guildies got, with the boss. Search it, filter by quality, hover for the tooltip, shift-click to link.\n"
@@ -1689,6 +1690,7 @@ ui.login = function()
   if db.ui.tab and pages[db.ui.tab] then current = db.ui.tab end
   ui.applyScale()
   ui.news = db.ui.ver ~= ui.ver
+  if ui.awayStart then pcall(ui.awayStart) end   -- before noteMe, which marks you as on now
   if ui.noteMe then ui.noteMe() end
   if ui.askPlayed then C_Timer.After(6, function() pcall(ui.askPlayed) end) end
   C_Timer.NewTicker(60, sessionTick)
@@ -2044,6 +2046,7 @@ NS.k = {
   ui = ui, win = win, W = W, PERTH = PERTH, GOLD = GOLD, DIM = DIM, INK = INK, IC_LOOT = IC_LOOT, Item = Item,
   page = page, label = label, rows = rows, setRow = setRow, text = text, tex = tex, wowButton = wowButton,
   itemText = itemText, memberName = memberName, guildie = guildie, short = short, nameIn = nameIn, fullName = fullName,
-  dot = dot, now = now,
+  dot = dot, now = now, panel = panel, clock = clock, altTag = altTag, first = first, check = check,
+  show = function(key) return show(key) end, IC_RUN = IC_RUN, IC_DING = IC_DING, IC_JOIN = IC_JOIN, IC_LEAVE = IC_LEAVE,
   db = function() return db end, refresh = function() return refresh() end,
 }

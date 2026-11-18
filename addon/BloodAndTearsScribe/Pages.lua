@@ -93,6 +93,7 @@ do
     local a = DB().alts[me] or {}
     DB().alts[me] = a
     a.lv = UnitLevel("player"); a.class = select(2, UnitClass("player")); a.at = now()
+    DB().ui.lastOn = now()
     if GetMoney then a.gold = GetMoney() end
     if GetRealZoneText then local z = GetRealZoneText(); if z and z ~= "" then a.zone = z end end
     if GetNumSkillLines then
@@ -182,4 +183,114 @@ do
     m:ClearAllPoints(); m:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x / sc + 4, y / sc + 4)
     m:Show()
   end
+end
+
+-- While you were away: a few seconds after you log in, if you'd been off for a while and anything happened, a small
+-- panel lists it: guildies' level-ups (from the guild list), who joined or left, good drops and dungeon runs (those
+-- only when a guildie with the scribe was there and shared them). Once per login; off with a tick box in Settings.
+do
+  local AWAY_MIN = 30 * 60        -- don't bother after a quick relog
+  local p = k.panel("BloodAndTearsScribeAway", W, 300)
+  p:SetPoint("CENTER", 0, 70)
+  p.title:SetText("While you were away")
+  local stats = {}
+  for i = 1, 4 do
+    local bw = (W - 24 - 18) / 4
+    local box = tex(p, "BACKGROUND", 0.07, 0.04, 0.03, 1); box:SetSize(bw, 44); box:SetPoint("TOPLEFT", 12 + (i - 1) * (bw + 6), -58)
+    local n = text(p, "GameFontNormalLarge", "CENTER"); n:SetPoint("TOP", box, "TOP", 0, -6); n:SetWidth(bw)
+    local l = text(p, "GameFontDisableSmall", "CENTER"); l:SetPoint("BOTTOM", box, "BOTTOM", 0, 6); l:SetWidth(bw)
+    stats[i] = { n = n, l = l }
+  end
+  local list = rows(p, 14, -112)
+  local open = wowButton(CreateFrame("Button", nil, p, "UIPanelButtonTemplate"), 140, 22, "Open the Today tab"); open:SetPoint("BOTTOMRIGHT", -14, 12)
+  open:SetScript("OnClick", function() p:Hide(); k.show("today"); win:Show() end)
+  local foot = text(p, "GameFontDisableSmall"); foot:SetPoint("BOTTOMLEFT", 14, 16); foot:SetWidth(W - 180)
+  foot:SetText("From the guild list and guildies' scribes.")
+  local since, loginAt, before = nil, nil, nil
+
+  local function plural(n, one, many) return n .. " " .. (n == 1 and one or many) end
+  local function build()
+    local db = DB()
+    if not db or not since then return 0 end
+    local mine = {}
+    for n in pairs(db.mine or {}) do mine[n] = true end
+    local lines, dings, joins, drops, runs = {}, {}, 0, 0, 0
+    local function when(t) return (t and t < loginAt - 120) and k.clock(t) or "" end
+    -- Level-ups: each guildie's highest new level. Ones the guild list only showed at login have no time.
+    for name, m in pairs(db.members) do
+      if not mine[k.first(name)] and not mine[name] then
+        local top, tt
+        for lv, t in pairs(m.ups or {}) do if t > since and (not top or lv > top) then top, tt = lv, t end end
+        if top then dings[#dings + 1] = { t = tt, line = nameIn(name, m.class) .. DIM .. " reached |r" .. top .. k.altTag(name), right = when(tt) } end
+      end
+    end
+    table.sort(dings, function(a, b) return a.t > b.t end)
+    -- Joins and leaves: new names on the guild list since you were last on, and names that left it.
+    local come, gone = {}, {}
+    for name, m in pairs(db.members) do
+      if before and not before.known[name] then come[#come + 1] = { name, m.class } end
+      if before and m.gone and not before.gone[name] then gone[#gone + 1] = name end
+    end
+    for _, e in ipairs(db.events or {}) do if e.t > since and e.what == "joined" then local seen = false
+      for _, c in ipairs(come) do if k.first(c[1]) == k.first(e.who) then seen = true end end
+      if not seen then come[#come + 1] = { e.who } end end end
+    joins = #come
+    -- Good drops (rare and better) and runs, from shared notes.
+    local loot = {}
+    for i = #db.loot, 1, -1 do local l = db.loot[i]
+      if l.t > since and (l.q or 0) >= 3 and (guildie(l.who)) and not mine[l.who] then loot[#loot + 1] = l end end
+    drops = #loot
+    local byZone, order = {}, {}
+    for _, kl in ipairs(db.kills or {}) do if kl.t > since then
+      local z = byZone[kl.zone or "?"]
+      if not z then z = { zone = kl.zone or "?", n = 0, who = {}, t = kl.t }; byZone[z.zone] = z; order[#order + 1] = z end
+      z.n = z.n + 1; if kl.t > z.t then z.t = kl.t end
+      for n in pairs(kl.who or {}) do z.who[n] = true end
+    end end
+    runs = #order
+    table.sort(order, function(a, b) return a.t > b.t end)
+    if #dings + joins + #gone + drops + runs == 0 then return 0 end
+    -- The lines, in groups, each short; the panel grows to fit (up to 14 lines).
+    local function add(mark, main, right, item) lines[#lines + 1] = { mark, main, right or "", item } end
+    for i = 1, math.min(5, #dings) do add(k.IC_DING, dings[i].line, dings[i].right) end
+    if #dings > 5 then add("", DIM .. "and " .. (#dings - 5) .. " more level-ups|r") end
+    for i = 1, math.min(3, drops) do local l = loot[i]; add(IC_LOOT, itemText(l) .. "  " .. memberName(l.who), l.zone or "", l) end
+    if drops > 3 then add("", DIM .. "and " .. (drops - 3) .. " more on the Loot tab|r") end
+    for i = 1, math.min(3, runs) do local z = order[i]; local g = 0; for n in pairs(z.who) do if guildie(n) then g = g + 1 end end
+      add(k.IC_RUN, INK .. z.zone .. "|r" .. DIM .. "  ·  " .. plural(z.n, "boss", "bosses") .. (g > 1 and (", with " .. plural(g - 1, "guildie", "guildies")) or "") .. "|r", when(z.t)) end
+    for _, c in ipairs(come) do add(k.IC_JOIN, INK .. c[1] .. "|r" .. DIM .. " joined the guild|r") end
+    for _, n in ipairs(gone) do add(k.IC_LEAVE, DIM .. n .. " left the guild|r") end
+    stats[1].n:SetText(#dings); stats[1].l:SetText(#dings == 1 and "level-up" or "level-ups")
+    stats[2].n:SetText(joins); stats[2].l:SetText("joined")
+    stats[3].n:SetText(drops); stats[3].l:SetText(drops == 1 and "good drop" or "good drops")
+    stats[4].n:SetText(runs); stats[4].l:SetText(runs == 1 and "dungeon run" or "dungeon runs")
+    for i, r in ipairs(list) do
+      local L = lines[i]
+      if L then setRow(r, L[1], L[2], L[3]); if L[4] then r.item = L[4].id; r.itemName = L[4].name end else r:Hide() end
+    end
+    p:SetHeight(112 + math.min(#lines, #list) * 20 + 48)
+    local hrs = math.floor((now() - since) / 3600)
+    p.sub:SetText("Since you were last on" .. (hrs >= 1 and ("  ·  " .. (hrs >= 48 and (math.floor(hrs / 24) .. " days") or plural(hrs, "hour", "hours"))) or ""))
+    return #lines
+  end
+  -- At login: note when you were last on, and the guild list as it was then, then look a few seconds later (once the
+  -- guild list has been read and other scribes have shared).
+  ui.awayStart = function()
+    local db = DB()
+    if not db then return end
+    if db.ui.away == nil then db.ui.away = true end
+    local last = tonumber(db.ui.lastOn)
+    loginAt = now()
+    if not last or loginAt - last < AWAY_MIN then since = nil; return end
+    since = last
+    before = { known = {}, gone = {} }
+    for name, m in pairs(db.members) do before.known[name] = true; if m.gone then before.gone[name] = true end end
+    C_Timer.After(10, function()
+      if not DB().ui.away then return end
+      local ok, n = pcall(build)
+      if ok and n and n > 0 then p:Show() end
+    end)
+  end
+  ui.awayShow = function() if since and build() > 0 then p:Show() end end
+  k.check("away", "Show what happened while I was away, when I log in", -410)
 end
