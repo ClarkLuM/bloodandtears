@@ -1510,8 +1510,8 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 .gl-unl li{display:grid;grid-template-columns:4.5rem minmax(0,1fr) auto;gap:.75rem;align-items:baseline;padding:.625rem .75rem;border-radius:10px;background:var(--subtle,rgb(255 255 255 / .05))}
 .gl-unl li b{color:var(--accent-text);white-space:nowrap}.gl-unl li.next{outline:1px solid var(--accent-text)}.gl-unl li.done span:nth-child(2)::before{content:"\2713\00a0"}
 .gl-star{color:#f0cf8f;font-size:.875rem}
-.brand-mk{position:relative;display:block;flex:none;line-height:0;font-style:normal}.gl-pip{font-style:normal}
-.gl-pip{position:absolute;right:-.375rem;bottom:-.25rem;min-width:1.125rem;height:1.125rem;padding:0 .25rem;box-sizing:border-box;border-radius:99px;background:#c9932d;color:#1b0f08;font-size:.6875rem;line-height:1.125rem;font-weight:700;text-align:center;box-shadow:0 0 0 2px var(--base)}
+.brand-mk{position:relative;display:block;flex:none;line-height:0;font-style:normal}
+
 .gl-ring .brand-logo{border-radius:50%;box-shadow:0 0 0 2px #c9932d,0 0 10px rgb(230 188 119 / .45)}
 .gl-crown{position:absolute;left:50%;top:-.6rem;transform:translateX(-50%) rotate(-8deg);line-height:0;filter:drop-shadow(0 1px 1px rgb(0 0 0/.5))}
 html.gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 150 60 / .26),rgb(165 13 44 / .2) 55%,transparent)}
@@ -1519,6 +1519,12 @@ html.gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 1
 @media (min-width:1321px){.brand-mk{grid-row:1/3}}
 @media (max-width:760px){.day-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.day-grid{grid-template-columns:minmax(0,1fr)}.day-hero{padding:1.25rem}
   .gl-hero{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.gl-main{width:100%}.gl-parts{grid-template-columns:repeat(2,minmax(0,1fr));text-align:left}.rc-acts{width:100%;display:grid;grid-template-columns:1fr 1fr}.rc-acts select{grid-column:1/-1;width:100%}.gl-unl li{grid-template-columns:4.25rem minmax(0,1fr)}.gl-unl li>span:last-child{grid-column:2}.gl-unl li>span:last-child:empty{display:none}.rc-acts .btn{width:100%}.rc-acts select{flex:1 1 100%}}
+.hub{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}
+.hub-t{display:flex;flex-direction:column;gap:.25rem;padding:.875rem 1rem;border-radius:12px;border:1px solid var(--sep);background:var(--raised);color:var(--text);text-decoration:none;min-width:0;transition:border-color .15s}
+.hub-t:hover{border-color:var(--accent-text);color:var(--text)}
+.hub-eb{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--accent-text)}
+.hub-t b{font-size:1.25rem;line-height:1.75rem;font-weight:600}.hub-s{font-size:.8125rem;color:var(--ter)}.hub-t .gl-bar{height:.375rem;margin:.125rem 0}
+@media (max-width:520px){.hub{gap:.5rem}.hub-t{padding:.625rem .75rem;gap:.125rem}.hub-eb{font-size:.625rem;letter-spacing:.04em}.hub-t b{font-size:1rem;line-height:1.375rem}.hub-s{font-size:.75rem;line-height:1rem}}
 </style>
 </head>
 <body>
@@ -1903,7 +1909,7 @@ function header(page){
   const navLabel=(k,l)=>dots[k]?l+" (something new)":null;
   const dc=S.guild.discord&&DISCORD_RE.test(S.guild.discord)?S.guild.discord:"";
   return h("header",{class:"top"},h("div",{class:"wrap"},
-    h("a",{class:"brand"+(glHas(3)?" gl-ring":""),href:"#roster"},h("i",{class:"brand-mk"},h("img",{class:"brand-logo",src:"logo.svg",alt:"",width:"40",height:"40"}),glHas(10)?h("i",{class:"gl-crown","aria-hidden":"true"},crownSvg()):null,glHas(2)?h("i",{class:"gl-pip",title:"Guild level "+guildLevel().level},String(guildLevel().level)):null),h("b",{},"Blood and Tears"),h("span",{},"Horde · WoW Forever")),
+    h("a",{class:"brand"+(glHas(3)?" gl-ring":""),href:"#roster"},h("i",{class:"brand-mk"},h("img",{class:"brand-logo",src:"logo.svg",alt:"",width:"40",height:"40"}),glHas(10)?h("i",{class:"gl-crown","aria-hidden":"true"},crownSvg()):null),h("b",{},"Blood and Tears"),h("span",{},"Horde · WoW Forever")),
     h("nav",{class:"main","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null,"aria-label":navLabel(k,l),...dotted(k)},l))),
     // On phones the menu moves to a bar along the bottom.
     h("nav",{class:"bottom","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null,"aria-label":navLabel(k,l),...dotted(k)},navIcon(k),h("span",{class:"nb-l"},l),h("span",{class:"nb-s","aria-hidden":"true"},NAV_SHORT[k]||l)))),
@@ -2124,7 +2130,7 @@ function viewRoster(){
     const fit=()=>l.style.setProperty("--rt-h",t.offsetHeight+"px");fit();if(window.ResizeObserver&&!t._ro){t._ro=new ResizeObserver(fit);t._ro.observe(t)}});
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
   const at=(el,n)=>{if(el&&el.style)el.style.setProperty("--o",n);return el};
-  return[head,birthdayBanner(),h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(sinceCard(),0),at(claimBanner(),1),at(spotlight(true),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
+  return[head,birthdayBanner(),hubTiles(),h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(sinceCard(),0),at(claimBanner(),1),at(spotlight(true),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
     h("div",{class:"rl-col"},at(guildToday(),6),at(siteUse(),12),at(discordBox(),13)))]}
 
 // Their best equipped item: highest quality first (green and up).
@@ -2299,7 +2305,7 @@ function weekLine(){const wk=weekMoves(),l=wk?wk.list:[];
 // The side column as one flowing block: In Game Today (with the week's line), Character of the Day and Guild Makeup
 // (with About the Guild), split by thin lines instead of being separate cards.
 function guildToday(){
-  const wk=h("section",{class:"gt-sec gt-wk"},weekLine());const secs=[nowRow(),recentDings(),wk,glSec(),guildMakeup()].filter(Boolean).filter(Boolean).map(el=>{
+  const wk=h("section",{class:"gt-sec gt-wk"},weekLine());const secs=[nowRow(),recentDings(),wk,guildMakeup()].filter(Boolean).filter(Boolean).map(el=>{
     const sec=document.createElement("section");for(const a of el.attributes)sec.setAttribute(a.name,a.value);
     sec.classList.remove("card");sec.classList.add("gt-sec");sec.removeAttribute("style");sec.append(...el.childNodes);return sec});
   return secs.length?h("aside",{class:"card gt","aria-label":"The guild today"},secs):null}
@@ -3041,7 +3047,7 @@ function viewRecap(){
 // Everything the guild does adds up to guild xp, worked out from what's already saved (nothing new is stored):
 // levels, dungeon stamps, honourable kills and the Hall of Firsts. Each guild level needs 150 more xp than the last.
 const GL_STEP=150,glNeed=L=>GL_STEP*(L-1)*L/2;
-const GL_UNLOCKS=[[2,"The guild level shows on the gingerbread in the header"],[3,"A gold ring around the gingerbread"],[5,"Ember glow on every page heading"],
+const GL_UNLOCKS=[[3,"A gold ring around the gingerbread"],[5,"Ember glow on every page heading"],
   [7,"A star on the Roster for the week's top xp earner"],[10,"The gingerbread gets a crown"]];
 let GLC=null;
 function guildLevel(){const key=[S.members,S.firsts,S.scribe,DUNGEON_LOOT];if(GLC&&GLC.key.every((k,i)=>k===key[i]))return GLC.v;
@@ -3054,10 +3060,15 @@ function guildLevel(){const key=[S.members,S.firsts,S.scribe,DUNGEON_LOOT];if(GL
   const earn=ms.filter(m=>memberState(m)!=="former").map(m=>[m,weekGained(m)+Math.floor(hkWeekOf(m)/50)+10*passportOf(m).filter(s=>Date.parse(s.at||"")>=wk).length
     +25*firsts.filter(f=>f.id===m.id&&!f.by&&Date.parse(f.at)>=wk).length]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
   const v={xp,level,from:glNeed(level),to:glNeed(level+1),parts,earn,week:earn.reduce((a,x)=>a+x[1],0)};GLC={key,v};return v}
-// The side column on the Roster: a section, not a card (guildToday folds its parts together).
-function glSec(){if(!S.members.length)return null;const g=guildLevel(),nx=GL_UNLOCKS.find(u=>u[0]>g.level);
-  return h("section",{class:"gl-side","aria-labelledby":"gls-h"},h("div",{class:"spread"},h("h2",{id:"gls-h",class:"gt-eb"},"Guild Level "+g.level),h("a",{class:"small",href:"#guild"},"See it")),glBar(g),
-    h("span",{class:"small ter"},fmtN(g.to-g.xp)+" xp to level "+(g.level+1)+(g.week?" · +"+fmtN(g.week)+" this week":"")))}
+// Three tiles under the Roster heading: today so far, this week's recap and the guild level.
+function hubTiles(){if(!S.members.length)return null;
+  const d0=new Date();d0.setHours(0,0,0,0);const t0=d0.getTime(),on=S.members.filter(m=>Date.parse(seenOf(m))>=t0).length;
+  const ups=feedItems().filter(x=>x.t>=t0&&x.k==="level").length,lv=S.members.reduce((t,m)=>t+weekGained(m),0),g=guildLevel();
+  const tile=(href,eb,big,small,extra)=>h("a",{class:"hub-t",href},h("span",{class:"hub-eb"},eb),h("b",{},big),extra||null,h("span",{class:"hub-s"},small));
+  return h("nav",{class:"hub","aria-label":"Today, this week and the guild level"},
+    tile("#today","Today",ups?ups+(ups===1?" level-up":" level-ups"):on+" on today",ups?on+" on today":"See what's new"),
+    tile("#recap","This week","+"+fmtN(lv)+(lv===1?" level":" levels"),"Weekly recap"),
+    tile("#guild","Guild level","Level "+g.level,fmtN(g.to-g.xp)+" xp to "+(g.level+1),glBar(g)))}
 const crownSvg=()=>{const n="http://www.w3.org/2000/svg",sv=document.createElementNS(n,"svg"),pa=document.createElementNS(n,"path");sv.setAttribute("viewBox","0 0 24 16");sv.setAttribute("width","22");sv.setAttribute("height","15");
   pa.setAttribute("d","M2 14 L1 3 L7 8 L12 1 L17 8 L23 3 L22 14 Z");pa.setAttribute("fill","#e6bc77");pa.setAttribute("stroke","#5a3a12");pa.setAttribute("stroke-width","1.2");pa.setAttribute("stroke-linejoin","round");sv.append(pa);return sv};
 const glWeek=()=>S.members.length?guildLevel():null;
