@@ -39,17 +39,21 @@ do
     end
   end
   -- The data itself comes from RecipeData.lua (loaded first).
-  do local _, ns = ...; if ns then Item.ids, Item.rec, Item.rn = ns.ids or {}, ns.rec or {}, ns.rn or {} end end
+  do local _, ns = ...; if ns then Item.ids, Item.rec, Item.rn, Item.where = ns.ids or {}, ns.rec or {}, ns.rn or {}, ns.where or {} end end
   function Item.info(name) if not byName then build() end return name and byName[name] or nil end
   function Item.list(prof) if not byName then build() end return lists[prof] end
   function Item.reagName(id) return (Item.rn and Item.rn[id]) or ("item " .. id) end
   Item.SRC = { T = "from a trainer", R = "from a recipe (vendor, drop or quest)", A = "known automatically" }
+  -- Where to get a recipe, from the site's data: "Sold by X (Zone)", "Drops from Y", "Quest: Z"... (nil if unknown)
+  function Item.whereText(e) return e and Item.where and Item.where[e.prof .. "|" .. e.name] or nil end
   -- Adds what a recipe needs to the tooltip being shown.
   function Item.tipRecipe(name)
     local e = Item.info(name)
     if not e then return end
     GameTooltip:AddLine(" ")
     GameTooltip:AddLine(e.prof .. " " .. e.skill .. (Item.SRC[e.src] and (", " .. Item.SRC[e.src]) or ""), 0.88, 0.66, 0.38)
+    local where = Item.whereText(e)
+    if where and e.src == "R" then GameTooltip:AddLine("Recipe: " .. where, 0.70, 0.85, 1, true) end
     for _, r in ipairs(e.reag) do GameTooltip:AddLine(r[2] .. " x " .. Item.reagName(r[1]), 0.94, 0.90, 0.89) end
   end
 end
@@ -1158,7 +1162,7 @@ do
         local icon = id and Item.icon(id)
         r.recipe = e.name
         r.name:SetText((icon and ("|T" .. icon .. ":16:16|t ") or "") .. e.name)
-        r.info:SetText((e.skill <= rank and (GOLD .. "You can learn this now|r") or (DIM .. "Needs " .. prof .. " " .. e.skill .. "|r")) .. DIM .. "  ·  " .. (Item.SRC[e.src] or "source unknown") .. "|r")
+        r.info:SetText((e.skill <= rank and (GOLD .. "You can learn this now|r") or (DIM .. "Needs " .. prof .. " " .. e.skill .. "|r")) .. DIM .. "  ·  " .. (Item.whereText(e) or Item.SRC[e.src] or "source unknown") .. "|r")
         r:Show()
       else r:Hide() end
     end
