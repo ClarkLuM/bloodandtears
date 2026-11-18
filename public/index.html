@@ -3034,7 +3034,7 @@ function viewRecap(){
       h("div",{class:"day-side"},
         h("section",{class:"card","aria-labelledby":"rcl-h"},h("div",{class:"spread"},h("h2",{id:"rcl-h"},"Top Levellers")),data.lev.length?h("div",{class:"rc-pods"},pod):h("p",{class:"empty",style:"margin:0"},"Nobody levelled up this week.")),
         data.loot.length?h("section",{class:"card","aria-labelledby":"rcb-h"},h("div",{class:"spread"},h("h2",{id:"rcb-h"},"Best Loot"),h("span",{class:"small ter"},"blues and better")),
-          h("div",{class:"day-rows"},data.loot.map(([m,name,q])=>h("div",{class:"spread",style:"flex-wrap:nowrap"},itemRef(name,{q}),h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap"},classIcon(m.cls),charLink(m)))))):null,
+          h("div",{class:"day-rows"},data.loot.map(([m,name,q,,id])=>h("div",{class:"spread",style:"flex-wrap:nowrap"},(r=>{if(r.classList.contains("item-plain"))r.style.color="var(--q"+Math.max(0,Math.min(6,+q||1))+")";return r})(itemRef(name,id?{id,q}:null)),h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap"},classIcon(m.cls),charLink(m)))))):null,
         data.kw.length?h("section",{class:"card","aria-labelledby":"rck-h"},h("div",{class:"spread"},h("h2",{id:"rck-h"},"Most Honourable Kills")),h("div",{class:"day-rows"},data.kw.map(([m,v])=>h("div",{class:"spread"},h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap"},classIcon(m.cls),charLink(m)),h("b",{},v))))):null,
         data.firsts.length?h("section",{class:"card","aria-labelledby":"rcf-h"},h("div",{class:"spread"},h("h2",{id:"rcf-h"},"New in the Hall of Firsts")),h("div",{class:"day-rows"},data.firsts.map(([l,f])=>{const m=f.id&&memberById(f.id);
           return h("div",{class:"spread"},h("span",{class:"ter"},l),h("span",{class:"row",style:"gap:.375rem"},classIcon(f.cls||(m&&m.cls)),m?charLink(m):h("b",{},f.name||"")))}))):null),
@@ -3151,7 +3151,7 @@ function liveRecap(past){
   const lev=all.map(m=>[m,weekGained(m,since,until)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([m,v])=>[m,"+"+v]);
   const kw=past?[]:all.map(m=>[m,hkWeekOf(m)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([m,v])=>[m,v.toLocaleString("en-AU")]);
   const firsts=FIRSTS.map(([k,l])=>[l,(S.firsts||{})[k]]).filter(([,f])=>f&&!f.by&&inR(Date.parse(f.at))).slice(0,4);
-  const loot=all.flatMap(m=>(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Equipped /.test(j.t||"")&&j.item&&+j.item.q>=3&&inR(Date.parse(j.at))).map(j=>[m,j.t.slice(9),+j.item.q,Date.parse(j.at)]))
+  const loot=all.flatMap(m=>(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Equipped /.test(j.t||"")&&j.item&&+j.item.q>=3&&inR(Date.parse(j.at))).map(j=>[m,j.t.slice(9),+j.item.q,Date.parse(j.at),+j.item.id||0]))
     .sort((a,b)=>b[2]-a[2]||b[3]-a[3]).slice(0,3);
   return past?{saved:true,label:past.label,from:since,to:until,totals,lev,kw,firsts,loot}:{from:since+864e5,to:Date.now(),totals,lev,kw,firsts,loot}}
 // A finished week saved by the server (guild/recaps), in the same shape. Characters who've since left keep their name.
@@ -3161,7 +3161,7 @@ function savedRecap(r){const who=(n,c)=>S.members.find(m=>nameOf(m)===n)||{char:
     totals:[["+"+(+t.levels||0).toLocaleString("en-AU"),"levels gained"],[String(+t.blues||0),"blue items on"],[String(+t.epics||0),"epic items on"],["+"+(+t.hk||0).toLocaleString("en-AU"),"honourable kills"]],
     lev:(r.lev||[]).slice(0,3).map(([n,c,v])=>[who(n,c),"+"+v]),kw:(r.kw||[]).slice(0,3).map(([n,c,v])=>[who(n,c),(+v).toLocaleString("en-AU")]),
     firsts:(r.firsts||[]).map(([k,n,c,at,item])=>[(FIRSTS.find(f=>f[0]===k)||[k,k])[1],{name:n,cls:c,at,item}]).slice(0,4),
-    loot:(r.loot||[]).slice(0,3).map(([n,c,name,q])=>[who(n,c),name,q])}}
+    loot:(r.loot||[]).slice(0,3).map(([n,c,name,q,id])=>[who(n,c),name,q,0,+id||0])}}
 async function recapPng(data=liveRecap()){
   await document.fonts.ready.catch(()=>{});
   const W=1080,PAD=72,colW=(W-PAD*2-48)/2,{totals,lev,kw,firsts,loot}=data;
