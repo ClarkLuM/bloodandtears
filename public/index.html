@@ -1268,6 +1268,12 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
  .page-head.ph-logo:has(>.row>.btn:nth-of-type(2))>.row{flex:1 1 100%;flex-wrap:wrap;gap:.5rem}
  .page-head.ph-logo:has(>.row>.btn:nth-of-type(2))>.row .btn{flex:1 1 auto}
 }
+/* Phones: the Dungeons / Raids switch in the heading gets its own full-width row under the title, and never wraps. */
+@media (max-width:640px){
+ .page-head.ph-logo:has(>.dg-tabs){flex-wrap:wrap}
+ .page-head.ph-logo>.dg-tabs{flex:1 1 100%;flex-wrap:nowrap;display:flex}
+ .page-head.ph-logo>.dg-tabs a{flex:1;justify-content:center;white-space:nowrap}
+}
 /* Your own character, pinned to the top */
 .roster-t tr.r-row.mine:not(.lvup){border-color:color-mix(in srgb,var(--accent-text) 45%,transparent)}
 /* By class: each group headed with its colour */
