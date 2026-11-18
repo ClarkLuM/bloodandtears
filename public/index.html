@@ -664,7 +664,6 @@ nav.bottom a[data-wc] .nb-ic{position:relative}
 nav.bottom a[data-wc] .nb-ic::after{content:"";position:absolute;top:-.125rem;right:-.3125rem;width:.5rem;height:.5rem;border-radius:50%;background:var(--accent-text);box-shadow:0 0 0 2px var(--sunken)}
 .preview-strip{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25rem .75rem;padding:.5rem 1rem;background:#a50d2c;color:#fff;font-size:.875rem;text-align:center}
 .preview-strip a{color:#ffe1a8;font-weight:600}
-.test-mark{color:var(--accent-text)}
 @keyframes swNext{from{opacity:.4;transform:translateX(2.5rem)}to{opacity:1;transform:none}}
 @keyframes swPrev{from{opacity:.4;transform:translateX(-2.5rem)}to{opacity:1;transform:none}}
 html[data-swipe="next"] #app main{animation:swNext .22s ease-out}html[data-swipe="prev"] #app main{animation:swPrev .22s ease-out}
@@ -4469,7 +4468,7 @@ function render(){
     S.saveErr?h("div",{class:"note warn spread",role:"alert"},h("span",{},S.saveErr),h("button",{class:"btn sm",onclick:()=>{S.saveErr="";render()}},"OK")):null,
     !S.loaded&&!S.error?h("div",{class:"note"},"Loading the roster…"):null,
     body),
-    h("footer",{class:"site-foot wrap"},h("span",{},"Blood and Tears · a guild site, made by guildies",h("b",{class:"test-mark"}," · Hello from the new deploy button! (test, 18 Nov)")),h("button",{type:"button",class:"foot-link",onclick:openPrivacy},"Privacy and opting out"))].filter(Boolean));
+    h("footer",{class:"site-foot wrap"},h("span",{},"Blood and Tears · a guild site, made by guildies"),h("button",{type:"button",class:"foot-link",onclick:openPrivacy},"Privacy and opting out"))].filter(Boolean));
   for(const[id,v]of Object.entries(typed)){const el=document.getElementById(id);if(!el||el.closest("dialog"))continue;el.value=v}
   if(keep){const el=document.getElementById(keep);if(el)el.focus()}
   // The loading screen goes once the roster is in (or something's gone wrong, or it's taking too long).
