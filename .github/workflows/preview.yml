@@ -17,6 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp the build (for the "new version ready" notice)
+        run: |
+          sed -i "s/__BUILD__/${GITHUB_SHA}/" public/index.html
+          printf '{"build":"%s"}\n' "$GITHUB_SHA" > public/version.json
       - id: deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:

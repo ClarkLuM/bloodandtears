@@ -664,6 +664,9 @@ nav.bottom a[data-wc] .nb-ic{position:relative}
 nav.bottom a[data-wc] .nb-ic::after{content:"";position:absolute;top:-.125rem;right:-.3125rem;width:.5rem;height:.5rem;border-radius:50%;background:var(--accent-text);box-shadow:0 0 0 2px var(--sunken)}
 .preview-strip{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25rem .75rem;padding:.5rem 1rem;background:#a50d2c;color:#fff;font-size:.875rem;text-align:center}
 .preview-strip a{color:#ffe1a8;font-weight:600}
+.update-strip{position:sticky;top:0;z-index:30;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem 1rem;padding:.5rem 1rem;background:var(--raised);border-bottom:1px solid var(--accent-b,var(--b-def));font-size:.9375rem}
+.helper-line{display:inline-flex;flex-wrap:wrap;gap:.25rem;align-items:center}.helper-line .dot{display:inline-block;border-radius:50%;vertical-align:middle}
+.update-strip .btn{border-color:var(--accent-text);color:var(--accent-text)}
 @keyframes swNext{from{opacity:.4;transform:translateX(2.5rem)}to{opacity:1;transform:none}}
 @keyframes swPrev{from{opacity:.4;transform:translateX(-2.5rem)}to{opacity:1;transform:none}}
 html[data-swipe="next"] #app main{animation:swNext .22s ease-out}html[data-swipe="prev"] #app main{animation:swPrev .22s ease-out}
@@ -1830,6 +1833,17 @@ function wcDots(page){if(!S.loaded||!S.members.length)return{};const seen=wcRead
     const what=wcWhat(k,seen[k],now[k]);if(what.length)dots[k]=what}
   if(dirty)wcSave();return dots}
 
+// "A new version is ready": the GitHub deploys stamp this page with the commit it was built from (BUILD) and write the
+// same into version.json. Every few minutes, and when the tab comes back into view, the page checks version.json; if a
+// newer site has gone live since it loaded, a strip offers a one-tap refresh. Copies deployed by hand have no stamp and
+// don't check.
+const BUILD="__BUILD__";
+let newVersion=false;
+(()=>{if(!/^[0-9a-f]{7,40}$/.test(BUILD))return;
+  const check=async()=>{if(newVersion)return;try{const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const v=await r.json();
+    if(v&&v.build&&v.build!==BUILD){newVersion=true;render()}}catch(e){}};
+  setInterval(check,5*60e3);addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check()});setTimeout(check,30e3)})();
+const updateStrip=()=>newVersion?h("div",{class:"update-strip",role:"status"},h("span",{},"A new version of the site is ready."),h("button",{type:"button",class:"btn sm",onclick:()=>location.reload()},"Refresh")):null;
 // A preview copy (a Firebase preview link, not the real site) says so in a red strip along the top, so the two can't
 // be mixed up. The guild data is the same real data.
 const IS_PREVIEW=/--[a-z0-9-]+\.web\.app$/.test(location.hostname);
@@ -4073,10 +4087,17 @@ function scribeLine(){const sc=S.scribe,can=isOfficer()||isScribe();
       return[inp,h("label",{for:"scribe-file",class:"btn sm",title:tip},"Upload the scribe file")]})();
   return h("span",{class:"row",style:"gap:.375rem .75rem;align-items:center"},sc&&sc.up?h("span",{},"Guild scribe file from "+(sc.by||"an officer")+", uploaded "+ago(sc.up)):can?h("span",{},"No guild scribe file yet"):null,up,
     h("button",{class:"btn sm ghost",type:"button",title:"A snapshot of the site for the Scribe addon: passports, professions, recipes, alts, titles",onclick:downloadAddonFile},"Download for the addon"),
+    helperLine(),
     can?h("button",{class:"btn sm ghost",type:"button",title:"A small helper for your Windows computer that uploads the scribe file and fetches the addon's site data by itself",onclick:openAutoUpload},"Set up automatic upload"):null)}
 // Automatic upload: a small helper for a scribe's Windows computer (public/scribe-helper.txt, made into a .cmd file
 // with their own upload key). Every 15 minutes it uploads the notes file if it changed and saves the site's latest
 // data as SiteData.lua. The key comes from scribeKey and is shown only inside the file; making a new one replaces it.
+// Each automatic-upload helper checks in at least hourly. Whose computer it's on comes from the characters that person
+// owns on the site. Not heard from for three hours: shown as quiet (the computer may just be off).
+function helperLine(){const hs=Object.entries(S.helpers||{}).filter(([,v])=>v&&v.seen);if(!hs.length)return null;
+  const who=uid=>{const m=S.members.find(x=>Array.isArray(x.owners)&&x.owners.includes(uid));return m?nameOf(m):"a scribe"};
+  return h("span",{class:"helper-line"},hs.sort((a,b)=>String(b[1].seen).localeCompare(String(a[1].seen))).map(([uid,v],i)=>{const quiet=Date.now()-Date.parse(v.seen)>3*36e5;
+    return h("span",{class:quiet?"ter":""},i?" · ":"",h("i",{class:"dot",style:`width:.5rem;height:.5rem;background:${quiet?"var(--ter)":"#3ba55d"}`})," Automatic upload on "+who(uid)+"'s computer: "+(quiet?"quiet, last heard from "+ago(v.seen):"checked in "+ago(v.seen))+(v.up?", last upload "+ago(v.up):""))}))}
 const SCRIBE_AUTO_URL="https://australia-southeast1-loot-goblins-roster.cloudfunctions.net/scribeAuto";
 function openAutoUpload(){
   const dlg=$("#dlg"),f=$("#dlgForm");if(dlg.open)return;
@@ -4461,7 +4482,7 @@ function render(){
   const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():views[r.page]();
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
-  app.replaceChildren(...[previewStrip(),header(r.page==="char"?"":r.page==="history"?"roster":r.page==="raids"?"lfg":r.page),
+  app.replaceChildren(...[previewStrip(),updateStrip(),header(r.page==="char"?"":r.page==="history"?"roster":r.page==="raids"?"lfg":r.page),
     net?h("div",{class:"netbar",role:"status"},net):null,winterVeil(),
     h("main",{class:"wrap"},
     S.error?h("div",{class:"note warn"},S.error):null,
@@ -4504,6 +4525,7 @@ function subscribe(){
     stripped.add(m.id);updateDoc(charRef(m),{player:deleteField()}).catch(()=>{})}};
   live("members",x=>{S.members=x;strip(x);setTimeout(checkLinkHash)});
   live("alts",x=>{S.alts=x.map(a=>({...a,isAlt:true}));strip(S.alts)});
+  S.unsub.push(onSnapshot(doc(db,"guild","helpers"),snap=>{S.helpers=snap.exists()?snap.data():{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","officers"),snap=>{S.officers=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","itemIds"),snap=>{S.itemIds=snap.exists()?snap.data().items||{}:{};S.itemIdsReady=true;schedule()},()=>{S.itemIdsReady=true}));
   S.unsub.push(onSnapshot(doc(db,"guild","roster"),snap=>{S.guildRoster=snap.exists()?snap.data():null;schedule()},()=>{}));

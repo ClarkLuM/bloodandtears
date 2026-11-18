@@ -394,12 +394,16 @@ exports.scribeAuto = onRequest({ region: REGION, maxInstances: 1, timeoutSeconds
   if (q.empty) { res.status(401).json({ error: "That upload key isn't known any more. Download a new helper from the site." }); return; }
   const uid = q.docs[0].id;
   if (!(await canScribe(uid))) { res.status(403).json({ error: "This key's owner isn't an officer or guild scribe any more." }); return; }
+  // Each helper checks in at least hourly; the site shows when it was last heard from (guild/helpers, by uid).
+  const now = new Date().toISOString();
+  await db().doc("guild/helpers").set({ [uid]: { seen: now } }, { merge: true });
   const text = req.rawBody ? req.rawBody.toString("utf8") : "";
   let result = null;
   if (text.trim()) {
     try { result = await scribeUploadAs(uid, text); }
     catch (e) { res.status(400).json({ error: e.message || "Upload failed." }); return; }
-    await q.docs[0].ref.set({ used: new Date().toISOString() }, { merge: true });
+    await q.docs[0].ref.set({ used: now }, { merge: true });
+    await db().doc("guild/helpers").set({ [uid]: { seen: now, up: now } }, { merge: true });
   }
   const sd = (await db().doc("guild/sitedata").get()).data() || {};
   res.json({ ok: true, result, siteData: sd.text || "", siteAt: sd.at || "" });
