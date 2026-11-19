@@ -711,12 +711,12 @@ async function updateFirsts() {
   const byAt = (a, b) => String(a.at).localeCompare(String(b.at));
   const cands = {}, add = (k, e, rank) => (cands[k] = cands[k] || []).push({ ...e, rank });
   const tot = { levels: 0, blues: 0, epics: 0, hk: 0, sixty: 0 };
-  const snap = await db().collection("members").get();
+  const snap = await db().collection("members").get(), bases = {};
   for (const doc of snap.docs) {
     const d = doc.data() || {}, id = doc.id, lv = +d.level || 1, j = Array.isArray(d.journey) ? d.journey : [];
     tot.levels += Math.max(0, lv - 1); if (lv >= 60) tot.sixty++;
     for (const g of Object.values(d.gear || {})) if (g && g.id) { if (+g.q === 3) tot.blues++; else if (+g.q >= 4) tot.epics++; }
-    const base = { id, name: plainName(d).slice(0, 41), cls: String(d.cls || "").slice(0, 12) };
+    const base = bases[id] = { id, name: plainName(d).slice(0, 41), cls: String(d.cls || "").slice(0, 12) };
     const ups = j.filter(x => x && /^Reached level \d+/.test(x.t || "") && x.at)
       .map(x => ({ to: lvOfText(x.t), from: x.from != null ? +x.from : lvOfText(x.t) - 1, at: x.at })).sort(byAt);
     // The level the site first saw them at: worked out once, while their history is still complete, then kept.
@@ -743,6 +743,14 @@ async function updateFirsts() {
     if (hk >= 100) add("hk100", { ...base, at: now, by: firstRun }, hk);
     const top = Object.entries(d.profs || {}).filter(([p]) => !NOT_PROFS.includes(p)).sort((x, y) => (+y[1] || 0) - (+x[1] || 0))[0];
     if (top && +top[1] >= 300) add("prof300", { ...base, at: now, by: firstRun, note: String(top[0]).slice(0, 30) }, +top[1]);
+  }
+  // Blue and epic items the guild scribe saw someone loot count too, from the moment they looted it (the armory only
+  // knows once it's worn and they've logged out, which can be hours later, or never for an item they don't wear).
+  const sloot = ((await db().doc("guild/scribe").get()).data() || {}).loot;
+  for (const x of Array.isArray(sloot) ? sloot : []) {
+    const base = x && bases[x.id], it = x && x.item; if (!base || !it || !x.at) continue;
+    for (const [k, q] of [["blue", 3], ["epic", 4]]) if (+it.q >= q)
+      add(k, { ...base, at: x.at, by: false, item: { id: String(it.id), q: +it.q, name: String(it.name || "").slice(0, 120) } }, +it.q);
   }
   let changed = firstRun || Object.keys(start).length !== Object.keys(cur.start || {}).length;
   for (const [k, arr] of Object.entries(cands)) {
@@ -1070,12 +1078,14 @@ async function scribeUploadAs(uid, text) {
     const ids = idsOf(x.who); if (ids.length) kills.push({ at, boss, zone: short(x.zone, 60), ids });
   }
   kills.sort((a, b) => (a.at < b.at ? -1 : 1));
+  let newGood = false;
   const loot = Array.isArray(cur.loot) ? cur.loot.slice() : [], seenL = new Set(loot.map(x => x.at + "|" + x.id + "|" + x.item.id));
   for (const x of Array.isArray(sv.loot) ? sv.loot : Object.values(sv.loot || {})) {
     if (!x || !x.name || !(+x.id > 0) || !(+x.q >= 2)) continue;
     const hit = who(x.who), at = iso(x.t); if (!hit || !at) continue;
     const sig = at + "|" + hit.id + "|" + String(x.id); if (seenL.has(sig)) continue; seenL.add(sig);
     loot.push({ at, id: hit.id, item: { id: String(+x.id), q: Math.min(7, +x.q), name: short(x.name, 120) }, zone: short(x.zone, 60) });
+    if (+x.q >= 3) newGood = true;
   }
   loot.sort((a, b) => (a.at < b.at ? -1 : 1));
   // Joins and leaves for the feed, without repeats.
@@ -1116,7 +1126,7 @@ async function scribeUploadAs(uid, text) {
   }
   await ref.set({ stamps, members, days, hours, raids, runs, zones, zonesOld, kills: kills.slice(-300), loot: loot.slice(-300), events: events.slice(-200), at: iso(sv.at) || new Date().toISOString(), by: short((sv.by && listed.filter(n => keyOf(n).startsWith(keyOf(sv.by) + " ")).length === 1 ? listed.find(n => keyOf(n).startsWith(keyOf(sv.by) + " ")) : sv.by), 40), up: new Date().toISOString() });
   await saveStreaks().catch(err => logger.warn("streaks", err.message));
-  if (levelled.length) await updateFirsts().catch(err => logger.warn("firsts", err.message));
+  if (levelled.length || newGood) await updateFirsts().catch(err => logger.warn("firsts", err.message));
   return { matched, unknown: unknown.slice(0, 20), unknownN: unknown.length, raids: Object.keys(sv.raids || {}).length, recipeChars, levelled: levelled.slice(0, 20),
     runs: Object.keys(sv.runs || {}).length, zoneDays, kills: (Array.isArray(sv.kills) ? sv.kills : Object.values(sv.kills || {})).length };
 }
