@@ -4849,6 +4849,8 @@ function route(){const p=(location.hash||"#roster").slice(1).split("/");if(p[0]=
 function render(){
   const app=$("#app");
   const keep=document.activeElement&&document.activeElement.id,typed={};
+  // An open More menu stays open through a redraw (the page redraws whenever new data arrives).
+  const moreOpen=[...app.querySelectorAll("details.more")].findIndex(d=>d.open);
   // Typed text survives a redraw; checkboxes and menus always show what's saved (a quick chip can change a menu).
   for(const el of app.querySelectorAll("input[id],textarea[id]"))if(el.type!=="checkbox")typed[el.id]=el.value;
   if(!configured){app.replaceChildren(h("main",{class:"wrap"},h("div",{class:"note warn"},"This copy isn't connected to Firebase yet. Paste your project's config into firebase-config.js.")));return}
@@ -4871,6 +4873,7 @@ function render(){
     h("footer",{class:"site-foot wrap"},h("span",{},"Blood and Tears · a guild site, made by guildies"),h("button",{type:"button",class:"foot-link",onclick:openPrivacy},"Privacy and opting out"))].filter(Boolean));
   for(const[id,v]of Object.entries(typed)){const el=document.getElementById(id);if(!el||el.closest("dialog"))continue;el.value=v}
   if(keep){const el=document.getElementById(keep);if(el)el.focus()}
+  if(moreOpen>=0){const d=app.querySelectorAll("details.more")[moreOpen];if(d)d.open=true}
   fitNews();
   // The loading screen goes once the roster is in (or something's gone wrong, or it's taking too long).
   if(S.loaded||S.error||S.authError||!configured)bootDone();
