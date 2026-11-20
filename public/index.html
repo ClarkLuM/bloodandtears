@@ -1568,6 +1568,36 @@ html.gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 1
 .ft-tag{display:inline-flex;align-items:center;gap:.375rem;padding:.125rem .625rem;border-radius:99px;border:1px solid rgb(230 188 119/.45);color:#f0cf8f;font-size:.8125rem;text-decoration:none;background:rgb(230 188 119/.08)}
 .ft-tag.big{background:linear-gradient(90deg,#c9932d,#f0cf8f);color:#2a1606;border-color:transparent;font-weight:600}
 .ft-tag:hover{border-color:#f0cf8f;color:#fff}.ft-tag.big:hover{color:#2a1606;filter:brightness(1.08)}
+.tt-all{display:flex;flex-direction:column;gap:1rem}
+.tt-cols{display:grid;grid-template-columns:repeat(3,max-content);gap:1.25rem;justify-content:center}
+.tt-col{display:flex;flex-direction:column;gap:.5rem}
+@media (max-width:900px){.tt-cols{grid-template-columns:max-content}}
+#dlg:has(.tt-all){width:min(54rem,calc(100vw - 2rem));max-width:none}
+/* Talent trees */
+.tt{gap:.875rem}
+.tt-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.375rem}
+.tt-tab{display:flex;justify-content:space-between;align-items:baseline;gap:.375rem;padding:.4375rem .625rem;border-radius:8px;border:1px solid var(--sep);background:transparent;color:var(--sec);font:inherit;font-size:.8125rem;cursor:pointer;min-width:0}
+.tt-tab span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tt-tab b{color:var(--text);font-variant-numeric:tabular-nums}
+.tt-tab.on{border-color:var(--accent-text);background:rgb(230 188 119/.08);color:var(--text)}.tt-tab:hover{border-color:var(--accent-text)}
+.tt-grid{--ts:2.75rem;--tg:.875rem;--tp:.75rem;position:relative;display:grid;grid-template-columns:repeat(4,var(--ts));grid-template-rows:repeat(var(--rows),var(--ts));gap:var(--tg);justify-content:center;padding:var(--tp);border-radius:10px;background:radial-gradient(ellipse at 50% 0,rgb(165 13 44/.12),transparent 70%),var(--sunken,#0f0a09);border:1px solid var(--sep);width:max-content;margin:0 auto}
+.tt-cell{position:relative;width:var(--ts);height:var(--ts);padding:0;border-radius:7px;border:2px solid #3a2e2c;background:#0f0a09;cursor:pointer;z-index:1}
+.tt-cell img,.tt-noic{display:block;width:100%;height:100%;border-radius:5px}
+.tt-cell.locked img{filter:grayscale(1) brightness(.45)}.tt-cell.locked{border-color:#2a2220}
+.tt-cell.open img{filter:grayscale(.85) brightness(.75)}.tt-cell.open{border-color:#5b4a46}
+.tt-cell.on{border-color:#3fbf5a}.tt-cell.max{border-color:#e6bc77;box-shadow:0 0 8px rgb(230 188 119/.35)}
+.tt-cell.sel{outline:2px solid var(--accent-text);outline-offset:2px}
+.tt-cell:hover img{filter:none}
+.tt-rank{position:absolute;right:-.4375rem;bottom:-.4375rem;padding:0 .25rem;min-width:1.375rem;height:1.0625rem;border-radius:4px;background:#0f0a09;border:1px solid #4a3a39;font:600 .6875rem/1rem var(--body);color:#a6948e;text-align:center}
+.tt-cell.on .tt-rank{color:#7fd48a;border-color:#3fbf5a}.tt-cell.max .tt-rank{color:#f0cf8f;border-color:#c9932d}.tt-cell.locked .tt-rank{color:#6d5f5b}
+.tt-v,.tt-h{position:absolute;background:#3a2e2c;pointer-events:none}.tt-v.lit,.tt-h.lit{background:#c9932d}
+.tt-v{width:4px;left:calc(var(--tp) + var(--c)*(var(--ts) + var(--tg)) + var(--ts)/2 - 2px);top:calc(var(--tp) + var(--r1)*(var(--ts) + var(--tg)) + var(--ts));height:calc((var(--r2) - var(--r1))*(var(--ts) + var(--tg)) - var(--ts))}
+.tt-v.from-mid{top:calc(var(--tp) + var(--r1)*(var(--ts) + var(--tg)) + var(--ts)/2);height:calc((var(--r2) - var(--r1))*(var(--ts) + var(--tg)) - var(--ts)/2)}
+.tt-h{height:4px;top:calc(var(--tp) + var(--r)*(var(--ts) + var(--tg)) + var(--ts)/2 - 2px);left:calc(var(--tp) + var(--c1)*(var(--ts) + var(--tg)) + var(--ts));width:calc((var(--c2) - var(--c1))*(var(--ts) + var(--tg)) - var(--ts))}
+.tt-h.half{width:calc((var(--c2) - var(--c1))*(var(--ts) + var(--tg)) - var(--ts)/2 + 2px)}.tt-h.half.left{left:calc(var(--tp) + var(--c1)*(var(--ts) + var(--tg)) + var(--ts)/2 - 2px)}
+.tt-v::after{content:"";position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border-left:6px solid transparent;border-right:6px solid transparent;border-top:7px solid #3a2e2c}
+.tt-v.lit::after{border-top-color:#c9932d}
+.tt-detail{padding:.75rem;border-radius:10px;border:1px solid var(--sep);background:var(--raised)}
+@media (max-width:420px){.tt-grid{--ts:2.5rem;--tg:.75rem;--tp:.625rem}}
 </style>
 </head>
 <body>
@@ -1659,7 +1689,7 @@ function cleanTip(html){const doc=new DOMParser().parseFromString(String(html),"
   const idOf=el=>{if(el.dataset.item)return el.dataset.item;const u=el.getAttribute("href")||"",i=/item=(\d+)/.exec(u),sp=/spell=(\d+)/.exec(u);return i?i[1]:sp?"-"+sp[1]:null};
   document.addEventListener("mouseover",e=>{const el=e.target.closest&&e.target.closest("[data-item],a[href*='wowhead.com'],[data-tip-name]");if(!el||el===cur)return;
     // Talents: the armory's own text for their rank, in the same box as Wowhead's item tooltips.
-    if(el.dataset.tipName){hide();cur=el;timer=setTimeout(()=>{if(cur!==el)return;const ic=safePic(el.dataset.tipIcon||"");
+    if(el.dataset.tipName){hide();cur=el;timer=setTimeout(()=>{if(cur!==el)return;const ic=tipIcon(el.dataset.tipIcon||"");
       tip=h("div",{class:"whtip",role:"tooltip"},h("div",{class:"hd"},ic?h("img",{src:ic,alt:"",referrerpolicy:"no-referrer"}):null,
         h("div",{},h("b",{class:"wt-name"},el.dataset.tipName),el.dataset.tipRank?h("div",{class:"wt-rank"},el.dataset.tipRank):null,
           el.dataset.tipDesc?h("div",{class:"wt-desc"},el.dataset.tipDesc):null)));document.body.append(tip);place()},120);return}
@@ -1879,6 +1909,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-20","Talent trees","Character pages now show the full WoW Forever talent trees, like Wowhead's calculator: what's taken, what's maxed, what's open next and what's still locked. Hover or tap any talent to read it.",null],
   ["2026-11-20","Guild news, and bragging rights","Big moments from the last few days scroll along the top of every page: epics, guild firsts, level 50s and 60s, titles and milestones. The guild's first epic and first level 60 also get a gold spot on the Roster for a week, and a gold ribbon on their character page for good.",null],
   ["2026-11-18","The guild has a level","Levels, dungeon stamps, honourable kills and guild firsts all earn the guild xp. Each guild level unlocks something for everyone.","#guild"],
   ["2026-11-18","Today and the weekly recap, as pages","Today shows everything since midnight: the feed, who's been on and where. The weekly recap is a page now, with the picture for Discord a tap away.","#today"],
@@ -4279,9 +4310,88 @@ function statsBox(m){
   return h("div",{class:"stats",role:"group","aria-label":"Stats"},groups.map(([t,l])=>h("div",{},h("h3",{},t),
       l.map(([k,label])=>h("div",{class:"sr"},h("span",{},label),h("b",{},t==="PvP"?(k==="hk"?(+a.hk||0).toLocaleString("en-AU"):pvpRank(+a.rank||0)):statVal(k,st[k])))),t==="PvP"?rankLine(REC_BOARDS[0][2],m,"ganker"):null)),
     h("p",{class:"small",style:"grid-column:1/-1;margin:0;color:#a6948e"},"From the armory"+(a.updated?", as of "+ago(a.updated):"")))}
+// The full WoW Forever talent trees (public/talent-trees.json, built by tools/talents/build.py from Wowhead's
+// WoW Forever talent calculator), loaded the first time a character page wants them. What's specced comes from the
+// armory; everything else in the tree shows greyed out, so you can see what's coming and what was skipped.
+let TAL_TREES=null,talLoading=false;
+function talLayout(cls){
+  if(TAL_TREES)return(TAL_TREES.classes||{})[cls]||null;
+  if(!talLoading){talLoading=true;fetch("talent-trees.json").then(r=>r.ok?r.json():null).then(d=>{TAL_TREES=d||{classes:{}};render()}).catch(()=>{TAL_TREES={classes:{}};render()})}
+  return null}
+const TAL_ICON=n=>/^[\w-]+$/.test(String(n||""))?"https://wow.zamimg.com/images/wow/icons/medium/"+String(n).toLowerCase()+".jpg":"";
+const tipIcon=u=>safePic(u)||(/^https:\/\/wow\.zamimg\.com\/images\/wow\/icons\/\w+\/[\w-]+\.jpg$/.test(String(u||""))?u:"");
+// One tree, drawn from the layout plus what the armory says is taken (t.have, t.pts). grid(sel, onPick) makes the
+// clickable grid; the rest describe a talent for tooltips and the detail box.
+function talTools(t,low){
+  const rows=Math.max(7,...t.talents.map(x=>x[1]+1));
+  const rankOf=x=>{const a=t.have.get(low(x[0]));return a?Math.min(+a.rank||1,x[3]):0};
+  const stateOf=x=>{const r=rankOf(x);if(r)return r>=x[3]?"max":"on";const req=x[5]>=0?t.talents[x[5]]:null;
+    return t.pts>=x[1]*5&&(!req||rankOf(req)>=req[3])?"open":"locked"};
+  const descOf=x=>{const r=rankOf(x),a=t.have.get(low(x[0]));return r?(a&&a.desc)||(r>=x[3]&&x[7]?x[7]:x[6]):x[6]};
+  const tipRank=x=>{const r=rankOf(x);return r?"Rank "+r+" of "+x[3]:x[3]>1?"Not taken · "+x[3]+" ranks":"Not taken"};
+  const tipDesc=x=>{const r=rankOf(x);let d=descOf(x);if(r<x[3]&&x[3]>1&&x[7])d+=(r?" Next ranks build up to: ":" At rank "+x[3]+": ")+x[7];
+    if(stateOf(x)==="locked"){const req=x[5]>=0?t.talents[x[5]]:null,needPts=t.pts<x[1]*5,needReq=req&&rankOf(req)<req[3];
+      d+=" · Needs "+(needPts?x[1]*5+" points in "+t.name:"")+(needPts&&needReq?" and ":"")+(needReq?req[3]+"/"+req[3]+" "+req[0]:"")+"."}
+    return d};
+  const grid=(sel,onPick)=>{
+    const cells=t.talents.map(x=>{const st=stateOf(x),r=rankOf(x),ic=TAL_ICON(x[4]);
+      return h("button",{type:"button",class:"tt-cell "+st+(sel===x[0]?" sel":""),style:`grid-row:${x[1]+1};grid-column:${x[2]+1}`,"aria-label":x[0]+", "+tipRank(x),"aria-pressed":sel===x[0]?"true":"false",
+        "data-tip-name":x[0],"data-tip-rank":tipRank(x),"data-tip-desc":tipDesc(x),"data-tip-icon":ic,onclick:()=>onPick(x)},
+        ic?h("img",{src:ic,alt:"",loading:"lazy"}):h("span",{class:"tt-noic"}),h("span",{class:"tt-rank"},r+"/"+x[3]))});
+    // Arrows from a talent to the one it opens up: down, across, or across then down.
+    const arrows=t.talents.filter(x=>x[5]>=0).flatMap(x=>{const q=t.talents[x[5]],lit=stateOf(x)!=="locked"?" lit":"",out=[];
+      if(q[1]===x[1])out.push(h("i",{class:"tt-h"+lit,style:`--r:${x[1]};--c1:${Math.min(q[2],x[2])};--c2:${Math.max(q[2],x[2])}`,"aria-hidden":"true"}));
+      else if(q[2]===x[2])out.push(h("i",{class:"tt-v"+lit,style:`--c:${x[2]};--r1:${q[1]};--r2:${x[1]}`,"aria-hidden":"true"}));
+      else{out.push(h("i",{class:"tt-h half"+lit+(x[2]<q[2]?" left":""),style:`--r:${q[1]};--c1:${Math.min(q[2],x[2])};--c2:${Math.max(q[2],x[2])}`,"aria-hidden":"true"}));
+        out.push(h("i",{class:"tt-v from-mid"+lit,style:`--c:${x[2]};--r1:${q[1]};--r2:${x[1]}`,"aria-hidden":"true"}))}
+      return out});
+    return h("div",{class:"tt-grid",style:`--rows:${rows}`,role:"group","aria-label":t.name+" tree, "+t.pts+" points"},arrows,cells)};
+  return{rows,rankOf,stateOf,tipRank,tipDesc,grid}}
+// All three trees side by side, like Wowhead's calculator (stacked on phones). Clicking a talent shows it at the top.
+function openTalTrees(m,trees,low){const dlg=$("#dlg"),f=$("#dlgForm");if(dlg.open)return;
+  const info=h("div",{class:"tt-detail",hidden:true});
+  const show=(T,x,t)=>{info.hidden=false;info.replaceChildren(h("div",{class:"row",style:"gap:.625rem;flex-wrap:nowrap;align-items:flex-start"},TAL_ICON(x[4])?h("img",{src:TAL_ICON(x[4]),alt:"",class:"tal-ico"}):null,
+    h("div",{style:"min-width:0;display:flex;flex-direction:column;gap:.125rem"},h("b",{},x[0]),h("span",{class:"small ter"},t.name+" · "+T.tipRank(x)),h("span",{class:"small"},T.tipDesc(x)))))};
+  f.replaceChildren(h("div",{class:"tt-all"},
+    h("div",{class:"spread"},h("h2",{style:"margin:0"},nameOf(m)+"'s talents"),h("span",{class:"small ter"},trees.map(x=>x.pts).join(" / "))),
+    info,
+    h("div",{class:"tt-cols"},trees.map(t=>{const T=talTools(t,low);
+      return h("div",{class:"tt-col"},h("div",{class:"spread",style:"flex-wrap:nowrap"},h("b",{},t.name),h("span",{class:"small ter"},t.pts+(t.pts===1?" point":" points"))),T.grid("",x=>show(T,x,t)))})),
+    h("div",{class:"row",style:"justify-content:flex-end"},h("button",{type:"button",class:"btn",onclick:()=>dlg.close()},"Close"))));
+  f.onsubmit=e=>e.preventDefault();dlg.showModal()}
 function talentsCard(m){
-  const trees=(m.armory&&Array.isArray(m.armory.talents)?m.armory.talents:[]).filter(t=>t&&+t.points>0);
-  if(!trees.length)return null;
+  const got=(m.armory&&Array.isArray(m.armory.talents)?m.armory.talents:[]).filter(t=>t&&+t.points>0);
+  const lay=talLayout(m.cls);
+  if(!lay||!lay.length)return got.length?talentsList(m,got):null;
+  // Match each armory tree to the layout by the talents they share (names can differ, like Combat for Retribution).
+  const low=s=>String(s||"").trim().toLowerCase();
+  const trees=lay.map(t=>{const names=new Set(t.talents.map(x=>low(x[0])));
+    const a=got.map(g=>[g,(g.talents||[]).filter(x=>names.has(low(x.name))).length+(low(g.name)===low(t.name)?.5:0)]).sort((x,y)=>y[1]-x[1])[0];
+    const g=a&&a[1]>0?a[0]:null,have=new Map((g&&g.talents||[]).map(x=>[low(x.name),x]));
+    const pts=g?+g.points||0:0;return{...t,g,have,pts}});
+  const spent=trees.reduce((s,t)=>s+t.pts,0),avail=Math.max(0,(+m.level||1)-9);
+  const known=new Set(trees.flatMap(t=>t.talents.map(x=>low(x[0])))),extra=got.flatMap(g=>(g.talents||[]).filter(x=>!known.has(low(x.name))));
+  const key=m.id+"|",pick=S.ui.talTree&&S.ui.talTree.startsWith(key)?+S.ui.talTree.slice(key.length):-1;
+  const main=trees.reduce((b,t,i)=>t.pts>trees[b].pts||(t.g&&t.g.active&&t.pts===trees[b].pts)?i:b,0),ti=pick>=0&&pick<trees.length?pick:main,t=trees[ti];
+  const T=talTools(t,low);
+  const sel=S.ui.talSel&&S.ui.talSel.startsWith(key+ti+"|")?S.ui.talSel.slice((key+ti+"|").length):"";
+  const{rows,rankOf,tipRank,tipDesc}=T;
+  const grid=T.grid(sel,x=>setUi({talSel:sel===x[0]?"":key+ti+"|"+x[0]},true));
+  // What the next 5 points in this tree open up.
+  const nextRow=t.pts<(rows-1)*5?Math.floor(t.pts/5)+1:null,nextNames=nextRow!=null?t.talents.filter(x=>x[1]===nextRow&&!rankOf(x)).map(x=>x[0]):[];
+  const sx=sel&&t.talents.find(x=>x[0]===sel);
+  return h("section",{class:"card tt","aria-labelledby":"tal-h"},
+    h("div",{class:"spread"},h("h2",{id:"tal-h"},"Talents"),h("span",{class:"row",style:"gap:.75rem"},h("button",{type:"button",class:"btn ghost sm",onclick:()=>openTalTrees(m,trees,low)},"All three trees"),h("span",{class:"small ter"},trees.map(x=>x.pts).join(" / ")+(avail?" · "+(avail-spent>0?(avail-spent)+(avail-spent===1?" point":" points")+" unspent":"all points spent"):"")))),
+    h("div",{class:"tt-tabs",role:"tablist","aria-label":"Talent trees"},trees.map((x,i)=>h("button",{type:"button",role:"tab","aria-selected":i===ti?"true":"false",class:"tt-tab"+(i===ti?" on":""),
+      onclick:()=>setUi({talTree:key+i,talSel:""},true)},h("span",{},x.name),h("b",{},String(x.pts))))),
+    grid,
+    sx?h("div",{class:"tt-detail"},h("div",{class:"row",style:"gap:.625rem;flex-wrap:nowrap;align-items:flex-start"},TAL_ICON(sx[4])?h("img",{src:TAL_ICON(sx[4]),alt:"",class:"tal-ico"}):null,
+        h("div",{style:"min-width:0;display:flex;flex-direction:column;gap:.125rem"},h("b",{},sx[0]),h("span",{class:"small ter"},tipRank(sx)),h("span",{class:"small"},tipDesc(sx)))))
+      :h("p",{class:"small ter",style:"margin:0"},(matchMedia("(hover: hover)").matches?"Hover or click":"Tap")+" a talent to read it. Bright ones are taken, gold edges are maxed, dim ones aren't open yet."+
+        (nextNames.length?" "+(nextRow*5-t.pts)+" more in "+t.name+" opens "+andList(nextNames).join("")+".":"")),
+    extra.length?h("p",{class:"small ter",style:"margin:0"},"Also on the armory: "+extra.map(x=>x.name+" "+(x.rank||1)).join(", ")):null)}
+// The plain list, for a class whose trees haven't loaded (or aren't in the file).
+function talentsList(m,trees){
   const ico=(u,cls)=>safePic(u)?h("img",{src:safePic(u),alt:"",class:cls,referrerpolicy:"no-referrer",loading:"lazy"}):h("span",{class:cls});
   return h("section",{class:"card","aria-labelledby":"tal-h",style:"gap:.75rem"},
     h("div",{class:"spread"},h("h2",{id:"tal-h"},"Talents"),h("span",{class:"small ter"},trees.map(t=>t.points).join(" / ")+(matchMedia("(hover: hover)").matches?" · hover one to read it":" · tap one to read it"))),
