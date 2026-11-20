@@ -253,7 +253,7 @@ async function armoryOf(fullName) {
         for (const g of Object.values(c.gear || {})) {
           const slot = g && g.slot && GEAR_SLOT[g.slot.type]; if (!slot || !g.id) continue;
           const icon = ((g.media && g.media.content && g.media.content.assets) || []).find(a => a.key === "icon");
-          gear[slot] = { id: String(g.id), name: String(g.name || "").slice(0, 120), q: Q_NUM[g.quality && g.quality.type] ?? 1, icon: "", iconUrl: pic(icon && icon.value),
+          gear[slot] = { id: String(g.id), name: String(g.name || "").slice(0, 120), q: Q_NUM[g.quality && g.quality.type] ?? 1, il: +(g.level && g.level.value) || 0, icon: "", iconUrl: pic(icon && icon.value),
             slot: INV_TEXT[g.inventory_type && g.inventory_type.type] || "" };
         }
         out.gear = Object.keys(gear).length ? gear : null;
@@ -327,6 +327,8 @@ async function syncChar(coll, id, data) {
       const prev = data.gear || {};
       for (const [slot, g] of Object.entries(a.gear)) if (g.q >= 3 && !(prev[slot] && String(prev[slot].id) === g.id)) journey.unshift({ t: "Equipped " + g.name, at: now, item: { id: g.id, q: g.q } });
       patch.gear = a.gear; changed = true; what.push("gear");
+    } else if (Object.entries(a.gear).some(([k, g]) => g.il && !(data.gear && data.gear[k] && data.gear[k].il))) {
+      patch.gear = a.gear; changed = true; // same items, now with their item levels (for the gear score)
     }
   }
   // Honourable kill milestones for the feed. Not on the first sync, so nobody gets news for kills they already had.
@@ -821,10 +823,25 @@ async function saveWeekRecap() {
   await ref.set({ open: { wk, at: now, full: !!open, rows: rowsNow }, weeks, at: now });
 }
 // Title reigns: who is alone at the top of the boards the server can work out from what it already reads
-// (honourable kills, loot points and each profession), and since when.
+// (honourable kills, gear score and each profession), and since when.
 // guild/titles = { holders: { <key>: { id, name, cls, since } }, log: [ { at, k, to: { id, name, cls }, from: { name, cls } | null } ] }
 // (the last 60 changes). Keys are "hk", "gear" and "p:<Profession>". The site shows "3 weeks running" from `since`
 // and the changes in the Guild Feed. A tie means nobody holds the title, the same rule the site uses.
+// Gear score, for Best Dressed: every slot's item level, weighted by quality (a rare beats a green of the same level,
+// an epic beats a rare), with a two-hander counting for both hands. Shirt and tabard don't count. Items saved before
+// item levels were kept use the character's average item level, or their level. Keep in step with gearScore in
+// public/index.html.
+const GS_QUAL = { 0: 0.5, 1: 1, 2: 1.15, 3: 1.3, 4: 1.5, 5: 1.75, 6: 1.75, 7: 1.3 };
+function gearScore(d) {
+  const a = d.armory || {}, fb = +a.ilvl || +d.level || 1;
+  let t = 0;
+  for (const [slot, g] of Object.entries(d.gear || {})) {
+    if (!g || !g.id || slot === "Shirt" || slot === "Tabard") continue;
+    const v = (+g.il || fb) * (GS_QUAL[+g.q] ?? 1);
+    t += slot === "Main hand" && g.slot === "Two-Hand" ? v * 2 : v;
+  }
+  return Math.round(t);
+}
 const TITLE_PROFS = ["Alchemy", "Blacksmithing", "Enchanting", "Engineering", "Herbalism", "Leatherworking", "Mining", "Skinning", "Tailoring", "Cooking", "First Aid", "Fishing"];
 async function saveTitles() {
   const ref = db().doc("guild/titles"), cur = (await ref.get()).data() || {}, now = new Date().toISOString();
@@ -835,7 +852,7 @@ async function saveTitles() {
     const d = doc.data() || {}, name = plainName(d);
     if (inGuild && !inGuild.has(keyOf(name))) continue; // people who have left don't hold titles
     ms.push({ id: doc.id, name: name.slice(0, 41), cls: String(d.cls || "").slice(0, 12), hk: +((d.armory || {}).hk) || 0,
-      gear: Object.values(d.gear || {}).reduce((t, g) => t + (g && g.id ? Math.max(0, +g.q - 1) : 0), 0), profs: d.profs || {} });
+      gear: gearScore(d), profs: d.profs || {} });
   }
   const boards = [["hk", m => m.hk], ["gear", m => m.gear], ...TITLE_PROFS.map(p => ["p:" + p, m => +m.profs[p] || 0])];
   const old = cur.holders || {}, holders = {}, log = Array.isArray(cur.log) ? cur.log.slice() : [], first = !cur.holders;
