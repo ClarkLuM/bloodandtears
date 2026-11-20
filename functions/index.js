@@ -191,6 +191,16 @@ const INV_TEXT = { HEAD: "Head", NECK: "Neck", SHOULDER: "Shoulder", CLOAK: "Bac
   HAND: "Hands", WAIST: "Waist", LEGS: "Legs", FEET: "Feet", FINGER: "Finger", TRINKET: "Trinket", WEAPON: "One-Hand", TWOHWEAPON: "Two-Hand",
   WEAPONMAINHAND: "Main Hand", WEAPONOFFHAND: "Off Hand", SHIELD: "Off Hand", HOLDABLE: "Held In Off-hand", RANGED: "Ranged", RANGEDRIGHT: "Ranged", THROWN: "Thrown", RELIC: "Relic" };
 const Q_NUM = { POOR: 0, COMMON: 1, UNCOMMON: 2, RARE: 3, EPIC: 4, LEGENDARY: 5, ARTIFACT: 6, HEIRLOOM: 7 };
+// When each level was first reached, kept for good as lvlog { "<level>": iso } (the journey only keeps its last 40 lines,
+// so a long levelling history falls off it). The levelling chart on the character page draws from both.
+const LV_RE = /^Reached level (\d+)/;
+const lvFromJourney = j => (Array.isArray(j) ? j : []).filter(x => x && LV_RE.test(x.t || "") && x.at).map(x => [+LV_RE.exec(x.t)[1], x.at]);
+function withLv(old, entries) {
+  const o = { ...(old && typeof old === "object" ? old : {}) }; let ch = false;
+  for (const [l, at] of entries) { const k = String(Math.floor(+l)); if (!(+k >= 2 && +k <= 60) || typeof at !== "string" || !at) continue;
+    if (!o[k] || at < o[k]) { o[k] = at; ch = true; } }
+  return ch ? o : null;
+}
 // Only Blizzard's own image server is trusted for pictures and icons.
 const pic = u => typeof u === "string" && /^https:\/\/render\.worldofwarcraft\.com\/[\w\/.-]+$/.test(u) ? u : "";
 // Stats the armory lists that don't exist in this version of the game.
@@ -338,6 +348,7 @@ async function syncChar(coll, id, data) {
   }
   if (a.rank && prevA.rank !== undefined && a.rank > +prevA.rank) { journey.unshift({ t: "Reached PvP " + pvpRankName(a.rank), at: now }); changed = true; what.push("PvP rank"); }
   if (changed) { patch.updatedAt = now; patch.journey = journey.slice(0, 40); }
+  { const lvl = withLv(data.lvlog, lvFromJourney(journey)); if (lvl) patch.lvlog = lvl; }
   // What the last sync that changed something changed, so the character page can say so.
   if (what.length) A.change = { at: now, what: what.slice(0, 8) };
   await db().doc(`${coll}/${id}`).update(patch);
@@ -661,7 +672,8 @@ async function syncRoster() {
     if (out.has(key)) continue;
     if (have) {
       const d = have.data, old = +d.level || 1, patch = {};
-      if (g.level > old) { patch.level = g.level; patch.journey = [{ t: "Reached level " + g.level, at: now, from: old }, ...(Array.isArray(d.journey) ? d.journey : [])].slice(0, 40); raised++; }
+      if (g.level > old) { patch.level = g.level; patch.journey = [{ t: "Reached level " + g.level, at: now, from: old }, ...(Array.isArray(d.journey) ? d.journey : [])].slice(0, 40); raised++;
+        const lvl = withLv(d.lvlog, [[g.level, now]]); if (lvl) patch.lvlog = lvl; }
       if (g.cls && !d.cls) patch.cls = g.cls;
       if (g.role && !d.roleEditedAt && g.role !== d.role && g.role !== d.role2 && g.role !== "DPS") patch.role = g.role;
       if (g.race && !d.race) patch.race = g.race;
@@ -1020,6 +1032,12 @@ async function scribeUploadAs(uid, text) {
     // first saw each new level (or this upload, if it didn't note a time). The armory only ever raises a level, so it
     // won't log the same ding again when it catches up. The Hall of Firsts reads this history.
     const d = dataOf.get(hit.coll + "/" + hit.id), have = Math.max(1, Math.min(60, +(d && d.level) || 1)), lv = Math.max(1, Math.min(60, Math.floor(+m.level || 0)));
+    // The addon's own record of when it saw each level (it keeps them all), into the lasting level log.
+    if (d && m.ups && typeof m.ups === "object") {
+      const ups = Object.entries(m.ups).map(([l, t]) => { let at = iso(t); if (at && at > upNow) at = upNow; if (at && d.createdAt && at < d.createdAt) at = d.createdAt; return [+l, at]; })
+        .filter(([l]) => +l <= lv);
+      const lvl = withLv(d.lvlog, ups); if (lvl) { await db().doc(`${hit.coll}/${hit.id}`).set({ lvlog: lvl }, { merge: true }); d.lvlog = lvl; }
+    }
     if (d && lv > have) {
       const journey = Array.isArray(d.journey) ? d.journey.slice() : [], upTimes = m.ups && typeof m.ups === "object" ? m.ups : {};
       const has = new Set(journey.map(j => j && j.t));
@@ -1028,7 +1046,7 @@ async function scribeUploadAs(uid, text) {
         let at = iso(upTimes[l]) || upNow; if (at > upNow) at = upNow; if (d.createdAt && at < d.createdAt) at = d.createdAt;
         journey.push({ t, at, from: l - 1, via: "scribe" }); }
       journey.sort((a, b) => String(b.at || "").localeCompare(String(a.at || "")));
-      await db().doc(`${hit.coll}/${hit.id}`).set({ level: lv, journey: journey.slice(0, 40) }, { merge: true });
+      await db().doc(`${hit.coll}/${hit.id}`).set({ level: lv, journey: journey.slice(0, 40), ...(withLv(d.lvlog, lvFromJourney(journey)) ? { lvlog: withLv(d.lvlog, lvFromJourney(journey)) } : {}) }, { merge: true });
       levelled.push(short(name, 40) + " " + have + " → " + lv);
     }
   }

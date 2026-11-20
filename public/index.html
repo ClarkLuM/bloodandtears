@@ -968,6 +968,7 @@ a.r-name:hover{color:var(--accent-text)}
 .flame svg{width:100%;height:100%}
 .r-seen{display:inline-flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 .flame.big{font-size:1rem;margin-left:.625rem;vertical-align:middle}
+.flame.card{font-family:var(--body);font-size:.875rem;margin-left:.375rem;vertical-align:middle;color:#ff9d4d;text-shadow:0 1px 3px rgb(0 0 0/.85);letter-spacing:0;text-transform:none}.flame.card>span:first-child{width:1rem;height:1rem;filter:drop-shadow(0 1px 2px rgb(0 0 0/.8))}
 .flame.big>span:first-child{width:1.125rem;height:1.125rem}
 .lg-pvp{position:absolute;top:3.125rem;right:.5rem;width:2.25rem;z-index:1;display:flex;justify-content:center;filter:drop-shadow(0 1px 2px rgb(0 0 0 / .85))}
 .lg-rank{position:absolute;left:.75rem;bottom:1.875rem;z-index:1;display:flex;align-items:center;gap:.25rem;font:600 .6875rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:#f6d77a;text-shadow:0 1px 3px rgb(0 0 0 / .9)}
@@ -997,6 +998,7 @@ a.r-name:hover{color:var(--accent-text)}
 .zm-daycap{position:absolute;left:.75rem;top:.75rem;background:color-mix(in srgb,var(--raised) 88%,transparent);border:1px solid var(--sep);border-radius:10px;padding:.375rem .625rem;display:flex;flex-direction:column;max-width:calc(100% - 1.5rem);pointer-events:none}
 .zm-daycap b{color:var(--accent-text)}
 /* Levelling timeline */
+.lv-gap{stroke-dasharray:4 5;opacity:.7}
 .lv-stats{display:flex;gap:1.5rem;flex-wrap:wrap}.lv-stats div{display:flex;flex-direction:column}.lv-stats b{font-size:1.25rem;color:var(--ginger);font-variant-numeric:tabular-nums}.lv-stats span{font-size:.75rem;color:var(--ter)}
 .lv-svg{display:block;width:100%;height:auto;overflow:visible}
 .lv-g{stroke:var(--sep)}.lv-ax{font:500 10px Figtree,system-ui,sans-serif;fill:var(--ter)}
@@ -2691,7 +2693,7 @@ function cardData(m){
     art:[mix(cc,"#000000",.55),mix(cc,"#000000",.25),"#0f0a09"],rows,hp:typeof st.health==="number"?Math.round(st.health):0,
     name:nameOf(m),line:["Level "+lv,classLine(m),roleText(m)].filter(Boolean).join(" · "),
     initials:nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(),
-    mini,num,rarity,flav:flavourOf(m),stamps:trimStamps(stampsOf(m)),frame,move:moveOf(m),first:firstEd(m),gm:isGM(m),pvp:+(m.armory||{}).rank||0}}
+    mini,num,rarity,flav:flavourOf(m),stamps:trimStamps(stampsOf(m).filter(s=>!/^\d+d$/.test(s[0]))),streak:streakOf(m),frame,move:moveOf(m),first:firstEd(m),gm:isGM(m),pvp:+(m.armory||{}).rank||0}}
 function cardEl(m){
   const d=cardData(m),[,tname,f,edge]=d.tier;
   const artStyle=d.bg?`background-image:linear-gradient(180deg,${d.art[0]}55,${d.art[2]}cc),url(${d.bg})`:`background:linear-gradient(160deg,${d.art[0]},${d.art[1]} 55%,${d.art[2]})`;
@@ -2706,7 +2708,7 @@ function cardEl(m){
         h("span",{class:"lg-lv",style:`border-color:${edge};color:${edge}`,"aria-hidden":"true"},String(d.lv)),
         d.pvp?(()=>{const e=h("span",{class:"lg-pvp",title:"PvP "+pvpRank(d.pvp)});e.innerHTML=pvpSvg(d.pvp);return e})():null,
         d.gm?(()=>{const e=h("span",{class:"lg-rank"},h("span",{}),"Guild Master");e.firstChild.innerHTML=CROWN;return e})():null,
-        h("div",{class:"lg-hd"},h("b",{},d.name),d.hp?h("span",{class:"lg-hp"},h("small",{},"HP"),d.hp.toLocaleString("en-AU")):null),
+        h("div",{class:"lg-hd"},h("b",{},d.name,d.streak?flameEl(d.streak,"card"):null),d.hp?h("span",{class:"lg-hp"},h("small",{},"HP"),d.hp.toLocaleString("en-AU")):null),
         d.move?h("span",{class:"lg-move"},d.move.text):null),
       h("div",{class:"lg-type",style:`background:${mix(d.cc,"#0f0a09",.72)};color:${mix(d.cc,"#ffffff",.25)}`},d.line.replace(/^Level \d+ · /,"")),
       h("div",{class:"lg-stats"},d.rows.map(x=>h("div",{class:"lg-st"},h("i",{style:`background:${x.col}`},x.icon),h("span",{},x.label),h("b",{},x.val),
@@ -2930,7 +2932,7 @@ function cardSection(m){
     (()=>{const x=mine[0],rg=reignOf(x.k,m.id);return h("span",{class:"small",style:"text-align:center"},h("b",{style:"color:var(--accent-text)"},x.t)," · "+x.board.toLowerCase()+(rg?" · "+rg.text.toLowerCase():""))})()):null;
   return h("section",{class:"card","aria-labelledby":"card-h",style:"gap:.75rem;align-items:center"},h("div",{class:"spread",style:"width:100%;flex-wrap:nowrap"},h("h2",{id:"card-h",style:"flex:none"},"Card"),h("span",{class:"small ter",style:"min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap",title:d.frame?"For "+d.frame.title+(d.frame.reign?" · "+d.frame.reign.text.toLowerCase():""):null},d.frame?(/frame$/i.test(d.frame.name)?d.frame.name:d.frame.name+" frame"):(d.first?"First edition · ":"")+tname+(next?" · "+next[1].toLowerCase()+" at "+next[0]:""))),
     flipCard(m),h("p",{class:"small ter",style:"margin:0;text-align:center"},"Tap the card to see the back."),
-    stampsOf(m).length?h("ul",{class:"stamp-key"},stampsOf(m).map(([t,how,c])=>h("li",{},h("b",{style:`color:${c}`},t),h("span",{},how)))):null,h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn",onclick:()=>copyCard(m)},"Copy for Discord")),pickT,flav)}
+    stampsOf(m).filter(s=>!/^\d+d$/.test(s[0])).length?h("ul",{class:"stamp-key"},stampsOf(m).filter(s=>!/^\d+d$/.test(s[0])).map(([t,how,c])=>h("li",{},h("b",{style:`color:${c}`},t),h("span",{},how)))):null,h("div",{class:"row",style:"justify-content:center"},h("button",{class:"btn",onclick:()=>copyCard(m)},"Copy for Discord")),pickT,flav)}
 
 // Journey lines on a character page: "Equipped X" links the item to Wowhead in its quality colour (with the tooltip).
 // Older lines without the item saved are matched to current gear by name.
@@ -4162,24 +4164,31 @@ function aboutCard(inner){
 /* ---------- Levelling timeline ---------- */
 // A character's level over time, from the "Reached level N" entries the site records (armory and scribe), drawn as a line
 // with gold dots at every tenth level, their best week shaded, and optionally a guildie's line to compare with.
-function levelPoints(m){const ups=(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Reached level \d+/.test(j.t||"")&&Date.parse(j.at||""))
-    .map(j=>({t:Date.parse(j.at),lv:+String(j.t).replace(/\D/g,""),from:j.from!=null?+j.from:null})).sort((a,b)=>a.t-b.t);
+// The journey keeps only its last 40 lines, so the server also keeps a lasting log of when each level was reached
+// (m.lvlog). Levels from before either was kept show as a dashed line from the level the site first saw them at.
+function levelPoints(m){
+  const by=new Map(),add=(lv,t,from)=>{if(!(lv>=2&&lv<=60)||!t)return;const o=by.get(lv);if(!o||t<o.t)by.set(lv,{t,lv,from:from!=null?from:(o&&o.from)})};
+  for(const j of Array.isArray(m.journey)?m.journey:[])if(/^Reached level \d+/.test(j.t||""))add(+String(j.t).replace(/\D/g,""),Date.parse(j.at||""),j.from!=null?+j.from:null);
+  for(const[l,at]of Object.entries(m.lvlog||{}))add(+l,Date.parse(at||""),null);
+  const ups=[...by.values()].sort((a,b)=>a.t-b.t||a.lv-b.lv).filter((u,i,a)=>!a.slice(0,i).some(v=>v.lv>=u.lv));
   if(!ups.length)return[];
-  const pts=[],f=ups[0],start=Date.parse(m.joined||m.createdAt||"")||f.t;
-  pts.push({t:Math.min(start,f.t),lv:f.from!=null?f.from:Math.max(1,f.lv-1)});
-  for(const u of ups){if(u.from!=null&&u.from>pts[pts.length-1].lv)pts.push({t:u.t,lv:u.from});pts.push({t:u.t,lv:u.lv})}
+  const pts=[],f=ups[0],start=Date.parse(m.joined||m.createdAt||"")||f.t,seen=(S.firstStart||{})[m.id];
+  const base=typeof seen==="number"&&seen>=1&&seen<f.lv?seen:f.from!=null?f.from:Math.max(1,f.lv-1);
+  pts.push({t:Math.min(start,f.t),lv:base});
+  for(const u of ups){const prev=pts[pts.length-1];if(u.from!=null&&u.from>prev.lv)pts.push({t:u.t,lv:u.from,gap:u.from-prev.lv>1});pts.push({t:u.t,lv:u.lv,gap:u.from==null&&u.lv-prev.lv>1&&prev===pts[0]})}
   const now=+m.level||pts[pts.length-1].lv;if(now>=pts[pts.length-1].lv)pts.push({t:Date.now(),lv:now});
   return pts}
 // Levels gained in each Monday-to-Sunday week (Perth time).
 function bestWeek(pts){const wk=t=>{const d=new Date(t+8*36e5);d.setUTCHours(0,0,0,0);d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7));return d.getTime()-8*36e5};
-  const g=new Map();for(let i=1;i<pts.length;i++){const k=wk(pts[i].t),d=pts[i].lv-pts[i-1].lv;if(d>0)g.set(k,(g.get(k)||0)+d)}
+  const g=new Map();for(let i=1;i<pts.length;i++){if(pts[i].gap)continue;const k=wk(pts[i].t),d=pts[i].lv-pts[i-1].lv;if(d>0)g.set(k,(g.get(k)||0)+d)}
   let best=null;for(const[k,v]of g)if(!best||v>best.n)best={from:k,to:k+7*864e5,n:v};return best}
 function levelCard(m){const pts=levelPoints(m);if(pts.length<3||pts[pts.length-1].lv-pts[0].lv<2)return null;
   const others=S.members.filter(x=>x.id!==m.id&&memberState(x)!=="former"&&levelPoints(x).length>=3).sort((a,b)=>nameOf(a).localeCompare(nameOf(b)));
   const cmp=S.ui.lvCmp&&others.find(x=>x.id===S.ui.lvCmp),cp=cmp?levelPoints(cmp):[];
   const t0=Math.min(pts[0].t,...(cp.length?[cp[0].t]:[])),t1=Date.now(),top=Math.min(60,Math.ceil(Math.max(...pts.map(p=>p.lv),...cp.map(p=>p.lv))/10)*10||10);
   const W=560,H=200,L=30,R=14,T=12,B=24,x=t=>L+(t-t0)/Math.max(1,t1-t0)*(W-L-R),y=v=>T+(1-v/top)*(H-T-B);
-  const line=P=>P.map((p,i)=>(i?"L":"M")+x(p.t).toFixed(1)+","+y(p.lv).toFixed(1)).join("");
+  const line=P=>P.map((p,i)=>(i&&!p.gap?"L":"M")+x(p.t).toFixed(1)+","+y(p.lv).toFixed(1)).join("");
+  const gaps=P=>P.map((p,i)=>p.gap&&i?"M"+x(P[i-1].t).toFixed(1)+","+y(P[i-1].lv).toFixed(1)+"L"+x(p.t).toFixed(1)+","+y(p.lv).toFixed(1):"").join("");
   const bw=bestWeek(pts),days=(t1-pts[0].t)/864e5,gain=pts[pts.length-1].lv-pts[0].lv,rate=days>=7?gain/(days/7):gain;
   const fmt=t=>new Date(t).toLocaleDateString("en-AU",{day:"numeric",month:"short"});
   let svg=`<svg viewBox="0 0 ${W} ${H}" class="lv-svg" role="img" aria-label="${xmlEsc(nameOf(m))}: level ${pts[0].lv} to ${pts[pts.length-1].lv} since ${fmt(pts[0].t)}${cmp?", compared with "+xmlEsc(nameOf(cmp)):""}">`;
@@ -4187,7 +4196,7 @@ function levelCard(m){const pts=levelPoints(m);if(pts.length<3||pts[pts.length-1
   const ticks=4;for(let i=0;i<=ticks;i++){const t=t0+(t1-t0)*i/ticks;svg+=`<text x="${x(t).toFixed(1)}" y="${H-6}" class="lv-ax" text-anchor="${i===0?"start":i===ticks?"end":"middle"}">${fmt(t)}</text>`}
   if(bw&&bw.n>1){const a=Math.max(L,x(bw.from)),b=Math.min(W-R,x(bw.to));if(b>a)svg+=`<rect x="${a.toFixed(1)}" y="${T}" width="${(b-a).toFixed(1)}" height="${H-T-B}" class="lv-best"/>`}
   if(cp.length)svg+=`<path d="${line(cp)}" class="lv-l2"/>`;
-  svg+=`<path d="${line(pts)}" class="lv-l1"/>`;
+  svg+=`<path d="${line(pts)}" class="lv-l1"/>`;if(pts.some(p=>p.gap))svg+=`<path d="${gaps(pts)}" class="lv-l1 lv-gap"/>`;
   for(const p of pts)if(p.lv%10===0&&p.t<t1-6e4)svg+=`<circle cx="${x(p.t).toFixed(1)}" cy="${y(p.lv).toFixed(1)}" r="3.5" class="lv-mk"><title>Level ${p.lv}, ${fmt(p.t)}</title></circle>`;
   const last=pts[pts.length-1];svg+=`<circle cx="${x(last.t).toFixed(1)}" cy="${y(last.lv).toFixed(1)}" r="4.5" class="lv-now"/></svg>`;
   const chart=h("div",{class:"lv-chart"});chart.innerHTML=svg;
@@ -4196,6 +4205,7 @@ function levelCard(m){const pts=levelPoints(m);if(pts.length<3||pts[pts.length-1
     h("div",{class:"spread"},h("h2",{id:"lv-h-"+m.id},"Levelling"),h("span",{class:"small ter"},"since "+fmt(pts[0].t))),
     h("div",{class:"lv-stats"},stats.map(([v,l])=>h("div",{},h("b",{},v),h("span",{},l)))),
     chart,
+    pts.some(p=>p.gap)?h("p",{class:"small ter",style:"margin:0"},"The dashed part is from before the site kept every level, so it shows the climb without the day-by-day detail."):null,
     h("div",{class:"spread",style:"flex-wrap:wrap;gap:.5rem"},h("div",{class:"lv-key small"},h("span",{},h("i",{class:"k1"}),nameOf(m)),cmp?h("span",{},h("i",{class:"k2"}),nameOf(cmp)):null,bw&&bw.n>1?h("span",{},h("i",{class:"k3"}),"best week"):null),
       others.length?h("label",{class:"f lv-cmp"},"Compare with",h("select",{onchange:e=>setUi({lvCmp:e.target.value||null},true)},h("option",{value:""},"Nobody"),others.map(o=>h("option",{value:o.id,selected:cmp&&cmp.id===o.id},nameOf(o)+" ("+(+o.level||1)+")")))):null))}
 
@@ -4947,7 +4957,7 @@ function subscribe(){
   S.unsub.push(onSnapshot(doc(db,"guild","titles"),snap=>{S.titlesDoc=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","recaps"),snap=>{S.recapWeeks=snap.exists()?(snap.data().weeks||{}):{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","records"),snap=>{S.recDays=snap.exists()?(snap.data().days||{}):{};schedule()},()=>{}));
-  S.unsub.push(onSnapshot(doc(db,"guild","firsts"),snap=>{const d=snap.exists()?snap.data():{};S.firsts=d.list||{};S.milestones=d.milestones||{};S.firstsReady=true;schedule()},()=>{S.firstsReady=true;schedule()}));
+  S.unsub.push(onSnapshot(doc(db,"guild","firsts"),snap=>{const d=snap.exists()?snap.data():{};S.firsts=d.list||{};S.milestones=d.milestones||{};S.firstStart=d.start||{};S.firstsReady=true;schedule()},()=>{S.firstsReady=true;schedule()}));
 }
 addEventListener("online",render);addEventListener("offline",render);
 // Refresh who's online every minute while the page is open.
