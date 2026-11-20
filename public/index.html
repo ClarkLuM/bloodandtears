@@ -1526,6 +1526,48 @@ html.gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 1
 .hub-t b{font-size:.9375rem;line-height:1.25rem;font-weight:600;white-space:nowrap;grid-column:1;grid-row:2}.hub-s{font-size:.75rem;color:var(--ter);white-space:nowrap;grid-column:2;grid-row:1/3;align-self:center}
 .hub-t .gl-bar{height:.25rem;grid-column:1/-1}
 @media (max-width:640px){.hub{gap:.375rem}.hub-t{grid-template-columns:minmax(0,1fr);padding:.375rem .5rem}.hub-s{display:none}.hub-eb{font-size:.625rem;letter-spacing:.03em}.hub-t b{font-size:.875rem}.hub-t .gl-bar{grid-column:1}}
+/* Guild news ticker */
+.news{display:flex;align-items:stretch;border-bottom:1px solid var(--sep);background:color-mix(in srgb,var(--raised) 85%,#000);font-size:.875rem;line-height:1.25rem;min-height:2.25rem;overflow:hidden}
+.nt-label{flex:none;display:flex;align-items:center;gap:.5rem;padding:0 .875rem 0 1rem;background:#7a1428;color:#fff;font-weight:700;font-size:.6875rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;position:relative;z-index:1}
+.nt-label:hover{color:#fff;background:#8f1830}
+.nt-dot{width:.5rem;height:.5rem;border-radius:50%;background:#ff5a5a;box-shadow:0 0 0 0 rgb(255 90 90/.7);animation:ntPulse 2s infinite}
+@keyframes ntPulse{70%{box-shadow:0 0 0 .4rem rgb(255 90 90/0)}100%{box-shadow:0 0 0 0 rgb(255 90 90/0)}}
+.nt-view{flex:1;min-width:0;overflow:hidden;display:flex;align-items:center;-webkit-mask-image:linear-gradient(90deg,transparent,#000 1.5rem,#000 calc(100% - 2rem),transparent);mask-image:linear-gradient(90deg,transparent,#000 1.5rem,#000 calc(100% - 2rem),transparent)}
+.nt-view:focus-visible{outline:2px solid var(--accent-text);outline-offset:-2px}
+.nt-run{display:flex;width:max-content;animation:ntRun linear infinite}
+.nt-run.still{animation:none}.nt-run.still>.nt-track+.nt-track{display:none}
+.news:hover .nt-run,.nt-view:focus-within .nt-run{animation-play-state:paused}
+@keyframes ntRun{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.nt-track{display:flex;list-style:none;margin:0;padding:0}
+.nt-item{display:flex;align-items:center;gap:.5rem;white-space:nowrap;padding:.4375rem 1.75rem .4375rem 1.25rem;position:relative}
+.nt-item::after{content:"";position:absolute;right:0;top:50%;width:.3125rem;height:.3125rem;border-radius:50%;background:var(--sep);transform:translateY(-50%)}
+.nt-tag{font-size:.625rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.0625rem .4375rem;border-radius:4px;background:var(--subtle,rgb(255 255 255/.08));color:var(--sec)}
+.nt-tag.n-big{background:linear-gradient(90deg,#c9932d,#f0cf8f);color:#2a1606}.nt-tag.n-epic{background:#6b2fa0;color:#fff}.nt-tag.n-first{background:rgb(230 188 119/.2);color:#f0cf8f}
+.nt-tag.n-ding{background:rgb(127 212 138/.16);color:#8fdc99}.nt-tag.n-title{background:rgb(240 197 140/.14);color:#f0c58c}.nt-tag.n-ms{background:rgb(165 13 44/.3);color:#ffb3bf}
+.nt-tx .item-link{white-space:nowrap}.nt-when{font-size:.75rem;color:var(--ter)}
+:root[data-theme="light"] .news{background:color-mix(in srgb,var(--raised) 92%,#7a1428)}
+@media (prefers-reduced-motion:reduce){.nt-run{animation:none}.nt-run>.nt-track+.nt-track{display:none}.nt-view{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.nt-dot{animation:none}}
+@media (max-width:640px){.nt-label{padding:0 .625rem;font-size:0}.nt-label .nt-dot{width:.625rem;height:.625rem}.nt-label::after{content:"News";font-size:.625rem}.news{font-size:.8125rem}}
+/* The guild's first epic and first 60, in gold for a week */
+.ff-wrap{display:flex;flex-direction:column;gap:.75rem}
+.flex-first{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:1.25rem;position:relative;overflow:hidden;
+  border:1px solid #c9932d!important;background:radial-gradient(ellipse at 8% 50%,rgb(185 104 245/.22),transparent 55%),linear-gradient(120deg,rgb(201 147 45/.18),transparent 60%),var(--raised)!important}
+.flex-first.f60{background:radial-gradient(ellipse at 8% 50%,rgb(230 188 119/.3),transparent 55%),linear-gradient(120deg,rgb(201 147 45/.2),transparent 60%),var(--raised)!important}
+.flex-first::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgb(255 230 170/.12) 50%,transparent 60%);transform:translateX(-100%);animation:ffShine 6s ease-in-out infinite;pointer-events:none}
+@keyframes ffShine{0%,60%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.ff-face{position:relative;width:4.5rem;height:4.5rem;border-radius:50%;border:3px solid;display:grid;place-items:center;font-weight:700;font-size:1.25rem;background:#120b0a;box-shadow:0 0 0 3px #c9932d,0 0 24px rgb(230 188 119/.45)}
+.ff-face img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.ff-badge{position:absolute;right:-.5rem;bottom:-.375rem;min-width:1.75rem;height:1.75rem;padding:0 .375rem;box-sizing:border-box;border-radius:99px;background:linear-gradient(135deg,#f0cf8f,#c9932d);color:#2a1606;font:700 .75rem/1.75rem var(--body);font-style:normal;text-align:center;box-shadow:0 0 0 2px var(--raised)}
+.ff-body{min-width:0;display:flex;flex-direction:column;gap:.25rem}.ff-body p{margin:0}
+.ff-eb{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#f0cf8f}
+.ff-big{font-size:1.375rem;line-height:1.875rem;font-weight:600}.ff-big .item-link{font-weight:600}
+.ff-sub{font-size:.8125rem;color:var(--ter)}
+@media (prefers-reduced-motion:reduce){.flex-first::after{animation:none;display:none}}
+@media (max-width:640px){.ff-wrap{gap:.5rem}.flex-first{grid-template-columns:auto minmax(0,1fr);gap:.75rem;padding:.875rem 1rem!important}.ff-face{width:3rem;height:3rem;font-size:1rem;box-shadow:0 0 0 2px #c9932d,0 0 14px rgb(230 188 119/.4)}.ff-badge{min-width:1.375rem;height:1.375rem;font-size:.625rem;line-height:1.375rem;right:-.375rem;bottom:-.25rem}.ff-eb{font-size:.625rem}.ff-big{font-size:1rem;line-height:1.375rem}.ff-sub{font-size:.75rem}.ff-sub .ff-long{display:none}.ff-go{display:none}}
+.ft-tags{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.125rem}
+.ft-tag{display:inline-flex;align-items:center;gap:.375rem;padding:.125rem .625rem;border-radius:99px;border:1px solid rgb(230 188 119/.45);color:#f0cf8f;font-size:.8125rem;text-decoration:none;background:rgb(230 188 119/.08)}
+.ft-tag.big{background:linear-gradient(90deg,#c9932d,#f0cf8f);color:#2a1606;border-color:transparent;font-weight:600}
+.ft-tag:hover{border-color:#f0cf8f;color:#fff}.ft-tag.big:hover{color:#2a1606;filter:brightness(1.08)}
 </style>
 </head>
 <body>
@@ -1837,6 +1879,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-20","Guild news, and bragging rights","Big moments from the last few days scroll along the top of every page: epics, guild firsts, level 50s and 60s, titles and milestones. The guild's first epic and first level 60 also get a gold spot on the Roster for a week, and a gold ribbon on their character page for good.",null],
   ["2026-11-18","The guild has a level","Levels, dungeon stamps, honourable kills and guild firsts all earn the guild xp. Each guild level unlocks something for everyone.","#guild"],
   ["2026-11-18","Today and the weekly recap, as pages","Today shows everything since midnight: the feed, who's been on and where. The weekly recap is a page now, with the picture for Discord a tap away.","#today"],
   ["2026-11-18","What changed, at a glance","A gold dot on Dungeons, Cards, Records or Activity means something changed there since you last looked. Hover it to see what. On phones, Activity is shorter: drop-downs, the top three in each list, and the week in four parts of the day.",null],
@@ -2131,7 +2174,7 @@ function viewRoster(){
     const fit=()=>l.style.setProperty("--rt-h",t.offsetHeight+"px");fit();if(window.ResizeObserver&&!t._ro){t._ro=new ResizeObserver(fit);t._ro.observe(t)}});
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
   const at=(el,n)=>{if(el&&el.style)el.style.setProperty("--o",n);return el};
-  return[head,birthdayBanner(),hubTiles(),h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(sinceCard(),0),at(claimBanner(),1),at(spotlight(true),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
+  return[head,birthdayBanner(),firstsFlex(),hubTiles(),h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(sinceCard(),0),at(claimBanner(),1),at(spotlight(true),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
     h("div",{class:"rl-col"},at(guildToday(),6),at(siteUse(),12),at(discordBox(),13)))]}
 
 // Their best equipped item: highest quality first (green and up).
@@ -2331,7 +2374,7 @@ function guildTotals(){
   return h("section",{class:"totals","aria-label":"Guild totals"},tiles.map(([k,label,wk,tip,verb])=>{const nx=MS_STEPS[k]?msNext(k,v[k]):null;
     const next=nx?"Next guild milestone: "+fmtN(nx.n)+" ("+fmtN(nx.n-v[k])+" to go)":"";
     // Nobody's got there yet: say so, and point at the Hall of Firsts.
-    if(!v[k]&&(k==="epics"||k==="sixty"))return h("a",{class:"total total-open",href:"#records",title:"See the Hall of Firsts",
+    if(!v[k]&&(k==="epics"||k==="sixty")&&!(S.firsts||{})[k==="epics"?"epic":"lv60"])return h("a",{class:"total total-open",href:"#records",title:"See the Hall of Firsts",
       onclick:e=>{e.preventDefault();setUi({raceTab:"firsts"},true);location.hash="#records";setTimeout(()=>{const el=document.getElementById("race-h");if(el)el.scrollIntoView({behavior:"smooth",block:"start"})},250)}},
       h("span",{},k==="epics"?"First epic:":"First 60:"),h("b",{},"up for grabs"));
         return h("div",{class:"total",title:[tip,next].filter(Boolean).join(". ")||null},
@@ -2911,6 +2954,57 @@ function feedItems(){
   // Guild milestones (not ones already passed when they were first counted; the first epic and 60 have their firsts line).
   for(const[k,v]of Object.entries(S.milestones||{})){const x=msInfo(k,v);if(x&&!x.by&&x.feed)push(x.at,[h("b",{},"Blood and Tears"),x.feed],"title")}
   return out.filter(x=>x.t<=Date.now()+6e4).sort((a,b)=>b.t-a.t)}
+/* ---------- Guild news ticker and the big firsts ---------- */
+// Headlines along the top of every page: only the big moments of the last few days (epics, guild firsts, 50s and 60s,
+// titles changing hands, guild milestones), newest first. It scrolls slowly, stops while pointed at or focused, and
+// sits still for anyone who has asked for less motion. Nothing recent, no strip.
+const NEWS_DAYS=3,FIRST_DAYS=7;
+const FIRST_WORDS={lv10:"first to level 10",lv20:"first to level 20",lv30:"first to level 30",lv40:"first to level 40",lv50:"first to level 50",lv60:"first to level 60",
+  blue:"first blue item",epic:"first epic",pvp:"first PvP rank",hk100:"first to 100 kills",prof300:"first to 300 skill"};
+function newsItems(){
+  const now=Date.now(),out=[],seen=new Set(),add=(t,tag,cls,parts,key)=>{if(key&&seen.has(key))return;if(key)seen.add(key);out.push({t,tag,cls,parts})};
+  // Guild firsts lead: they're the rarest news there is.
+  for(const[k]of FIRSTS){const f=(S.firsts||{})[k],m=f&&!f.by&&memberById(f.id),t=f&&Date.parse(f.at||"");if(!m||!t||now-t>FIRST_DAYS*864e5)continue;
+    const big=k==="epic"||k==="lv60";
+    add(t,big?"Guild first":"First",big?"n-big":"n-first",[feedWho(m),k==="epic"?[" found the guild's first epic",f.item&&f.item.id?[": ",qLink(f.item)]:""]:k==="blue"?[" found the guild's first blue",f.item&&f.item.id?[": ",qLink(f.item)]:""]
+      :k.startsWith("lv")?" is the guild's first level "+k.slice(2):" is the guild's "+FIRST_WORDS[k]],(k==="epic"&&f.item?"loot|"+f.id+"|"+String(f.item.name||"").toLowerCase():k.startsWith("lv")?"lv|"+f.id+"|"+k.slice(2):""))}
+  for(const x of feedItems()){if(now-x.t>NEWS_DAYS*864e5)continue;
+    const q=x.k==="loot"&&x.bit&&x.bit.getAttribute?+((/--q(\d)/.exec(x.bit.getAttribute("style")||"")||[])[1]||0):0;
+    if(x.k==="loot"&&q>=4)add(x.t,q>=5?"Legendary":"Epic loot","n-epic",x.parts,"loot|"+(x.m&&x.m.id)+"|"+String(x.bit.textContent||"").replace(/^\[|\]$/g,"").toLowerCase());
+    else if(x.k==="level"&&(x.bit===60||x.bit===50))add(x.t,"Level "+x.bit,x.bit===60?"n-big":"n-ding",x.parts,"lv|"+(x.m&&x.m.id)+"|"+x.bit);
+    else if(x.k==="title"&&x.parts.some(p=>p&&p.classList&&p.classList.contains("feed-title")))add(x.t,"Title","n-title",x.parts);
+    else if(x.k==="title"&&x.parts[0]&&x.parts[0].textContent==="Blood and Tears")add(x.t,"Milestone","n-ms",x.parts)}
+  return out.sort((a,b)=>b.t-a.t).slice(0,10)}
+function newsTicker(){
+  if(!S.loaded||!S.members.length)return null;const list=newsItems();if(!list.length)return null;
+  const one=list.map(x=>h("li",{class:"nt-item"},h("span",{class:"nt-tag "+x.cls},x.tag),h("span",{class:"nt-tx"},x.parts),h("span",{class:"nt-when"},ago(new Date(x.t).toISOString()))));
+  const track=h("ul",{class:"nt-track"},one),copy=h("ul",{class:"nt-track",inert:"","aria-hidden":"true"},one.map(li=>li.cloneNode(true)));
+  // Roughly the same reading speed however many headlines there are.
+  const secs=Math.max(30,list.reduce((a,x)=>a+8+String(x.parts.map?x.parts.map(p=>p&&p.textContent||p).join(""):"").length*.18,0));
+  return h("section",{class:"news","aria-label":"Guild news"},h("a",{class:"nt-label",href:"#history"},h("span",{class:"nt-dot","aria-hidden":"true"}),"Guild news"),
+    h("div",{class:"nt-view",tabindex:"0"},h("div",{class:"nt-run",style:"animation-duration:"+Math.round(secs)+"s"},track,copy)))}
+// When the headlines all fit, they sit still instead of scrolling past twice.
+function fitNews(){const v=document.querySelector(".nt-view");if(!v)return;const run=v.firstChild,tr=run&&run.firstChild;if(!tr)return;
+  requestAnimationFrame(()=>run.classList.toggle("still",tr.scrollWidth<=v.clientWidth))}
+addEventListener("resize",()=>fitNews());
+// The big ones get a week on the Roster: the guild's first epic and first level 60, in gold.
+function firstsFlex(){
+  const now=Date.now(),cards=[];
+  for(const k of ["lv60","epic"]){const f=(S.firsts||{})[k],m=f&&!f.by&&memberById(f.id),t=f&&Date.parse(f.at||"");if(!m||!t||now-t>FIRST_DAYS*864e5)continue;
+    const pic=charPic(m,"avatar"),cc=CLASSES[m.cls]||"#bfaea9",when=new Date(t).toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long"})+", "+clock(t);
+    const days=Math.max(1,Math.round((t-LAUNCH)/864e5));
+    cards.push(h("section",{class:"card flex-first"+(k==="lv60"?" f60":"")},
+      h("span",{class:"ff-face",style:"border-color:"+cc+";color:"+cc},pic?h("img",{src:pic,alt:"",referrerpolicy:"no-referrer"}):nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(),h("i",{class:"ff-badge","aria-hidden":"true"},k==="lv60"?"60":"1st")),
+      h("div",{class:"ff-body"},h("p",{class:"ff-eb"},k==="lv60"?"The guild's first level 60":"The guild's first epic"),
+        h("p",{class:"ff-big"},charLink(m),k==="lv60"?" hit level 60":[" found ",f.item&&f.item.id?qLink(f.item):h("b",{},"an epic")]),
+        h("p",{class:"ff-sub"},when,h("span",{class:"ff-long"}," · "+days+(days===1?" day":" days")+" after launch · in the Hall of Firsts for good"))),
+      h("a",{class:"btn sm ff-go",href:"#records",onclick:()=>{S.ui.raceTab="firsts"}},"Hall of Firsts")))}
+  return cards.length?h("div",{class:"ff-wrap"},cards):null}
+// On their character page, for good: a gold ribbon for each guild first they hold.
+function firstTags(m){const held=FIRSTS.filter(([k])=>{const f=(S.firsts||{})[k];return f&&f.id===m.id&&!f.by});if(!held.length)return null;
+  return h("div",{class:"ft-tags"},held.map(([k])=>{const f=S.firsts[k],big=k==="epic"||k==="lv60";
+    return h("a",{class:"ft-tag"+(big?" big":""),href:"#records",onclick:()=>{S.ui.raceTab="firsts"},title:"In the Hall of Firsts since "+new Date(f.at).toLocaleDateString("en-AU",{day:"numeric",month:"long"})},
+      h("span",{"aria-hidden":"true"},"★︎"),"Guild's "+FIRST_WORDS[k].replace(/^first to /,"first to "))}))}
 /* ---------- Neck and neck ---------- */
 // Two or more players on the same level who both dinged it in the last two days (from level 10, below 60). The biggest
 // such race shows at the top of the feed while it's still true; it never goes into History.
@@ -4089,7 +4183,7 @@ function viewChar(coll,id){
       h("div",{class:"ch-hero"},
         h("span",{class:"ch-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?fadeImg({src:av,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
         h("div",{style:"display:flex;flex-direction:column;gap:.25rem;min-width:0"},h("h1",{},nameOf(m),streakOf(m)?flameEl(streakOf(m),"big"):null),
-          h("p",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),titleTags(m),
+          h("p",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),titleTags(m),firstTags(m),
           h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—"))))),
     can||isOfficer()?h("div",{class:"row"},moreMenu([
         ["",null,"This character"],
@@ -4663,7 +4757,7 @@ function render(){
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
   app.replaceChildren(...[previewStrip(),updateStrip(),header(r.page==="char"?"":["history","today","recap","guild"].includes(r.page)?"roster":r.page==="raids"?"lfg":r.page),
-    net?h("div",{class:"netbar",role:"status"},net):null,winterVeil(),
+    newsTicker(),net?h("div",{class:"netbar",role:"status"},net):null,winterVeil(),
     h("main",{class:"wrap"},
     S.error?h("div",{class:"note warn"},S.error):null,
     S.saveErr?h("div",{class:"note warn spread",role:"alert"},h("span",{},S.saveErr),h("button",{class:"btn sm",onclick:()=>{S.saveErr="";render()}},"OK")):null,
@@ -4672,6 +4766,7 @@ function render(){
     h("footer",{class:"site-foot wrap"},h("span",{},"Blood and Tears · a guild site, made by guildies"),h("button",{type:"button",class:"foot-link",onclick:openPrivacy},"Privacy and opting out"))].filter(Boolean));
   for(const[id,v]of Object.entries(typed)){const el=document.getElementById(id);if(!el||el.closest("dialog"))continue;el.value=v}
   if(keep){const el=document.getElementById(keep);if(el)el.focus()}
+  fitNews();
   // The loading screen goes once the roster is in (or something's gone wrong, or it's taking too long).
   if(S.loaded||S.error||S.authError||!configured)bootDone();
   S.anim=null;
