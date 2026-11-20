@@ -3027,8 +3027,15 @@ function newsTicker(){
   const track=h("ul",{class:"nt-track"},one),copy=h("ul",{class:"nt-track",inert:"","aria-hidden":"true"},one.map(li=>li.cloneNode(true)));
   // Roughly the same reading speed however many headlines there are.
   const secs=Math.max(30,list.reduce((a,x)=>a+8+String(x.parts.map?x.parts.map(p=>p&&p.textContent||p).join(""):"").length*.18,0));
-  return h("section",{class:"news","aria-label":"Guild news"},h("a",{class:"nt-label",href:"#history"},h("span",{class:"nt-dot","aria-hidden":"true"}),"Guild news"),
-    h("div",{class:"nt-view",tabindex:"0"},h("div",{class:"nt-run",style:"animation-duration:"+Math.round(secs)+"s"},track,copy)))}
+  // The page redraws often, which makes a new strip each time. Starting each new one where the old one had got to (from
+  // a clock that stops while the strip is pointed at) keeps it gliding instead of jumping back to the start.
+  const sig=list.map(x=>x.t+x.tag).join("|")+"|"+Math.round(secs),now=performance.now();
+  if(NT.sig!==sig){NT.sig=sig;NT.t0=now;NT.p=0}
+  const at=((NT.p||now)-NT.t0)/1000%Math.round(secs);
+  return h("section",{class:"news","aria-label":"Guild news",onpointerenter:()=>{if(!NT.p)NT.p=performance.now()},onpointerleave:()=>{if(NT.p){NT.t0+=performance.now()-NT.p;NT.p=0}}},
+    h("a",{class:"nt-label",href:"#history"},h("span",{class:"nt-dot","aria-hidden":"true"}),"Guild news"),
+    h("div",{class:"nt-view",tabindex:"0"},h("div",{class:"nt-run",style:"animation-duration:"+Math.round(secs)+"s;animation-delay:-"+at.toFixed(2)+"s"},track,copy)))}
+const NT={sig:"",t0:0,p:0};
 // When the headlines all fit, they sit still instead of scrolling past twice.
 function fitNews(){const v=document.querySelector(".nt-view");if(!v)return;const run=v.firstChild,tr=run&&run.firstChild;if(!tr)return;
   requestAnimationFrame(()=>run.classList.toggle("still",tr.scrollWidth<=v.clientWidth))}
