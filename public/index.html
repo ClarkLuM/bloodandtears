@@ -140,8 +140,6 @@ label.check{display:flex;align-items:center;gap:.5rem;min-height:2.5rem;color:va
 /* Class icons, ringed in the class colour */
 .cls-ic{display:inline-block;width:1.125rem;height:1.125rem;border-radius:4px;flex:none;vertical-align:middle;object-fit:cover;box-shadow:0 0 0 1px var(--cc,transparent);background:var(--sunken)}
 .chip .cls-ic{width:1rem;height:1rem}
-.list-row{display:flex;align-items:center;gap:.75rem;min-height:2.75rem;border-top:1px solid var(--sep)}
-.list-row:first-child{border-top:0}
 .empty{color:var(--ter);padding:.5rem 0}
 .note{padding:.625rem .875rem;border:1px solid var(--b-sub);background:var(--sunken);border-radius:10px;color:var(--sec)}
 .note.warn{border-color:var(--accent-b);color:var(--text)}
@@ -305,11 +303,7 @@ dialog legend{font-weight:600;font-size:1rem;line-height:1.5rem;padding:0 0 .5re
 .chip:hover{border-color:var(--b-def);color:var(--text)}
 .chip.away{border-style:dashed;color:var(--sec)}.chip.away .cls-ic{opacity:.6}
 .chip .ter{font-size:.75rem}
-.range-row{display:flex;flex-direction:column;gap:.75rem;padding:.875rem 0 .25rem;border-top:1px solid var(--sep)}
-.range-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}
 @media (max-width:600px){.range-cols{grid-template-columns:minmax(0,1fr)}}
-.range-col{display:flex;flex-direction:column;gap:.375rem;min-width:0;padding:.625rem .75rem;background:var(--sunken);border:1px solid var(--sep);border-radius:10px}
-.range-col .chips{flex-direction:column;align-items:flex-start}
 /* Card stamps: little seals on the picture for things the character has done */
 .lg-stamps{position:absolute;left:.5rem;bottom:.375rem;display:flex;gap:.25rem;z-index:1}
 .lg-stamp{width:1.625rem;height:1.625rem;border-radius:50%;display:grid;place-items:center;font-size:.6875rem;line-height:1;font-weight:600;letter-spacing:.02em;background:rgb(15 10 9 / .85);border:1.5px solid currentColor;box-shadow:0 1px 3px rgb(0 0 0 / .5)}
@@ -372,8 +366,6 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .lg-br span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .lg-br b{color:#efe6e2;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
 .lg-br.on span{color:#efe6e2}
-.lg-pbar{display:block;height:.1875rem;border-radius:4px;background:#281e1d;margin:1px 0 .1875rem;overflow:hidden}
-.lg-pbar i{display:block;height:100%;border-radius:4px}
 .lg-tabs{display:flex;gap:.25rem;margin:2px .75rem 0;padding:.1875rem;border-radius:6px;background:#161010}
 .lg-tab{flex:1;font:inherit;font-size:.6875rem;line-height:1.125rem;font-weight:600;border:0;border-radius:4px;background:none;color:#8b7b79;cursor:pointer;padding:1px .25rem}
 .lg-tab[aria-selected="true"]{background:#281e1d;color:#efe6e2}
@@ -466,8 +458,6 @@ nav.bottom{display:none}
 }
 /* Since you were last here */
 .since{border-color:var(--accent-b);background:linear-gradient(100deg,var(--accent-subtle),var(--raised) 70%);gap:.75rem}
-.since-hd{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem .75rem;flex-wrap:wrap}
-.since-hd h2{font-size:1.25rem;line-height:1.625rem}
 .since-list{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem}
 .since-it{font-size:.875rem;line-height:1.375rem;color:var(--sec);white-space:nowrap}
 .since-it b{font-family:var(--display);font-weight:600;font-size:1.5rem;line-height:1.625rem;color:var(--text);font-variant-numeric:tabular-nums;margin-right:1px}
@@ -482,10 +472,6 @@ nav.bottom{display:none}
 .mk-cls>span b{margin-left:auto;font-variant-numeric:tabular-nums}
 /* Totals: how far to the next guild milestone */
 .total{position:relative}
-.spark{display:block;width:5.25rem;height:1rem;margin-top:.25rem;fill:var(--accent-text);opacity:.75}.spark .z{fill:var(--sep);opacity:1}.spark .t{fill:var(--gold-hi);opacity:1}
-.spark .z.t{fill:var(--sep)}
-@media (max-width:640px){.spark{display:none}}
-@media (min-width:641px) and (max-width:900px){.spark{flex-basis:100%}}
 a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:1rem;color:var(--accent-text)}a.total-open:hover b{text-decoration:underline}
 .r-loot .item-link{white-space:normal;overflow-wrap:break-word}
 .mk-off{margin:0;color:var(--sec)}
@@ -518,7 +504,6 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .dg-n{font-variant-numeric:tabular-nums;color:var(--sec)}.dg-n b{color:var(--text);font-weight:600}.dg-n.zero,.dg-n.zero b{color:var(--ter);font-weight:400}
 .dg-n-l{display:none}
 .dg-detail{display:flex;flex-direction:column;gap:.75rem;padding:.25rem 1.25rem 1.25rem;background:color-mix(in srgb,var(--subtle) 50%,transparent)}
-.dg-detail>.range-row{border-top:0}
 @media (max-width:600px){.dg-cols{display:none}.dg-sum{grid-template-columns:minmax(0,1fr) auto;row-gap:0;padding-bottom:.5rem}.dg-name{grid-column:1/-1;padding-bottom:.125rem}
   .dg-n{text-align:left;font-size:.875rem;padding-left:0}.dg-n+.dg-n{padding-left:0;text-align:left}.dg-sum{grid-template-columns:auto auto 1fr 2.25rem;column-gap:1rem}.dg-name{grid-column:1/4}.dg-x{grid-column:4;grid-row:1/span 2}.dg-n-l{display:inline}}
 .pf-kind{grid-column:1/-1;font-size:.6875rem;line-height:1rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
@@ -581,7 +566,6 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .rec-who{display:flex;align-items:center;gap:.5rem;flex:1;min-width:0}.rec-who .tag{flex:none}.rec-who a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rec-v{font-variant-numeric:tabular-nums;color:var(--sec);white-space:nowrap;font-size:.875rem}
 .rec-gap{color:var(--ter);padding-left:.875rem;line-height:1rem;font-size:.75rem}
-.spoon-tag{white-space:nowrap}
 .rec-more{align-self:flex-start;margin:.25rem 0 0 -.75rem}
 .rec-top{display:grid;grid-template-columns:minmax(0,27rem) minmax(0,1fr);gap:.75rem;align-items:start}
 @media (max-width:960px){.rec-top,.rec-a{grid-template-columns:minmax(0,1fr)}}
@@ -680,14 +664,12 @@ html[data-swipe="next"] #app main{animation:swNext .22s ease-out}html[data-swipe
 @media (max-width:480px){.brand{gap:.5rem;min-width:0}.brand b{font-size:1rem;line-height:1.5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.hdr-tools{gap:.25rem}.hdr-tools .btn{padding:0 .5rem}header.top .wrap{column-gap:.5rem}.brand-logo{width:2.25rem;height:2.25rem}}
 @media (max-width:360px){.brand{gap:.375rem}.brand b{font-size:.875rem}.brand-logo{width:1.875rem;height:1.875rem}}
 .tab-empty{display:none}
-.recap-img{display:block;width:100%;max-height:55vh;object-fit:contain;border-radius:10px;background:#0f0a09;border:1px solid var(--b-sub)}
 .rr{gap:.75rem}
 .rr-hero{display:grid;grid-template-columns:minmax(12rem,15rem) minmax(0,1fr);gap:1.25rem;align-items:center}
 @media (max-width:900px){.rr-hero{grid-template-columns:minmax(0,1fr)}}
 .rr-count{display:flex;flex-direction:column;gap:.125rem}
 .rr-eyebrow{font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)}
 .rr-count>b{font-size:2.75rem;line-height:3rem;color:var(--gold-hi);font-variant-numeric:tabular-nums}
-.rr-close{display:flex;flex-direction:column;gap:.375rem}
 .rr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.75rem}
 .rr-raid{display:flex;flex-direction:column;gap:.75rem;padding:1rem;border-radius:10px;background:var(--sunken);border:1px solid var(--b-sub)}.rr-raid h3{margin:0}.rr-raid>.tag{align-self:flex-start}
 .rr-ok{color:#7fd69a;background:rgb(47 154 70/.16)}:root[data-theme="light"] .rr-ok{color:#1d6a30;background:rgb(35 128 58/.12)}
@@ -1501,7 +1483,7 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 .rc-pod b{font-size:1.5rem;line-height:2rem;color:var(--accent-text)}
 .rc-moments{display:flex;flex-direction:column}.rc-moments>div{display:flex;flex-direction:column;gap:.125rem;padding:.5rem 0;border-top:1px solid var(--sep)}.rc-moments>div:first-child{border-top:0}
 .gl-bar{height:.625rem;border-radius:99px;background:var(--subtle,rgb(255 255 255 / .07));overflow:hidden}.gl-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#c9932d,#f0cf8f)}
-.gl-mini{display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit}.gl-side{display:flex;flex-direction:column;gap:.5rem}
+.gl-mini{display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit}
 .gl-hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1.75rem;align-items:center}
 .gl-emb{width:7.5rem;height:7.5rem;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;
   background:radial-gradient(circle at 35% 30%,#d6a24a,#7a1428 70%);box-shadow:0 0 0 4px #2a1a14,0 0 0 6px #c9932d,0 10px 30px rgb(0 0 0/.35)}
@@ -1749,8 +1731,6 @@ const isOfficer=()=>!!S.user&&((S.officers&&Array.isArray(S.officers.uids)&&S.of
 const canEdit=m=>isOfficer()||isMine(m);
 // From the armory's guild roster (checked every hour): who's the Guild Master, and who isn't in the guild any more.
 const rosterEntry=m=>{const g=S.guildRoster;if(!g||!Array.isArray(g.members))return undefined;const k=nameOf(m).toLowerCase().replace(/\s+/g," ");return g.members.find(x=>String(x.name).toLowerCase()===k)||null};
-const guildTags=m=>{const e=rosterEntry(m);return[e&&e.rank===0?h("span",{class:"tag gold"},"Guild Master"):null,isOfficerChar(m)?h("span",{class:"tag"},"Officer"):null,e===null?h("span",{class:"tag",title:"Not on the guild's armory roster"},"Not in the guild"):null,
-null]};
 // The roster row's one mark beside the name: a gold crown for the Guild Master, "Officer" for officers. Characters not in
 // the guild have their own group at the bottom, so they need no tag.
 const rosterTag=m=>{const e=rosterEntry(m);if(e&&e.rank===0){const c=h("span",{class:"r-crown",title:"Guild Master",role:"img","aria-label":"Guild Master"});c.innerHTML=CROWN;return c}
@@ -2363,19 +2343,6 @@ function nowRow(){
     list.length?h("div",{class:"now-list"},list.slice(0,16).map(face),list.length>16?h("span",{class:"now-more"},"+"+(list.length-16)):null)
       :h("p",{class:"empty",style:"margin:0"},"Nobody's logged off yet today."),
     h("p",{class:"small ter",style:"margin:0"},"From the armory, which updates when someone logs off."))}
-// Who's logged off since midnight, from the armory (it updates when someone logs off).
-function inGameToday(){
-  if(!S.members.length)return null;
-  const start=new Date();start.setHours(0,0,0,0);
-  const list=S.members.filter(m=>Date.parse(seenOf(m))>=start.getTime()).sort((a,b)=>Date.parse(seenOf(b))-Date.parse(seenOf(a)));
-  return h("aside",{class:"card","aria-labelledby":"today-h",style:"gap:.5rem"},h("div",{class:"spread"},h("h2",{id:"today-h"},"In Game Today"),list.length?h("span",{class:"small ter"},String(list.length)):null),
-    list.length?h("div",{style:"display:flex;flex-direction:column;gap:.375rem"},list.slice(0,12).map(m=>h("div",{class:"spread",style:"flex-wrap:nowrap"},
-      h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap;min-width:0"},classIcon(m.cls),charLink(m),h("span",{class:"small ter"},String(m.level||1))),
-      h("span",{class:"small ter",style:"white-space:nowrap"},ago(seenOf(m))))),list.length>12?h("span",{class:"small ter"},"and "+(list.length-12)+" more"):null)
-      :h("p",{class:"empty"},"Nobody's logged off yet today."),
-    h("p",{class:"small ter",style:"margin:0"},"From the armory, which updates when someone logs off."),
-    weekLine())}
-// One line about the week's leaderboard moves, pointing to Records (the full list lives there).
 function weekLine(){const wk=weekMoves(),l=wk?wk.list:[];
   const n=k=>l.filter(e=>e.kind===k).length,crowns=n("crown"),ups=n("up"),gains=l.filter(e=>e.kind==="gain");
   const bits=[crowns?crowns+(crowns===1?" new top spot":" new top spots"):"",ups?ups+(ups===1?" big climb":" big climbs"):""].filter(Boolean);
@@ -2404,8 +2371,6 @@ function guildTotals(){
   const all=S.members;if(!all.length)return null;
   const v=guildNums();
   const wkAgo=Date.now()-7*864e5,cur=all.filter(m=>isMine(m)||memberState(m)==="current");v.chars=cur.length;
-  const spark={levels:dayCounts(all.flatMap(m=>(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Reached level \d+/.test(j.t||"")).map(j=>{const to=+String(j.t).replace(/\D/g,"");return[j.at,Math.max(1,to-(+j.from||to-1))]}))),
-    chars:dayCounts(cur.map(m=>[m.joined||m.createdAt,1]))};
   const tiles=[["chars","Characters",cur.filter(m=>Date.parse(m.joined||m.createdAt||"")>=wkAgo).length,"Joined in the last seven days"],["levels","Levels",all.reduce((t,m)=>t+weekGained(m),0)],
     ["epics","Epic items",null,"Equipped right now"],["hk","Honourable kills",all.reduce((t,m)=>t+hkWeekOf(m),0)],["sixty","Level 60s"]];
   return h("section",{class:"totals","aria-label":"Guild totals"},tiles.map(([k,label,wk,tip,verb])=>{const nx=MS_STEPS[k]?msNext(k,v[k]):null;
@@ -2420,18 +2385,6 @@ function guildTotals(){
       nx?h("em",{class:"total-to"},fmtN(nx.n-v[k])+" to "+fmtN(nx.n)):null,
       nx?h("i",{class:"total-next","aria-hidden":"true"},h("s",{style:`width:${Math.round(nx.pct*100)}%`})):null,
       next?h("span",{class:"visually-hidden"},". "+next):null)}))}
-
-// Counts per day for the last 14 days (Perth days), oldest first, from [time, amount] pairs.
-function dayCounts(pairs){const day=t=>new Date(t+8*36e5).toISOString().slice(0,10),out=[],now=Date.now();
-  for(let i=13;i>=0;i--)out.push([day(now-i*864e5),0]);const at=new Map(out.map((x,i)=>[x[0],i]));
-  for(const[t,n]of pairs){const ms=Date.parse(t||"");if(!ms)continue;const i=at.get(day(ms));if(i!==undefined)out[i][1]+=n}
-  return out.some(x=>x[1])?out:null}
-// Fourteen thin bars, today on the right and brighter; the numbers are read out for screen readers.
-function sparkBars(d,what){const max=Math.max(...d.map(x=>x[1]),1),W=4,G=2,H=16;
-  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.setAttribute("viewBox",`0 0 ${d.length*(W+G)-G} ${H}`);svg.setAttribute("class","spark");svg.setAttribute("aria-hidden","true");
-  d.forEach(([,n],i)=>{const r=document.createElementNS("http://www.w3.org/2000/svg","rect"),bh=n?Math.max(2,Math.round(n/max*H)):1;
-    r.setAttribute("x",i*(W+G));r.setAttribute("y",H-bh);r.setAttribute("width",W);r.setAttribute("height",bh);r.setAttribute("rx","1");if(!n)r.setAttribute("class","z");if(i===d.length-1)r.setAttribute("class",n?"t":"z t");svg.append(r)});
-  return[svg,h("span",{class:"visually-hidden"},". Last 14 days, "+what+": "+d.map(x=>x[1]).join(", "))]}
 
 /* ---------- Guild milestones ---------- */
 // The guild's totals passing round numbers. The server notes when each is first passed (guild/firsts, `milestones`,
@@ -3214,7 +3167,7 @@ function guildLevel(){const key=[S.members,S.firsts,S.scribe,DUNGEON_LOOT];if(GL
 // Three tiles under the Roster heading: today so far, this week's recap and the guild level.
 function hubTiles(){if(!S.members.length)return null;
   const d0=new Date();d0.setHours(0,0,0,0);const t0=d0.getTime(),on=S.members.filter(m=>Date.parse(seenOf(m))>=t0).length;
-  const ups=feedItems().filter(x=>x.t>=t0&&x.k==="level").length,lv=S.members.reduce((t,m)=>t+weekGained(m),0),g=guildLevel();
+  const ups=[...S.members,...S.alts].reduce((n,m)=>n+(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Reached level \d+/.test(j.t||"")&&Date.parse(j.at||"")>=t0).length,0),lv=S.members.reduce((t,m)=>t+weekGained(m),0),g=guildLevel();
   const tile=(href,eb,big,small,extra)=>h("a",{class:"hub-t",href},h("span",{class:"hub-eb"},eb),h("b",{},big),extra||null,h("span",{class:"hub-s"},small));
   return h("nav",{class:"hub","aria-label":"Today, this week and the guild level"},
     tile("#today","Today",ups?ups+(ups===1?" level-up":" level-ups"):on+" on today",ups?on+" on today":"See what's new"),
