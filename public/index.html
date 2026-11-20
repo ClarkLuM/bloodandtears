@@ -328,9 +328,9 @@ dialog legend{font-weight:600;font-size:1rem;line-height:1.5rem;padding:0 0 .5re
 .hist-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.75rem;align-items:baseline;padding:.5rem 0;border-top:1px solid var(--sep)}
 /* More menu */
 details.more{position:relative}
-details.more summary{list-style:none;cursor:pointer}
+details.more summary{list-style:none;cursor:pointer;transition:background-color .15s,border-color .15s,color .15s}
 details.more summary::-webkit-details-marker{display:none}
-details.more summary::after{content:"";width:.4375rem;height:.4375rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);margin-left:.5rem}
+details.more summary::after{transition:none;content:"";width:.4375rem;height:.4375rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);margin-left:.5rem}
 details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .more-menu{position:absolute;right:0;top:calc(100% + .375rem);z-index:30;min-width:13.75rem;display:flex;flex-direction:column;padding:.375rem;background:var(--overlay);border:1px solid var(--b-sub);border-radius:10px;box-shadow:0 8px 24px rgb(0 0 0 / .35)}
 .more-menu button{font:inherit;font-size:.875rem;line-height:1.25rem;text-align:left;background:none;border:0;border-radius:6px;padding:.5625rem .625rem;min-height:2.5rem;color:var(--text);cursor:pointer}
