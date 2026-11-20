@@ -1095,8 +1095,8 @@ img.fade{opacity:0;transition:opacity .3s ease}img.fade.in{opacity:1}
 @media (prefers-reduced-motion:reduce){img.fade{transition:none}}
 /* Opening something slides it down into place (only when it's opened, not on every redraw). */
 @keyframes slide-open{from{opacity:0;transform:translateY(-.375rem);clip-path:inset(0 0 100% 0)}to{opacity:1;transform:none;clip-path:inset(0 0 0 0)}}
-.opening,details.opening>:not(summary){animation:slide-open .24s cubic-bezier(.2,.7,.3,1)}
-@media (prefers-reduced-motion:reduce){.opening,details.opening>:not(summary){animation:none}}
+.opening:not(details),details.opening>:not(summary){animation:slide-open .24s cubic-bezier(.2,.7,.3,1)}
+@media (prefers-reduced-motion:reduce){.opening:not(details),details.opening>:not(summary){animation:none}}
 
 /* Option B: quieter details on top of the tidy-up */
 nav.main a[aria-current="page"]{background:transparent;box-shadow:inset 0 -2px 0 var(--accent)}
