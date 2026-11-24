@@ -3,7 +3,7 @@
 # `firebase deploy --only functions,firestore:rules` from WSL used to.
 # Uses the same FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER secret as the site deploy. That account needs these roles in
 # Google Cloud (IAM), added once: Cloud Functions Admin, Cloud Run Admin, Service Account User, Cloud Scheduler Admin,
-# Artifact Registry Administrator, Firebase Rules Admin and Service Usage Consumer. The README says how.
+# Artifact Registry Administrator, Firebase Rules Admin, Firebase Extensions Viewer and Service Usage Consumer. The README says how.
 name: Deploy the server
 on:
   workflow_dispatch:

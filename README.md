@@ -206,7 +206,7 @@ Every colour on the site comes from the design system in `opendesigner/` (OpenDe
 
 - **Preview:** every push to `main` that touches `public/` or `firebase.json` builds a private preview copy of the site (Firebase Hosting channel `preview`, kept 30 days). The link is in the run summary under Actions, "Preview the site".
 - **Live:** Actions, "Deploy the site", Run workflow. It publishes `public/` from `main`. Nothing goes live without pressing it.
-- **Server code** (functions) is still deployed by hand from a copy outside OneDrive, as it changes rarely: `firebase deploy --only functions`.
+- **Server code** (functions and Firestore rules): GitHub, Actions, **Deploy the server**, Run workflow. It uses the same deploy key as the site. That key's account (`github-action-…@loot-goblins-roster.iam.gserviceaccount.com`) needs these roles, added once in Google Cloud console, IAM, pencil on that account, Add another role: Cloud Functions Admin, Cloud Run Admin, Service Account User, Cloud Scheduler Admin, Artifact Registry Administrator, Firebase Rules Admin, Firebase Extensions Viewer and Service Usage Consumer. A failed run names the permission it was missing. The old way still works: `firebase deploy --only functions` from a copy outside OneDrive.
 - **One-time setup:** in the project folder run `firebase init hosting:github` and give it `ClarkLuM/bloodandtears`. Answer No to its build script and its own workflows; it only needs to make the service account and the `FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER` secret these workflows use.
 
 ## Automatic scribe upload
