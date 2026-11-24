@@ -3576,7 +3576,7 @@ function canMake(m){
   if(recipesState!=="ok")return h("p",{class:"small ter",style:"margin:0"},"Loading the recipe book…");
   const bySk=(a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]);
   const rows=Object.keys(m.profs).filter(p=>S.recipes[p]).map(p=>{const sk=skillIn(m,p),k=knownSet(m,p),all=S.recipes[p].filter(r=>+r[1]<=sk);
-    const next=S.recipes[p].filter(r=>+r[1]>sk&&+r[1]<=sk+50).sort((a,b)=>a[1]-b[1]||a[0].localeCompare(b[0]));
+    const next=sk>=300?[]:S.recipes[p].filter(r=>+r[1]>sk&&+r[1]<=sk+50).sort((a,b)=>a[1]-b[1]||a[0].localeCompare(b[0]));
     // The scribe has seen their profession window: list exactly what they know, and the rest they could learn.
     if(k){const has=r=>k.has(String(r[0]).toLowerCase());return{p,sk,known:true,k,learn:S.recipes[p].filter(has).sort(bySk),miss:all.filter(r=>!has(r)).sort(bySk),next,n:k.size}}
     return{p,sk,learn:all.filter(r=>r[2]!=="R").sort(bySk),miss:all.filter(r=>r[2]==="R").sort(bySk),next,need:all.filter(r=>r[2]==="R").length}}).filter(x=>x.learn.length||x.miss.length||x.next.length);
@@ -3585,7 +3585,7 @@ function canMake(m){
   return h("div",{class:"cm"},h("span",{class:"small ter",style:"font-weight:600"},"Recipe book"),
     rows.map(x=>{const key=m.id+"|"+x.p,open=!!(S.ui.cmOpen||{})[key];
       if(open)loadRecipeInfo();
-      const info=open&&rinfoState==="ok",su=r=>info?skillUp(x.p,r[0],x.sk):null;
+      const maxed=x.sk>=300,info=open&&rinfoState==="ok"&&!maxed,su=r=>info?skillUp(x.p,r[0],x.sk):null;
       const row=(r,o={})=>{const rk=m.id+"|"+x.p+"|"+r[0],ro=S.ui.cmRc===rk,u=o.next?["r","Red: needs "+r[1]+" skill"]:su(r),where=o.where&&r[2]==="R"?rcWhere(x.p,r[0]):"";
         return h("li",{class:ro?"open":""},u?h("span",{class:"su su-"+u[0],title:u[1]},h("span",{class:"visually-hidden"},u[1])):h("span",{class:"su none","aria-hidden":"true"}),
           h("span",{class:"cm-n"},itemRef(r[0],r[4]?{id:r[4],q:r[5]}:null),x.known&&x.k.has(String(r[0]).toLowerCase())?h("span",{class:"rb-k",title:"The guild scribe has seen them know this"}," ✓"):null,where?h("span",{class:"small ter rb-where"},where):null),
@@ -3600,7 +3600,7 @@ function canMake(m){
         h("summary",{},h("b",{},x.p),h("span",{class:"small ter"},x.known?x.n+" recipes they know (seen by the guild scribe)":x.learn.length+" known or at the trainer"+(x.need?" · "+x.need+" more with a recipe":""))),
         ups.length?h("div",{class:"rb-best"},h("span",{class:"rb-h"},"Best skill-ups right now"),h("ul",{class:"cm-list"},ups.map(r=>row(r,{where:true})))):null,
         tabs.length>1?h("div",{class:"seg rb-tabs",role:"group","aria-label":x.p+" recipes"},tabs.map(([v,l])=>h("button",{type:"button","aria-pressed":String(f===v),onclick:()=>setUi({rbF:{...(S.ui.rbF||{}),[key]:v},rbMore:{...(S.ui.rbMore||{}),[key]:false}})},l.replace(/ \(\d+\)$/,""),h("span",{}," "+l.match(/\d+/)[0])))):null,
-        open&&f!=="next"?suKey():null,
+        maxed?h("p",{class:"small ter rb-note"},x.p+" is maxed at "+x.sk+". No more skill-ups to chase."):open&&f!=="next"?suKey():null,
         f==="next"?h("p",{class:"small ter rb-note"},"Opens up as their "+x.p+" skill climbs past "+x.sk+"."):null,
         list.length?h("ul",{class:"cm-list"},(more?list:list.slice(0,N)).map(r=>row(r,{next:f==="next",where:f==="find"}))):h("p",{class:"small ter rb-note"},"Nothing here."),
         list.length>N&&!more?h("button",{type:"button",class:"linkish small rb-more",onclick:()=>setUi({rbMore:{...(S.ui.rbMore||{}),[key]:true}})},"Show all "+list.length):null)}))}
