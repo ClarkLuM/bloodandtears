@@ -83,6 +83,7 @@ Other things worth knowing about:
 | `public/firebase-config.js` | The Firebase project's config and the App Check key |
 | `public/recipes.json`, `public/recipe-info.json` | The recipe list for Who Can Make It?, and each recipe's reagents and source (built by `tools/recipes/build.py`) |
 | `public/talent-trees.json` | The WoW Forever talent tree layouts the character page draws (built by `tools/talents/build.py` from Wowhead's talent calculator data saved in `tools/talents/`) |
+| `public/spellbook.json` | Every class ability and rank by level for the character page's Spellbook (built by `tools/spellbook/build.py` from Wowhead's WoW Forever ability data and spell tooltips saved in `tools/spellbook/`) |
 | `public/dungeon-loot.json` | Dungeon drops for What Drops, passport stamps from loot and item links (built by `tools/dungeon-loot/build.py`; the page loads it separately so it opens faster) |
 | `manifest.webmanifest`, `icon*`, `logo.svg`, `og-gingerbread.png` | The home-screen icon and the link preview |
 | `public/robots.txt` | Keeps the site out of search engines |

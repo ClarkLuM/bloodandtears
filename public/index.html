@@ -348,6 +348,22 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .first-row{display:grid;grid-template-columns:6.2em minmax(0,1fr) auto;gap:.5rem;align-items:baseline;padding:.4375rem 0;border-top:1px solid var(--sep);font-size:.75rem;line-height:1.125rem}
 .first-row:first-child{border-top:0}
 .first-row .who{display:flex;flex-direction:column;gap:2px;min-width:0}
+.sb{gap:.75rem}.sb-h{display:block;font:600 .75rem 'Alegreya Sans SC',serif;letter-spacing:.08em;color:var(--accent-text);margin-bottom:.375rem}
+.sb-up{display:flex;flex-direction:column;gap:.5rem}.sb-up>.linkish{align-self:flex-start}
+.sb-lv{display:flex;flex-direction:column;gap:.375rem}.sb-lvn{font-size:.75rem;font-weight:600;color:var(--sec)}
+.sb-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:.375rem}
+.sb-chip{display:flex;align-items:center;gap:.5rem;min-width:0;padding:.25rem .5rem .25rem .25rem;border:1px solid var(--sep);border-radius:8px;background:var(--sunken);cursor:default}
+.sb-chip.new{border-color:rgb(212 162 76 / .55)}.sb-chip.new .sb-t .ter{color:var(--gold);font-weight:600}
+.sb-chip{font:inherit;color:inherit;text-align:left;width:100%}.sb-chip.sel,.sb-ic.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}.sb-ic{padding:0;cursor:pointer}.sb-chip{cursor:pointer}.sb-detail{margin-top:.375rem}
+.sb-chip:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.sb-chip .tal-ico{width:1.75rem;height:1.75rem}
+.sb-t{display:flex;flex-direction:column;min-width:0;line-height:1.15}.sb-t b{font-size:.8125rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sb-t .ter{font-size:.6875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-all{display:flex;flex-direction:column;gap:.75rem}.sb-all>summary{cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .75rem;min-height:2.25rem;padding:.375rem 0}
+.sb-all[open]{gap:.75rem}.sb-school{margin-bottom:.5rem}
+.sb-icons{display:flex;flex-wrap:wrap;gap:.375rem}
+.sb-ic{position:relative;width:2.5rem;height:2.5rem;border-radius:6px;border:1px solid var(--b-def);background:var(--sunken);overflow:hidden;cursor:default}
+.sb-ic img{width:100%;height:100%;display:block}.sb-ic:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.sb-rk{position:absolute;right:1px;bottom:1px;min-width:1rem;padding:0 .1875rem;border-radius:4px;background:rgb(0 0 0 / .75);color:#f3e7c8;font-size:.625rem;font-weight:700;line-height:.875rem;text-align:center}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -881,7 +897,8 @@ a.r-name:hover{color:var(--accent-text)}
 .lg-type{margin-top:.375rem}
 /* Cards page: sets, a quieter link under each card, and two cards across on phones */
 .binder-set{display:flex;flex-direction:column;gap:.75rem}
-.binder{justify-content:start;grid-template-columns:repeat(auto-fill,16.25rem);gap:1.25rem 1.5rem}
+.binder{justify-content:start;grid-template-columns:repeat(auto-fill,11.375rem);gap:1rem 1.125rem}
+.binder .lg-flip{zoom:.7}
 .binder-it{gap:.25rem}
 .binder-link{font-size:.75rem;line-height:1.75rem;color:var(--ter);text-decoration:none;padding:0 .5rem}
 .binder-link:hover{color:var(--accent-text);text-decoration:underline}
@@ -906,7 +923,7 @@ a.r-name:hover{color:var(--accent-text)}
 @media (max-width:860px){.prof-cols{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:560px){.ch-hero{gap:.75rem;align-items:flex-start}.ch-av{width:3.5rem;height:3.5rem;font-size:1.25rem}}
 /* Dungeons / Raids switch, and the Raids page */
-.dg-tabs a{display:inline-flex;align-items:center;font-weight:600;height:2rem;padding:0 .875rem;border-radius:6px;color:var(--sec);text-decoration:none}
+.dg-tabs a{display:inline-flex;align-items:center;font-weight:600;height:2rem;padding:0 .875rem;border-radius:999px;color:var(--sec);text-decoration:none}
 .dg-tabs a:hover{color:var(--text)}
 .dg-tabs a[aria-current="page"]{background:var(--raised);color:var(--text)}
 .rd-t tr.rd-away td{color:var(--ter)}
@@ -1630,7 +1647,7 @@ fetch("dungeon-loot.json").then(r=>r.ok?r.json():Promise.reject(new Error(r.stat
 const RAIDS=[["Barrow Deeps",10,{Tank:2,Healer:3,DPS:5},""],["Hyjal Summit",20,{Tank:3,Healer:5,DPS:12},""],
   ["Onyxia's Lair",40,{Tank:5,Healer:10,DPS:25},"Needs the Drakefire Amulet in your bags. The Horde quest chain starts with Warlord Goretooth in the Badlands."]];
 const DISCORD_RE=/^https:\/\/(discord\.gg|(www\.)?discord\.com\/invite)\/[A-Za-z0-9-]+\/?$/;
-const PAGES=[["roster","Roster"],["lfg","Dungeons"],["professions","Professions"],["records","Records"],["activity","Activity"]];
+const PAGES=[["roster","Roster"],["lfg","Dungeons and Raids"],["professions","Professions"],["records","Records"],["activity","Activity"]];
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const el=document.createElement(tag);for(const[k,v]of Object.entries(attrs||{})){if(v==null||v===false)continue;if(k==="class")el.className=v;else if(k==="style")el.style.cssText=v;else if(k.startsWith("on"))el.addEventListener(k.slice(2),v);else if(k==="value"&&(tag==="input"||tag==="textarea"||tag==="select"))el.value=v;else el.setAttribute(k,v===true?"":v)}for(const k of kids.flat(Infinity)){if(k==null||k===false)continue;el.append(k.nodeType?k:document.createTextNode(String(k)))}return el}
@@ -1881,6 +1898,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-25","A spellbook on every character","Character pages now show the class abilities and ranks their level allows, and what the trainer has for them over the next few levels. Hover one to read it.","#roster"],
   ["2026-11-25","A recipe book on every character","Open a profession under Professions on any character page: the best skill-ups right now (with where to find a missing recipe), everything they can make or learn, the recipes they still need, and what opens up next as their skill climbs.","#roster"],
   ["2026-11-25","When will they hit 60?","The Raids page now says how many more are on pace to reach 60 before raids open on 9 December, and when each of the 50s should get there. Character pages say it too, under the levelling chart.","#raids"],
   ["2026-11-25","A tidier site","Cards are now the Cards view on the Roster (with the card of the week on top), so the menu is one shorter. \"Since you were here\" lives in the first tile under the Roster heading, the Roster shows one banner at a time, and a gold dot on a menu item now means something new on the site lives on that page.","#roster"],
@@ -1947,7 +1965,7 @@ function header(page){
     h("a",{class:"brand"+(glHas(3)?" gl-ring":""),href:"#roster"},h("i",{class:"brand-mk"},h("img",{class:"brand-logo",src:"logo.svg",alt:"",width:"40",height:"40"}),glHas(10)?h("i",{class:"gl-crown","aria-hidden":"true"},crownSvg()):null),h("b",{},"Blood and Tears"),h("span",{},"Horde · WoW Forever")),
     h("nav",{class:"main","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null,"aria-label":navLabel(k,l),...dotted(k)},l))),
     // On phones the menu moves to a bar along the bottom.
-    h("nav",{class:"bottom","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null,"aria-label":navLabel(k,l),...dotted(k)},navIcon(k),h("span",{class:"nb-l"},l),h("span",{class:"nb-s","aria-hidden":"true"},NAV_SHORT[k]||l)))),
+    h("nav",{class:"bottom","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null,"aria-label":navLabel(k,l),...dotted(k)},navIcon(k),h("span",{class:"nb-l"},k==="lfg"?"Dungeons":l),h("span",{class:"nb-s","aria-hidden":"true"},NAV_SHORT[k]||l)))),
     h("div",{class:"hdr-tools"},
       h("button",{class:"btn quiet srch-btn",type:"button",onclick:openSearch,"aria-label":"Search the site",title:"Search (press /)"},
         srchIcon(),h("span",{class:"srch-l"},"Search"),h("span",{class:"srch-ph","aria-hidden":"true"},h("span",{class:"sp-long"},"Search guildies, items, recipes"),h("span",{class:"sp-short"},"Search")),h("kbd",{class:"srch-k"},"/")),
@@ -1965,7 +1983,7 @@ function header(page){
 // dungeon drops and pages, and goes
 // straight there. Recipes are loaded the first time it opens.
 // The bottom bar's icons on phones (simple line drawings in the text colour).
-const NAV_SHORT={professions:"Crafts"};
+const NAV_SHORT={professions:"Crafts",lfg:"Dungeons"};
 const NAV_IC={
   roster:'<circle cx="8" cy="7" r="3"/><path d="M2.5 17c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="14.5" cy="6.5" r="2.25"/><path d="M14 11.2c2 .1 3.5 1.6 4 4.3"/>',
   lfg:'<path d="M4 18V8a6 6 0 0 1 12 0v10"/><path d="M2.5 18h15"/><path d="M8 18v-5h4v5"/>',
@@ -4219,7 +4237,7 @@ function viewChar(coll,id){
   // the character pane, the passport and professions; the narrow one holds the card, talents and journey.
   // On phones the columns dissolve and --o puts each tab's sections back in reading order.
   const o=(el,n)=>{if(el)el.style.setProperty("--o",n);return el};
-  const cells=[h("div",{class:"col col-main"},o(sec(gearCard(m),"gear"),4),o(sec(levelCard(m),"overview"),2),m.isAlt?null:o(sec(passportCard(m),"overview"),3),o(sec(profCard,"profs"),6)),
+  const cells=[h("div",{class:"col col-main"},o(sec(gearCard(m),"gear"),4),o(sec(levelCard(m),"overview"),2),m.isAlt?null:o(sec(passportCard(m),"overview"),3),o(sec(profCard,"profs"),6),o(sec(spellbookCard(m),"gear"),5)),
     h("div",{class:"col col-side"},o(sec(cardSection(m),"overview"),1),o(sec(talentsCard(m),"gear"),5),o(sec(journeyCard,"overview"),2))];
   const tab=["overview","gear","profs"].includes(S.ui.charTab)?S.ui.charTab:"overview";
   out.push(h("div",{class:"char-tabs"},seg("Section",[["overview","Overview"],["gear","Gear"],["profs","Professions"]],tab,k=>{S.ui.charTab=k;render()})));
@@ -4342,6 +4360,51 @@ function openTalTrees(m,trees,low){const dlg=$("#dlg"),f=$("#dlgForm");if(dlg.op
   // Clicking outside the window closes it too.
   dlg.onclick=e=>{if(e.target===dlg)dlg.close()};dlg.addEventListener("close",()=>{dlg.onclick=null},{once:true});
   f.onsubmit=e=>e.preventDefault();dlg.showModal()}
+// The spellbook: every class ability and rank their level allows (public/spellbook.json, from Wowhead's WoW Forever data,
+// built by tools/spellbook/build.py), and what the trainer has for them over the next few levels. Abilities that start
+// as a talent (Mortal Strike, Pyroblast) only show once they have that talent. The armory doesn't say which ranks
+// they've actually bought, so this is what they can have, not a list of what they've trained.
+let SPELLBOOK=null,sbLoading=false;
+function sbData(cls){
+  if(SPELLBOOK)return(SPELLBOOK.classes||{})[cls]||null;
+  if(!sbLoading){sbLoading=true;fetch("spellbook.json").then(r=>r.ok?r.json():null).then(d=>{SPELLBOOK=d||{classes:{}};render()}).catch(()=>{SPELLBOOK={classes:{}};render()})}
+  return null}
+function spellbookCard(m){
+  const d=sbData(m.cls);if(!d||!d.spells.length)return null;
+  const L=+m.level||1,low=s=>String(s||"").trim().toLowerCase();
+  const tal=new Set((m.armory&&Array.isArray(m.armory.talents)?m.armory.talents:[]).flatMap(g=>(g.talents||[]).map(x=>low(x.name))));
+  const ok=sp=>!sp[9]||tal.has(low(sp[0]));
+  const spells=d.spells.filter(ok);
+  // Highest rank they can have of each ability, by school.
+  const best=new Map();for(const sp of spells)if(sp[1]<=L){const b=best.get(sp[0]);if(!b||sp[4]>b[4])best.set(sp[0],sp)}
+  const known=[...best.values()];
+  const upLv=[...new Set(spells.filter(sp=>sp[1]>L).map(sp=>sp[1]))].sort((a,b)=>a-b),more=!!(S.ui.sbMore||{})[m.id],shown=upLv.slice(0,more?upLv.length:3);
+  const rk=sp=>sp[5]>1?"Rank "+sp[4]+(sp[4]===sp[5]?" (max)":" of "+sp[5]):"";
+  const chip=(sp,o={})=>{const ic=TAL_ICON(sp[3]);
+    return h("button",{type:"button",class:"sb-chip"+(o.isNew?" new":"")+(sel===sp[8]?" sel":""),"aria-pressed":String(sel===sp[8]),onclick:pick(sp),"data-tip-name":sp[0],"data-tip-rank":[rk(sp),d.schools[sp[2]]||"",sp[6]].filter(Boolean).join(" · "),"data-tip-desc":sp[7]||"","data-tip-icon":ic},
+      ic?h("img",{class:"tal-ico",src:ic,alt:"",loading:"lazy"}):h("span",{class:"tal-ico"}),
+      h("span",{class:"sb-t"},h("b",{},sp[0]),h("span",{class:"small ter"},o.isNew?"New":rk(sp)||(d.schools[sp[2]]||""))))};
+  const open=!!(S.ui.sbOpen||{})[m.id],sk=m.id+"|",sel=S.ui.sbSel&&S.ui.sbSel.startsWith(sk)?+S.ui.sbSel.slice(sk.length):0;
+  const pick=sp=>()=>setUi({sbSel:sel===sp[8]?"":sk+sp[8]},true);
+  // Tapping (or clicking) one shows its text under the row, for phones where there's no hover.
+  const detail=l=>{const sp=sel&&l.find(x=>x[8]===sel);if(!sp)return null;const ic=TAL_ICON(sp[3]);
+    return h("div",{class:"tt-detail sb-detail"},h("div",{class:"row",style:"gap:.625rem;flex-wrap:nowrap;align-items:flex-start"},ic?h("img",{src:ic,alt:"",class:"tal-ico"}):null,
+      h("div",{style:"min-width:0;display:flex;flex-direction:column;gap:.125rem"},h("b",{},sp[0]),h("span",{class:"small ter"},["Level "+sp[1],rk(sp),d.schools[sp[2]]||"",sp[6]].filter(Boolean).join(" · ")),sp[7]?h("span",{class:"small"},sp[7]):null)))};
+  const groups=d.schools.map((nm,i)=>[nm,known.filter(sp=>sp[2]===i).sort((a,b)=>a[1]-b[1]||a[0].localeCompare(b[0]))]).filter(g=>g[1].length);
+  const other=known.filter(sp=>sp[2]<0);if(other.length)groups.push(["Other",other]);
+  return h("section",{class:"card sb","aria-labelledby":"sb-h"},
+    h("div",{class:"spread"},h("h2",{id:"sb-h"},"Spellbook"),h("span",{class:"small ter"},known.length+" abilities at level "+L)),
+    h("div",{class:"sb-up"},h("span",{class:"sb-h"},upLv.length?"Coming up at the trainer":"The trainer"),
+      upLv.length?shown.map(lv=>h("div",{class:"sb-lv"},h("span",{class:"sb-lvn"},"Level "+lv),
+        h("div",{class:"sb-chips"},spells.filter(sp=>sp[1]===lv).map(sp=>chip(sp,{isNew:sp[4]===1&&!best.has(sp[0])}))),detail(spells.filter(sp=>sp[1]===lv)))):
+        h("p",{class:"small ter",style:"margin:0"},"They can have every rank there is."),
+      upLv.length>3?h("button",{type:"button",class:"btn ghost sm",onclick:()=>setUi({sbMore:{...(S.ui.sbMore||{}),[m.id]:!more}})},more?"Show less":"Show every level to 60"):null),
+    h("details",{class:"sb-all",open:open||null,ontoggle:e=>{if(e.target.open!==open)S.ui.sbOpen={...(S.ui.sbOpen||{}),[m.id]:e.target.open}}},
+      h("summary",{},h("b",{},"Everything they can have now"),h("span",{class:"small ter"},(matchMedia("(hover: hover)").matches?"hover or click":"tap")+" an icon to read it")),
+      groups.map(([nm,l])=>h("div",{class:"sb-school"},h("span",{class:"sb-h"},nm+" ",h("span",{class:"small ter"},String(l.length))),h("div",{class:"sb-icons"},l.map(sp=>{const ic=TAL_ICON(sp[3]);
+        return h("button",{type:"button",class:"sb-ic"+(sel===sp[8]?" sel":""),"aria-pressed":String(sel===sp[8]),onclick:pick(sp),"aria-label":sp[0]+(sp[5]>1?", "+rk(sp):""),"data-tip-name":sp[0],"data-tip-rank":[rk(sp),nm,sp[6]].filter(Boolean).join(" · "),"data-tip-desc":sp[7]||"","data-tip-icon":ic},
+          ic?h("img",{src:ic,alt:"",loading:"lazy"}):null,sp[5]>1?h("span",{class:"sb-rk"},String(sp[4])):null)})),detail(l))),
+      h("p",{class:"small ter",style:"margin:0"},"Everything their level allows. The armory doesn't say which ranks they've bought from the trainer.")))}
 function talentsCard(m){
   const got=(m.armory&&Array.isArray(m.armory.talents)?m.armory.talents:[]).filter(t=>t&&+t.points>0);
   const lay=talLayout(m.cls);
