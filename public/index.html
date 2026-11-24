@@ -553,6 +553,12 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 :root[data-theme="light"] .su-o{background:#d4600f}:root[data-theme="light"] .su-y{background:#c79a0a}:root[data-theme="light"] .su-g{background:#2a8d22}:root[data-theme="light"] .su-x{background:#9a9090}
 .su-key{display:flex;flex-wrap:wrap;gap:.25rem .75rem;padding-left:1.0625rem;margin-bottom:.25rem}.su-key>span{display:inline-flex;align-items:center;gap:.375rem}
 .cm-p>a{display:inline-block;margin:0 0 .5rem 1.0625rem}
+.su-r{background:#d23c3c}:root[data-theme="light"] .su-r{background:#b02a2a}
+.rb-best{margin:.25rem 0 .625rem 1.0625rem;padding:.5rem .625rem;border:1px solid rgb(212 162 76 / .45);border-radius:10px;background:rgb(212 162 76 / .07)}
+.rb-best .cm-list{padding:0;margin:0}.rb-h{display:block;font:600 .75rem 'Alegreya Sans SC',serif;letter-spacing:.08em;color:var(--gold);margin-bottom:.25rem}
+.seg.rb-tabs{margin:0 0 .5rem 1.0625rem;flex:0 1 auto;width:fit-content}
+.rb-note{margin:0 0 .375rem 1.0625rem}.rb-more{margin:0 0 .5rem 1.0625rem}
+.rb-k{color:var(--trim);font-weight:600}.rb-where{display:block;font-size:.75rem;line-height:1rem}
 @media (prefers-reduced-motion:reduce){.cm-p>summary::before{transition:none}}
 .medal{display:inline-grid;place-items:center;flex:none;width:1.5rem;height:1.5rem;border-radius:50%;font-size:.75rem;font-weight:600;color:var(--sec);background:var(--sunken);border:1px solid var(--b-sub)}
 .medal.m1{background:#e2b552;color:#2b1d02;border-color:#f3d48a}.medal.m2{background:#c3c9d0;color:#1d2228;border-color:#e3e7eb}.medal.m3{background:#c4834f;color:#2a1405;border-color:#dfa678}
@@ -1875,6 +1881,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-25","A recipe book on every character","Open a profession under Professions on any character page: the best skill-ups right now (with where to find a missing recipe), everything they can make or learn, the recipes they still need, and what opens up next as their skill climbs.","#roster"],
   ["2026-11-25","When will they hit 60?","The Raids page now says how many more are on pace to reach 60 before raids open on 9 December, and when each of the 50s should get there. Character pages say it too, under the levelling chart.","#raids"],
   ["2026-11-25","A tidier site","Cards are now the Cards view on the Roster (with the card of the week on top), so the menu is one shorter. \"Since you were here\" lives in the first tile under the Roster heading, the Roster shows one banner at a time, and a gold dot on a menu item now means something new on the site lives on that page.","#roster"],
   ["2026-11-20","Best Dressed is fairer","Best Dressed now goes by gear score: every slot's item level, weighted by quality, so an epic beats a rare and a rare beats a green, and a higher-level outfit beats a lower one. Character pages show each character's gear score.","#records"],
@@ -3556,31 +3563,47 @@ function recipeFinder(){
 // "Can make" on a character's Professions card: per crafting profession, the recipes their armory skill covers that are
 // learned automatically or taught by the trainer, hardest first. Recipes that need a drop, vendor or quest item are only
 // counted, because the site can't see which of those they've found.
+// The recipe book: each profession they have, what they can make or learn now, the best skill-ups right now (with where
+// to get a missing recipe) and what opens up next. "✓" marks recipes the guild scribe has seen them know.
+function rcWhere(p,name){if(rinfoState!=="ok")return"";const d=S.rinfo.recipes[p+"|"+name];if(!d)return"";const ri=d[5],sc=(ri&&ri[2]&&ri[2].length?ri[2]:d[4])||[],sm=ri?ri[3]:[],zones=S.rinfo.zones||{};
+  const verb=sc.includes(5)?"Sold by":sc.includes(4)?"Quest:":sc.includes(2)?"Drops from":"From";
+  if(sm&&sm.length){const [,n,z]=sm[0];return verb+" "+n+(z&&zones[z]?" ("+zones[z]+")":"")}
+  return sc.includes(5)?"Sold by a vendor":sc.includes(2)?"Drops from monsters":sc.includes(4)?"A quest reward":""}
 function canMake(m){
   if(!Object.keys(m.profs||{}).length)return null;
   loadRecipes();
   if(recipesState==="failed")return null;
-  if(recipesState!=="ok")return h("p",{class:"small ter",style:"margin:0"},"Loading what they can make…");
-  const rows=Object.keys(m.profs).filter(p=>S.recipes[p]).map(p=>{const sk=skillIn(m,p),k=knownSet(m,p);
-    // The scribe has seen their profession window: list exactly what they know.
-    if(k)return{p,known:true,learn:S.recipes[p].filter(r=>k.has(String(r[0]).toLowerCase())).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),need:0,n:k.size};
-    const all=S.recipes[p].filter(r=>+r[1]<=sk);
-    return{p,learn:all.filter(r=>r[2]!=="R").sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),need:all.filter(r=>r[2]==="R").length}}).filter(x=>x.learn.length||x.need);
+  if(recipesState!=="ok")return h("p",{class:"small ter",style:"margin:0"},"Loading the recipe book…");
+  const bySk=(a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]);
+  const rows=Object.keys(m.profs).filter(p=>S.recipes[p]).map(p=>{const sk=skillIn(m,p),k=knownSet(m,p),all=S.recipes[p].filter(r=>+r[1]<=sk);
+    const next=S.recipes[p].filter(r=>+r[1]>sk&&+r[1]<=sk+50).sort((a,b)=>a[1]-b[1]||a[0].localeCompare(b[0]));
+    // The scribe has seen their profession window: list exactly what they know, and the rest they could learn.
+    if(k){const has=r=>k.has(String(r[0]).toLowerCase());return{p,sk,known:true,k,learn:S.recipes[p].filter(has).sort(bySk),miss:all.filter(r=>!has(r)).sort(bySk),next,n:k.size}}
+    return{p,sk,learn:all.filter(r=>r[2]!=="R").sort(bySk),miss:all.filter(r=>r[2]==="R").sort(bySk),next,need:all.filter(r=>r[2]==="R").length}}).filter(x=>x.learn.length||x.miss.length||x.next.length);
   if(!rows.length)return null;
   const N=12;
-  return h("div",{class:"cm"},h("span",{class:"small ter",style:"font-weight:600"},"Can make"),
+  return h("div",{class:"cm"},h("span",{class:"small ter",style:"font-weight:600"},"Recipe book"),
     rows.map(x=>{const key=m.id+"|"+x.p,open=!!(S.ui.cmOpen||{})[key];
       if(open)loadRecipeInfo();
+      const info=open&&rinfoState==="ok",su=r=>info?skillUp(x.p,r[0],x.sk):null;
+      const row=(r,o={})=>{const rk=m.id+"|"+x.p+"|"+r[0],ro=S.ui.cmRc===rk,u=o.next?["r","Red: needs "+r[1]+" skill"]:su(r),where=o.where&&r[2]==="R"?rcWhere(x.p,r[0]):"";
+        return h("li",{class:ro?"open":""},u?h("span",{class:"su su-"+u[0],title:u[1]},h("span",{class:"visually-hidden"},u[1])):h("span",{class:"su none","aria-hidden":"true"}),
+          h("span",{class:"cm-n"},itemRef(r[0],r[4]?{id:r[4],q:r[5]}:null),x.known&&x.k.has(String(r[0]).toLowerCase())?h("span",{class:"rb-k",title:"The guild scribe has seen them know this"}," ✓"):null,where?h("span",{class:"small ter rb-where"},where):null),
+          h("span",{class:"rc-src "+r[2]},R_LABEL[r[2]]),h("span",{class:"small ter cm-sk"},(o.next?"at ":r[3]?"about ":"")+r[1]),
+          h("button",{type:"button",class:"cm-tog","aria-expanded":String(ro),"aria-label":(ro?"Hide":"Show")+" reagents and recipe for "+r[0],onclick:()=>{if(!ro)openAnim("c:"+rk);setUi({cmRc:ro?null:rk})}},""),
+          ro?(()=>{const d=recipePanel({p:x.p,name:r[0],src:r[2]});d.className+=anim("c:"+rk);return d})():null)};
+      // Best skill-ups: orange first, then yellow, from what they know or can learn, then recipes they'd need to find.
+      const ups=info?[...x.learn,...x.miss].map(r=>[r,su(r)]).filter(([,u])=>u&&(u[0]==="o"||u[0]==="y")).sort((a,b)=>(a[1][0]==="o"?0:1)-(b[1][0]==="o"?0:1)||(a[0][2]==="R"?1:0)-(b[0][2]==="R"?1:0)||b[0][1]-a[0][1]).slice(0,3).map(z=>z[0]):[];
+      const tabs=[["now",x.known?"Knows ("+x.learn.length+")":"Can make or learn ("+x.learn.length+")"],...(x.miss.length?[["find",(x.known?"Still to learn":"Needs a recipe")+" ("+x.miss.length+")"]]:[]),...(x.next.length?[["next","Coming up ("+x.next.length+")"]]:[])];
+      const f=tabs.some(t=>t[0]===(S.ui.rbF||{})[key])?(S.ui.rbF||{})[key]:tabs[0][0],list=f==="find"?x.miss:f==="next"?x.next:x.learn,more=!!(S.ui.rbMore||{})[key];
       return h("details",{class:"cm-p",open:open||null,ontoggle:e=>{if(e.target.open!==!!(S.ui.cmOpen||{})[key]){S.ui.cmOpen={...(S.ui.cmOpen||{}),[key]:e.target.open};if(e.target.open)schedule()}}},
         h("summary",{},h("b",{},x.p),h("span",{class:"small ter"},x.known?x.n+" recipes they know (seen by the guild scribe)":x.learn.length+" known or at the trainer"+(x.need?" · "+x.need+" more with a recipe":""))),
-        open?suKey():null,
-        x.learn.length?h("ul",{class:"cm-list"},x.learn.slice(0,N).map(r=>{const rk=m.id+"|"+x.p+"|"+r[0],ro=S.ui.cmRc===rk,su=open?skillUp(x.p,r[0],skillIn(m,x.p)):null;
-          return h("li",{class:ro?"open":""},su?h("span",{class:"su su-"+su[0],title:su[1]},h("span",{class:"visually-hidden"},su[1])):h("span",{class:"su none","aria-hidden":"true"}),
-            h("span",{class:"cm-n"},itemRef(r[0],r[4]?{id:r[4],q:r[5]}:null)),
-            h("span",{class:"rc-src "+r[2]},R_LABEL[r[2]]),h("span",{class:"small ter cm-sk"},(r[3]?"about ":"")+r[1]),
-            h("button",{type:"button",class:"cm-tog","aria-expanded":String(ro),"aria-label":(ro?"Hide":"Show")+" reagents and recipe for "+r[0],onclick:()=>{if(!ro)openAnim("c:"+rk);setUi({cmRc:ro?null:rk})}},""),
-            ro?(()=>{const d=recipePanel({p:x.p,name:r[0],src:r[2]});d.className+=anim("c:"+rk);return d})():null)})):null,
-        x.learn.length>N?h("a",{class:"small",href:"#professions",onclick:()=>setUi({pProf:x.p,pq:"",pKind:"learn",pMore:false})},"See all "+x.learn.length+" in Who Can Make It?"):null)}))}
+        ups.length?h("div",{class:"rb-best"},h("span",{class:"rb-h"},"Best skill-ups right now"),h("ul",{class:"cm-list"},ups.map(r=>row(r,{where:true})))):null,
+        tabs.length>1?h("div",{class:"seg rb-tabs",role:"group","aria-label":x.p+" recipes"},tabs.map(([v,l])=>h("button",{type:"button","aria-pressed":String(f===v),onclick:()=>setUi({rbF:{...(S.ui.rbF||{}),[key]:v},rbMore:{...(S.ui.rbMore||{}),[key]:false}})},l.replace(/ \(\d+\)$/,""),h("span",{}," "+l.match(/\d+/)[0])))):null,
+        open&&f!=="next"?suKey():null,
+        f==="next"?h("p",{class:"small ter rb-note"},"Opens up as their "+x.p+" skill climbs past "+x.sk+"."):null,
+        list.length?h("ul",{class:"cm-list"},(more?list:list.slice(0,N)).map(r=>row(r,{next:f==="next",where:f==="find"}))):h("p",{class:"small ter rb-note"},"Nothing here."),
+        list.length>N&&!more?h("button",{type:"button",class:"linkish small rb-more",onclick:()=>setUi({rbMore:{...(S.ui.rbMore||{}),[key]:true}})},"Show all "+list.length):null)}))}
 
 // Whether a recipe still gives skill points at this skill, from Wowhead's colours [orange, yellow, green, grey].
 function skillUp(p,name,sk){const d=rinfoState==="ok"&&S.rinfo.recipes[p+"|"+name];if(!d||!d[1]||d[1].length!==4||!d[1][3])return null;const [,y,g,gr]=d[1];
