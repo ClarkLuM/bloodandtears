@@ -102,6 +102,16 @@ service cloud.firestore {
     // database, but nothing can read or change them any more (anything not listed here is closed).
 
     // Guild basics and the Discord invite: everyone reads, officers change them.
+    // Page opens, for the officers' "Site use" box: one counter per page per Perth day ("2026-11-25_roster"), counting
+    // each device once a day. Anyone signed in can add one; nobody can set a number, read who, or take any away.
+    match /views/{id} {
+      allow read: if isOfficer();
+      allow create: if signedIn() && id.matches('^20[0-9]{2}-[01][0-9]-[0-3][0-9]_[a-z]{3,12}$') &&
+        request.resource.data.keys().hasOnly(['n']) && request.resource.data.n == 1;
+      allow update: if signedIn() && request.resource.data.keys().hasOnly(['n']) &&
+        request.resource.data.n == resource.data.n + 1;
+    }
+
     match /guild/{docId} {
       // optout (characters taken off the site) is only for officers to read.
       allow read: if signedIn() && (docId != 'optout' || isOfficer());

@@ -1,0 +1,10 @@
+{
+  "name": "bt-minify",
+  "private": true,
+  "type": "module",
+  "description": "Shrinks public/index.html for deploys (the GitHub deploy workflows run it; the repo keeps the readable file).",
+  "dependencies": {
+    "html-minifier-terser": "7.2.0",
+    "terser": "5.36.0"
+  }
+}

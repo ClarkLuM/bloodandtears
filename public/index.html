@@ -458,9 +458,6 @@ nav.bottom{display:none}
 }
 /* Since you were last here */
 .since{border-color:var(--accent-b);background:linear-gradient(100deg,var(--accent-subtle),var(--raised) 70%);gap:.75rem}
-.since-list{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem}
-.since-it{font-size:.875rem;line-height:1.375rem;color:var(--sec);white-space:nowrap}
-.since-it b{font-family:var(--display);font-weight:600;font-size:1.5rem;line-height:1.625rem;color:var(--text);font-variant-numeric:tabular-nums;margin-right:1px}
 /* Guild makeup */
 .mk-bar{display:flex;height:.625rem;border-radius:4px;overflow:hidden;background:var(--sunken);gap:2px}
 .mk-bar i{display:block;height:100%}
@@ -878,8 +875,6 @@ a.r-name:hover{color:var(--accent-text)}
 .lg-type{margin-top:.375rem}
 /* Cards page: sets, a quieter link under each card, and two cards across on phones */
 .binder-set{display:flex;flex-direction:column;gap:.75rem}
-.binder-h{display:flex;align-items:baseline;gap:.75rem;padding-bottom:.375rem;border-bottom:1px solid var(--sep)}
-.binder-h h2{margin:0;font-size:1.25rem;line-height:1.5rem}
 .binder{justify-content:start;grid-template-columns:repeat(auto-fill,16.25rem);gap:1.25rem 1.5rem}
 .binder-it{gap:.25rem}
 .binder-link{font-size:.75rem;line-height:1.75rem;color:var(--ter);text-decoration:none;padding:0 .5rem}
@@ -1213,19 +1208,8 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 .dings{display:flex;flex-direction:column;gap:.5rem;margin-top:.625rem}
 .ding-l{font-size:.75rem;font-weight:600;line-height:1.125rem;padding:0 .4375rem;border-radius:999px;background:color-mix(in srgb,var(--cc) 18%,transparent);color:color-mix(in srgb,var(--cc) 80%,#fff)}
 :root[data-theme="light"] .ding-l{color:color-mix(in srgb,var(--cc) 40%,#1a1211)}
-
-/* Since you were here: one slim line instead of a card */
-.since-bar{display:flex;align-items:center;flex-wrap:wrap;gap:.375rem 1rem;padding:.5rem .5rem .5rem 1rem;border:1px solid color-mix(in srgb,var(--sep) 70%,transparent);border-radius:999px;background:linear-gradient(90deg,color-mix(in srgb,var(--wine) 22%,var(--raised)),var(--raised) 60%)}
-.since-bar h2{margin:0;font:600 .75rem/1.25rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text)}
-.since-bar h2 .ter{text-transform:none;letter-spacing:0;font-weight:400;margin-left:.25rem}
-.since-bar .since-list{display:inline-flex;gap:.75rem;flex-wrap:wrap}
-.since-bar .since-it{font-size:.875rem}
-.since-go{margin-left:auto;white-space:nowrap}
-.since-x{width:1.75rem;height:1.75rem;border:0;border-radius:50%;background:none;color:var(--ter);font-size:1.125rem;line-height:1;cursor:pointer}
-.since-x:hover{background:var(--overlay);color:var(--text)}
-@media (max-width:640px){.since-bar{border-radius:12px;padding:.625rem .5rem .625rem .875rem}.since-go{margin-left:0}}
-.since-bar .since-it b{font-size:1rem}
-@media (max-width:640px){.since-bar{position:relative;padding-right:2.5rem}.since-x{position:absolute;top:.375rem;right:.375rem}}
+@media (max-width:640px){.since-bar{border-radius:12px;padding:.625rem .5rem .625rem .875rem}}
+@media (max-width:640px){.since-bar{position:relative;padding-right:2.5rem}}
 
 /* Milestones on the stat tiles */
 .total-to{font-style:normal;font-size:.6875rem;line-height:1rem;color:var(--ter);margin-top:.125rem;padding-bottom:.375rem}
@@ -1323,14 +1307,6 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 .lg-flip.tilt::after{opacity:1}
 /* Badges on the art fit their words instead of squeezing into circles */
 .lg-stamp{width:auto;min-width:1.625rem;padding:0 .375rem;border-radius:999px;box-sizing:border-box}
-/* Each set headed in its own metal */
-.binder-h{align-items:center;gap:.625rem;padding:.625rem 1rem;border:0;border-radius:10px;background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 18%,transparent),transparent 70%);box-shadow:inset 3px 0 0 var(--tc)}
-.binder-h h2{font:400 1.25rem/1.5rem var(--display);background:linear-gradient(100deg,color-mix(in srgb,var(--t1) 55%,#fff),var(--tc) 50%,color-mix(in srgb,var(--tc) 70%,var(--t2)));-webkit-background-clip:text;background-clip:text;color:transparent}
-.binder-mark{color:var(--tc);font-size:1rem;line-height:1}
-.binder-n{margin-left:auto;font-size:.75rem;font-weight:600;padding:0 .5rem;border-radius:999px;background:color-mix(in srgb,var(--tc) 20%,transparent);color:var(--sec)}
-:root[data-theme="light"] .binder-h h2{background:none;color:color-mix(in srgb,var(--tc) 45%,#1a1211)}
-:root[data-theme="light"] .binder-h{box-shadow:inset 3px 0 0 color-mix(in srgb,var(--tc) 70%,#3a1608)}
-.binder-set{gap:1rem;margin-top:.5rem}
 /* Card of the week: lit in their class colour */
 .cow{background:radial-gradient(70% 120% at 12% 50%,color-mix(in srgb,var(--cc) 18%,transparent),transparent 70%),var(--raised);border-color:color-mix(in srgb,var(--cc) 30%,var(--sep))}
 .cow .pf-kind{color:color-mix(in srgb,var(--cc) 70%,var(--accent-text));letter-spacing:.08em}
@@ -1585,6 +1561,11 @@ html.gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 1
 .tt-v.lit::after{border-top-color:#c9932d}
 .tt-detail{padding:.75rem;border-radius:10px;border:1px solid var(--sep);background:var(--raised)}
 @media (max-width:420px){.tt-grid{--ts:2.5rem;--tg:.75rem;--tp:.625rem}}
+.vw{display:flex;flex-direction:column;gap:.25rem;margin-top:.5rem}
+.vw-row{display:grid;grid-template-columns:minmax(0,1fr) 2.5rem minmax(0,1.2fr);gap:.5rem;align-items:center;font-size:.8125rem}
+.vw-row.zero{color:var(--ter)}.vw-row.zero .vw-bar i{display:none}.vw-hd{font-size:.6875rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
+.vw-row>b{text-align:right;font-variant-numeric:tabular-nums}
+.vw-bar{display:flex;align-items:center;gap:.375rem}.vw-bar i{display:block;height:.375rem;border-radius:99px;background:var(--accent-text);min-width:2px}.vw-bar b{font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -1596,7 +1577,7 @@ html.gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 1
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, onSnapshot, setDoc, updateDoc, deleteDoc, addDoc, deleteField, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, onSnapshot, setDoc, updateDoc, deleteDoc, addDoc, deleteField, getDoc, getDocs, query, where, documentId, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 import * as cfg from "./firebase-config.js";
@@ -1643,7 +1624,7 @@ fetch("dungeon-loot.json").then(r=>r.ok?r.json():Promise.reject(new Error(r.stat
 const RAIDS=[["Barrow Deeps",10,{Tank:2,Healer:3,DPS:5},""],["Hyjal Summit",20,{Tank:3,Healer:5,DPS:12},""],
   ["Onyxia's Lair",40,{Tank:5,Healer:10,DPS:25},"Needs the Drakefire Amulet in your bags. The Horde quest chain starts with Warlord Goretooth in the Badlands."]];
 const DISCORD_RE=/^https:\/\/(discord\.gg|(www\.)?discord\.com\/invite)\/[A-Za-z0-9-]+\/?$/;
-const PAGES=[["roster","Roster"],["lfg","Dungeons"],["cards","Cards"],["professions","Professions"],["records","Records"],["activity","Activity"]];
+const PAGES=[["roster","Roster"],["lfg","Dungeons"],["professions","Professions"],["records","Records"],["activity","Activity"]];
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const el=document.createElement(tag);for(const[k,v]of Object.entries(attrs||{})){if(v==null||v===false)continue;if(k==="class")el.className=v;else if(k==="style")el.style.cssText=v;else if(k.startsWith("on"))el.addEventListener(k.slice(2),v);else if(k==="value"&&(tag==="input"||tag==="textarea"||tag==="select"))el.value=v;else el.setAttribute(k,v===true?"":v)}for(const k of kids.flat(Infinity)){if(k==null||k===false)continue;el.append(k.nodeType?k:document.createTextNode(String(k)))}return el}
@@ -1894,6 +1875,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-25","A tidier site","Cards are now the Cards view on the Roster (with the card of the week on top), so the menu is one shorter. \"Since you were here\" lives in the first tile under the Roster heading, the Roster shows one banner at a time, and a gold dot on a menu item now means something new on the site lives on that page.","#roster"],
   ["2026-11-20","Best Dressed is fairer","Best Dressed now goes by gear score: every slot's item level, weighted by quality, so an epic beats a rare and a rare beats a green, and a higher-level outfit beats a lower one. Character pages show each character's gear score.","#records"],
   ["2026-11-20","Talent trees","Character pages now show the full WoW Forever talent trees, like Wowhead's calculator: what's taken, what's maxed, what's open next and what's still locked. Hover or tap any talent to read it.",null],
   ["2026-11-20","Guild news, and bragging rights","Big moments from the last few days scroll along the top of every page: epics, guild firsts, level 50s and 60s, titles and milestones. The guild's first epic and first level 60 also get a gold spot on the Roster for a week, and a gold ribbon on their character page for good.",null],
@@ -1919,34 +1901,18 @@ function openWhatsNew(){const dlg=$("#dlg"),f=$("#dlgForm");if(dlg.open)return;c
     h("div",{class:"row",style:"justify-content:flex-end"},h("button",{type:"button",class:"btn primary",onclick:done},"Got it"))));
   f.onsubmit=e=>e.preventDefault();dlg.showModal()}
 
-/* ---------- What changed since you last looked ---------- */
-// Each page remembers (in this browser) what it looked like the last time you opened it. When the guild has moved on
-// since, its menu item gets a gold dot, and hovering it says what changed. Opening the page clears the dot. The Roster
-// has its own "Since you were last here" bar, and What's new is for new things on the site, so neither gets a dot.
-const WC_PAGES=["lfg","cards","records","activity"];
-function wcNow(){const pool=recPool(),out={};
-  out.lfg={n:pool.reduce((a,m)=>a+passportOf(m).length,0)};
-  out.cards={t:Object.fromEntries(pool.map(m=>[m.id,tierOf(+m.level||1)[1]]))};
-  out.records={lead:Object.fromEntries(REC_BOARDS.map(b=>{const r=ranked(b[2]);return[b[0],r[0]?r[0][0].id:null]})),titles:pool.reduce((a,m)=>a+titlesOf(m).length,0)};
-  if(S.scribe!==undefined)out.activity={at:(S.scribe&&S.scribe.at)||""};
-  return out}
-function wcWhat(k,was,now){const out=[];if(!was||!now)return out;
-  if(k==="lfg"&&now.n>was.n)out.push((now.n-was.n)+(now.n-was.n===1?" new dungeon stamp":" new dungeon stamps"));
-  if(k==="cards"){const nw=Object.keys(now.t).filter(id=>!(id in was.t)).length,up=Object.keys(now.t).filter(id=>id in was.t&&was.t[id]!==now.t[id]).length;
-    if(nw)out.push(nw+(nw===1?" new card":" new cards"));if(up)out.push(up+(up===1?" card moved up a metal":" cards moved up a metal"))}
-  if(k==="records"){for(const b of REC_BOARDS){const id=now.lead[b[0]];if(id&&id!==was.lead[b[0]]){const m=anyById(id);if(m)out.push(nameOf(m)+" took first in "+b[1].toLowerCase())}}
-    if(now.titles>was.titles)out.push((now.titles-was.titles)+(now.titles-was.titles===1?" new title":" new titles"))}
-  if(k==="activity"&&now.at&&now.at!==was.at)out.push("New notes from the guild scribe");
-  return out}
+/* ---------- New on this page ---------- */
+// A gold dot on a menu item when something new on the site (a What's new entry) lives on that page and you haven't
+// opened it since. Guild happenings have the news strip and Today; this is only for new things to try.
+const WN_PAGE=href=>{const k=String(href||"").replace(/^#/,"").split("/")[0];return!k?null:["today","recap","guild","history","char"].includes(k)?"roster":k==="raids"?"lfg":k};
 let WC=null;
-function wcRead(){if(WC)return WC;try{WC=JSON.parse(localStorage.getItem("lg-wc")||"{}")||{}}catch(e){WC={}}return WC}
-function wcSave(){try{localStorage.setItem("lg-wc",JSON.stringify(WC))}catch(e){}}
-// Called on every render once the guild has loaded: notes the page you're on as seen, and first-time pages silently.
-function wcDots(page){if(!S.loaded||!S.members.length)return{};const seen=wcRead(),now=wcNow(),dots={};let dirty=false;
-  for(const k of WC_PAGES){if(!now[k])continue;
-    if(!seen[k]||k===page){if(JSON.stringify(seen[k])!==JSON.stringify(now[k])){seen[k]=now[k];dirty=true}continue}
-    const what=wcWhat(k,seen[k],now[k]);if(what.length)dots[k]=what}
-  if(dirty)wcSave();return dots}
+function wcRead(){if(WC)return WC;try{WC=JSON.parse(localStorage.getItem("lg-wn-pg")||"null")}catch(e){WC=null}
+  if(!WC||typeof WC!=="object"){WC={};for(const[k]of PAGES)WC[k]=WHATS_NEW[0]?WHATS_NEW[0][0]:"";wcSave()}return WC}
+function wcSave(){try{localStorage.setItem("lg-wn-pg",JSON.stringify(WC))}catch(e){}}
+function wcDots(page){const seen=wcRead(),dots={};
+  if(page&&WHATS_NEW[0]&&seen[page]!==WHATS_NEW[0][0]){seen[page]=WHATS_NEW[0][0];wcSave()}
+  for(const[d,title,,href]of WHATS_NEW){const k=WN_PAGE(href);if(k&&k!==page&&d>(seen[k]||"")){(dots[k]=dots[k]||[]).push(title)}}
+  return dots}
 
 // "A new version is ready": the GitHub deploys stamp this page with the commit it was built from (BUILD) and write the
 // same into version.json. Every few minutes, and when the tab comes back into view, the page checks version.json; if a
@@ -1966,8 +1932,8 @@ const previewStrip=()=>IS_PREVIEW?h("div",{class:"preview-strip",role:"note"},h(
 
 /* ---------- header ---------- */
 function header(page){
-  const dots=wcDots(page),dotted=k=>dots[k]?{"data-wc":"",title:"Since you last looked: "+dots[k].join(", ")}:{};
-  const navLabel=(k,l)=>dots[k]?l+" (something new)":null;
+  const dots=wcDots(page),dotted=k=>dots[k]?{"data-wc":"",title:"New here: "+dots[k].join(", ")}:{};
+  const navLabel=(k,l)=>dots[k]?l+" (new on this page)":null;
   const dc=S.guild.discord&&DISCORD_RE.test(S.guild.discord)?S.guild.discord:"";
   return h("header",{class:"top"},h("div",{class:"wrap"},
     h("a",{class:"brand"+(glHas(3)?" gl-ring":""),href:"#roster"},h("i",{class:"brand-mk"},h("img",{class:"brand-logo",src:"logo.svg",alt:"",width:"40",height:"40"}),glHas(10)?h("i",{class:"gl-crown","aria-hidden":"true"},crownSvg()):null),h("b",{},"Blood and Tears"),h("span",{},"Horde · WoW Forever")),
@@ -2002,7 +1968,7 @@ const NAV_IC={
 const navIcon=k=>{const x=h("span",{class:"nb-ic","aria-hidden":"true"});x.innerHTML=`<svg viewBox="0 0 20 20" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${NAV_IC[k]||""}</svg>`;return x};
 const chatIcon=()=>{const x=h("span",{class:"dc-ic","aria-hidden":"true"});x.innerHTML='<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 4.5h13v9h-7l-4 3v-3h-2z"/></svg>';return x};
 const srchIcon=()=>{const x=h("span",{class:"srch-ic","aria-hidden":"true"});x.innerHTML='<svg viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m13 13 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';return x};
-const SRCH_PAGES=[["Roster","#roster"],["Dungeons","#lfg"],["Raids","#raids"],["Cards","#cards"],["Professions","#professions"],["Records","#records"],["Activity","#activity"],["Guild History","#history"],["Today","#today"],["Weekly Recap","#recap"],["Guild Level","#guild"]];
+const SRCH_PAGES=[["Roster","#roster"],["Dungeons","#lfg"],["Raids","#raids"],["Cards","#roster/cards"],["Professions","#professions"],["Records","#records"],["Activity","#activity"],["Guild History","#history"],["Today","#today"],["Weekly Recap","#recap"],["Guild Level","#guild"]];
 function searchIndex(){
   const out=[],go=(hash,ui)=>()=>{if(ui)Object.assign(S.ui,ui);if(location.hash===hash)render();else location.hash=hash};
   for(const m of [...S.members,...S.alts])if(isMine(m)||memberState(m)!=="former")
@@ -2182,7 +2148,7 @@ function viewRoster(){
     body=[...inG.flatMap(row),...(out.length&&inG.length?[h("tr",{class:"r-group"},h("td",{colspan:"6"},h("span",{class:"r-group-in"},"Not in the guild",h("span",{class:"small ter"},String(out.length)))))]:[]),...out.flatMap(row)]}
   const empty=h("div",{class:"card"},h("h3",{},total?"Nobody matches":"No one's on the roster yet"),
     h("p",{class:"sub"},total?"Try fewer filters, or a different search.":"The guild list from the armory fills this in within the hour."),total?h("div",{},h("button",{class:"btn sm",type:"button",onclick:clear},"Clear filters")):null);
-  const results=!list.length?empty:view==="cards"?h("div",{class:"binder"},list.map(binderIt))
+  const results=!list.length?empty:view==="cards"?[cardOfWeek(),h("div",{class:"binder"},list.map(binderIt))]
     :h("div",{class:"tablebox"},h("table",{class:"roster-t"},h("thead",{},h("tr",{},[...["Character","Level","Professions","Best loot","Last seen"].map(t=>h("th",{scope:"col"},t)),h("th",{scope:"col"},h("span",{class:"visually-hidden"},"Details"))])),h("tbody",{},body)));
   const tools=h("div",{class:"r-tools-wrap"+(u.rFiltersOpen?" open":"")},rosterFilters(),count);
   // The search, sort and column titles stay at the top while scrolling the list (desktop). The column titles sit just
@@ -2191,7 +2157,7 @@ function viewRoster(){
     const fit=()=>l.style.setProperty("--rt-h",t.offsetHeight+"px");fit();if(window.ResizeObserver&&!t._ro){t._ro=new ResizeObserver(fit);t._ro.observe(t)}});
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
   const at=(el,n)=>{if(el&&el.style)el.style.setProperty("--o",n);return el};
-  return[head,birthdayBanner(),firstsFlex(),hubTiles(),h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(sinceCard(),0),at(claimBanner(),1),at(spotlight(true),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
+  return[head,firstsFlex()||birthdayBanner(),hubTiles(),h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(claimBanner(),1),at(spotlight(true),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
     h("div",{class:"rl-col"},at(guildToday(),6),at(siteUse(),12),at(discordBox(),13)))]}
 
 // Their best equipped item: highest quality first (green and up).
@@ -2204,37 +2170,8 @@ function rankGear(m){const l=Object.values(m.gear||{}).filter(g=>g&&g.id&&+g.q>=
   return l.sort((x,y)=>(+y.q-+x.q)||(f(y).l-f(x).l)||(f(y).s-f(x).s))}
 const bestLoot=m=>rankGear(m)[0]||null;
 
-/* ---------- Cards ---------- */
-// Everyone's trading card in one place, like flicking through a binder.
-const C_SORTS=[["level","Rarity and level"],["kills","Most kills"],["dungeons","Most dungeons"],["name","Name"]];
+/* ---------- Cards (the Roster's Cards view) ---------- */
 const binderIt=m=>h("div",{class:"binder-it"},flipCard(m),h("a",{class:"binder-link",href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,"aria-label":"Open "+nameOf(m)+"'s page"},"Open page"));
-function viewCards(){
-  const u=S.ui,role=u.role||"All",sort=u.cSort||"level",q=String(u.cq||"").trim().toLowerCase().split(/\s+/).filter(Boolean);
-  const hay=m=>[nameOf(m),m.cls,m.race,m.spec,roleText(m),...titlesOf(m).map(x=>x.t)].join(" ").toLowerCase();
-  const by={level:(a,b)=>(+b.level||0)-(+a.level||0),kills:(a,b)=>(+(b.armory||{}).hk||0)-(+(a.armory||{}).hk||0),dungeons:(a,b)=>passportOf(b).length-passportOf(a).length,name:()=>0}[sort];
-  const inRole=r=>S.members.filter(m=>r==="All"||canRole(m,r));
-  const list=inRole(role).filter(m=>q.every(w=>hay(m).includes(w))).sort((a,b)=>by(a,b)||nameOf(a).localeCompare(nameOf(b)));
-  const glass=h("span",{"aria-hidden":"true"});glass.innerHTML='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5" stroke-linecap="round"/></svg>';
-  const tools=h("div",{class:"r-top"},
-    h("div",{class:"r-search"},glass,h("input",{id:"c-q",type:"search",placeholder:"Search the cards","aria-label":"Search the cards by name, class, race, role or title",value:u.cq||"",autocomplete:"off",oninput:e=>{S.ui.cq=e.target.value;schedule()}})),
-    h("div",{class:"r-ctrls"},
-      h("label",{class:"r-sort"},h("span",{class:"ter"},"Sort"),h("select",{id:"c-sort",onchange:e=>setUi({cSort:e.target.value},true)},C_SORTS.map(([v,l])=>h("option",{value:v,selected:sort===v},l)))),
-      seg("Filter by role",[["All","All",S.members.length],...ROLES.map(r=>[r,r,inRole(r).length])],role,k=>setUi({role:k},true))));
-  // Sorted by level, the binder is split into its sets, one for each metal (a new one every ten levels).
-  const SETS=TIERS.map(([lv,t],i)=>[t,lv>=60?"Level 60":lv?"Levels "+lv+" to "+(TIERS[i-1][0]-1):"Under level 10"]);
-  const binder=ms=>h("div",{class:"binder"},ms.map(binderIt));
-  const body=!list.length?h("p",{class:"empty"},S.members.length?"No cards match. Try a different search or role.":"No cards yet. They appear as the guild list fills in.")
-    :sort!=="level"?binder(list)
-    :SETS.map(([t,range])=>{const ms=list.filter(m=>tierOf(+m.level||1)[1]===t);
-      // Each set is headed in its own metal, with its rarity mark and a count.
-      const tr=TIERS.find(x=>x[1]===t)||TIERS[TIERS.length-1],mark=TIER_MARK[t]||"○";
-      return ms.length?h("section",{class:"binder-set","aria-label":t+" cards",style:`--tc:${tr[3]};--t1:${tr[2][0]};--t2:${tr[2][1]}`},h("div",{class:"binder-h"},h("span",{class:"binder-mark","aria-hidden":"true"},mark),h("h2",{},t),h("span",{class:"small ter"},range),h("span",{class:"binder-n"},ms.length+(ms.length===1?" card":" cards"))),binder(ms)):null});
-  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Cards"),h("p",{class:"sub"},"Everyone's trading card. Tap one to flip it; \"Open page\" shows under it."))),
-      null),
-    cardOfWeek(),tools,
-    h("div",{class:"r-count",role:"status"},list.length===S.members.length?`${list.length} cards`:`Showing ${list.length} of ${S.members.length} cards`),
-    body]}
-
 /* ---------- Card of the week ---------- */
 // The week's biggest mover from Records (a new number one first), shown big with why, their numbers and professions.
 // Falls back to whoever gained the most levels this week.
@@ -2311,6 +2248,27 @@ const perthDay=(t=Date.now())=>new Date(t+8*36e5).toISOString().slice(0,10);
 let visitMarked=false;
 function markVisit(){if(visitMarked||!S.loaded||!S.user)return;visitMarked=true;const now=Date.now();
   for(const m of S.members.filter(owns))if(!(Date.parse(m.visitedAt||"")>now-12*36e5))updateDoc(charRef(m),{visitedAt:new Date(now).toISOString()}).catch(()=>{})}
+// Page opens: each device counts once per page per day (views/<Perth day>_<page>, n). Nothing about who is kept.
+const VIEW_PAGES={roster:"Roster",lfg:"Dungeons",raids:"Raids",professions:"Professions",records:"Records",activity:"Activity",
+  history:"History",today:"Today",recap:"Weekly recap",guild:"Guild level",char:"Character pages"};
+function countView(page){
+  if(!S.user||!VIEW_PAGES[page]||IS_PREVIEW)return;const day=perthDay();let seen={};
+  try{seen=JSON.parse(localStorage.getItem("lg-vw")||"{}")}catch(e){}
+  if(seen.d!==day)seen={d:day,p:[]};if(seen.p.includes(page))return;seen.p.push(page);
+  try{localStorage.setItem("lg-vw",JSON.stringify(seen))}catch(e){}
+  setDoc(doc(db,"views",day+"_"+page),{n:increment(1)},{merge:true}).catch(()=>{})}
+let viewsLoad=0;
+function loadViews(){if(viewsLoad&&Date.now()-viewsLoad<10*60e3)return;viewsLoad=Date.now();
+  const from=perthDay(Date.now()-6*864e5);
+  getDocs(query(collection(db,"views"),where(documentId(),">=",from+"_"),where(documentId(),"<=",perthDay()+"_~"))).then(snap=>{
+    S.views=snap.docs.map(d=>[d.id.slice(0,10),d.id.slice(11),+d.data().n||0]);schedule()}).catch(()=>{S.views=S.views||[]})}
+function viewsTable(){
+  loadViews();if(!S.views)return h("p",{class:"small ter",style:"margin:0"},"Loading page opens…");
+  const today=perthDay(),by=new Map();for(const[d,p,n]of S.views){const o=by.get(p)||{t:0,w:0};o.w+=n;if(d===today)o.t+=n;by.set(p,o)}
+  const rows=Object.keys(VIEW_PAGES).map(k=>[k,by.get(k)||{t:0,w:0}]).sort((a,b)=>b[1].w-a[1].w),top=Math.max(1,...rows.map(r=>r[1].w));
+  return h("div",{class:"vw"},h("div",{class:"vw-row vw-hd"},h("span",{},"Page"),h("span",{},"Today"),h("span",{},"7 days")),
+    rows.map(([k,o])=>h("div",{class:"vw-row"+(o.w?"":" zero")},h("span",{},VIEW_PAGES[k]),h("b",{},String(o.t)),h("span",{class:"vw-bar"},h("i",{style:"width:"+Math.round(o.w/top*100)+"%"}),h("b",{},String(o.w))))),
+    h("p",{class:"small ter",style:"margin:0"},"Each device counts once per page per day. Counting started "+(S.views.length?new Date(S.views.map(v=>v[0]).sort()[0]+"T12:00:00+08:00").toLocaleDateString("en-AU",{day:"numeric",month:"short"}):"today")+"."))}
 function siteUse(){
   if(!isOfficer()||!S.members.length)return null;
   const mains=S.members,claimed=mains.filter(m=>Array.isArray(m.owners)&&m.owners.length),week=Date.now()-7*864e5;
@@ -2318,7 +2276,8 @@ function siteUse(){
   return h("aside",{class:"card","aria-labelledby":"use-h",style:"gap:.625rem"},h("div",{class:"spread"},h("h2",{id:"use-h"},"Site Use"),h("span",{class:"tag"},"Officers only")),
     h("div",{class:"totals",style:"grid-template-columns:1fr 1fr"},h("div",{class:"total"},h("b",{},claimed.length+" of "+mains.length),h("span",{},"characters claimed")),
       h("div",{class:"total"},h("b",{},String(visited.length)),h("span",{},"opened the site this week"))),
-    free.length?h("p",{class:"small ter",style:"margin:0"},"Not claimed yet: ",free.slice(0,8).map((m,i)=>[i?", ":"",charLink(m)]),free.length>8?" and "+(free.length-8)+" more":""):null)}
+    free.length?h("p",{class:"small ter",style:"margin:0"},"Not claimed yet: ",free.slice(0,8).map((m,i)=>[i?", ":"",charLink(m)]),free.length>8?" and "+(free.length-8)+" more":""):null,
+    h("h3",{class:"gt-eb",style:"margin:.25rem 0 0"},"Page opens"),viewsTable())}
 
 /* ---------- In game today ---------- */
 // The latest level-ups across the guild (from everyone's journey), newest first.
@@ -2476,17 +2435,6 @@ function sinceLast(){
     .filter(x=>x[0]>0).map(([k,one,many])=>[k,k===1?one:many]);
   const top=[...gained].sort((a,b)=>b[1]-a[1])[0];
   return{items,top:top&&top[1]>=2?top:null}}
-function sinceCard(){
-  if(S.ui.sinceHide)return null;
-  const x=sinceLast();if(!x||!x.items.length)return null;
-  // One slim line: what changed, who climbed most, a link to the full list, and a way to hide it.
-  return h("section",{class:"since-bar","aria-labelledby":"since-h"},
-    h("h2",{id:"since-h"},"Since you were here ",h("span",{class:"ter"},ago(new Date(lastHere).toISOString()))),
-    h("span",{class:"since-list"},x.items.map(([k,l])=>h("span",{class:"since-it"},h("b",{},fmtN(k))," "+l))),
-    x.top?h("span",{class:"small since-top"},h("span",{class:"ter"},"Most levels "),feedWho(x.top[0]),h("span",{class:"ter"}," +"+x.top[1])):null,
-    h("a",{class:"small since-go",href:"#history"},"See what happened"),
-    h("button",{class:"since-x",type:"button","aria-label":"Hide",title:"Hide",onclick:()=>setUi({sinceHide:true})},"×"))}
-
 /* ---------- Spotlight ---------- */
 // A different character each day (the same one for everyone), with a button to see someone else.
 const hashStr=s=>{let x=2166136261;for(const c of String(s))x=Math.imul(x^c.charCodeAt(0),16777619);return x>>>0};
@@ -3167,10 +3115,11 @@ function guildLevel(){const key=[S.members,S.firsts,S.scribe,DUNGEON_LOOT];if(GL
 // Three tiles under the Roster heading: today so far, this week's recap and the guild level.
 function hubTiles(){if(!S.members.length)return null;
   const d0=new Date();d0.setHours(0,0,0,0);const t0=d0.getTime(),on=S.members.filter(m=>Date.parse(seenOf(m))>=t0).length;
-  const ups=[...S.members,...S.alts].reduce((n,m)=>n+(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Reached level \d+/.test(j.t||"")&&Date.parse(j.at||"")>=t0).length,0),lv=S.members.reduce((t,m)=>t+weekGained(m),0),g=guildLevel();
+  const since=sinceLast(),ups=[...S.members,...S.alts].reduce((n,m)=>n+(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Reached level \d+/.test(j.t||"")&&Date.parse(j.at||"")>=t0).length,0),lv=S.members.reduce((t,m)=>t+weekGained(m),0),g=guildLevel();
   const tile=(href,eb,big,small,extra)=>h("a",{class:"hub-t",href},h("span",{class:"hub-eb"},eb),h("b",{},big),extra||null,h("span",{class:"hub-s"},small));
   return h("nav",{class:"hub","aria-label":"Today, this week and the guild level"},
-    tile("#today","Today",ups?ups+(ups===1?" level-up":" level-ups"):on+" on today",ups?on+" on today":"See what's new"),
+    since&&since.items.length?tile("#history","Since you were here",fmtN(since.items[0][0])+" "+since.items[0][1],since.items.slice(1,3).map(([k,l])=>fmtN(k)+" "+l).join(" · ")||ago(new Date(lastHere).toISOString()))
+      :tile("#today","Today",ups?ups+(ups===1?" level-up":" level-ups"):on+" on today",ups?on+" on today":"See what's new"),
     tile("#recap","This week","+"+fmtN(lv)+(lv===1?" level":" levels"),"Weekly recap"),
     tile("#guild","Guild level","Level "+g.level,fmtN(g.to-g.xp)+" xp to "+(g.level+1),glBar(g)))}
 const crownSvg=()=>{const n="http://www.w3.org/2000/svg",sv=document.createElementNS(n,"svg"),pa=document.createElementNS(n,"path");sv.setAttribute("viewBox","0 0 24 16");sv.setAttribute("width","22");sv.setAttribute("height","15");
@@ -4845,7 +4794,9 @@ function milestoneToast({badge,title,sub},after){
   document.addEventListener("visibilitychange",vis);document.body.append(el);vis();run()}
 
 /* ---------- render ---------- */
-function route(){const p=(location.hash||"#roster").slice(1).split("/");if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(["today","recap","guild"].includes(p[0]))return{page:p[0]};if(["duel","draft","trumps","guess"].includes(p[0]))return{page:"cards"};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
+function route(){const p=(location.hash||"#roster").slice(1).split("/");
+  // The Cards page is now the Roster's Cards view: old links (and the old card games) land there.
+  if(p[0]==="cards"||(p[0]==="roster"&&p[1]==="cards")||["duel","draft","trumps","guess"].includes(p[0])){S.ui.rView="cards";history.replaceState(null,"","#roster");return{page:"roster"}}if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(["today","recap","guild"].includes(p[0]))return{page:p[0]};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
 function render(){
   const app=$("#app");
   const keep=document.activeElement&&document.activeElement.id,typed={};
@@ -4858,7 +4809,8 @@ function render(){
   if(!S.user){app.replaceChildren(h("main",{class:"wrap",style:"padding-top:3rem"},h("p",{class:"ter"},"Loading…")));return}
   const r=route();
   keepSiteData();
-  const views={roster:viewRoster,lfg:viewLfg,raids:viewRaids,cards:viewCards,professions:viewProfessions,records:viewRecords,activity:viewActivity};
+  countView(r.page);
+  const views={roster:viewRoster,lfg:viewLfg,raids:viewRaids,professions:viewProfessions,records:viewRecords,activity:viewActivity};
   const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():r.page==="today"?viewToday():r.page==="recap"?viewRecap():r.page==="guild"?viewGuild():views[r.page]();
   document.documentElement.classList.toggle("gl-ember",!!glHas(5));
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.

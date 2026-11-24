@@ -1,0 +1,46 @@
+# Puts the server code live: GitHub, Actions, "Deploy the server", Run workflow. Only runs when someone presses the button.
+# It deploys the Cloud Functions (functions/) and the Firestore security rules (firestore.rules) from main, the same as
+# `firebase deploy --only functions,firestore:rules` from WSL used to.
+# Uses the same FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER secret as the site deploy. That account needs these roles in
+# Google Cloud (IAM), added once: Cloud Functions Admin, Cloud Run Admin, Service Account User, Cloud Scheduler Admin,
+# Artifact Registry Administrator, Firebase Rules Admin and Service Usage Consumer. The README says how.
+name: Deploy the server
+on:
+  workflow_dispatch:
+    inputs:
+      what:
+        description: "What to deploy"
+        type: choice
+        options: ["functions and rules", "functions only", "rules only"]
+        default: "functions and rules"
+permissions:
+  contents: read
+concurrency:
+  group: deploy-server
+jobs:
+  server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install the functions' packages
+        if: inputs.what != 'rules only'
+        run: cd functions && npm ci
+      - name: Deploy
+        env:
+          SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER }}
+          FUNCTIONS_DISCOVERY_TIMEOUT: "60"
+        run: |
+          KEY="$RUNNER_TEMP/sa.json"
+          printf '%s' "$SA_KEY" > "$KEY"
+          export GOOGLE_APPLICATION_CREDENTIALS="$KEY"
+          case "${{ inputs.what }}" in
+            "functions only") ONLY="functions" ;;
+            "rules only") ONLY="firestore:rules" ;;
+            *) ONLY="functions,firestore:rules" ;;
+          esac
+          npx --yes firebase-tools@14 deploy --only "$ONLY" --project loot-goblins-roster --non-interactive --force
+          rm -f "$KEY"
+      - run: echo "Server code deployed (${{ inputs.what }})." >> "$GITHUB_STEP_SUMMARY"
