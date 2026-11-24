@@ -3473,7 +3473,10 @@ function dungeonLoot(name){
 // profession skill from the armory. Loaded the first time someone opens Professions.
 let recipesState="";
 function loadRecipes(){if(recipesState==="loading"||recipesState==="ok")return;recipesState="loading";
-  fetch("recipes.json").then(r=>r.ok?r.json():Promise.reject(new Error(r.status))).then(d=>{S.recipes=d.recipes||{};recipesState="ok";schedule()})
+  fetch("recipes.json").then(r=>r.ok?r.json():Promise.reject(new Error(r.status))).then(d=>{S.recipes=d.recipes||{};
+    // Skill caps at 300. A few late recipes are listed at 305-325, but that's when they stop being orange: you learn them at 300.
+    for(const l of Object.values(S.recipes))for(const r of l)if(+r[1]>300)r[1]=300;
+    recipesState="ok";schedule()})
     .catch(()=>{recipesState="failed";schedule()})}
 // Reagents, skill-up colours and where each recipe comes from (public/recipe-info.json, from Wowhead's WoW Forever
 // pages; built by tools/recipes/build.py). Loaded the first time someone opens a recipe's details.
