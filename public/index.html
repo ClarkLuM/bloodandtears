@@ -1875,6 +1875,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-25","When will they hit 60?","The Raids page now says how many more are on pace to reach 60 before raids open on 9 December, and when each of the 50s should get there. Character pages say it too, under the levelling chart.","#raids"],
   ["2026-11-25","A tidier site","Cards are now the Cards view on the Roster (with the card of the week on top), so the menu is one shorter. \"Since you were here\" lives in the first tile under the Roster heading, the Roster shows one banner at a time, and a gold dot on a menu item now means something new on the site lives on that page.","#roster"],
   ["2026-11-20","Best Dressed is fairer","Best Dressed now goes by gear score: every slot's item level, weighted by quality, so an epic beats a rare and a rare beats a green, and a higher-level outfit beats a lower one. Character pages show each character's gear score.","#records"],
   ["2026-11-20","Talent trees","Character pages now show the full WoW Forever talent trees, like Wowhead's calculator: what's taken, what's maxed, what's open next and what's still locked. Hover or tap any talent to read it.",null],
@@ -3984,6 +3985,16 @@ function viewProfessions(){
 // Raids open on 9 December (Perth time); the tag counts down to it.
 const RAIDS_OPEN=Date.parse("2026-12-09T00:00:00+08:00");
 function raidCountdown(){const d=Math.ceil((RAIDS_OPEN-Date.now())/864e5);return d<=0?"Open now":d===1?"Open tomorrow":"Open in "+d+" days"}
+// When someone will reach 60 at their pace over the last two weeks (levels from the lasting level log and journey).
+// Rough on purpose: the last levels take longer, so it's said as "around". Null when there's no recent pace to go on.
+function fc60(m){const lv=+m.level||1;if(lv>=60)return null;
+  const pts=levelPoints(m),since=Date.now()-14*864e5;let gained=0,first=null;
+  for(let i=1;i<pts.length;i++){if(pts[i].gap||pts[i].t<since)continue;gained+=Math.max(0,pts[i].lv-pts[i-1].lv);if(first==null)first=pts[i-1].t}
+  if(gained<1)return null;const span=Math.max(3*864e5,Date.now()-Math.max(since,first||since)),perDay=gained/(span/864e5);
+  // Levels in the 50s take about half again as long as the 40s, so later levels count for more.
+  let need=0;for(let l=lv;l<60;l++)need+=l>=50?1.5:l>=40?1.2:1;
+  return Date.now()+need/perDay*864e5}
+const fcText=t=>new Date(t).toLocaleDateString("en-AU",{day:"numeric",month:"short",timeZone:"Australia/Perth"});
 // Raid readiness: who's level 60 (and seen in the last two weeks) by role, against the group each raid wants;
 // who's nearly there; and what the 60s have on. All from the armory; people who play two roles fill gaps first.
 function raidGroups(ppl,size,want){let n=0;
@@ -3997,6 +4008,7 @@ function raidsCard(){
   const sixty=chars.filter(m=>(+m.level||1)>=60),ready=sixty.filter(m=>!isAway(m)),away=sixty.length-ready.length;
   const close=chars.filter(m=>{const l=+m.level||1;return l>=55&&l<60}).length;
   const days=Math.ceil((RAIDS_OPEN-Date.now())/864e5),open=days<=0;
+  const onPace=chars.filter(m=>(+m.level||1)<60&&!isAway(m)).filter(m=>{const f=fc60(m);return f&&f<=RAIDS_OPEN}).length;
   const toLoot=name=>{setUi({dgLoot:{...(S.ui.dgLoot||{}),[name]:true}});setTimeout(()=>{const el=document.getElementById("rl-"+name.replace(/\W+/g,"-"));if(el)el.scrollIntoView({behavior:"smooth",block:"start"})},60)};
   const tile=([name,size,want,note])=>{
     const groups=raidGroups(ready,size,want),have=fillRoles(ready,want),short=ROLES.filter(r=>have[r]<want[r]).map(r=>[r,want[r]-have[r]]);
@@ -4014,6 +4026,7 @@ function raidsCard(){
     h("div",{class:"rr-count"},h("span",{class:"rr-eyebrow",id:"raids-h"},open?"Raids are open":"Raids open in"),
       h("b",{},open?"Now":days===1?"1 day":days+" days"),h("span",{class:"small",style:"color:var(--sec)"},open?"Since "+when:when),
       h("span",{class:"small ter",style:"margin-top:.375rem"},ready.length+(ready.length===1?" level 60":" level 60s")+(away?" (+"+away+" away)":"")+" · "+close+" at 55 to 59"),
+      !open&&onPace?h("span",{class:"small",style:"color:var(--sec)"},h("b",{},String(onPace))," more on pace to hit 60 before raids open"):null,
       h("span",{class:"small ter"},"Counts 60s seen in the last two weeks. Anyone who plays two roles fills a gap first.")),
     h("div",{class:"rr-grid"},RAIDS.map(tile))))}
 
@@ -4036,7 +4049,7 @@ function viewRaids(){
       h("td",{"data-label":"Onyxia amulet"},hasAmulet(m)?h("span",{class:"tag rr-ok"},"Wearing it"):null),seen(m))};
   const nearRow=m=>{const lv=+m.level||1;
     return h("tr",{class:"rd-near"+(isAway(m)?" rd-away":"")},h("td",{"data-label":"Character"},who(m)),role(m),
-      h("td",{"data-label":"Level"},h("span",{class:"rd-lv"},h("span",{},"Level "+lv),h("span",{class:"track","aria-hidden":"true"},h("i",{style:`width:${(lv-50)*10+5}%`}))),h("span",{class:"l2"},(60-lv)+" to go")),
+      h("td",{"data-label":"Level"},h("span",{class:"rd-lv"},h("span",{},"Level "+lv),h("span",{class:"track","aria-hidden":"true"},h("i",{style:`width:${(lv-50)*10+5}%`}))),h("span",{class:"l2"},(60-lv)+" to go"+(fc60(m)?" · 60 around "+fcText(fc60(m)):""))),
       h("td",{"data-label":"Onyxia amulet"}),seen(m))};
   const grp=(t,n)=>h("tr",{class:"r-group"},h("td",{colspan:"5"},h("span",{class:"r-group-in"},t,h("span",{class:"small ter"},String(n)))));
   const table=sixty.length||close.length?h("div",{class:"tablebox"},h("table",{class:"rd-t"},h("thead",{},h("tr",{},["Character","Role","Gear","Onyxia amulet","Last seen"].map(t=>h("th",{scope:"col"},t)))),
@@ -4115,6 +4128,7 @@ function levelCard(m){const pts=levelPoints(m);if(pts.length<3||pts[pts.length-1
     h("div",{class:"spread"},h("h2",{id:"lv-h-"+m.id},"Levelling"),h("span",{class:"small ter"},"since "+fmt(pts[0].t))),
     h("div",{class:"lv-stats"},stats.map(([v,l])=>h("div",{},h("b",{},v),h("span",{},l)))),
     chart,
+    fc60(m)?h("p",{class:"small",style:"margin:0;color:var(--sec)"},"At this pace, level 60 around ",h("b",{},fcText(fc60(m))),fc60(m)<=RAIDS_OPEN?", before raids open on 9 December.":" (raids open on 9 December)."):null,
     pts.some(p=>p.gap)?h("p",{class:"small ter",style:"margin:0"},"The dashed part is from before the site kept every level, so it shows the climb without the day-by-day detail."):null,
     h("div",{class:"spread",style:"flex-wrap:wrap;gap:.5rem"},h("div",{class:"lv-key small"},h("span",{},h("i",{class:"k1"}),nameOf(m)),cmp?h("span",{},h("i",{class:"k2"}),nameOf(cmp)):null,bw&&bw.n>1?h("span",{},h("i",{class:"k3"}),"best week"):null),
       others.length?h("label",{class:"f lv-cmp"},"Compare with",h("select",{onchange:e=>setUi({lvCmp:e.target.value||null},true)},h("option",{value:""},"Nobody"),others.map(o=>h("option",{value:o.id,selected:cmp&&cmp.id===o.id},nameOf(o)+" ("+(+o.level||1)+")")))):null))}
