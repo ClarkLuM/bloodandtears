@@ -386,6 +386,45 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 @media (max-width:760px){.ap-row{grid-auto-columns:11rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.25rem;margin:0 -.25rem;padding-inline:.25rem;align-items:stretch}
   .ap-p{scroll-snap-align:start}.ap-p.top{order:-1}.ap-p.top .ap-art,.ap-art{height:14rem}}
 @media (prefers-reduced-motion:reduce){.ap-p{transition:none}.ap-p:hover{transform:none}}
+/* PREVIEW ONLY: podium mockups (#lab) */
+.lab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,27rem),1fr));gap:1rem}
+.lab-box{gap:.75rem}.lab-frame{max-width:27rem;width:100%;margin:0 auto}
+.lab-a{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.375rem}
+.la{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
+.la-fig{position:relative;height:9rem;overflow:hidden}.la-1 .la-fig{height:11rem}
+.la-img{position:absolute;left:50%;bottom:-14%;height:150%;transform:translateX(-50%);max-width:none;filter:drop-shadow(0 4px 6px rgb(0 0 0 / .6))}
+.la-step{display:flex;flex-direction:column;align-items:center;gap:.125rem;padding:.5rem .25rem;border-radius:6px 6px 0 0;border:1px solid var(--sep);border-bottom:0;text-align:center}
+.la-step b{font-size:.875rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--cc) 80%,#fff)}.la-step>span:last-child{font-size:.75rem;color:var(--sec)}
+.la-1 .la-step{min-height:6.5rem;background:linear-gradient(rgb(212 162 76 / .35),var(--sunken));border-color:rgb(212 162 76 / .5)}
+.la-2 .la-step{min-height:5rem;background:linear-gradient(rgb(200 205 215 / .22),var(--sunken))}
+.la-3 .la-step{min-height:4rem;background:linear-gradient(rgb(190 130 80 / .25),var(--sunken))}
+.lab-b{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.375rem}
+.lb2{display:flex;flex-direction:column;border-radius:8px;overflow:hidden;text-decoration:none;color:var(--text);border:1px solid color-mix(in srgb,var(--cc) 50%,transparent);min-width:0}
+.lb2-art{position:relative;height:9.5rem;overflow:hidden;background:radial-gradient(110% 70% at 50% 15%,color-mix(in srgb,var(--cc) 55%,transparent),transparent 70%),linear-gradient(color-mix(in srgb,var(--cc) 45%,#1a1211),#120c0b)}
+.lb2-1 .lb2-art{height:12rem}.lb2-1{border-color:var(--gold);box-shadow:0 0 18px rgb(212 162 76 / .25)}
+.lb2-img{position:absolute;left:50%;bottom:-12%;height:140%;transform:translateX(-50%);max-width:none}
+.lb2-plate{display:flex;flex-direction:column;align-items:center;gap:.0625rem;padding:.375rem .25rem .5rem;background:#120c0b;border-top:2px solid var(--cc);text-align:center}.lb2-1 .lb2-plate{border-top-color:var(--gold)}
+.lb2-k{font-size:.625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ter)}.lb2-1 .lb2-k{color:var(--gold)}
+.lb2-plate b{font-size:.875rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lb2-v{font-size:.6875rem;color:var(--sec)}
+.lab-c{position:relative;height:17rem;border-radius:10px;overflow:hidden;background:radial-gradient(60% 50% at 50% 100%,rgb(212 162 76 / .18),transparent 70%),#0f0a09}
+.lc-beam{position:absolute;left:50%;top:-10%;width:60%;height:100%;transform:translateX(-50%);background:linear-gradient(rgb(255 236 190 / .22),rgb(255 236 190 / 0) 85%);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%)}
+.lc-floor{position:absolute;left:50%;bottom:2.75rem;width:60%;height:1.75rem;transform:translateX(-50%);border-radius:50%;background:radial-gradient(rgb(255 230 170 / .35),transparent 70%)}
+.lc-win{position:absolute;left:50%;bottom:0;width:48%;height:100%;transform:translateX(-50%);text-decoration:none;color:var(--text)}
+.lc-img{position:absolute;left:50%;bottom:1.5rem;height:118%;transform:translateX(-50%);max-width:none;filter:drop-shadow(0 6px 10px rgb(0 0 0 / .6))}
+.lc-cap{position:absolute;left:0;right:0;bottom:.375rem;display:flex;align-items:center;justify-content:center;gap:.375rem;font-size:.8125rem}.lc-cap span:last-child{color:var(--sec)}
+.lc-side{position:absolute;bottom:1.25rem;width:26%;display:flex;flex-direction:column;align-items:center;gap:.125rem;text-decoration:none;color:var(--text);font-size:.75rem;text-align:center}.lc-side.l{left:2%}.lc-side.r{right:2%}
+.lc-side b{font-size:.8125rem;color:color-mix(in srgb,var(--cc) 80%,#fff)}.lc-side>span:last-child{color:var(--sec)}
+.lc-face{position:relative;width:3.5rem;height:3.5rem;border-radius:50%;display:grid;place-items:center;background:var(--sunken);box-shadow:0 0 0 2px #0f0a09,0 0 0 3.5px var(--cc);font-weight:600}
+.lc-face img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;object-fit:cover}.lc-m{position:absolute;right:-.375rem;bottom:-.375rem}
+.lab-d{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.25rem;padding-top:.75rem}
+.ld{display:flex;flex-direction:column;border-radius:10px;padding:3px;text-decoration:none;color:var(--text);background:linear-gradient(135deg,var(--t1),var(--t2));box-shadow:0 6px 14px rgb(0 0 0 / .45);min-width:0;transition:transform .2s}
+.ld-2{transform:rotate(-5deg) translateY(.5rem)}.ld-3{transform:rotate(5deg) translateY(.75rem)}.ld-1{transform:translateY(-.25rem) scale(1.06);z-index:1}
+.ld:hover{transform:translateY(-.5rem) scale(1.06)}
+.ld-art{position:relative;height:9rem;border-radius:7px 7px 0 0;overflow:hidden;background:#0f0a09 center/cover}
+.ld-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;transform:scale(1.35)}
+.ld-m{position:absolute;left:.25rem;top:.25rem}
+.ld-nm{display:flex;flex-direction:column;align-items:center;padding:.25rem .25rem .375rem;background:#120c0b;border-radius:0 0 7px 7px;text-align:center}
+.ld-nm b{font-size:.8125rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--cc) 80%,#fff)}.ld-nm span{font-size:.6875rem;color:var(--sec)}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -3757,6 +3796,33 @@ function podiumCard(){
         h("div",{class:"ap-art"},src?h("img",{src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null),
         h("div",{class:"ap-plate"},h("span",{class:"ap-k"},isTop?"Top honour":"Title"),h("b",{class:"ap-t"},x.t),h("span",{class:"ap-n"},nameOf(m)),
           h("span",{class:"ap-q"},PODIUM_QUIP[x.k]||x.how),h("span",{class:"ap-v"},x.fmt(x.holder[1])),rg?h("span",{class:"ap-r"},rg.text):null))})))}
+// PREVIEW ONLY (#lab): four ways the Leaderboards' top three could look, with the guild's real characters. Remove once one is picked.
+function viewLab(){
+  const k=S.ui.labBoard||"hk",[,title,get,fmt]=REC_BOARDS.find(b=>b[0]===k)||REC_BOARDS[0],rows=ranked(get).slice(0,3);
+  const full=m=>{const r=m.armory&&m.armory.render;return safePic(r)&&!/\/shadow\//.test(r)?r:genericFg(m)},face=m=>safePic(m.armory&&m.armory.avatar)||"";
+  const cc=m=>CLASSES[m.cls]||"#bfaea9",first=m=>nameOf(m).split(/\s+/)[0],link=m=>`#char/${m.isAlt?"alts":"members"}/${m.id}`;
+  const order=[[rows[1],2],[rows[0],1],[rows[2],3]].filter(x=>x[0]);
+  const img=(src,cls,m)=>src?h("img",{class:cls,src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null;
+  const A=h("div",{class:"lab-a"},order.map(([r,pl])=>{const m=r[0];return h("a",{class:"la la-"+pl,href:link(m),style:`--cc:${cc(m)}`},
+    h("div",{class:"la-fig"},img(full(m),"la-img",m)),h("div",{class:"la-step"},h("span",{class:"la-pl"},medal(pl)),h("b",{},first(m)),h("span",{},fmt(r[1]))))}));
+  const B=h("div",{class:"lab-b"},order.map(([r,pl])=>{const m=r[0];return h("a",{class:"lb2 lb2-"+pl,href:link(m),style:`--cc:${cc(m)}`},
+    h("div",{class:"lb2-art"},img(full(m),"lb2-img",m)),h("div",{class:"lb2-plate"},h("span",{class:"lb2-k"},["","First","Second","Third"][pl]),h("b",{},first(m)),h("span",{class:"lb2-v"},fmt(r[1]))))}));
+  const C=rows[0]?h("div",{class:"lab-c"},h("div",{class:"lc-beam"}),h("div",{class:"lc-floor"}),
+    h("a",{class:"lc-win",href:link(rows[0][0]),style:`--cc:${cc(rows[0][0])}`},img(full(rows[0][0]),"lc-img",rows[0][0]),h("div",{class:"lc-cap"},medal(1),h("b",{},first(rows[0][0])),h("span",{},fmt(rows[0][1])))),
+    [[rows[1],2,"l"],[rows[2],3,"r"]].filter(x=>x[0]).map(([r,pl,side])=>h("a",{class:"lc-side "+side,href:link(r[0]),style:`--cc:${cc(r[0])}`},
+      h("span",{class:"lc-face"},face(r[0])?h("img",{src:face(r[0]),alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.remove()}):first(r[0]).slice(0,2),h("span",{class:"lc-m"},medal(pl))),h("b",{},first(r[0])),h("span",{},fmt(r[1]))))):null;
+  const D=h("div",{class:"lab-d"},order.map(([r,pl])=>{const m=r[0],t=tierOf(+m.level||1);return h("a",{class:"ld ld-"+pl,href:link(m),style:`--cc:${cc(m)};--t1:${t[2][0]};--t2:${t[2][1]}`},
+    h("div",{class:"ld-art",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},img(full(m),"ld-img",m),h("span",{class:"ld-m"},medal(pl))),
+    h("div",{class:"ld-nm"},h("b",{},first(m)),h("span",{},fmt(r[1]))))}));
+  const box=(id,name,note,body)=>h("section",{class:"card lab-box"},h("div",{},h("h2",{},id+" · "+name),h("p",{class:"small ter",style:"margin:.125rem 0 0"},note)),h("div",{class:"lab-frame"},body));
+  return[h("div",{class:"page-head"},h("h1",{},"Podium mockups"),h("p",{class:"sub"},"Four ways the Leaderboards' top three could look, with real characters. Each one is drawn at the width of the real Leaderboards card.")),
+    h("div",{style:"margin-bottom:1rem"},seg("Board",REC_BOARDS.map(b=>[b[0],{hk:"Kills",level:"Level",dungeons:"Dungeons",gear:"Gear"}[b[0]]]),k,v=>setUi({labBoard:v},true))),
+    !rows.length?h("p",{class:"empty"},"Nobody on this board yet."):
+    h("div",{class:"lab-grid"},
+      box("A","Standing","Full-body renders standing on gold, silver and bronze steps, name and number on the step.",A),
+      box("B","Panels","Tall class-coloured panels like the Podium addon; first is taller with a gold edge.",B),
+      box("C","Spotlight","The leader stands in a spotlight; second and third as portraits either side.",C),
+      box("D","Mini cards","Three little trading cards on the race backdrop; first raised in the middle, the others tilted.",D))]}
 function viewRecords(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
     // This Week at its own height with the two page links under it, beside the leaderboards.
@@ -4945,7 +5011,7 @@ function milestoneToast({badge,title,sub},after){
 /* ---------- render ---------- */
 function route(){const p=(location.hash||"#roster").slice(1).split("/");
   // The Cards page is now the Roster's Cards view: old links (and the old card games) land there.
-  if(p[0]==="cards"||(p[0]==="roster"&&p[1]==="cards")||["duel","draft","trumps","guess"].includes(p[0])){S.ui.rView="cards";history.replaceState(null,"","#roster");return{page:"roster"}}if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(["today","recap","guild"].includes(p[0]))return{page:p[0]};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
+  if(p[0]==="cards"||(p[0]==="roster"&&p[1]==="cards")||["duel","draft","trumps","guess"].includes(p[0])){S.ui.rView="cards";history.replaceState(null,"","#roster");return{page:"roster"}}if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(p[0]==="lab"&&IS_PREVIEW)return{page:"lab"};if(["today","recap","guild"].includes(p[0]))return{page:p[0]};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
 function render(){
   const app=$("#app");
   const keep=document.activeElement&&document.activeElement.id,typed={};
@@ -4960,7 +5026,7 @@ function render(){
   keepSiteData();
   countView(r.page);
   const views={roster:viewRoster,lfg:viewLfg,raids:viewRaids,professions:viewProfessions,records:viewRecords,activity:viewActivity};
-  const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():r.page==="today"?viewToday():r.page==="recap"?viewRecap():r.page==="guild"?viewGuild():views[r.page]();
+  const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():r.page==="today"?viewToday():r.page==="recap"?viewRecap():r.page==="guild"?viewGuild():r.page==="lab"?viewLab():views[r.page]();
   document.documentElement.classList.toggle("gl-ember",!!glHas(5));
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
