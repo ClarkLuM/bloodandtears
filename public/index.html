@@ -364,27 +364,41 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .sb-ic{position:relative;width:2.5rem;height:2.5rem;border-radius:6px;border:1px solid var(--b-def);background:var(--sunken);overflow:hidden;cursor:default}
 .sb-ic img{width:100%;height:100%;display:block}.sb-ic:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
 .sb-rk{position:absolute;right:1px;bottom:1px;min-width:1rem;padding:0 .1875rem;border-radius:4px;background:rgb(0 0 0 / .75);color:#f3e7c8;font-size:.625rem;font-weight:700;line-height:.875rem;text-align:center}
-/* The podium: title holders as little cards on steps */
-.ap{gap:.875rem}
-.ap-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,12rem);justify-content:center;gap:.625rem;align-items:end}
+/* The podium: title holders as little cards on steps, on a lit stage */
+.ap{gap:.75rem;overflow:hidden}
+.ap-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;width:100%}
+.ap-head h2{font-size:1.5rem;line-height:2rem}
+.ap-stage{position:relative;padding-top:1rem;margin:0 -1.5rem -1.5rem;padding-inline:1.5rem;background:radial-gradient(70% 60% at 50% 100%,rgb(212 162 76 / .1),transparent 70%)}
+.ap-light{position:absolute;left:50%;top:-2rem;width:min(34rem,90%);height:calc(100% + 2rem);transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(40% 45% at 50% 30%,rgb(255 226 160 / .16),transparent 70%),linear-gradient(rgb(255 236 190 / .1),transparent 75%);clip-path:polygon(38% 0,62% 0,100% 100%,0 100%)}
+.ap-row{position:relative;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,13rem);justify-content:center;gap:.75rem;align-items:end}
+.ap-n2 .ap-row,.ap-n3 .ap-row{grid-auto-columns:minmax(0,15rem);gap:1rem}
+.ap-floor{position:relative;height:.75rem;margin:0 -1.5rem;background:linear-gradient(rgb(255 236 190 / .14),transparent);border-top:1px solid rgb(212 162 76 / .35)}
 .ap-p{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
 .ap-p:focus-visible{outline:none}.ap-p:focus-visible .ap-card{outline:2px solid var(--focus);outline-offset:2px}
-.ap-card{position:relative;z-index:1;margin:0 .375rem -.125rem;padding:3px;border-radius:12px;background:linear-gradient(135deg,var(--p1),var(--p2) 55%,var(--p3));box-shadow:0 8px 18px rgb(0 0 0 / .45);transition:transform .2s cubic-bezier(.2,.8,.2,1)}
-.ap-p:hover .ap-card{transform:translateY(-4px)}
-.ap-p.top .ap-card{box-shadow:0 8px 18px rgb(0 0 0 / .45),0 0 22px rgb(212 162 76 / .35)}
-.ap-art{position:relative;height:11rem;border-radius:9px 9px 0 0;overflow:hidden;background:#0f0a09 center/cover}.ap-p.top .ap-art{height:13.5rem}
+.ap-card{position:relative;z-index:1;margin:0 .5rem -.125rem;padding:3px;border-radius:12px;background:linear-gradient(135deg,var(--p1),var(--p2) 55%,var(--p3));box-shadow:0 10px 22px rgb(0 0 0 / .5);
+  transform:perspective(800px) rotateX(0) rotateY(0);transition:transform .5s cubic-bezier(.23,1,.32,1),box-shadow .4s}
+.ap-card.tilt{transform:perspective(800px) rotateX(var(--rx,0)) rotateY(var(--ry,0)) scale(1.04);transition:transform .08s linear,box-shadow .3s;box-shadow:0 22px 36px -12px rgb(0 0 0 / .7)}
+.ap-card::after{content:"";position:absolute;inset:0;border-radius:12px;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgb(255 255 255 / .35),rgb(255 255 255 / .06) 30%,transparent 55%);mix-blend-mode:overlay;z-index:3}
+.ap-card.tilt::after{opacity:1}
+.ap-p.top .ap-card{margin:0 0 -.125rem;box-shadow:0 10px 22px rgb(0 0 0 / .5),0 0 28px rgb(212 162 76 / .4)}
+.ap-art{position:relative;height:11.5rem;border-radius:9px 9px 0 0;overflow:hidden;background:#0f0a09 center/cover}.ap-p.top .ap-art{height:14.5rem}
 .ap-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;transform:scale(1.35)}
-.ap-n{padding:.3125rem .375rem .375rem;border-radius:0 0 9px 9px;background:#120c0b;text-align:center;font-weight:600;font-size:.875rem;line-height:1.125rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ap-plate{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;gap:.125rem;min-height:8.5rem;padding:.75rem .5rem .625rem;border-radius:8px 8px 0 0;border:1px solid color-mix(in srgb,var(--p1) 40%,transparent);border-bottom:0;background:linear-gradient(color-mix(in srgb,var(--p2) 50%,var(--sunken)),var(--sunken) 90%)}
-.ap-p.top .ap-plate{min-height:10rem;border-color:rgb(212 162 76 / .55);background:linear-gradient(rgb(212 162 76 / .35),var(--sunken) 90%)}
-.ap-k{font-size:.625rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb,var(--p3) 80%,#fff)}.ap-p.top .ap-k{color:var(--gold)}
-.ap-t{font-family:var(--display);font-weight:600;font-size:1.0625rem;line-height:1.25rem;color:var(--p3)}.ap-p.top .ap-t{color:var(--gold);font-size:1.25rem;line-height:1.5rem}
-.ap-q{font-size:.6875rem;line-height:.9375rem;color:var(--sec)}
-.ap-v{margin-top:.25rem;padding:.125rem .5rem;border-radius:999px;font-size:.6875rem;font-weight:700;background:rgb(0 0 0 / .45);border:1px solid color-mix(in srgb,var(--p1) 60%,transparent)}
-.ap-r{font-size:.625rem;color:var(--ter)}
-@media (max-width:760px){.ap-row{grid-auto-columns:10.5rem;justify-content:start;overflow-x:auto;scroll-snap-type:x mandatory;padding:.5rem .25rem .25rem;margin:0 -.25rem}
-  .ap-p{scroll-snap-align:start}.ap-p.top{order:-1}.ap-art,.ap-p.top .ap-art{height:11rem}.ap-plate,.ap-p.top .ap-plate{min-height:8.5rem}}
-@media (prefers-reduced-motion:reduce){.ap-card{transition:none}.ap-p:hover .ap-card{transform:none}}
+.ap-lv{position:absolute;top:.375rem;right:.375rem;min-width:1.75rem;height:1.75rem;padding:0 .25rem;border-radius:999px;display:grid;place-items:center;font-weight:700;font-size:.8125rem;color:#1a1211;background:linear-gradient(135deg,var(--p3),var(--p1));box-shadow:0 0 0 2px #120c0b}
+.ap-n{display:flex;align-items:center;justify-content:center;gap:.375rem;padding:.3125rem .375rem .375rem;border-radius:0 0 9px 9px;background:#120c0b;font-weight:600;font-size:.875rem;line-height:1.125rem;min-width:0}
+.ap-n>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ap-plate{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.1875rem;min-height:8.75rem;padding:.875rem .625rem .625rem;border-radius:8px 8px 0 0;border:1px solid color-mix(in srgb,var(--p1) 40%,transparent);border-bottom:0;background:linear-gradient(color-mix(in srgb,var(--p2) 50%,var(--sunken)),var(--sunken) 92%)}
+.ap-p.top .ap-plate{min-height:10.5rem;border-color:rgb(212 162 76 / .55);background:linear-gradient(rgb(212 162 76 / .38),var(--sunken) 92%)}
+.ap-pl{position:absolute;right:.375rem;bottom:-.75rem;font:700 4.5rem/1 var(--display);color:rgb(255 255 255 / .06);pointer-events:none}.ap-p.top .ap-pl{color:rgb(255 226 160 / .12)}
+.ap-k{position:relative;font-size:.625rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb,var(--p3) 80%,#fff)}.ap-p.top .ap-k{color:var(--gold)}
+.ap-t{position:relative;font-family:var(--display);font-weight:600;font-size:1.1875rem;line-height:1.375rem;color:var(--p3)}.ap-p.top .ap-t{color:var(--gold);font-size:1.375rem;line-height:1.625rem}
+.ap-q{position:relative;font-size:.75rem;line-height:1rem;color:var(--sec)}
+.ap-v{position:relative;margin-top:.25rem;padding:.125rem .625rem;border-radius:999px;font-size:.75rem;font-weight:700;background:rgb(0 0 0 / .45);border:1px solid color-mix(in srgb,var(--p1) 60%,transparent)}
+.ap-r{position:relative;font-size:.6875rem;color:var(--ter)}
+@media (max-width:760px){.ap-head h2{font-size:1.25rem;line-height:1.75rem}.ap-stage{margin:0 -1rem -1rem;padding-inline:1rem}.ap-floor{margin:0 -1rem}
+  .ap-row,.ap-n2 .ap-row,.ap-n3 .ap-row{grid-auto-columns:11rem;gap:.625rem;justify-content:start;overflow-x:auto;scroll-snap-type:x mandatory;padding:.5rem .25rem 0;margin:0 -.25rem}
+  .ap-p{scroll-snap-align:start}.ap-p.top{order:-1}.ap-art,.ap-p.top .ap-art{height:11.5rem}.ap-plate,.ap-p.top .ap-plate{min-height:9rem}.ap-card,.ap-p.top .ap-card{margin:0 .25rem -.125rem}}
+@media (prefers-reduced-motion:reduce){.ap-card{transition:none}}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -3748,16 +3762,25 @@ const PODIUM_QUIP={hk:"Leaves a trail of grey names behind.",gear:"Dressed to ki
 function podiumCard(){
   const held=PODIUM.map(k=>titleList().find(x=>x.k===k)).filter(x=>x&&x.holder);
   if(held.length<2)return null;
-  const top=held.find(x=>x.k==="speed")||held[0],rest=held.filter(x=>x!==top),mid=Math.floor(rest.length/2),row=[...rest.slice(0,mid),top,...rest.slice(mid)];
+  // Laid out like a real podium: 1 in the middle, 2 on its left, 3 on its right, then 4 and 5 on the outside.
+  const top=held.find(x=>x.k==="speed")||held[0],rest=held.filter(x=>x!==top),row=[top];
+  rest.forEach((x,i)=>i%2?row.push(x):row.unshift(x));
+  const rank=x=>x===top?1:rest.indexOf(x)+2;
   const pic=m=>{const r=m.armory&&m.armory.render;return safePic(r)&&!/\/shadow\//.test(r)?r:genericFg(m)};
-  return h("section",{class:"card ap","aria-labelledby":"ap-h"},
-    h("div",{class:"spread",style:"align-items:baseline;width:100%"},h("h2",{id:"ap-h"},"The Podium"),h("a",{class:"small linkish",href:"#records",onclick:e=>{e.preventDefault();document.getElementById("hot-h")?.scrollIntoView({behavior:"smooth",block:"start"})}},"Every title")),
-    h("div",{class:"ap-row"},row.map(x=>{const m=x.holder[0],fr=frameFor(x.k),f=fr?fr.f:["#bfaea9","#312625","#e0d4d0","#1a1312"],isTop=x===top,src=pic(m),rg=reignOf(x.k,m.id);
+  return h("section",{class:"card ap ap-n"+row.length,"aria-labelledby":"ap-h"},
+    h("div",{class:"ap-head"},h("div",{},h("h2",{id:"ap-h"},"The Podium"),h("p",{class:"small ter",style:"margin:.125rem 0 0"},"The guild's title holders. Speed Demon resets every week.")),
+      h("a",{class:"small linkish",href:"#records",onclick:e=>{e.preventDefault();document.getElementById("hot-h")?.scrollIntoView({behavior:"smooth",block:"start"})}},"Every title")),
+    h("div",{class:"ap-stage"},h("div",{class:"ap-light","aria-hidden":"true"}),
+    h("div",{class:"ap-row"},row.map(x=>{const m=x.holder[0],fr=frameFor(x.k),f=fr?fr.f:["#bfaea9","#312625","#e0d4d0","#1a1312"],isTop=x===top,src=pic(m),rg=reignOf(x.k,m.id),pl=rank(x);
+      const card=h("div",{class:"ap-card"},h("div",{class:"ap-art",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},src?h("img",{src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null,
+          h("span",{class:"ap-lv"},String(m.level||"?"))),
+        h("div",{class:"ap-n"},classIcon(m.cls),h("span",{},nameOf(m))));
+      addTilt(card);
       return h("a",{class:"ap-p"+(isTop?" top":""),href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,style:`--p1:${f[0]};--p2:${f[1]};--p3:${f[2]}`,"aria-label":x.t+": "+nameOf(m)+", "+x.fmt(x.holder[1])},
-        h("div",{class:"ap-card"},h("div",{class:"ap-art",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},src?h("img",{src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null),
-          h("div",{class:"ap-n"},nameOf(m))),
-        h("div",{class:"ap-plate"},h("span",{class:"ap-k"},isTop?"Top honour":"Title"),h("b",{class:"ap-t"},x.t),
-          h("span",{class:"ap-q"},PODIUM_QUIP[x.k]||x.how),h("span",{class:"ap-v"},x.fmt(x.holder[1])),rg?h("span",{class:"ap-r"},rg.text):null))})))}
+        card,
+        h("div",{class:"ap-plate"},h("span",{class:"ap-pl","aria-hidden":"true"},String(pl)),h("span",{class:"ap-k"},isTop?"Top honour":"Title"),h("b",{class:"ap-t"},x.t),
+          h("span",{class:"ap-q"},PODIUM_QUIP[x.k]||x.how),h("span",{class:"ap-v"},x.fmt(x.holder[1])),rg?h("span",{class:"ap-r"},rg.text):null))})),
+    h("div",{class:"ap-floor","aria-hidden":"true"})))}
 function viewRecords(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
     // This Week at its own height with the two page links under it, beside the leaderboards.
