@@ -425,6 +425,26 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .ld-m{position:absolute;left:.25rem;top:.25rem}
 .ld-nm{display:flex;flex-direction:column;align-items:center;padding:.25rem .25rem .375rem;background:#120c0b;border-radius:0 0 7px 7px;text-align:center}
 .ld-nm b{font-size:.8125rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--cc) 80%,#fff)}.ld-nm span{font-size:.6875rem;color:var(--sec)}
+.lab-e{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.375rem}
+.lee{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
+.lee-card{margin:0 .25rem -.125rem;position:relative;z-index:1}.lee-card .ld-art{height:8rem}.lee-1 .lee-card .ld-art{height:9.5rem}.lee-card:hover{transform:translateY(-.25rem)}
+.le-step{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;border-radius:6px 6px 0 0;border:1px solid var(--sep);border-bottom:0;font-size:.75rem;color:var(--sec);padding-top:.375rem}
+.le-1{min-height:4.5rem;background:linear-gradient(rgb(212 162 76 / .35),var(--sunken));border-color:rgb(212 162 76 / .5)}.le-2{min-height:3.25rem;background:linear-gradient(rgb(200 205 215 / .22),var(--sunken))}.le-3{min-height:2.5rem;background:linear-gradient(rgb(190 130 80 / .25),var(--sunken))}
+.lab-f{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.375rem}
+.lf{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
+.lf-arch{position:relative;height:9rem;margin:0 .375rem;border-radius:999px 999px 0 0;overflow:hidden;background:#0f0a09 center/cover;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--cc) 55%,transparent)}
+.lf-1 .lf-arch{height:10.5rem;box-shadow:inset 0 0 0 2px var(--gold),0 0 18px rgb(212 162 76 / .3)}
+.lf-arch::after{content:"";position:absolute;inset:auto 0 0;height:35%;background:linear-gradient(transparent,rgb(15 10 9 / .7))}
+.lf-img{position:absolute;left:50%;bottom:-20%;height:170%;transform:translateX(-50%);max-width:none}
+.lf-1 .la-step{min-height:5rem;background:linear-gradient(rgb(212 162 76 / .35),var(--sunken));border-color:rgb(212 162 76 / .5)}.lf-2 .la-step{min-height:4rem;background:linear-gradient(rgb(200 205 215 / .22),var(--sunken))}.lf-3 .la-step{min-height:3.25rem;background:linear-gradient(rgb(190 130 80 / .25),var(--sunken))}
+.lab-g{position:relative;border-radius:10px;overflow:hidden;background:linear-gradient(rgb(15 10 9 / .15),rgb(15 10 9 / .85)),var(--bg,#1a1211) center/cover}
+.lg2-figs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;height:12rem}
+.lg2{position:relative;height:100%;overflow:hidden}.lg2-2,.lg2-3{height:82%}
+.lg2-img{position:absolute;left:50%;bottom:-20%;height:175%;transform:translateX(-50%);max-width:none;filter:drop-shadow(0 6px 10px rgb(0 0 0 / .6))}
+.lg2-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.25rem;padding:0 .25rem}
+.lg2-s{display:flex;flex-direction:column;align-items:center;gap:.125rem;padding:.375rem .25rem;border-radius:6px 6px 0 0;text-decoration:none;color:var(--text);font-size:.75rem;text-align:center;backdrop-filter:blur(4px)}
+.lg2-s b{font-size:.8125rem;color:color-mix(in srgb,var(--cc) 80%,#fff)}.lg2-s>span:last-child{color:var(--sec)}
+.lg2-s1{min-height:4.75rem;background:linear-gradient(rgb(212 162 76 / .45),rgb(15 10 9 / .9))}.lg2-s2{min-height:3.75rem;background:linear-gradient(rgb(200 205 215 / .3),rgb(15 10 9 / .9))}.lg2-s3{min-height:3.25rem;background:linear-gradient(rgb(190 130 80 / .35),rgb(15 10 9 / .9))}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -3814,14 +3834,26 @@ function viewLab(){
   const D=h("div",{class:"lab-d"},order.map(([r,pl])=>{const m=r[0],t=tierOf(+m.level||1);return h("a",{class:"ld ld-"+pl,href:link(m),style:`--cc:${cc(m)};--t1:${t[2][0]};--t2:${t[2][1]}`},
     h("div",{class:"ld-art",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},img(full(m),"ld-img",m),h("span",{class:"ld-m"},medal(pl))),
     h("div",{class:"ld-nm"},h("b",{},first(m)),h("span",{},fmt(r[1]))))}));
+  // E: the mini cards standing on the medal steps. F: A's figures in an arched window of their race backdrop, on the steps.
+  // G: one wide stage: the three on a single race-backdrop banner, steps along the bottom.
+  const steps=(pl,r)=>h("div",{class:"le-step le-"+pl},h("span",{class:"la-pl"},medal(pl)),h("span",{},fmt(r[1])));
+  const E=h("div",{class:"lab-e"},order.map(([r,pl])=>{const m=r[0],t=tierOf(+m.level||1);return h("a",{class:"lee lee-"+pl,href:link(m),style:`--cc:${cc(m)};--t1:${t[2][0]};--t2:${t[2][1]}`},
+    h("div",{class:"ld lee-card"},h("div",{class:"ld-art",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},img(full(m),"ld-img",m)),h("div",{class:"ld-nm"},h("b",{},first(m)))),steps(pl,r))}));
+  const F=h("div",{class:"lab-f"},order.map(([r,pl])=>{const m=r[0];return h("a",{class:"lf lf-"+pl,href:link(m),style:`--cc:${cc(m)}`},
+    h("div",{class:"lf-arch",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},img(full(m),"lf-img",m)),
+    h("div",{class:"la-step"},h("span",{class:"la-pl"},medal(pl)),h("b",{},first(m)),h("span",{},fmt(r[1]))))}));
+  const G=rows[0]?h("div",{class:"lab-g",style:genericBg(rows[0][0])?`--bg:url("${genericBg(rows[0][0])}")`:""},
+    h("div",{class:"lg2-figs"},order.map(([r,pl])=>h("a",{class:"lg2 lg2-"+pl,href:link(r[0]),style:`--cc:${cc(r[0])}`},img(full(r[0]),"lg2-img",r[0])))),
+    h("div",{class:"lg2-steps"},order.map(([r,pl])=>h("a",{class:"lg2-s lg2-s"+pl,href:link(r[0]),style:`--cc:${cc(r[0])}`},h("span",{class:"la-pl"},medal(pl)),h("b",{},first(r[0])),h("span",{},fmt(r[1])))))):null;
   const box=(id,name,note,body)=>h("section",{class:"card lab-box"},h("div",{},h("h2",{},id+" · "+name),h("p",{class:"small ter",style:"margin:.125rem 0 0"},note)),h("div",{class:"lab-frame"},body));
-  return[h("div",{class:"page-head"},h("h1",{},"Podium mockups"),h("p",{class:"sub"},"Four ways the Leaderboards' top three could look, with real characters. Each one is drawn at the width of the real Leaderboards card.")),
+  return[h("div",{class:"page-head"},h("h1",{},"Podium mockups"),h("p",{class:"sub"},"Ways the Leaderboards' top three could look, with real characters. Each one is drawn at the width of the real Leaderboards card.")),
     h("div",{style:"margin-bottom:1rem"},seg("Board",REC_BOARDS.map(b=>[b[0],{hk:"Kills",level:"Level",dungeons:"Dungeons",gear:"Gear"}[b[0]]]),k,v=>setUi({labBoard:v},true))),
     !rows.length?h("p",{class:"empty"},"Nobody on this board yet."):
     h("div",{class:"lab-grid"},
       box("A","Standing","Full-body renders standing on gold, silver and bronze steps, name and number on the step.",A),
-      box("B","Panels","Tall class-coloured panels like the Podium addon; first is taller with a gold edge.",B),
-      box("C","Spotlight","The leader stands in a spotlight; second and third as portraits either side.",C),
+      box("E","Cards on steps","D's mini cards, upright, standing on A's medal steps with the number on the step.",E),
+      box("F","Arches","A's figures, each in an arched window of their race backdrop, on the medal steps.",F),
+      box("G","Stage","One wide backdrop (the leader's) with all three standing on it, and the medal steps along the bottom.",G),
       box("D","Mini cards","Three little trading cards on the race backdrop; first raised in the middle, the others tilted.",D))]}
 function viewRecords(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
