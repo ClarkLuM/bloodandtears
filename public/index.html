@@ -364,6 +364,28 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .sb-ic{position:relative;width:2.5rem;height:2.5rem;border-radius:6px;border:1px solid var(--b-def);background:var(--sunken);overflow:hidden;cursor:default}
 .sb-ic img{width:100%;height:100%;display:block}.sb-ic:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
 .sb-rk{position:absolute;right:1px;bottom:1px;min-width:1rem;padding:0 .1875rem;border-radius:4px;background:rgb(0 0 0 / .75);color:#f3e7c8;font-size:.625rem;font-weight:700;line-height:.875rem;text-align:center}
+/* The podium */
+.pod{gap:.875rem;overflow:hidden}
+.pod-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,13.5rem);justify-content:center;gap:.75rem;align-items:end}
+.pod-p{position:relative;display:flex;flex-direction:column;text-decoration:none;color:var(--text);border-radius:10px;overflow:hidden;border:1px solid color-mix(in srgb,var(--p1) 45%,transparent);background:#0f0a09;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s}
+.pod-p:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgb(0 0 0 / .45),0 0 0 1px var(--p1)}
+.pod-p:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.pod-art{position:relative;height:13rem;background:radial-gradient(120% 70% at 50% 18%,color-mix(in srgb,var(--p3) 70%,transparent),transparent 70%),linear-gradient(var(--p1),var(--p2));overflow:hidden}
+.pod-p.top .pod-art{height:16rem}
+.pod-art::after{content:"";position:absolute;inset:auto 0 0 0;height:30%;background:linear-gradient(transparent,rgb(15 10 9 / .55))}
+.pod-art img{position:absolute;left:50%;bottom:-6%;height:125%;width:auto;max-width:none;transform:translateX(-50%);filter:drop-shadow(0 6px 10px rgb(0 0 0 / .5))}
+.pod-plate{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.125rem;padding:.625rem .5rem .75rem;border-top:2px solid var(--p1);background:linear-gradient(color-mix(in srgb,var(--p2) 55%,#0f0a09),#0f0a09)}
+.pod-p.top .pod-plate{border-top-color:var(--gold);box-shadow:inset 0 1px 0 rgb(255 230 170 / .25)}
+.pod-k{font:600 .625rem 'Alegreya Sans SC',serif;letter-spacing:.1em;color:color-mix(in srgb,var(--p3) 80%,#fff);text-transform:lowercase}
+.pod-p.top .pod-k{color:var(--gold)}
+.pod-t{font-family:var(--display);font-weight:600;font-size:1.0625rem;line-height:1.25rem;color:var(--p3)}
+.pod-p.top .pod-t{color:var(--gold);font-size:1.25rem;line-height:1.5rem}
+.pod-n{font-weight:600;font-size:.875rem}.pod-q{font-size:.6875rem;line-height:.9375rem;color:var(--sec);min-height:1.875rem}
+.pod-v{margin-top:.25rem;padding:.125rem .5rem;border-radius:999px;font-size:.6875rem;font-weight:700;background:rgb(0 0 0 / .45);border:1px solid color-mix(in srgb,var(--p1) 60%,transparent)}
+.pod-r{font-size:.625rem;color:var(--ter)}
+@media (max-width:760px){.pod-row{grid-auto-columns:11rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.25rem;margin:0 -.25rem;padding-inline:.25rem;align-items:stretch}
+  .pod-p{scroll-snap-align:start}.pod-p.top{order:-1}.pod-p.top .pod-art,.pod-art{height:14rem}}
+@media (prefers-reduced-motion:reduce){.pod-p{transition:none}.pod-p:hover{transform:none}}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -1899,6 +1921,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-26","The Podium","Records now opens with the guild's title holders standing on their own coloured panels, with Speed Demon (most levels this week) in the tall middle spot.","#records"],
   ["2026-11-25","A spellbook on every character","Character pages now show the class abilities and ranks their level allows, and what the trainer has for them over the next few levels. Hover one to read it.","#roster"],
   ["2026-11-25","A recipe book on every character","Open a profession under Professions on any character page: the best skill-ups right now (with where to find a missing recipe), everything they can make or learn, the recipes they still need, and what opens up next as their skill climbs.","#roster"],
   ["2026-11-25","When will they hit 60?","The Raids page now says how many more are on pace to reach 60 before raids open on 9 December, and when each of the 50s should get there. Character pages say it too, under the levelling chart.","#raids"],
@@ -3713,9 +3736,26 @@ function viewActivity(){
     wherePlays(),
     whenWePlay(),
     any?null:h("section",{class:"card",style:"gap:.5rem"},h("h2",{},"Nothing noted yet"),h("p",{class:"small ter",style:"margin:0"},"This page fills in from the guild scribe, an in-game addon an officer runs. Once its notes are uploaded, the busiest hours and a map of the zones show here."))]}
+// The podium: the guild's title holders standing on coloured panels, like the end-of-dungeon awards in the Podium addon.
+// Speed Demon (most levels this week) takes the tall middle spot when someone holds it; otherwise the first held title does.
+const PODIUM=["hk","gear","speed","dungeons","epics"];
+const PODIUM_QUIP={hk:"Leaves a trail of grey names behind.",gear:"Dressed to kill. Literally.",speed:"Levels like it's a second job.",dungeons:"Has seen the inside of everything.",epics:"Purple is a lifestyle."};
+function podiumCard(){
+  const held=PODIUM.map(k=>titleList().find(x=>x.k===k)).filter(x=>x&&x.holder);
+  if(held.length<2)return null;
+  const top=held.find(x=>x.k==="speed")||held[0],rest=held.filter(x=>x!==top),mid=Math.floor(rest.length/2),row=[...rest.slice(0,mid),top,...rest.slice(mid)];
+  const pic=m=>{const r=m.armory&&m.armory.render;return safePic(r)&&!/\/shadow\//.test(r)?r:genericFg(m)};
+  return h("section",{class:"card pod","aria-labelledby":"pod-h"},
+    h("div",{class:"spread",style:"align-items:baseline;width:100%"},h("h2",{id:"pod-h"},"The Podium"),h("a",{class:"small linkish",href:"#records",onclick:e=>{e.preventDefault();document.getElementById("hot-h")?.scrollIntoView({behavior:"smooth",block:"start"})}},"Every title")),
+    h("div",{class:"pod-row"},row.map(x=>{const m=x.holder[0],fr=frameFor(x.k),f=fr?fr.f:["#bfaea9","#312625","#e0d4d0","#1a1312"],isTop=x===top,src=pic(m),rg=reignOf(x.k,m.id);
+      return h("a",{class:"pod-p"+(isTop?" top":""),href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,style:`--p1:${f[0]};--p2:${f[1]};--p3:${f[2]}`,"aria-label":x.t+": "+nameOf(m)+", "+x.fmt(x.holder[1])},
+        h("div",{class:"pod-art"},src?h("img",{src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null),
+        h("div",{class:"pod-plate"},h("span",{class:"pod-k"},isTop?"Top honour":"Title"),h("b",{class:"pod-t"},x.t),h("span",{class:"pod-n"},nameOf(m)),
+          h("span",{class:"pod-q"},PODIUM_QUIP[x.k]||x.how),h("span",{class:"pod-v"},x.fmt(x.holder[1])),rg?h("span",{class:"pod-r"},rg.text):null))})))}
 function viewRecords(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
     // This Week at its own height with the two page links under it, beside the leaderboards.
+    podiumCard(),
     h("div",{class:"rec-top rec-a"},raceCard(),recBoards(),
     h("div",{class:"rec-links"},S.scribe?h("a",{class:"card rec-link",href:"#activity"},h("span",{},h("b",{},"When and where the guild plays"),h("span",{class:"small ter"}," · the busiest hours and a map of the zones")),h("span",{class:"rec-link-go"},"On the Activity page →")):null,
     h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →")))),
