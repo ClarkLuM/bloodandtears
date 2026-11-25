@@ -364,28 +364,27 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .sb-ic{position:relative;width:2.5rem;height:2.5rem;border-radius:6px;border:1px solid var(--b-def);background:var(--sunken);overflow:hidden;cursor:default}
 .sb-ic img{width:100%;height:100%;display:block}.sb-ic:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
 .sb-rk{position:absolute;right:1px;bottom:1px;min-width:1rem;padding:0 .1875rem;border-radius:4px;background:rgb(0 0 0 / .75);color:#f3e7c8;font-size:.625rem;font-weight:700;line-height:.875rem;text-align:center}
-/* The podium */
-.ap{gap:.875rem;overflow:hidden}
-.ap-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,13.5rem);justify-content:center;gap:.75rem;align-items:end}
-.ap-p{position:relative;display:flex;flex-direction:column;text-decoration:none;color:var(--text);border-radius:10px;overflow:hidden;border:1px solid color-mix(in srgb,var(--p1) 45%,transparent);background:#0f0a09;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s}
-.ap-p:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgb(0 0 0 / .45),0 0 0 1px var(--p1)}
-.ap-p:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.ap-art{position:relative;height:13rem;background:radial-gradient(120% 70% at 50% 18%,color-mix(in srgb,var(--p3) 70%,transparent),transparent 70%),linear-gradient(var(--p1),var(--p2));overflow:hidden}
-.ap-p.top .ap-art{height:16rem}
-.ap-art::after{content:"";position:absolute;inset:auto 0 0 0;height:30%;background:linear-gradient(transparent,rgb(15 10 9 / .55))}
-.ap-art img{position:absolute;left:50%;bottom:-6%;height:125%;width:auto;max-width:none;transform:translateX(-50%);filter:drop-shadow(0 6px 10px rgb(0 0 0 / .5))}
-.ap-plate{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.125rem;padding:.625rem .5rem .75rem;border-top:2px solid var(--p1);background:linear-gradient(color-mix(in srgb,var(--p2) 55%,#0f0a09),#0f0a09)}
-.ap-p.top .ap-plate{border-top-color:var(--gold);box-shadow:inset 0 1px 0 rgb(255 230 170 / .25)}
-.ap-k{font:600 .625rem 'Alegreya Sans SC',serif;letter-spacing:.1em;color:color-mix(in srgb,var(--p3) 80%,#fff);text-transform:lowercase}
-.ap-p.top .ap-k{color:var(--gold)}
-.ap-t{font-family:var(--display);font-weight:600;font-size:1.0625rem;line-height:1.25rem;color:var(--p3)}
-.ap-p.top .ap-t{color:var(--gold);font-size:1.25rem;line-height:1.5rem}
-.ap-n{font-weight:600;font-size:.875rem}.ap-q{font-size:.6875rem;line-height:.9375rem;color:var(--sec);min-height:1.875rem}
+/* The podium: title holders as little cards on steps */
+.ap{gap:.875rem}
+.ap-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,12rem);justify-content:center;gap:.625rem;align-items:end}
+.ap-p{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
+.ap-p:focus-visible{outline:none}.ap-p:focus-visible .ap-card{outline:2px solid var(--focus);outline-offset:2px}
+.ap-card{position:relative;z-index:1;margin:0 .375rem -.125rem;padding:3px;border-radius:12px;background:linear-gradient(135deg,var(--p1),var(--p2) 55%,var(--p3));box-shadow:0 8px 18px rgb(0 0 0 / .45);transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+.ap-p:hover .ap-card{transform:translateY(-4px)}
+.ap-p.top .ap-card{box-shadow:0 8px 18px rgb(0 0 0 / .45),0 0 22px rgb(212 162 76 / .35)}
+.ap-art{position:relative;height:11rem;border-radius:9px 9px 0 0;overflow:hidden;background:#0f0a09 center/cover}.ap-p.top .ap-art{height:13.5rem}
+.ap-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;transform:scale(1.35)}
+.ap-n{padding:.3125rem .375rem .375rem;border-radius:0 0 9px 9px;background:#120c0b;text-align:center;font-weight:600;font-size:.875rem;line-height:1.125rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ap-plate{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;gap:.125rem;min-height:8.5rem;padding:.75rem .5rem .625rem;border-radius:8px 8px 0 0;border:1px solid color-mix(in srgb,var(--p1) 40%,transparent);border-bottom:0;background:linear-gradient(color-mix(in srgb,var(--p2) 50%,var(--sunken)),var(--sunken) 90%)}
+.ap-p.top .ap-plate{min-height:10rem;border-color:rgb(212 162 76 / .55);background:linear-gradient(rgb(212 162 76 / .35),var(--sunken) 90%)}
+.ap-k{font-size:.625rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb,var(--p3) 80%,#fff)}.ap-p.top .ap-k{color:var(--gold)}
+.ap-t{font-family:var(--display);font-weight:600;font-size:1.0625rem;line-height:1.25rem;color:var(--p3)}.ap-p.top .ap-t{color:var(--gold);font-size:1.25rem;line-height:1.5rem}
+.ap-q{font-size:.6875rem;line-height:.9375rem;color:var(--sec)}
 .ap-v{margin-top:.25rem;padding:.125rem .5rem;border-radius:999px;font-size:.6875rem;font-weight:700;background:rgb(0 0 0 / .45);border:1px solid color-mix(in srgb,var(--p1) 60%,transparent)}
 .ap-r{font-size:.625rem;color:var(--ter)}
-@media (max-width:760px){.ap-row{grid-auto-columns:11rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.25rem;margin:0 -.25rem;padding-inline:.25rem;align-items:stretch}
-  .ap-p{scroll-snap-align:start}.ap-p.top{order:-1}.ap-p.top .ap-art,.ap-art{height:14rem}}
-@media (prefers-reduced-motion:reduce){.ap-p{transition:none}.ap-p:hover{transform:none}}
+@media (max-width:760px){.ap-row{grid-auto-columns:10.5rem;justify-content:start;overflow-x:auto;scroll-snap-type:x mandatory;padding:.5rem .25rem .25rem;margin:0 -.25rem}
+  .ap-p{scroll-snap-align:start}.ap-p.top{order:-1}.ap-art,.ap-p.top .ap-art{height:11rem}.ap-plate,.ap-p.top .ap-plate{min-height:8.5rem}}
+@media (prefers-reduced-motion:reduce){.ap-card{transition:none}.ap-p:hover .ap-card{transform:none}}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -1406,21 +1405,24 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
  .pt-t{font-size:.8125rem}
 }
 
-/* Records: the top three on a podium, as little cards on medal steps */
-.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.375rem;margin:1rem 0 .25rem}
-.pc{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
-.pc-card{position:relative;z-index:1;margin:0 .25rem -.125rem;display:flex;flex-direction:column;border-radius:10px;padding:3px;background:linear-gradient(135deg,var(--t1),var(--t2));box-shadow:0 6px 14px rgb(0 0 0 / .45);transition:transform .2s cubic-bezier(.2,.8,.2,1)}
-.pc:hover .pc-card{transform:translateY(-.25rem)}.pc:focus-visible{outline:none}.pc:focus-visible .pc-card{outline:2px solid var(--focus);outline-offset:2px}
-.pc-art{position:relative;height:7.5rem;border-radius:7px 7px 0 0;overflow:hidden;background:#0f0a09 center/cover}.pc-1 .pc-art{height:9rem}
-.pc-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;transform:scale(1.35)}
-.pc-nm{padding:.25rem .25rem .3125rem;background:#120c0b;border-radius:0 0 7px 7px;text-align:center}
-.pc-nm b{display:block;font-size:.8125rem;line-height:1.125rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--cc) 80%,#fff)}
-.pc.me .pc-nm b{text-decoration:underline;text-decoration-color:var(--accent-text);text-underline-offset:3px}
-.pc-step{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;padding-top:.375rem;border-radius:6px 6px 0 0;border:1px solid color-mix(in srgb,var(--sep) 70%,transparent);border-bottom:0;font-size:.75rem;color:var(--sec);font-variant-numeric:tabular-nums;white-space:nowrap}
-.pc-1 .pc-step{min-height:4.5rem;background:linear-gradient(rgb(212 162 76 / .35),var(--sunken));border-color:rgb(212 162 76 / .5);color:var(--text)}
-.pc-2 .pc-step{min-height:3.25rem;background:linear-gradient(rgb(200 205 215 / .22),var(--sunken))}
-.pc-3 .pc-step{min-height:2.5rem;background:linear-gradient(rgb(190 130 80 / .25),var(--sunken))}
-@media (prefers-reduced-motion:reduce){.pc-card{transition:none}.pc:hover .pc-card{transform:none}}
+/* Records: the top three on a podium */
+.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.5rem;margin:.75rem 0 .25rem}
+.pod{display:flex;flex-direction:column;align-items:center;gap:.125rem;text-decoration:none;color:var(--text);min-width:0}
+.pod-f{position:relative;width:3.25rem;height:3.25rem;border-radius:50%;display:grid;place-items:center;font:600 .9375rem/1 var(--display);background:color-mix(in srgb,var(--cc) 16%,var(--sunken));box-shadow:0 0 0 2px var(--raised),0 0 0 3.5px var(--cc);margin-bottom:.375rem;transition:transform .15s}
+.pod-1 .pod-f{width:4rem;height:4rem;font-size:1.125rem}
+.pod:hover .pod-f{transform:translateY(-2px)}
+.pod-m{position:absolute;right:-.375rem;bottom:-.375rem}.pod-m .medal{width:1.375rem;height:1.375rem;font-size:.6875rem;box-shadow:0 0 0 2px var(--raised)}
+.pod-n{font-size:.875rem;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--cc) 80%,#fff)}
+:root[data-theme="light"] .pod-n{color:color-mix(in srgb,var(--cc) 40%,#1a1211)}
+.pod-v{font-size:.75rem;color:var(--sec);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pod-b{align-self:stretch;margin-top:.5rem;display:grid;place-items:start center;padding-top:.375rem;border-radius:8px 8px 0 0;font:400 1.25rem/1 var(--display);color:var(--ter);background:linear-gradient(180deg,color-mix(in srgb,var(--cc) 22%,var(--sunken)),var(--sunken));border:1px solid color-mix(in srgb,var(--sep) 70%,transparent);border-bottom:0}
+.pod-1 .pod-b{height:4.5rem;color:var(--gold-hi)}.pod-2 .pod-b{height:3.25rem}.pod-3 .pod-b{height:2.25rem}
+.pod-pic{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--sunken)}
+.pod-1 .pod-b{background:linear-gradient(180deg,rgb(212 162 76 / .32),var(--sunken) 85%);border-color:rgb(212 162 76 / .45);box-shadow:inset 0 1px 0 rgb(255 230 170 / .25)}
+.pod-2 .pod-b{background:linear-gradient(180deg,rgb(200 205 215 / .2),var(--sunken) 85%);border-color:rgb(200 205 215 / .3)}
+.pod-3 .pod-b{background:linear-gradient(180deg,rgb(190 130 80 / .22),var(--sunken) 85%);border-color:rgb(190 130 80 / .35)}
+.pod-1 .pod-f{box-shadow:0 0 0 2px var(--raised),0 0 0 3.5px var(--cc),0 0 22px 2px rgb(212 162 76 / .35)}
+.pod.me .pod-n{text-decoration:underline;text-decoration-color:var(--accent-text);text-underline-offset:3px}
 .podium+.rec-list{border-top:1px solid color-mix(in srgb,var(--sep) 70%,transparent);padding-top:.375rem}
 /* Hall of Titles: plaques tinted in their frame */
 .hot-tiles{gap:.625rem}
@@ -1923,8 +1925,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
-  ["2026-11-26","Leaderboard cards","The top three on each Leaderboard now stand on gold, silver and bronze steps as little trading cards, framed in the metal their level earns.","#records"],
-  ["2026-11-26","The Podium","Records now opens with the guild's title holders standing on their own coloured panels, with Speed Demon (most levels this week) in the tall middle spot.","#records"],
+  ["2026-11-26","The Podium","Records now opens with the guild's title holders as little trading cards in their title's frame, standing on steps, with Speed Demon (most levels this week) on the tall middle one.","#records"],
   ["2026-11-25","A spellbook on every character","Character pages now show the class abilities and ranks their level allows, and what the trainer has for them over the next few levels. Hover one to read it.","#roster"],
   ["2026-11-25","A recipe book on every character","Open a profession under Professions on any character page: the best skill-ups right now (with where to find a missing recipe), everything they can make or learn, the recipes they still need, and what opens up next as their skill climbs.","#roster"],
   ["2026-11-25","When will they hit 60?","The Raids page now says how many more are on pace to reach 60 before raids open on 9 December, and when each of the 50s should get there. Character pages say it too, under the levelling chart.","#raids"],
@@ -3691,14 +3692,11 @@ function recList(k,rows,fmt,n=3,total=0){const open=recOpen(k),top=open?rows:row
   return[h("ol",{class:"rec-list"},top.map((r,i)=>[open&&i===rows.length-1&&rows.length>n?gap(1):null,recLine(r,fmt,open&&i===rows.length-1&&rows.length>n?"spoon":"")]),
       mine.map(r=>[gap(r===last),recLine(r,fmt,r===last?"spoon me":"me")]),last&&!mine.includes(last)?[gap(1),recLine(last,fmt,"spoon")]:null),
     rows.length>n+1?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(open),onclick:()=>recToggle(k)},open?(total?"Show fewer":"Show top 3"):"See all "+(total||rows.length)):null]}
-// The top three on a podium: each as a little trading card (their armory render on their race backdrop, framed in
-// the metal their level earns) standing on a gold, silver or bronze step with the number. First is in the middle and tallest.
-function podium(rows,fmt){const seat=(r,i)=>{if(!r)return h("div",{class:"pc pc-empty"});const[m,v,pl]=r,cc=CLASSES[m.cls]||"#bfaea9",t=tierOf(+m.level||1);
-    const rd=m.armory&&m.armory.render,src=safePic(rd)&&!/\/shadow\//.test(rd)?rd:genericFg(m),bg=genericBg(m);
-    return h("a",{class:"pc pc-"+i+(isMine(m)?" me":""),href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,style:`--cc:${cc};--t1:${t[2][0]};--t2:${t[2][1]}`,title:nameOf(m)+" · "+fmt(v)},
-      h("div",{class:"pc-card"},h("div",{class:"pc-art",style:bg?`background-image:url("${bg}")`:""},src?h("img",{src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null),
-        h("div",{class:"pc-nm"},h("b",{},nameOf(m).split(/\s+/)[0]))),
-      h("div",{class:"pc-step"},medal(pl),h("span",{},fmt(v))))};
+// The top three on a podium: first in the middle and tallest, a face ringed in class colour, the number under it.
+function podium(rows,fmt){const seat=(r,i)=>{if(!r)return h("div",{class:"pod pod-empty"});const[m,v,pl]=r,cc=CLASSES[m.cls]||"#bfaea9";
+    return h("a",{class:"pod pod-"+i+(isMine(m)?" me":""),href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,style:`--cc:${cc}`,title:nameOf(m)+" · "+fmt(v)},
+      h("span",{class:"pod-f"},nameOf(m).split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase(),safePic(m.armory&&m.armory.avatar)?h("img",{class:"pod-pic",src:safePic(m.armory.avatar),alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.remove()}):null,h("span",{class:"pod-m"},medal(pl))),
+      h("span",{class:"pod-n"},nameOf(m).split(/\s+/)[0]),h("span",{class:"pod-v"},fmt(v)),h("span",{class:"pod-b","aria-hidden":"true"},String(pl)))};
   return h("div",{class:"podium"},seat(rows[1],2),seat(rows[0],1),seat(rows[2],3))}
 // The four main boards share one card with a switch. The title and who holds it sit above the list.
 function recBoards(){
@@ -3742,7 +3740,8 @@ function viewActivity(){
     wherePlays(),
     whenWePlay(),
     any?null:h("section",{class:"card",style:"gap:.5rem"},h("h2",{},"Nothing noted yet"),h("p",{class:"small ter",style:"margin:0"},"This page fills in from the guild scribe, an in-game addon an officer runs. Once its notes are uploaded, the busiest hours and a map of the zones show here."))]}
-// The podium: the guild's title holders standing on coloured panels, like the end-of-dungeon awards in the Podium addon.
+// The podium: each title holder as a little trading card in their title's frame, standing on a step with the title,
+// like the end-of-dungeon awards in the Podium addon.
 // Speed Demon (most levels this week) takes the tall middle spot when someone holds it; otherwise the first held title does.
 const PODIUM=["hk","gear","speed","dungeons","epics"];
 const PODIUM_QUIP={hk:"Leaves a trail of grey names behind.",gear:"Dressed to kill. Literally.",speed:"Levels like it's a second job.",dungeons:"Has seen the inside of everything.",epics:"Purple is a lifestyle."};
@@ -3755,8 +3754,9 @@ function podiumCard(){
     h("div",{class:"spread",style:"align-items:baseline;width:100%"},h("h2",{id:"ap-h"},"The Podium"),h("a",{class:"small linkish",href:"#records",onclick:e=>{e.preventDefault();document.getElementById("hot-h")?.scrollIntoView({behavior:"smooth",block:"start"})}},"Every title")),
     h("div",{class:"ap-row"},row.map(x=>{const m=x.holder[0],fr=frameFor(x.k),f=fr?fr.f:["#bfaea9","#312625","#e0d4d0","#1a1312"],isTop=x===top,src=pic(m),rg=reignOf(x.k,m.id);
       return h("a",{class:"ap-p"+(isTop?" top":""),href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,style:`--p1:${f[0]};--p2:${f[1]};--p3:${f[2]}`,"aria-label":x.t+": "+nameOf(m)+", "+x.fmt(x.holder[1])},
-        h("div",{class:"ap-art"},src?h("img",{src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null),
-        h("div",{class:"ap-plate"},h("span",{class:"ap-k"},isTop?"Top honour":"Title"),h("b",{class:"ap-t"},x.t),h("span",{class:"ap-n"},nameOf(m)),
+        h("div",{class:"ap-card"},h("div",{class:"ap-art",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},src?h("img",{src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null),
+          h("div",{class:"ap-n"},nameOf(m))),
+        h("div",{class:"ap-plate"},h("span",{class:"ap-k"},isTop?"Top honour":"Title"),h("b",{class:"ap-t"},x.t),
           h("span",{class:"ap-q"},PODIUM_QUIP[x.k]||x.how),h("span",{class:"ap-v"},x.fmt(x.holder[1])),rg?h("span",{class:"ap-r"},rg.text):null))})))}
 function viewRecords(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
