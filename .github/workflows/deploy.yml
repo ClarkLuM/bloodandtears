@@ -1,6 +1,7 @@
 # Puts the site live: GitHub, Actions, "Deploy the site", Run workflow. Only runs when someone presses the button.
-# It publishes the site files (hosting) from main. Server code (functions) is still deployed by hand, as it changes rarely.
-# Needs the FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER secret (made by `firebase init hosting:github`).
+# It publishes the site files (hosting) from main. Server code has its own button, "Deploy the server".
+# Needs the FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER secret (made by `firebase init hosting:github`). For the small
+# character pictures (tools/thumbs) that account also needs Cloud Datastore Viewer in Google Cloud IAM.
 name: Deploy the site
 on:
   workflow_dispatch:
@@ -20,6 +21,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Small copies of the character pictures (skipped if it can't read the character list)
+        continue-on-error: true
+        env:
+          SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LOOT_GOBLINS_ROSTER }}
+        run: |
+          KEY="$RUNNER_TEMP/sa.json"
+          printf '%s' "$SA_KEY" > "$KEY"
+          cd tools/thumbs && npm ci --no-audit --no-fund
+          GOOGLE_APPLICATION_CREDENTIALS="$KEY" timeout 600 node make.mjs ../../public/thumbs || rm -rf ../../public/thumbs
+          rm -f "$KEY"
       - name: Shrink the page (the repo keeps the readable copy)
         run: cd tools/minify && npm ci --no-audit --no-fund && node minify.mjs ../../public/index.html ../../public/index.html
       - id: deploy

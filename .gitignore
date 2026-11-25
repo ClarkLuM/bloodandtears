@@ -19,3 +19,6 @@ opendesigner/overview.html
 *.hand-edited
 .DS_Store
 Thumbs.db
+
+# Small character pictures, made fresh by the deploy workflows (tools/thumbs)
+public/thumbs/

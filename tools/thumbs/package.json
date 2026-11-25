@@ -1,0 +1,10 @@
+{
+  "name": "bt-thumbs",
+  "private": true,
+  "type": "module",
+  "description": "Makes small copies of every character's armory picture for the site (the GitHub deploy workflows run it).",
+  "dependencies": {
+    "firebase-admin": "12.7.0",
+    "sharp": "0.33.5"
+  }
+}

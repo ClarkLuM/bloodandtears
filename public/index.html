@@ -1821,6 +1821,17 @@ const genericFg=m=>safePic(m.armory&&m.armory.fallbackFg)||(m.race?safePic(`http
 const genericBg=m=>safePic(m.armory&&m.armory.fallbackBg)||(m.race&&m.cls?safePic(`https://render.worldofwarcraft.com/shadow/profile-background/${raceSlug(m.cls)}-${raceSlug(m.race)}-${genderOf(m)}.jpg`):"");
 // If a picture fails to load, try the generic one, then give up quietly.
 const picFallback=alt=>e=>{const im=e.target;if(alt&&im.src!==alt&&!im.dataset.fb){im.dataset.fb="1";im.src=alt}else im.remove()};
+// Small copies of the armory pictures, made at each deploy (tools/thumbs): about 50 KB instead of 470 KB. A copy is
+// only used while it matches the character's armory picture and last armory update; otherwise the full picture shows.
+// The list is fetched straight away, so it's usually here before the characters are.
+let THUMBS=null;
+fetch("thumbs/index.json").then(r=>r.ok?r.json():{}).catch(()=>({})).then(d=>{THUMBS=d&&typeof d==="object"?d:{};if(typeof schedule==="function")schedule()});
+function thumbOf(m){
+  if(!THUMBS)return"";
+  const a=m&&m.armory||{},t=THUMBS[(m.isAlt?"alts/":"members/")+m.id];
+  return t&&t.r===a.render&&t.u===a.updated&&/^[\w-]+\.webp$/.test(t.f)?"thumbs/"+t.f+"?v="+(Math.floor((Date.parse(t.u)||0)/1000)):""};
+// The character's picture to show: the small copy when there is one, the armory's full picture otherwise.
+const renderPic=m=>thumbOf(m)||charPic(m,"render");
 const charPic=(m,k)=>{const a=m&&m.armory||{},u=safePic(a[k]);if(!u)return"";const v=Date.parse(a.updated||"")||Date.parse(a.at||"")||0;return v?u+"?v="+Math.floor(v/1000):u};
 // How fresh a character's armory data is, in plain words. The armory only updates when someone logs out, so old data
 // usually just means they haven't played since; it only looks like a problem when the site hasn't checked in a while.
@@ -1947,6 +1958,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-26","Spellbook: already unlocked","The Spellbook's trainer section can now look back too: every ability and rank already unlocked, newest first, in case a trip to the trainer got skipped.","#roster"],
   ["2026-11-26","Spelunker progress","Every Dungeon Passport now shows how close you are to each Spelunker set, names the last few dungeons you still need, and lets you stamp them right there.","#roster"],
   ["2026-11-26","The Podium","Records now opens with the guild's title holders as little trading cards in their title's frame, standing on steps, with Speed Demon (most levels this week) on the tall middle one.","#records"],
   ["2026-11-25","A spellbook on every character","Character pages now show the class abilities and ranks their level allows, and what the trainer has for them over the next few levels. Hover one to read it.","#roster"],
@@ -2679,7 +2691,7 @@ function cardData(m){
   const all=[...S.members,...S.alts].sort((a,b)=>String(a.createdAt||"").localeCompare(String(b.createdAt||""))||String(a.id).localeCompare(String(b.id)));
   const no=Math.max(1,all.findIndex(x=>x.id===m.id)+1),num=String(no).padStart(2,"0")+"/"+String(Math.max(all.length,no)).padStart(2,"0");
   const rarity=TIER_MARK[tier[1]]||"○";
-  return{bg:charPic(m,"bg")||genericBg(m),render:charPic(m,"render")||genericFg(m),avatar:charPic(m,"avatar"),fg:genericFg(m),lv,tier,cc,
+  return{bg:charPic(m,"bg")||genericBg(m),render:renderPic(m)||genericFg(m),renderFull:charPic(m,"render")||genericFg(m),avatar:charPic(m,"avatar"),fg:genericFg(m),lv,tier,cc,
     art:[mix(cc,"#000000",.55),mix(cc,"#000000",.25),"#0f0a09"],rows,hp:typeof st.health==="number"?Math.round(st.health):0,
     name:nameOf(m),line:["Level "+lv,classLine(m),roleText(m)].filter(Boolean).join(" · "),
     initials:nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(),
@@ -2838,7 +2850,7 @@ async function cardPng(m){
   const ax=6*K,ay=6*K,aw=W-12*K,ah=192*K;
   x.save();x.beginPath();x.rect(ax,ay,aw,ah);x.clip();g=x.createLinearGradient(ax,ay,ax+aw,ay+ah);g.addColorStop(0,d.art[0]);g.addColorStop(.55,d.art[1]);g.addColorStop(1,d.art[2]);x.fillStyle=g;x.fillRect(ax,ay,aw,ah);
   const bgIm=await loadImg(d.bg);if(bgIm){cover(bgIm,ax,ay,aw,ah);x.globalAlpha=.55;x.fillStyle=g;x.fillRect(ax,ay,aw,ah);x.globalAlpha=1}
-  const ren=await loadImg(d.render)||await loadImg(d.fg);
+  const ren=await loadImg(d.renderFull||d.render)||await loadImg(d.fg);
   if(ren)cover(ren,ax,ay,aw,ah,1.35,.4);
   else{const fc=d.avatar?await loadImg(d.avatar):null;x.fillStyle="#0f0a09";x.strokeStyle=d.cc;x.lineWidth=3*K;x.beginPath();x.arc(ax+aw/2,ay+ah/2,38*K,0,7);x.fill();x.stroke();
     if(fc){x.save();x.beginPath();x.arc(ax+aw/2,ay+ah/2,36*K,0,7);x.clip();x.drawImage(fc,ax+aw/2-36*K,ay+ah/2-36*K,72*K,72*K);x.restore()}
@@ -3787,7 +3799,7 @@ function podiumCard(){
   const top=held.find(x=>x.k==="speed")||held[0],rest=held.filter(x=>x!==top),row=[top];
   rest.forEach((x,i)=>i%2?row.push(x):row.unshift(x));
   const rank=x=>x===top?1:rest.indexOf(x)+2;
-  const pic=m=>{const r=m.armory&&m.armory.render;return safePic(r)&&!/\/shadow\//.test(r)?r:genericFg(m)};
+  const pic=m=>{const r=m.armory&&m.armory.render;return safePic(r)&&!/\/shadow\//.test(r)?renderPic(m)||r:genericFg(m)};
   return h("section",{class:"card ap ap-n"+row.length,"aria-labelledby":"ap-h"},
     h("div",{class:"ap-head"},h("div",{},h("h2",{id:"ap-h"},"The Podium"),h("p",{class:"small ter",style:"margin:.125rem 0 0"},"The guild's title holders. Speed Demon resets every week.")),
       h("button",{type:"button",class:"btn ghost sm","aria-expanded":String(!!S.ui.apAll),"aria-controls":"ap-all",onclick:()=>{if(!S.ui.apAll)openAnim("apAll");setUi({apAll:!S.ui.apAll},true)}},S.ui.apAll?"Hide the other titles":"Every title ("+hot.held+" of "+hot.total+" held)")),
@@ -4486,11 +4498,17 @@ function spellbookCard(m){
   const other=known.filter(sp=>sp[2]<0);if(other.length)groups.push(["Other",other]);
   return h("section",{class:"card sb","aria-labelledby":"sb-h"},
     h("div",{class:"spread"},h("h2",{id:"sb-h"},"Spellbook"),h("span",{class:"small ter"},known.length+" abilities at level "+L)),
-    h("div",{class:"sb-up"},h("span",{class:"sb-h"},upLv.length?"Coming up at the trainer":"The trainer"),
-      upLv.length?shown.map(lv=>h("div",{class:"sb-lv"},h("span",{class:"sb-lvn"},"Level "+lv),
-        h("div",{class:"sb-chips"},spells.filter(sp=>sp[1]===lv).map(sp=>chip(sp,{isNew:sp[4]===1&&!best.has(sp[0])}))),detail(spells.filter(sp=>sp[1]===lv)))):
-        h("p",{class:"small ter",style:"margin:0"},"They can have every rank there is."),
-      upLv.length>3?h("button",{type:"button",class:"btn ghost sm",onclick:()=>setUi({sbMore:{...(S.ui.sbMore||{}),[m.id]:!more}})},more?"Show less":"Show every level to 60"):null),
+    // Two views of the trainer: what's coming next, and what's already unlocked (newest first), to check nothing's
+    // been missed. Both show three levels until "Show every level".
+    (()=>{const back=!!(S.ui.sbBack||{})[m.id]||!upLv.length,pastLv=[...new Set(spells.filter(sp=>sp[1]<=L).map(sp=>sp[1]))].sort((a,b)=>b-a);
+      const list=back?pastLv:upLv,show=more?list:list.slice(0,3),lvRow=lv=>h("div",{class:"sb-lv"},h("span",{class:"sb-lvn"},"Level "+lv),
+        h("div",{class:"sb-chips"},spells.filter(sp=>sp[1]===lv).map(sp=>chip(sp,{isNew:!back&&sp[4]===1&&!best.has(sp[0])}))),detail(spells.filter(sp=>sp[1]===lv)));
+      return h("div",{class:"sb-up"},
+        h("div",{class:"spread",style:"align-items:center"},h("span",{class:"sb-h",style:"margin:0"},"The trainer"),
+          upLv.length?seg("Trainer",[["next","Coming up"],["back","Already unlocked"]],back?"back":"next",v=>setUi({sbBack:{...(S.ui.sbBack||{}),[m.id]:v==="back"},sbMore:{...(S.ui.sbMore||{}),[m.id]:false}})):null),
+        back?h("p",{class:"small ter",style:"margin:0"},upLv.length?"Everything up to level "+L+", newest first. Worth a look if they've skipped a trip to the trainer.":"Level 60: they can have every rank there is. Newest first, in case any were skipped."):null,
+        show.map(lvRow),
+        list.length>3?h("button",{type:"button",class:"btn ghost sm",onclick:()=>setUi({sbMore:{...(S.ui.sbMore||{}),[m.id]:!more}})},more?"Show less":back?"Show every level back to 1":"Show every level to 60"):null)})(),
     h("details",{class:"sb-all",open:open||null,ontoggle:e=>{if(e.target.open!==open)S.ui.sbOpen={...(S.ui.sbOpen||{}),[m.id]:e.target.open}}},
       h("summary",{},h("b",{},"Everything they can have now"),h("span",{class:"small ter"},(matchMedia("(hover: hover)").matches?"hover or click":"tap")+" an icon to read it")),
       groups.map(([nm,l])=>h("div",{class:"sb-school"},h("span",{class:"sb-h"},nm+" ",h("span",{class:"small ter"},String(l.length))),h("div",{class:"sb-icons"},l.map(sp=>{const ic=TAL_ICON(sp[3]);
