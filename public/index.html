@@ -386,65 +386,6 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 @media (max-width:760px){.ap-row{grid-auto-columns:11rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.25rem;margin:0 -.25rem;padding-inline:.25rem;align-items:stretch}
   .ap-p{scroll-snap-align:start}.ap-p.top{order:-1}.ap-p.top .ap-art,.ap-art{height:14rem}}
 @media (prefers-reduced-motion:reduce){.ap-p{transition:none}.ap-p:hover{transform:none}}
-/* PREVIEW ONLY: podium mockups (#lab) */
-.lab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,27rem),1fr));gap:1rem}
-.lab-box{gap:.75rem}.lab-frame{max-width:27rem;width:100%;margin:0 auto}
-.lab-a{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.375rem}
-.la{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
-.la-fig{position:relative;height:9.5rem;overflow:hidden}.la-1 .la-fig{height:11rem}
-.la-img{position:absolute;left:50%;bottom:-22%;height:185%;transform:translateX(-50%);max-width:none;filter:drop-shadow(0 4px 6px rgb(0 0 0 / .6))}
-.la-step{display:flex;flex-direction:column;align-items:center;gap:.125rem;padding:.5rem .25rem;border-radius:6px 6px 0 0;border:1px solid var(--sep);border-bottom:0;text-align:center}
-.la-step b{font-size:.875rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--cc) 80%,#fff)}.la-step>span:last-child{font-size:.75rem;color:var(--sec)}
-.la-1 .la-step{min-height:6.5rem;background:linear-gradient(rgb(212 162 76 / .35),var(--sunken));border-color:rgb(212 162 76 / .5)}
-.la-2 .la-step{min-height:5rem;background:linear-gradient(rgb(200 205 215 / .22),var(--sunken))}
-.la-3 .la-step{min-height:4rem;background:linear-gradient(rgb(190 130 80 / .25),var(--sunken))}
-.lab-b{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.375rem}
-.lb2{display:flex;flex-direction:column;border-radius:8px;overflow:hidden;text-decoration:none;color:var(--text);border:1px solid color-mix(in srgb,var(--cc) 50%,transparent);min-width:0}
-.lb2-art{position:relative;height:9.5rem;overflow:hidden;background:radial-gradient(110% 70% at 50% 15%,color-mix(in srgb,var(--cc) 55%,transparent),transparent 70%),linear-gradient(color-mix(in srgb,var(--cc) 45%,#1a1211),#120c0b)}
-.lb2-1 .lb2-art{height:12rem}.lb2-1{border-color:var(--gold);box-shadow:0 0 18px rgb(212 162 76 / .25)}
-.lb2-img{position:absolute;left:50%;bottom:-18%;height:165%;transform:translateX(-50%);max-width:none}
-.lb2-plate{display:flex;flex-direction:column;align-items:center;gap:.0625rem;padding:.375rem .25rem .5rem;background:#120c0b;border-top:2px solid var(--cc);text-align:center}.lb2-1 .lb2-plate{border-top-color:var(--gold)}
-.lb2-k{font-size:.625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ter)}.lb2-1 .lb2-k{color:var(--gold)}
-.lb2-plate b{font-size:.875rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lb2-v{font-size:.6875rem;color:var(--sec)}
-.lab-c{position:relative;height:17rem;border-radius:10px;overflow:hidden;background:radial-gradient(60% 50% at 50% 100%,rgb(212 162 76 / .18),transparent 70%),#0f0a09}
-.lc-beam{position:absolute;left:50%;top:-10%;width:60%;height:100%;transform:translateX(-50%);background:linear-gradient(rgb(255 236 190 / .22),rgb(255 236 190 / 0) 85%);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%)}
-.lc-floor{position:absolute;left:50%;bottom:2.75rem;width:60%;height:1.75rem;transform:translateX(-50%);border-radius:50%;background:radial-gradient(rgb(255 230 170 / .35),transparent 70%)}
-.lc-win{position:absolute;left:50%;bottom:0;width:48%;height:100%;transform:translateX(-50%);text-decoration:none;color:var(--text)}
-.lc-img{position:absolute;left:50%;bottom:1.25rem;height:104%;transform:translateX(-50%);max-width:none;filter:drop-shadow(0 6px 10px rgb(0 0 0 / .6))}
-.lc-cap{position:absolute;left:0;right:0;bottom:.375rem;display:flex;align-items:center;justify-content:center;gap:.375rem;font-size:.8125rem}.lc-cap span:last-child{color:var(--sec)}
-.lc-side{position:absolute;bottom:1.25rem;width:26%;display:flex;flex-direction:column;align-items:center;gap:.125rem;text-decoration:none;color:var(--text);font-size:.75rem;text-align:center}.lc-side.l{left:2%}.lc-side.r{right:2%}
-.lc-side b{font-size:.8125rem;color:color-mix(in srgb,var(--cc) 80%,#fff)}.lc-side>span:last-child{color:var(--sec)}
-.lc-face{position:relative;width:3.5rem;height:3.5rem;border-radius:50%;display:grid;place-items:center;background:var(--sunken);box-shadow:0 0 0 2px #0f0a09,0 0 0 3.5px var(--cc);font-weight:600}
-.lc-face img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;object-fit:cover}.lc-m{position:absolute;right:-.375rem;bottom:-.375rem}
-.lab-d{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.25rem;padding-top:.75rem}
-.ld{display:flex;flex-direction:column;border-radius:10px;padding:3px;text-decoration:none;color:var(--text);background:linear-gradient(135deg,var(--t1),var(--t2));box-shadow:0 6px 14px rgb(0 0 0 / .45);min-width:0;transition:transform .2s}
-.ld-2{transform:rotate(-5deg) translateY(.5rem)}.ld-3{transform:rotate(5deg) translateY(.75rem)}.ld-1{transform:translateY(-.25rem) scale(1.06);z-index:1}
-.ld:hover{transform:translateY(-.5rem) scale(1.06)}
-.ld-art{position:relative;height:9rem;border-radius:7px 7px 0 0;overflow:hidden;background:#0f0a09 center/cover}
-.ld-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;transform:scale(1.35)}
-.ld-m{position:absolute;left:.25rem;top:.25rem}
-.ld-nm{display:flex;flex-direction:column;align-items:center;padding:.25rem .25rem .375rem;background:#120c0b;border-radius:0 0 7px 7px;text-align:center}
-.ld-nm b{font-size:.8125rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--cc) 80%,#fff)}.ld-nm span{font-size:.6875rem;color:var(--sec)}
-.lab-e{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.375rem}
-.lee{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
-.lee-card{margin:0 .25rem -.125rem;position:relative;z-index:1}.lee-card .ld-art{height:8rem}.lee-1 .lee-card .ld-art{height:9.5rem}.lee-card:hover{transform:translateY(-.25rem)}
-.le-step{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;border-radius:6px 6px 0 0;border:1px solid var(--sep);border-bottom:0;font-size:.75rem;color:var(--sec);padding-top:.375rem}
-.le-1{min-height:4.5rem;background:linear-gradient(rgb(212 162 76 / .35),var(--sunken));border-color:rgb(212 162 76 / .5)}.le-2{min-height:3.25rem;background:linear-gradient(rgb(200 205 215 / .22),var(--sunken))}.le-3{min-height:2.5rem;background:linear-gradient(rgb(190 130 80 / .25),var(--sunken))}
-.lab-f{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.375rem}
-.lf{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
-.lf-arch{position:relative;height:9rem;margin:0 .375rem;border-radius:999px 999px 0 0;overflow:hidden;background:#0f0a09 center/cover;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--cc) 55%,transparent)}
-.lf-1 .lf-arch{height:10.5rem;box-shadow:inset 0 0 0 2px var(--gold),0 0 18px rgb(212 162 76 / .3)}
-.lf-arch::after{content:"";position:absolute;inset:auto 0 0;height:35%;background:linear-gradient(transparent,rgb(15 10 9 / .7))}
-.lf-img{position:absolute;left:50%;bottom:-20%;height:170%;transform:translateX(-50%);max-width:none}
-.lf-1 .la-step{min-height:5rem;background:linear-gradient(rgb(212 162 76 / .35),var(--sunken));border-color:rgb(212 162 76 / .5)}.lf-2 .la-step{min-height:4rem;background:linear-gradient(rgb(200 205 215 / .22),var(--sunken))}.lf-3 .la-step{min-height:3.25rem;background:linear-gradient(rgb(190 130 80 / .25),var(--sunken))}
-.lab-g{position:relative;border-radius:10px;overflow:hidden;background:linear-gradient(rgb(15 10 9 / .15),rgb(15 10 9 / .85)),var(--bg,#1a1211) center/cover}
-.lg2-figs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;height:12rem}
-.lg2{position:relative;height:100%;overflow:hidden}.lg2-2,.lg2-3{height:82%}
-.lg2-img{position:absolute;left:50%;bottom:-20%;height:175%;transform:translateX(-50%);max-width:none;filter:drop-shadow(0 6px 10px rgb(0 0 0 / .6))}
-.lg2-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.25rem;padding:0 .25rem}
-.lg2-s{display:flex;flex-direction:column;align-items:center;gap:.125rem;padding:.375rem .25rem;border-radius:6px 6px 0 0;text-decoration:none;color:var(--text);font-size:.75rem;text-align:center;backdrop-filter:blur(4px)}
-.lg2-s b{font-size:.8125rem;color:color-mix(in srgb,var(--cc) 80%,#fff)}.lg2-s>span:last-child{color:var(--sec)}
-.lg2-s1{min-height:4.75rem;background:linear-gradient(rgb(212 162 76 / .45),rgb(15 10 9 / .9))}.lg2-s2{min-height:3.75rem;background:linear-gradient(rgb(200 205 215 / .3),rgb(15 10 9 / .9))}.lg2-s3{min-height:3.25rem;background:linear-gradient(rgb(190 130 80 / .35),rgb(15 10 9 / .9))}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -1465,24 +1406,21 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
  .pt-t{font-size:.8125rem}
 }
 
-/* Records: the top three on a podium */
-.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.5rem;margin:.75rem 0 .25rem}
-.pod{display:flex;flex-direction:column;align-items:center;gap:.125rem;text-decoration:none;color:var(--text);min-width:0}
-.pod-f{position:relative;width:3.25rem;height:3.25rem;border-radius:50%;display:grid;place-items:center;font:600 .9375rem/1 var(--display);background:color-mix(in srgb,var(--cc) 16%,var(--sunken));box-shadow:0 0 0 2px var(--raised),0 0 0 3.5px var(--cc);margin-bottom:.375rem;transition:transform .15s}
-.pod-1 .pod-f{width:4rem;height:4rem;font-size:1.125rem}
-.pod:hover .pod-f{transform:translateY(-2px)}
-.pod-m{position:absolute;right:-.375rem;bottom:-.375rem}.pod-m .medal{width:1.375rem;height:1.375rem;font-size:.6875rem;box-shadow:0 0 0 2px var(--raised)}
-.pod-n{font-size:.875rem;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--cc) 80%,#fff)}
-:root[data-theme="light"] .pod-n{color:color-mix(in srgb,var(--cc) 40%,#1a1211)}
-.pod-v{font-size:.75rem;color:var(--sec);font-variant-numeric:tabular-nums;white-space:nowrap}
-.pod-b{align-self:stretch;margin-top:.5rem;display:grid;place-items:start center;padding-top:.375rem;border-radius:8px 8px 0 0;font:400 1.25rem/1 var(--display);color:var(--ter);background:linear-gradient(180deg,color-mix(in srgb,var(--cc) 22%,var(--sunken)),var(--sunken));border:1px solid color-mix(in srgb,var(--sep) 70%,transparent);border-bottom:0}
-.pod-1 .pod-b{height:4.5rem;color:var(--gold-hi)}.pod-2 .pod-b{height:3.25rem}.pod-3 .pod-b{height:2.25rem}
-.pod-pic{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--sunken)}
-.pod-1 .pod-b{background:linear-gradient(180deg,rgb(212 162 76 / .32),var(--sunken) 85%);border-color:rgb(212 162 76 / .45);box-shadow:inset 0 1px 0 rgb(255 230 170 / .25)}
-.pod-2 .pod-b{background:linear-gradient(180deg,rgb(200 205 215 / .2),var(--sunken) 85%);border-color:rgb(200 205 215 / .3)}
-.pod-3 .pod-b{background:linear-gradient(180deg,rgb(190 130 80 / .22),var(--sunken) 85%);border-color:rgb(190 130 80 / .35)}
-.pod-1 .pod-f{box-shadow:0 0 0 2px var(--raised),0 0 0 3.5px var(--cc),0 0 22px 2px rgb(212 162 76 / .35)}
-.pod.me .pod-n{text-decoration:underline;text-decoration-color:var(--accent-text);text-underline-offset:3px}
+/* Records: the top three on a podium, as little cards on medal steps */
+.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:.375rem;margin:1rem 0 .25rem}
+.pc{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
+.pc-card{position:relative;z-index:1;margin:0 .25rem -.125rem;display:flex;flex-direction:column;border-radius:10px;padding:3px;background:linear-gradient(135deg,var(--t1),var(--t2));box-shadow:0 6px 14px rgb(0 0 0 / .45);transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+.pc:hover .pc-card{transform:translateY(-.25rem)}.pc:focus-visible{outline:none}.pc:focus-visible .pc-card{outline:2px solid var(--focus);outline-offset:2px}
+.pc-art{position:relative;height:7.5rem;border-radius:7px 7px 0 0;overflow:hidden;background:#0f0a09 center/cover}.pc-1 .pc-art{height:9rem}
+.pc-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;transform:scale(1.35)}
+.pc-nm{padding:.25rem .25rem .3125rem;background:#120c0b;border-radius:0 0 7px 7px;text-align:center}
+.pc-nm b{display:block;font-size:.8125rem;line-height:1.125rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--cc) 80%,#fff)}
+.pc.me .pc-nm b{text-decoration:underline;text-decoration-color:var(--accent-text);text-underline-offset:3px}
+.pc-step{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;padding-top:.375rem;border-radius:6px 6px 0 0;border:1px solid color-mix(in srgb,var(--sep) 70%,transparent);border-bottom:0;font-size:.75rem;color:var(--sec);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pc-1 .pc-step{min-height:4.5rem;background:linear-gradient(rgb(212 162 76 / .35),var(--sunken));border-color:rgb(212 162 76 / .5);color:var(--text)}
+.pc-2 .pc-step{min-height:3.25rem;background:linear-gradient(rgb(200 205 215 / .22),var(--sunken))}
+.pc-3 .pc-step{min-height:2.5rem;background:linear-gradient(rgb(190 130 80 / .25),var(--sunken))}
+@media (prefers-reduced-motion:reduce){.pc-card{transition:none}.pc:hover .pc-card{transform:none}}
 .podium+.rec-list{border-top:1px solid color-mix(in srgb,var(--sep) 70%,transparent);padding-top:.375rem}
 /* Hall of Titles: plaques tinted in their frame */
 .hot-tiles{gap:.625rem}
@@ -1985,6 +1923,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-26","Leaderboard cards","The top three on each Leaderboard now stand on gold, silver and bronze steps as little trading cards, framed in the metal their level earns.","#records"],
   ["2026-11-26","The Podium","Records now opens with the guild's title holders standing on their own coloured panels, with Speed Demon (most levels this week) in the tall middle spot.","#records"],
   ["2026-11-25","A spellbook on every character","Character pages now show the class abilities and ranks their level allows, and what the trainer has for them over the next few levels. Hover one to read it.","#roster"],
   ["2026-11-25","A recipe book on every character","Open a profession under Professions on any character page: the best skill-ups right now (with where to find a missing recipe), everything they can make or learn, the recipes they still need, and what opens up next as their skill climbs.","#roster"],
@@ -3752,11 +3691,14 @@ function recList(k,rows,fmt,n=3,total=0){const open=recOpen(k),top=open?rows:row
   return[h("ol",{class:"rec-list"},top.map((r,i)=>[open&&i===rows.length-1&&rows.length>n?gap(1):null,recLine(r,fmt,open&&i===rows.length-1&&rows.length>n?"spoon":"")]),
       mine.map(r=>[gap(r===last),recLine(r,fmt,r===last?"spoon me":"me")]),last&&!mine.includes(last)?[gap(1),recLine(last,fmt,"spoon")]:null),
     rows.length>n+1?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(open),onclick:()=>recToggle(k)},open?(total?"Show fewer":"Show top 3"):"See all "+(total||rows.length)):null]}
-// The top three on a podium: first in the middle and tallest, a face ringed in class colour, the number under it.
-function podium(rows,fmt){const seat=(r,i)=>{if(!r)return h("div",{class:"pod pod-empty"});const[m,v,pl]=r,cc=CLASSES[m.cls]||"#bfaea9";
-    return h("a",{class:"pod pod-"+i+(isMine(m)?" me":""),href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,style:`--cc:${cc}`,title:nameOf(m)+" · "+fmt(v)},
-      h("span",{class:"pod-f"},nameOf(m).split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase(),safePic(m.armory&&m.armory.avatar)?h("img",{class:"pod-pic",src:safePic(m.armory.avatar),alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.remove()}):null,h("span",{class:"pod-m"},medal(pl))),
-      h("span",{class:"pod-n"},nameOf(m).split(/\s+/)[0]),h("span",{class:"pod-v"},fmt(v)),h("span",{class:"pod-b","aria-hidden":"true"},String(pl)))};
+// The top three on a podium: each as a little trading card (their armory render on their race backdrop, framed in
+// the metal their level earns) standing on a gold, silver or bronze step with the number. First is in the middle and tallest.
+function podium(rows,fmt){const seat=(r,i)=>{if(!r)return h("div",{class:"pc pc-empty"});const[m,v,pl]=r,cc=CLASSES[m.cls]||"#bfaea9",t=tierOf(+m.level||1);
+    const rd=m.armory&&m.armory.render,src=safePic(rd)&&!/\/shadow\//.test(rd)?rd:genericFg(m),bg=genericBg(m);
+    return h("a",{class:"pc pc-"+i+(isMine(m)?" me":""),href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,style:`--cc:${cc};--t1:${t[2][0]};--t2:${t[2][1]}`,title:nameOf(m)+" · "+fmt(v)},
+      h("div",{class:"pc-card"},h("div",{class:"pc-art",style:bg?`background-image:url("${bg}")`:""},src?h("img",{src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null),
+        h("div",{class:"pc-nm"},h("b",{},nameOf(m).split(/\s+/)[0]))),
+      h("div",{class:"pc-step"},medal(pl),h("span",{},fmt(v))))};
   return h("div",{class:"podium"},seat(rows[1],2),seat(rows[0],1),seat(rows[2],3))}
 // The four main boards share one card with a switch. The title and who holds it sit above the list.
 function recBoards(){
@@ -3816,45 +3758,6 @@ function podiumCard(){
         h("div",{class:"ap-art"},src?h("img",{src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null),
         h("div",{class:"ap-plate"},h("span",{class:"ap-k"},isTop?"Top honour":"Title"),h("b",{class:"ap-t"},x.t),h("span",{class:"ap-n"},nameOf(m)),
           h("span",{class:"ap-q"},PODIUM_QUIP[x.k]||x.how),h("span",{class:"ap-v"},x.fmt(x.holder[1])),rg?h("span",{class:"ap-r"},rg.text):null))})))}
-// PREVIEW ONLY (#lab): four ways the Leaderboards' top three could look, with the guild's real characters. Remove once one is picked.
-function viewLab(){
-  const k=S.ui.labBoard||"hk",[,title,get,fmt]=REC_BOARDS.find(b=>b[0]===k)||REC_BOARDS[0],rows=ranked(get).slice(0,3);
-  const full=m=>{const r=m.armory&&m.armory.render;return safePic(r)&&!/\/shadow\//.test(r)?r:genericFg(m)},face=m=>safePic(m.armory&&m.armory.avatar)||"";
-  const cc=m=>CLASSES[m.cls]||"#bfaea9",first=m=>nameOf(m).split(/\s+/)[0],link=m=>`#char/${m.isAlt?"alts":"members"}/${m.id}`;
-  const order=[[rows[1],2],[rows[0],1],[rows[2],3]].filter(x=>x[0]);
-  const img=(src,cls,m)=>src?h("img",{class:cls,src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null;
-  const A=h("div",{class:"lab-a"},order.map(([r,pl])=>{const m=r[0];return h("a",{class:"la la-"+pl,href:link(m),style:`--cc:${cc(m)}`},
-    h("div",{class:"la-fig"},img(full(m),"la-img",m)),h("div",{class:"la-step"},h("span",{class:"la-pl"},medal(pl)),h("b",{},first(m)),h("span",{},fmt(r[1]))))}));
-  const B=h("div",{class:"lab-b"},order.map(([r,pl])=>{const m=r[0];return h("a",{class:"lb2 lb2-"+pl,href:link(m),style:`--cc:${cc(m)}`},
-    h("div",{class:"lb2-art"},img(full(m),"lb2-img",m)),h("div",{class:"lb2-plate"},h("span",{class:"lb2-k"},["","First","Second","Third"][pl]),h("b",{},first(m)),h("span",{class:"lb2-v"},fmt(r[1]))))}));
-  const C=rows[0]?h("div",{class:"lab-c"},h("div",{class:"lc-beam"}),h("div",{class:"lc-floor"}),
-    h("a",{class:"lc-win",href:link(rows[0][0]),style:`--cc:${cc(rows[0][0])}`},img(full(rows[0][0]),"lc-img",rows[0][0]),h("div",{class:"lc-cap"},medal(1),h("b",{},first(rows[0][0])),h("span",{},fmt(rows[0][1])))),
-    [[rows[1],2,"l"],[rows[2],3,"r"]].filter(x=>x[0]).map(([r,pl,side])=>h("a",{class:"lc-side "+side,href:link(r[0]),style:`--cc:${cc(r[0])}`},
-      h("span",{class:"lc-face"},face(r[0])?h("img",{src:face(r[0]),alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.remove()}):first(r[0]).slice(0,2),h("span",{class:"lc-m"},medal(pl))),h("b",{},first(r[0])),h("span",{},fmt(r[1]))))):null;
-  const D=h("div",{class:"lab-d"},order.map(([r,pl])=>{const m=r[0],t=tierOf(+m.level||1);return h("a",{class:"ld ld-"+pl,href:link(m),style:`--cc:${cc(m)};--t1:${t[2][0]};--t2:${t[2][1]}`},
-    h("div",{class:"ld-art",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},img(full(m),"ld-img",m),h("span",{class:"ld-m"},medal(pl))),
-    h("div",{class:"ld-nm"},h("b",{},first(m)),h("span",{},fmt(r[1]))))}));
-  // E: the mini cards standing on the medal steps. F: A's figures in an arched window of their race backdrop, on the steps.
-  // G: one wide stage: the three on a single race-backdrop banner, steps along the bottom.
-  const steps=(pl,r)=>h("div",{class:"le-step le-"+pl},h("span",{class:"la-pl"},medal(pl)),h("span",{},fmt(r[1])));
-  const E=h("div",{class:"lab-e"},order.map(([r,pl])=>{const m=r[0],t=tierOf(+m.level||1);return h("a",{class:"lee lee-"+pl,href:link(m),style:`--cc:${cc(m)};--t1:${t[2][0]};--t2:${t[2][1]}`},
-    h("div",{class:"ld lee-card"},h("div",{class:"ld-art",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},img(full(m),"ld-img",m)),h("div",{class:"ld-nm"},h("b",{},first(m)))),steps(pl,r))}));
-  const F=h("div",{class:"lab-f"},order.map(([r,pl])=>{const m=r[0];return h("a",{class:"lf lf-"+pl,href:link(m),style:`--cc:${cc(m)}`},
-    h("div",{class:"lf-arch",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},img(full(m),"lf-img",m)),
-    h("div",{class:"la-step"},h("span",{class:"la-pl"},medal(pl)),h("b",{},first(m)),h("span",{},fmt(r[1]))))}));
-  const G=rows[0]?h("div",{class:"lab-g",style:genericBg(rows[0][0])?`--bg:url("${genericBg(rows[0][0])}")`:""},
-    h("div",{class:"lg2-figs"},order.map(([r,pl])=>h("a",{class:"lg2 lg2-"+pl,href:link(r[0]),style:`--cc:${cc(r[0])}`},img(full(r[0]),"lg2-img",r[0])))),
-    h("div",{class:"lg2-steps"},order.map(([r,pl])=>h("a",{class:"lg2-s lg2-s"+pl,href:link(r[0]),style:`--cc:${cc(r[0])}`},h("span",{class:"la-pl"},medal(pl)),h("b",{},first(r[0])),h("span",{},fmt(r[1])))))):null;
-  const box=(id,name,note,body)=>h("section",{class:"card lab-box"},h("div",{},h("h2",{},id+" · "+name),h("p",{class:"small ter",style:"margin:.125rem 0 0"},note)),h("div",{class:"lab-frame"},body));
-  return[h("div",{class:"page-head"},h("h1",{},"Podium mockups"),h("p",{class:"sub"},"Ways the Leaderboards' top three could look, with real characters. Each one is drawn at the width of the real Leaderboards card.")),
-    h("div",{style:"margin-bottom:1rem"},seg("Board",REC_BOARDS.map(b=>[b[0],{hk:"Kills",level:"Level",dungeons:"Dungeons",gear:"Gear"}[b[0]]]),k,v=>setUi({labBoard:v},true))),
-    !rows.length?h("p",{class:"empty"},"Nobody on this board yet."):
-    h("div",{class:"lab-grid"},
-      box("A","Standing","Full-body renders standing on gold, silver and bronze steps, name and number on the step.",A),
-      box("E","Cards on steps","D's mini cards, upright, standing on A's medal steps with the number on the step.",E),
-      box("F","Arches","A's figures, each in an arched window of their race backdrop, on the medal steps.",F),
-      box("G","Stage","One wide backdrop (the leader's) with all three standing on it, and the medal steps along the bottom.",G),
-      box("D","Mini cards","Three little trading cards on the race backdrop; first raised in the middle, the others tilted.",D))]}
 function viewRecords(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
     // This Week at its own height with the two page links under it, beside the leaderboards.
@@ -5043,7 +4946,7 @@ function milestoneToast({badge,title,sub},after){
 /* ---------- render ---------- */
 function route(){const p=(location.hash||"#roster").slice(1).split("/");
   // The Cards page is now the Roster's Cards view: old links (and the old card games) land there.
-  if(p[0]==="cards"||(p[0]==="roster"&&p[1]==="cards")||["duel","draft","trumps","guess"].includes(p[0])){S.ui.rView="cards";history.replaceState(null,"","#roster");return{page:"roster"}}if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(p[0]==="lab"&&IS_PREVIEW)return{page:"lab"};if(["today","recap","guild"].includes(p[0]))return{page:p[0]};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
+  if(p[0]==="cards"||(p[0]==="roster"&&p[1]==="cards")||["duel","draft","trumps","guess"].includes(p[0])){S.ui.rView="cards";history.replaceState(null,"","#roster");return{page:"roster"}}if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(["today","recap","guild"].includes(p[0]))return{page:p[0]};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
 function render(){
   const app=$("#app");
   const keep=document.activeElement&&document.activeElement.id,typed={};
@@ -5058,7 +4961,7 @@ function render(){
   keepSiteData();
   countView(r.page);
   const views={roster:viewRoster,lfg:viewLfg,raids:viewRaids,professions:viewProfessions,records:viewRecords,activity:viewActivity};
-  const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():r.page==="today"?viewToday():r.page==="recap"?viewRecap():r.page==="guild"?viewGuild():r.page==="lab"?viewLab():views[r.page]();
+  const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():r.page==="today"?viewToday():r.page==="recap"?viewRecap():r.page==="guild"?viewGuild():views[r.page]();
   document.documentElement.classList.toggle("gl-ember",!!glHas(5));
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
