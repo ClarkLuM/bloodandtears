@@ -372,6 +372,7 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .ap-light{position:absolute;left:50%;top:0;width:min(30rem,80%);height:85%;transform:translateX(-50%);pointer-events:none;background:radial-gradient(50% 50% at 50% 45%,rgb(255 220 150 / .13),rgb(255 220 150 / .04) 55%,transparent 75%);filter:blur(6px)}
 .ap-row{position:relative;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,13rem);justify-content:center;gap:.75rem;align-items:end}
 .ap-n2 .ap-row,.ap-n3 .ap-row{grid-auto-columns:minmax(0,15rem);gap:1rem}
+.ap-all{display:flex;flex-direction:column;gap:.75rem;padding-top:1.5rem}
 .ap-floor{position:relative;height:.75rem;margin:0 -1.5rem;background:linear-gradient(rgb(255 236 190 / .14),transparent);border-top:1px solid rgb(212 162 76 / .35)}
 .ap-p{display:flex;flex-direction:column;text-decoration:none;color:var(--text);min-width:0}
 .ap-p:focus-visible{outline:none}.ap-p:focus-visible .ap-card{outline:2px solid var(--focus);outline-offset:2px}
@@ -398,6 +399,14 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
   .ap-row,.ap-n2 .ap-row,.ap-n3 .ap-row{grid-auto-columns:11rem;gap:.625rem;justify-content:start;overflow-x:auto;scroll-snap-type:x mandatory;padding:.5rem .25rem 0;margin:0 -.25rem}
   .ap-p{scroll-snap-align:start}.ap-p.top{order:-1}.ap-art,.ap-p.top .ap-art{height:11.5rem}.ap-plate,.ap-p.top .ap-plate{min-height:9rem}.ap-card,.ap-p.top .ap-card{margin:0 .25rem -.125rem}}
 @media (prefers-reduced-motion:reduce){.ap-card{transition:none}}
+.wf{font-size:.75rem;line-height:1.125rem;color:var(--ter)}.wf>summary{cursor:pointer;width:fit-content;list-style:none;display:inline-flex;align-items:center;gap:.25rem;min-height:1.5rem;color:var(--sec)}
+.wf>summary::-webkit-details-marker{display:none}.wf>summary::before{content:"?";display:inline-grid;place-items:center;width:1rem;height:1rem;border-radius:50%;border:1px solid var(--sep);font-size:.625rem;font-weight:700}
+.wf>summary:hover{color:var(--text)}.wf p{margin:.25rem 0 0;max-width:42rem;color:var(--sec)}
+.spk{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));gap:.5rem}
+.spk-g{display:flex;flex-direction:column;gap:.25rem;padding:.5rem .625rem;border:1px solid var(--sep);border-radius:8px;background:var(--sunken)}
+.spk-g.done{border-color:rgb(127 214 154 / .45)}.spk-g.done .spk-t .ter{color:#7fd69a}
+.spk-t{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem}.spk-t b{font-size:.8125rem}
+.spk-miss{color:var(--sec)}.spk-miss .linkish{font-size:inherit}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -1938,6 +1947,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-26","Spelunker progress","Every Dungeon Passport now shows how close you are to each Spelunker set, names the last few dungeons you still need, and lets you stamp them right there.","#roster"],
   ["2026-11-26","The Podium","Records now opens with the guild's title holders as little trading cards in their title's frame, standing on steps, with Speed Demon (most levels this week) on the tall middle one.","#records"],
   ["2026-11-25","A spellbook on every character","Character pages now show the class abilities and ranks their level allows, and what the trainer has for them over the next few levels. Hover one to read it.","#roster"],
   ["2026-11-25","A recipe book on every character","Open a profession under Professions on any character page: the best skill-ups right now (with where to find a missing recipe), everything they can make or learn, the recipes they still need, and what opens up next as their skill climbs.","#roster"],
@@ -2259,12 +2269,22 @@ function cardOfWeek(){
       h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>copyCard(m)},"Copy for Discord"),h("a",{class:"btn ghost",href:`#char/members/${m.id}`},"See their page"))))}
 
 /* ---------- Dungeon passport section ---------- */
+// "Where's this from?": one short answer under a heading, so guildies don't have to ask in Discord.
+const whereFrom=text=>h("details",{class:"wf"},h("summary",{},"Where's this from?"),h("p",{},text));
+// The Spelunker sets on the passport: done, or how many to go and which ones (owners can stamp them right there).
+function spelunkers(m,by,can){
+  return h("ul",{class:"spk"},DG_GROUPS.map(g=>{const need=(g[2]||DUNGEONS.map(d=>d[0]).filter(n=>!DG_GROUPS.some(x=>x[2]&&x[2].includes(n)))).filter(n=>!DG_ALLIANCE.includes(n)),miss=need.filter(n=>!by.has(n)),done=need.length-miss.length;
+    return h("li",{class:"spk-g"+(miss.length?"":" done")},h("span",{class:"spk-t"},h("b",{},g[3]),h("span",{class:"small ter"},miss.length?done+" of "+need.length:"Done · on the card")),
+      h("i",{class:"dg-ach-bar","aria-hidden":"true"},h("s",{style:`width:${Math.round(done/need.length*100)}%`})),
+      miss.length&&miss.length<=4?h("span",{class:"spk-miss small"},"Still to go: ",miss.map((n,i)=>[i?", ":"",can?h("button",{type:"button",class:"linkish",title:"Stamp "+n,onclick:()=>{const c={...(m.cleared||{}),[n]:nowIso()};write(updateDoc(charRef(m),{cleared:c,updatedAt:nowIso()}))}},n):h("span",{},n)])):null)}))}
 function passportCard(m){
   const pass=passportOf(m),by=new Map(pass.map(x=>[x.name,x])),can=canEdit(m);
   return h("section",{class:"card","aria-labelledby":"pass-h",style:"gap:.75rem"},
     h("div",{class:"spread"},h("h2",{id:"pass-h"},"Dungeon Passport"),h("span",{class:"small ter"},pass.length+" of "+DUNGEONS.length+" cleared")),
     h("span",{class:"track","aria-hidden":"true"},h("i",{style:`width:${(pass.length/DUNGEONS.length*100).toFixed(0)}%`})),
     h("p",{class:"small ter",style:"margin:0"},can?"Tap a dungeon when you've cleared it. Tap again to take the stamp off. It's just for fun, so fill in as much or as little as you like.":"A stamp for every dungeon "+nameOf(m)+" has cleared."),
+    spelunkers(m,by,can),
+    whereFrom("Three places: the dungeons ticked here, the guild scribe (the in-game addon) when it sees the guild finish one, and loot that only one dungeon drops, once the armory shows it being worn. The armory can't see what you've run, so tick any it missed. A Spelunker set lands on the card once every dungeon in it is stamped."),
     h("div",{class:"pass-grid"},shownDungeons(m,by).map(([n,r])=>{const x=by.get(n),mine=!!(m.cleared&&m.cleared[n]);
       // A dungeon stamped from loot looks like any other stamp; the line under it says which item did it.
       const loot=x&&x.via==="loot",cls="pass-st"+(x?" on":""),tip=loot?n+": stamped automatically, from "+x.item+" ("+x.boss+")":n;
@@ -2397,9 +2417,10 @@ function guildTotals(){
   const all=S.members;if(!all.length)return null;
   const v=guildNums();
   const wkAgo=Date.now()-7*864e5,cur=all.filter(m=>isMine(m)||memberState(m)==="current");v.chars=cur.length;
-  const tiles=[["chars","Characters",cur.filter(m=>Date.parse(m.joined||m.createdAt||"")>=wkAgo).length,"Joined in the last seven days"],["levels","Levels",all.reduce((t,m)=>t+weekGained(m),0)],
-    ["epics","Epic items",null,"Equipped right now"],["hk","Honourable kills",all.reduce((t,m)=>t+hkWeekOf(m),0)],["sixty","Level 60s"]];
-  return h("section",{class:"totals","aria-label":"Guild totals"},tiles.map(([k,label,wk,tip,verb])=>{const nx=MS_STEPS[k]?msNext(k,v[k]):null;
+  // Three, not five: levels this week are in the This Week tile and the guild level, and epics are in the Hall of Firsts.
+  const tiles=[["chars","Characters",cur.filter(m=>Date.parse(m.joined||m.createdAt||"")>=wkAgo).length,"Joined in the last seven days"],
+    ["hk","Honourable kills",all.reduce((t,m)=>t+hkWeekOf(m),0)],["sixty","Level 60s"]];
+  return h("section",{class:"totals","aria-label":"Guild totals",style:"grid-template-columns:repeat(3,minmax(0,1fr))"},tiles.map(([k,label,wk,tip,verb])=>{const nx=MS_STEPS[k]?msNext(k,v[k]):null;
     const next=nx?"Next guild milestone: "+fmtN(nx.n)+" ("+fmtN(nx.n-v[k])+" to go)":"";
     // Nobody's got there yet: say so, and point at the Hall of Firsts.
     if(!v[k]&&(k==="epics"||k==="sixty")&&!(S.firsts||{})[k==="epics"?"epic":"lv60"])return h("a",{class:"total total-open",href:"#records",title:"See the Hall of Firsts",
@@ -3714,19 +3735,17 @@ function podium(rows,fmt){const seat=(r,i)=>{if(!r)return h("div",{class:"pod po
 // The four main boards share one card with a switch. The title and who holds it sit above the list.
 function recBoards(){
   const k=S.ui.recBoard&&REC_BOARDS.some(b=>b[0]===S.ui.recBoard)?S.ui.recBoard:"hk",[,title,get,fmt]=REC_BOARDS.find(b=>b[0]===k),rows=ranked(get);
-  const holder=TITLES[k]&&rows.length>1&&rows[1][2]!==1?rows[0][0]:null,rg=holder?reignOf(k,holder.id):null;
   const names={hk:"Kills",level:"Level",dungeons:"Dungeons",gear:"Gear"};
   return h("section",{class:"card rec-card lb","aria-label":title},
     h("h2",{},"Leaderboards"),
     seg("Board",REC_BOARDS.map(b=>[b[0],names[b[0]]]),k,v=>setUi({recBoard:v},true)),
     h("h3",{class:"visually-hidden"},title),
-    holder?h("p",{class:"lb-title small"},"Title: ",h("b",{},TITLES[k])," · ",charLink(holder),rg?" · "+rg.text.toLowerCase():""):
-      h("p",{class:"lb-title small ter"},rows.length+(rows.length===1?" character":" characters")),
+    h("p",{class:"lb-title small ter"},rows.length+(rows.length===1?" character":" characters")),
     rows.length>=3?[podium(rows,fmt),recList(k,rows.slice(3),fmt,2,rows.length)]:rows.length?recList(k,rows,fmt,5):h("p",{class:"empty"},"Nobody on this board yet."))}
 // Profession rankings by value, for the Professions page table (members and alts; former members left off).
 // Hall of Titles: a grid of frame tiles, one per title. Tap one for how it's won, its frame, the reign and who's next.
 // Professions and classes show only the held titles until "Show every title".
-function hallOfTitles(){
+function hallOfTitles(inner){
   const l=titleList(),groups=["Guild","Professions","Classes"],cur=S.ui.hotOpen;
   const first=m=>String(nameOf(m)).split(" ")[0];
   const tile=x=>{const fr=frameFor(x.k),rg=x.holder?reignOf(x.k,x.holder[0].id):null,open=cur===x.k;
@@ -3743,9 +3762,11 @@ function hallOfTitles(){
         h("span",{class:"hot-txt"},h("b",{},x.t),h("span",{},short))),more)};
   const lists=groups.map(g=>[g,l.filter(x=>x.group===g)]).filter(x=>x[1].length);
   const held=l.filter(x=>x.holder).length;
+  const body=lists.map(([g,xs])=>h("div",{class:"hot-g"},h("h3",{class:"pf-kind"},g),h("ul",{class:"hot-tiles"},xs.map(tile))));
+  if(inner)return{body,held,total:l.length};
+  // Only when there's no Podium yet (fewer than two titles held): the list on its own.
   return h("section",{class:"card hot","aria-labelledby":"hot-h"},
-    h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"hot-h"},"Hall of Titles"),h("span",{class:"small ter"},held+" of "+l.length+" held")),
-    lists.map(([g,xs])=>h("div",{class:"hot-g"},h("h3",{class:"pf-kind"},g),h("ul",{class:"hot-tiles"},xs.map(tile)))))}
+    h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"hot-h"},"Every Title"),h("span",{class:"small ter"},held+" of "+l.length+" held")),body)}
 // Activity: when and where the guild plays, from the guild scribe (the in-game addon an officer uploads).
 function viewActivity(){
   const any=S.scribe&&(Object.keys(S.scribe.hours||{}).length||Object.keys(S.scribe.zones||{}).length||Object.keys(S.scribe.zonesOld||{}).length);
@@ -3760,7 +3781,8 @@ const PODIUM=["hk","gear","speed","dungeons","epics"];
 const PODIUM_QUIP={hk:"Leaves a trail of grey names behind.",gear:"Dressed to kill. Literally.",speed:"Levels like it's a second job.",dungeons:"Has seen the inside of everything.",epics:"Purple is a lifestyle."};
 function podiumCard(){
   const held=PODIUM.map(k=>titleList().find(x=>x.k===k)).filter(x=>x&&x.holder);
-  if(held.length<2)return null;
+  if(held.length<2)return hallOfTitles();
+  const hot=hallOfTitles(true);
   // Laid out like a real podium: 1 in the middle, 2 on its left, 3 on its right, then 4 and 5 on the outside.
   const top=held.find(x=>x.k==="speed")||held[0],rest=held.filter(x=>x!==top),row=[top];
   rest.forEach((x,i)=>i%2?row.push(x):row.unshift(x));
@@ -3768,7 +3790,7 @@ function podiumCard(){
   const pic=m=>{const r=m.armory&&m.armory.render;return safePic(r)&&!/\/shadow\//.test(r)?r:genericFg(m)};
   return h("section",{class:"card ap ap-n"+row.length,"aria-labelledby":"ap-h"},
     h("div",{class:"ap-head"},h("div",{},h("h2",{id:"ap-h"},"The Podium"),h("p",{class:"small ter",style:"margin:.125rem 0 0"},"The guild's title holders. Speed Demon resets every week.")),
-      h("a",{class:"small linkish",href:"#records",onclick:e=>{e.preventDefault();document.getElementById("hot-h")?.scrollIntoView({behavior:"smooth",block:"start"})}},"Every title")),
+      h("button",{type:"button",class:"btn ghost sm","aria-expanded":String(!!S.ui.apAll),"aria-controls":"ap-all",onclick:()=>{if(!S.ui.apAll)openAnim("apAll");setUi({apAll:!S.ui.apAll},true)}},S.ui.apAll?"Hide the other titles":"Every title ("+hot.held+" of "+hot.total+" held)")),
     h("div",{class:"ap-stage"},h("div",{class:"ap-light","aria-hidden":"true"}),
     h("div",{class:"ap-row"},row.map(x=>{const m=x.holder[0],fr=frameFor(x.k),f=fr?fr.f:["#bfaea9","#312625","#e0d4d0","#1a1312"],isTop=x===top,src=pic(m),rg=reignOf(x.k,m.id),pl=rank(x);
       const card=h("div",{class:"ap-card"},h("div",{class:"ap-art",style:genericBg(m)?`background-image:url("${genericBg(m)}")`:""},src?h("img",{src,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))}):null,
@@ -3779,7 +3801,8 @@ function podiumCard(){
         card,
         h("div",{class:"ap-plate"},h("span",{class:"ap-pl","aria-hidden":"true"},String(pl)),h("span",{class:"ap-k"},isTop?"Top honour":"Title"),h("b",{class:"ap-t"},x.t),
           h("span",{class:"ap-q"},PODIUM_QUIP[x.k]||x.how),h("span",{class:"ap-v"},x.fmt(x.holder[1])),rg?h("span",{class:"ap-r"},rg.text):null))})),
-    h("div",{class:"ap-floor","aria-hidden":"true"})))}
+    h("div",{class:"ap-floor","aria-hidden":"true"})),
+    S.ui.apAll?h("div",{id:"ap-all",class:"ap-all hot"+anim("apAll")},hot.body):null)}
 function viewRecords(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
     // This Week at its own height with the two page links under it, beside the leaderboards.
@@ -3787,7 +3810,6 @@ function viewRecords(){
     h("div",{class:"rec-top rec-a"},raceCard(),recBoards(),
     h("div",{class:"rec-links"},S.scribe?h("a",{class:"card rec-link",href:"#activity"},h("span",{},h("b",{},"When and where the guild plays"),h("span",{class:"small ter"}," · the busiest hours and a map of the zones")),h("span",{class:"rec-link-go"},"On the Activity page →")):null,
     h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →")))),
-    hallOfTitles(),
     h("p",{class:"small ter"},"Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
 // When the guild plays: how many guildies are online by day of the week and hour (Perth), from the guild scribe's
 // five-minute checks. It only knows hours when the scribe was online, so blank cells are "not watched", not "empty".
@@ -4269,7 +4291,7 @@ function viewChar(coll,id){
         h("summary",{},h("h2",{},l),h("span",{class:"small ter"},list.length+(list.length===1?" thing":" things"))),
         h("div",{class:"journey"},list.map(journeyRow)))}):h("p",{class:"empty"},"Nothing yet. Levels, loot and professions show up here."));
   const groups=[["Primary",PRIMARY],["Secondary",SECONDARY]].map(([t,l])=>[t,l.filter(p=>m.profs&&p in m.profs)]).filter(x=>x[1].length);
-  const profCard=h("section",{class:"card",style:"gap:.75rem"},h("h2",{},"Professions"),
+  const profCard=h("section",{class:"card",style:"gap:.75rem"},h("h2",{},"Professions"),whereFrom("Skill levels come from Blizzard's armory. The recipes they know come from the guild scribe (the in-game addon), once it has seen their profession window; without it, the recipe book shows what their skill allows."),
     groups.length?h("div",{class:"prof-cols"},groups.map(([t,l])=>h("div",{style:"display:flex;flex-direction:column;gap:.625rem;min-width:0"},h("span",{class:"small ter",style:"font-weight:600"},t),l.map(p=>h("div",{class:"pbar-wrap"},profBar(p,m.profs[p]),rankLine(profBoard(p)[2],m,PROF_NOUN[p]||p.toLowerCase())))))):h("p",{class:"empty"},"No professions logged yet."),
     canMake(m));
   // The top of the page: their face in a class-coloured ring beside the name, then their headline numbers in one strip.
@@ -4352,6 +4374,7 @@ function gearCard(m){
   const weps=GEAR_BOTTOM.filter(n=>gear[n]&&gear[n].id);
   return h("section",{class:"card gear-card","aria-labelledby":"gear-h",style:"gap:.75rem"},
     h("div",{class:"spread"},h("h2",{id:"gear-h"},"Gear"),h("span",{class:"small ter"},filled+" of "+GEAR_ALL.length+" · from the armory")),
+    whereFrom("Blizzard's armory, which the site checks a few times a day. Gear changed in game shows up after the armory catches up, usually within a day. Gear score is item level weighted by quality, and a two-hander counts twice."),
     filled?h("div",{class:"gs-sum"},sum.map(([n,l])=>h("span",{},h("b",{},String(n)),l))):null,
     h("div",{class:"gear-body"},h("div",{class:"doll",style:`--glow:${glow}`+(bg?`;background:linear-gradient(180deg,rgb(15 10 9 / .15),rgb(15 10 9 / .72)),url(${bg}) center/cover,#0f0a09`:"")},
       h("div",{class:"doll-col"},GEAR_LEFT.map(n=>gearRow(m,n,"l"))),
