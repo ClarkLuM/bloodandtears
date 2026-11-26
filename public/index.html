@@ -398,16 +398,17 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 @media (max-width:760px){.ap-head{flex-direction:column;align-items:flex-start;gap:.5rem}.ap-head h2{font-size:1.25rem;line-height:1.75rem}
   .ap-stage{margin:0 -1rem -1rem;padding-inline:.5rem}.ap-floor{margin:0 -.5rem}
   /* Phones: everything fits the screen, no sideways scrolling. 2, 1, 3 across like a real podium; 4 and 5 below. */
-  .ap-row,.ap-n2 .ap-row,.ap-n3 .ap-row{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-columns:auto;gap:.375rem;justify-content:stretch}
-  .ap-p.rk2{order:1}.ap-p.rk1{order:2}.ap-p.rk3{order:3}.ap-p.rk4{order:4;grid-column:1}.ap-p.rk5{order:5;grid-column:3}
-  .ap-n2 .ap-p.rk1{grid-column:2}
+  /* Six narrow columns so each card takes two: 2, 1, 3 on the top row, then 4 and 5 centred under them. */
+  .ap-row,.ap-n2 .ap-row,.ap-n3 .ap-row{grid-auto-flow:row;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-columns:auto;gap:.75rem .375rem;justify-content:stretch}
+  .ap-p{grid-column:span 2}.ap-p.rk2{order:1}.ap-p.rk1{order:2}.ap-p.rk3{order:3}.ap-p.rk4{order:4;grid-column:2/span 2}.ap-p.rk5{order:5;grid-column:4/span 2}
+  .ap-n4 .ap-p.rk4{grid-column:3/span 2}.ap-n2 .ap-p.rk2{grid-column:2/span 2}
   .ap-card,.ap-p.top .ap-card{margin:0 .125rem -.125rem;border-radius:9px;padding:2px}
   .ap-art{height:7.5rem;border-radius:7px 7px 0 0}.ap-p.top .ap-art{height:9.25rem}
   .ap-n{font-size:.75rem;padding:.25rem .25rem .3125rem;gap:.25rem;border-radius:0 0 7px 7px}.ap-n .cls-ic{width:.875rem;height:.875rem}
   .ap-lv{min-width:1.375rem;height:1.375rem;font-size:.6875rem;top:.25rem;right:.25rem}
   .ap-plate,.ap-p.top .ap-plate{min-height:6.5rem;padding:.5rem .25rem .5rem;gap:.125rem}.ap-p.top .ap-plate{min-height:7.75rem}
   .ap-k{font-size:.5625rem;letter-spacing:.08em}.ap-t,.ap-p.top .ap-t{font-size:.875rem;line-height:1.0625rem}.ap-p.top .ap-t{font-size:.9375rem}
-  .ap-nl{display:none}.ap-ns{display:inline}.ap-q,.ap-r{display:none}.ap-v{font-size:.625rem;padding:.0625rem .375rem}.ap-pl{font-size:3rem;right:.125rem;bottom:-.5rem}}
+  .ap-nl{display:none}.ap-ns{display:inline}.ap-q,.ap-r{display:none}.ap-v{font-size:.625rem;padding:.0625rem .375rem;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}.ap-pl{font-size:3rem;right:.125rem;bottom:-.5rem}}
 @media (prefers-reduced-motion:reduce){.ap-card{transition:none}}
 .wf{font-size:.75rem;line-height:1.125rem;color:var(--ter)}.wf>summary{cursor:pointer;width:fit-content;list-style:none;display:inline-flex;align-items:center;gap:.25rem;min-height:1.5rem;color:var(--sec)}
 .wf>summary::-webkit-details-marker{display:none}.wf>summary::before{content:"?";display:inline-grid;place-items:center;width:1rem;height:1rem;border-radius:50%;border:1px solid var(--sep);font-size:.625rem;font-weight:700}
