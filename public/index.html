@@ -782,24 +782,9 @@ html[data-swipe="next"] #app main{animation:swNext .22s ease-out}html[data-swipe
 .rank-l:hover span{text-decoration:underline}.rank-l.spoon{color:var(--ter)}
 .stats .rank-l{grid-column:auto}.stats .rank-l,.stats .rank-l.spoon{color:#b3a9a9}
 /* Who can make it */
-.rc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .rc{display:flex;flex-direction:column;gap:.375rem;padding:.625rem 0;border-top:1px solid var(--sep)}
-.rc-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .75rem}
-.rc-name{font-weight:600}
-.rc-meta{white-space:nowrap}.rc-top{align-items:center}.rc-end{margin-left:auto;display:inline-flex;align-items:center;gap:.5rem}
-.rc-src{font-size:.75rem;line-height:1rem;font-weight:600;padding:0 .4375rem;border-radius:6px;border:1px solid var(--sep);color:var(--sec);white-space:nowrap}
-.rc-src.A{border-color:rgb(71 194 108 / .5);color:#7fd69a}.rc-src.T{border-color:rgb(212 162 76 / .55);color:var(--gold)}
 :root[data-theme="light"] .rc-src.A{color:#2a7d12}:root[data-theme="light"] .rc-src.T{color:#8a5a12}
-.rc-who{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem .75rem}
-.rc-chip{display:inline-flex;align-items:center;gap:.375rem;font-size:.875rem}
-.rc-chip .ter{font-size:.75rem}
-.rc-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;padding:.75rem .875rem;background:var(--sunken);border:1px solid var(--sep);border-radius:10px}
-.rc-panel h3{margin:0 0 .375rem;font:600 .75rem 'Alegreya Sans SC',serif;letter-spacing:.08em;color:var(--accent-text)}
-.rc-panel ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.25rem;font-size:.875rem}
-.rc-n{display:inline-block;min-width:1.5rem;color:var(--sec);font-size:.75rem;font-variant-numeric:tabular-nums}
-.rc-get b{font-weight:600}.rc-ups{margin-top:.375rem}.tx-o{color:#ff8040}.tx-y{color:#e6c34a}.tx-g{color:#40bf40}
 :root[data-theme="light"] .tx-o{color:#b34a00}:root[data-theme="light"] .tx-y{color:#8a6d00}:root[data-theme="light"] .tx-g{color:#2a7d12}
-.rc-panel-msg{margin:0}
 @media (max-width:40rem){.rc-panel{grid-template-columns:minmax(0,1fr)}}
 .r-search{position:relative;flex:1 1 12.5rem;min-width:0}
 .r-search input{width:100%;padding-left:2.25rem}
@@ -1142,7 +1127,6 @@ a.r-name:hover{color:var(--accent-text)}
 .rn-when{display:flex;flex-direction:column}
 .rn-who{display:flex;flex-wrap:wrap;gap:.375rem}
 @media (max-width:640px){.rn li{grid-template-columns:minmax(0,1fr)}.wwp{grid-template-columns:1.75rem repeat(24,minmax(0,1fr));gap:.0625rem}.wwp-c{height:.875rem}}
-.rc-knows{font-size:.75rem;font-weight:600;color:var(--trim)}
 :root[data-theme="light"] .rc-knows{color:#1d6b30}
 /* The loading screen: the gingerbread badge spins (or gently pulses, for anyone who's asked for less motion) until the
    roster arrives, then fades away. */
@@ -1531,42 +1515,22 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 .day-stat b{font-size:1.75rem;line-height:2.25rem;font-weight:600;color:var(--accent-text);font-variant-numeric:tabular-nums}.day-stat span{font-size:.8125rem;color:var(--ter)}
 .day-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:1.25rem;align-items:start}
 .day-side{display:flex;flex-direction:column;gap:1.25rem;min-width:0}
-.day-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
-.day-list li{display:grid;grid-template-columns:4rem 1.5rem minmax(0,1fr);gap:.5rem;align-items:center;padding:.5rem 0;border-top:1px solid var(--sep)}.day-list li:first-child{border-top:0}
-.day-list time{font-size:.8125rem;color:var(--ter);font-variant-numeric:tabular-nums}
-.day-ic{width:1.5rem;height:1.5rem;border-radius:6px;display:grid;place-items:center;font-size:.6875rem;background:var(--subtle,rgb(255 255 255 / .06));color:var(--sec)}
-.day-ic.k-level{color:#7fd48a}.day-ic.k-loot{color:#5aa9ff}.day-ic.k-title{color:var(--accent-text)}.day-ic.k-dungeon{color:#e49a6b}
 .day-on{display:flex;flex-direction:column;gap:.375rem}.day-where{white-space:nowrap;display:inline-flex;align-items:center;gap:.375rem;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .day-rows{display:flex;flex-direction:column}.day-rows>div{padding:.4375rem 0;border-top:1px solid var(--sep);gap:.75rem}.day-rows>div:first-child{border-top:0}
-.rc-acts{gap:.5rem;flex-wrap:nowrap}.rc-acts select{min-height:2.75rem}
-.rc-pods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;align-items:end;text-align:center}
-.rc-pod{display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:.875rem .5rem;border-radius:12px;background:var(--subtle,rgb(255 255 255 / .05));min-width:0}
-.rc-pod.first{padding-top:1.5rem;background:rgb(230 188 119 / .14)}.rc-pod.empty-pod{background:none}
-.rc-pod-n{display:inline-flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.25rem .375rem;max-width:100%;min-width:0}.rc-pod-n a{overflow-wrap:anywhere}
-.rc-pod b{font-size:1.5rem;line-height:2rem;color:var(--accent-text)}
-.rc-moments{display:flex;flex-direction:column}.rc-moments>div{display:flex;flex-direction:column;gap:.125rem;padding:.5rem 0;border-top:1px solid var(--sep)}.rc-moments>div:first-child{border-top:0}
 .gl-bar{height:.625rem;border-radius:99px;background:var(--subtle,rgb(255 255 255 / .07));overflow:hidden}.gl-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#c9932d,#f0cf8f)}
-.gl-mini{display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit}
 .gl-hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1.75rem;align-items:center}
 .gl-emb{width:7.5rem;height:7.5rem;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;
   background:radial-gradient(circle at 35% 30%,#d6a24a,#7a1428 70%);box-shadow:0 0 0 4px #2a1a14,0 0 0 6px #c9932d,0 10px 30px rgb(0 0 0/.35)}
 .gl-emb span{font-size:.6875rem;letter-spacing:.08em;text-transform:uppercase}.gl-emb b{font-size:2.5rem;line-height:2.75rem}
-.gl-main{display:flex;flex-direction:column;gap:.625rem;min-width:0}.gl-main h2{margin:0;font-size:1.625rem;line-height:2rem}
 .gl-parts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem;margin-top:.25rem}
 .gl-parts>div{display:flex;flex-direction:column;padding:.625rem .75rem;border-radius:10px;background:var(--subtle,rgb(255 255 255 / .05));min-width:0}.gl-parts b{color:var(--accent-text)}
-.gl-unl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem}
-.gl-unl li{display:grid;grid-template-columns:4.5rem minmax(0,1fr) auto;gap:.75rem;align-items:baseline;padding:.625rem .75rem;border-radius:10px;background:var(--subtle,rgb(255 255 255 / .05))}
-.gl-unl li b{color:var(--accent-text);white-space:nowrap}.gl-unl li.next{outline:1px solid var(--accent-text)}.gl-unl li.done span:nth-child(2)::before{content:"\2713\00a0"}
-.gl-star{color:#f0cf8f;font-size:.875rem}
 .brand-mk{position:relative;display:block;flex:none;line-height:0;font-style:normal}
 
 .gl-ring .brand-logo{border-radius:50%;box-shadow:0 0 0 2px #c9932d,0 0 10px rgb(230 188 119 / .45)}
-.gl-crown{position:absolute;left:50%;top:-.6rem;transform:translateX(-50%) rotate(-8deg);line-height:0;filter:drop-shadow(0 1px 1px rgb(0 0 0/.5))}
 html.gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 150 60 / .26),rgb(165 13 44 / .2) 55%,transparent)}
 :root[data-theme="light"].gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 150 60 / .16),rgb(165 13 44 / .08) 55%,transparent)}
 @media (min-width:1321px){.brand-mk{grid-row:1/3}}
 @media (max-width:760px){.day-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.day-grid{grid-template-columns:minmax(0,1fr)}.day-hero{padding:1.25rem}
-  .gl-hero{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.gl-main{width:100%}.gl-parts{grid-template-columns:repeat(2,minmax(0,1fr));text-align:left}.rc-acts{width:100%;display:grid;grid-template-columns:1fr 1fr}.rc-acts select{grid-column:1/-1;width:100%}.gl-unl li{grid-template-columns:4.25rem minmax(0,1fr)}.gl-unl li>span:last-child{grid-column:2}.gl-unl li>span:last-child:empty{display:none}.rc-acts .btn{width:100%}.rc-acts select{flex:1 1 100%}}
 .hub{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
 .hub-t{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;column-gap:.5rem;row-gap:.125rem;padding:.5rem .75rem;border-radius:10px;border:1px solid var(--sep);background:var(--raised);color:var(--text);text-decoration:none;min-width:0;transition:border-color .15s}
 .hub-t:hover{border-color:var(--accent-text);color:var(--text)}
@@ -1984,8 +1948,6 @@ const WHATS_NEW=[
   ["2026-11-20","Best Dressed is fairer","Best Dressed now goes by gear score: every slot's item level, weighted by quality, so an epic beats a rare and a rare beats a green, and a higher-level outfit beats a lower one. Character pages show each character's gear score.","#records"],
   ["2026-11-20","Talent trees","Character pages now show the full WoW Forever talent trees, like Wowhead's calculator: what's taken, what's maxed, what's open next and what's still locked. Hover or tap any talent to read it.",null],
   ["2026-11-20","Guild news, and bragging rights","Big moments from the last few days scroll along the top of every page: epics, guild firsts, level 50s and 60s, titles and milestones. The guild's first epic and first level 60 also get a gold spot on the Roster for a week, and a gold ribbon on their character page for good.",null],
-  ["2026-11-18","The guild has a level","Levels, dungeon stamps, honourable kills and guild firsts all earn the guild xp. Each guild level unlocks something for everyone.","#guild"],
-  ["2026-11-18","Today and the weekly recap, as pages","Today shows everything since midnight: the feed, who's been on and where. The weekly recap is a page now, with the picture for Discord a tap away.","#today"],
   ["2026-11-18","What changed, at a glance","A gold dot on Dungeons, Cards, Records or Activity means something changed there since you last looked. Hover it to see what. On phones, Activity is shorter: drop-downs, the top three in each list, and the week in four parts of the day.",null],
   ["2026-11-18","Easier on phones","Swipe left or right to move between pages, the bottom bar has icons and bigger buttons, search sits in the header as a search box, and pages no longer slide sideways.",null],
   ["2026-11-16","Levelling timelines","Each character page now charts their level over time, with their best week and milestones. Compare with a guildie to watch a level race.",null],
@@ -2041,7 +2003,7 @@ function header(page){
   const navLabel=(k,l)=>dots[k]?l+" (new on this page)":null;
   const dc=S.guild.discord&&DISCORD_RE.test(S.guild.discord)?S.guild.discord:"";
   return h("header",{class:"top"},h("div",{class:"wrap"},
-    h("a",{class:"brand"+(glHas(3)?" gl-ring":""),href:"#roster"},h("i",{class:"brand-mk"},h("img",{class:"brand-logo",src:"logo.svg",alt:"",width:"40",height:"40"}),glHas(10)?h("i",{class:"gl-crown","aria-hidden":"true"},crownSvg()):null),h("b",{},"Blood and Tears"),h("span",{},"Horde · WoW Forever")),
+    h("a",{class:"brand gl-ring",href:"#roster"},h("i",{class:"brand-mk"},h("img",{class:"brand-logo",src:"logo.svg",alt:"",width:"40",height:"40"})),h("b",{},"Blood and Tears"),h("span",{},"Horde · WoW Forever")),
     h("nav",{class:"main","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k?"page":null,"aria-label":navLabel(k,l),...dotted(k)},l))),
     // On phones the menu moves to a bar along the bottom.
     h("nav",{class:"bottom","aria-label":"Main"},PAGES.map(([k,l])=>h("a",{href:"#"+k,"aria-current":page===k||(k==="lfg"&&page==="raids")?"page":null,"aria-label":navLabel(k,l),...dotted(k)},navIcon(k),...(k==="lfg"?[h("span",{class:"nb-2"},"Dungeons & Raids")]:[h("span",{class:"nb-l"},l),h("span",{class:"nb-s","aria-hidden":"true"},NAV_SHORT[k]||l)])))),
@@ -2073,7 +2035,7 @@ const NAV_IC={
 const navIcon=k=>{const x=h("span",{class:"nb-ic","aria-hidden":"true"});x.innerHTML=`<svg viewBox="0 0 20 20" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${NAV_IC[k]||""}</svg>`;return x};
 const chatIcon=()=>{const x=h("span",{class:"dc-ic","aria-hidden":"true"});x.innerHTML='<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.5 4.5h13v9h-7l-4 3v-3h-2z"/></svg>';return x};
 const srchIcon=()=>{const x=h("span",{class:"srch-ic","aria-hidden":"true"});x.innerHTML='<svg viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m13 13 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';return x};
-const SRCH_PAGES=[["Roster","#roster"],["Dungeons","#lfg"],["Raids","#raids"],["Cards","#roster/cards"],["Professions","#professions"],["Records","#records"],["Activity","#activity"],["Guild History","#history"],["Today","#today"],["Weekly Recap","#recap"],["Guild Level","#guild"]];
+const SRCH_PAGES=[["Roster","#roster"],["Dungeons and Raids","#lfg"],["Raids","#raids"],["Cards","#roster/cards"],["Professions","#professions"],["Records","#records"],["Activity","#activity"],["Guild History","#history"]];
 function searchIndex(){
   const out=[],go=(hash,ui)=>()=>{if(ui)Object.assign(S.ui,ui);if(location.hash===hash)render();else location.hash=hash};
   for(const m of [...S.members,...S.alts])if(isMine(m)||memberState(m)!=="former")
@@ -2231,7 +2193,7 @@ function viewRoster(){
         h("span",{class:"r-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?fadeImg({src:av,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
         h("div",{style:"min-width:0"},
           // One tag at most beside the name (You, then Guild Master, Officer, Not in the guild), so the line under it has room.
-          h("span",{class:"row r-l1",style:"gap:.375rem;flex-wrap:nowrap"},h("a",{class:"linkish r-name",style:`--cc:${cc}`,href:`#char/${m.isAlt?"alts":"members"}/${m.id}`},nameOf(m)),annivBadge(m),glTopId()===m.id?h("span",{class:"gl-star",title:"Top guild xp earner this week"},"\u2605\uFE0E"):null,isMine(m)?h("span",{class:"tag gold"},"You"):rosterTag(m)),
+          h("span",{class:"row r-l1",style:"gap:.375rem;flex-wrap:nowrap"},h("a",{class:"linkish r-name",style:`--cc:${cc}`,href:`#char/${m.isAlt?"alts":"members"}/${m.id}`},nameOf(m)),annivBadge(m),null,isMine(m)?h("span",{class:"tag gold"},"You"):rosterTag(m)),
           h("span",{class:"l2"},tt?[h("b",{class:"r-title"},tt.t)," · "]:null,[classLine(m)||"—",roleText(m)].filter(Boolean).join(" · "))))),
       h("td",{"data-label":"Level"},h("span",{class:"r-lv"},h("b",{},String(m.level||1)),h("i",{"aria-hidden":"true"},h("s",{style:`width:${Math.round(lv/60*100)}%`}))),
         gain?h("span",{class:"r-up",title:`Up ${gain} level${gain===1?"":"s"} since you were last here`},"+"+gain):null,
@@ -2413,7 +2375,7 @@ function nowRow(){
       h("span",{class:"now-av"},av?fadeImg({src:av,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini,hot?h("i",{"aria-label":"On within the hour"}):null),
       h("span",{class:"now-n"},nameOf(m).split(/\s+/)[0]),h("span",{class:"now-t"},ago(seenOf(m)).replace(" ago","")))};
   return h("section",{class:"card now","aria-labelledby":"now-h"},
-    h("div",{class:"spread"},h("h2",{id:"now-h"},"In Game Today"),h("span",{class:"row",style:"gap:.75rem"},h("span",{class:"small ter"},list.length?list.length+(list.length===1?" character":" characters"):""),h("a",{class:"small",href:"#today"},"Today"))),
+    h("div",{class:"spread"},h("h2",{id:"now-h"},"In Game Today"),h("span",{class:"row",style:"gap:.75rem"},h("span",{class:"small ter"},list.length?list.length+(list.length===1?" character":" characters"):""))),
     list.length?h("div",{class:"now-list"},list.slice(0,16).map(face),list.length>16?h("span",{class:"now-more"},"+"+(list.length-16)):null)
       :h("p",{class:"empty",style:"margin:0"},"Nobody's logged off yet today."),
     h("p",{class:"small ter",style:"margin:0"},"From the armory, which updates when someone logs off."))}
@@ -3117,155 +3079,15 @@ function guildFeed(){
     races.map(x=>line(x.parts,"now",true)),
     items.length?items.slice(0,n).map(x=>line(x.parts,rel(new Date(x.t).toISOString()))):races.length?null:h("p",{class:"empty"},"Nothing yet. Level up or loot something good and it shows up here."),
     h("div",{class:"row",style:"margin-top:.5rem"},items.length>8?h("button",{class:"btn ghost sm",onclick:()=>setUi({feedAll:!S.ui.feedAll})},S.ui.feedAll?"Show less":"Show more"):null,
-      h("a",{class:"btn ghost sm",href:"#history"},"Full history"),h("a",{class:"btn ghost sm",href:"#today"},"Today"),h("a",{class:"btn ghost sm",href:"#recap"},"Weekly recap")))}
+      h("a",{class:"btn ghost sm",href:"#history"},"Full history")))}
 
 /* ---------- Today ---------- */
 // Everything that's happened since midnight on one page: the feed for today, who's been on, and where.
 const clock=t=>new Date(t).toLocaleTimeString("en-AU",{hour:"numeric",minute:"2-digit"}).replace(" ","").toLowerCase();
-// Boss kills the guild scribe saw, one group per dungeon per day per party (the server keeps the last 300 kills).
-function killGroups(since=0,until=Infinity){const sc=S.scribe||{},kb=new Map();
-  for(const k of Array.isArray(sc.kills)?sc.kills:[]){const t=Date.parse(k.at||"");if(!(t>=since&&t<until))continue;
-    const key=String(k.at).slice(0,10)+"|"+k.zone+"|"+[...(k.ids||[])].sort().join(",");
-    const g=kb.get(key)||kb.set(key,{t,zone:k.zone,ids:k.ids||[],bosses:[]}).get(key);g.bosses.push(k.boss);if(t>g.t)g.t=t}
-  return[...kb.values()].map(g=>({...g,name:dgName(g.zone,g.bosses[0])||g.zone}))}
-// Minutes in game per zone and per day between two times (Perth days), from the scribe's zone notes.
-function zoneSpan(since,until){const sc=S.scribe||{},a=perthDay(since),b=perthDay(until-1),zones=new Map(),days=new Map();
-  for(const[d,zs]of Object.entries(sc.zones||{})){if(d<a||d>b)continue;
-    for(const[zone,who]of Object.entries(zs||{})){const v=Object.values(who||{}).reduce((t,x)=>t+(+x>0?+x:0),0);if(!v)continue;
-      const k=zKey(zone),z=zones.get(k)||zones.set(k,{name:String(zone),min:0}).get(k);z.min+=v;days.set(d,(days.get(d)||0)+v)}}
-  return{zones:[...zones.values()].sort((x,y)=>y.min-x.min),days:[...days.entries()].sort((x,y)=>y[1]-x[1])}}
-const FEED_IC={level:"▲",loot:"◆",dungeon:"⚔︎",guild:"+",title:"★︎",prof:"⚒︎",pvp:"⚑︎",other:"•"};
-function viewToday(){
-  const d0=new Date();d0.setHours(0,0,0,0);const t0=d0.getTime();
-  const items=groupFeed(feedItems().filter(x=>x.t>=t0)),cnt=k=>items.filter(x=>x.k===k).reduce((a,x)=>a+(x.n||1),0);
-  const on=S.members.filter(m=>Date.parse(seenOf(m))>=t0).sort((a,b)=>Date.parse(seenOf(b))-Date.parse(seenOf(a)));
-  const bosses=killGroups(t0).reduce((a,g)=>a+g.bosses.length,0),zs=zoneSpan(t0,Date.now()+1).zones.slice(0,4);
-  const lv=cnt("level"),lt=cnt("loot");
-  const say=[zs.length?"Busiest in "+zs[0].name:"",lv?(lv===1?"one level-up":lv+" level-ups")+" so far":"",bosses?bosses+(bosses===1?" boss":" bosses")+" down":""].filter(Boolean);
-  const sum=say.length?say.join(", ").replace(/^./,c=>c.toUpperCase())+".":"A quiet day so far. Go make some noise.";
-  const sc=S.scribe&&S.scribe.at;
-  return[h("div",{class:"day-hero"},h("div",{},h("p",{class:"day-eb"},h("a",{href:"#roster"},"← Roster")," · Today"),h("h1",{},d0.toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long"})),h("p",{class:"sub"},sum)),
-      sc?h("span",{class:"small ter"},"Guild scribe notes from "+ago(sc)):null),
-    h("div",{class:"day-stats"},[[on.length,"on today"],[lv,lv===1?"level-up":"level-ups"],[lt,lt===1?"item looted":"items looted"],[bosses,bosses===1?"boss down":"bosses down"]].map(([v,l])=>h("div",{class:"day-stat"},h("b",{},String(v)),h("span",{},l)))),
-    h("div",{class:"day-grid"},
-      h("section",{class:"card day-feed","aria-labelledby":"dayf-h"},h("div",{class:"spread"},h("h2",{id:"dayf-h"},"What's Happened"),h("a",{class:"small",href:"#history"},"Full history")),
-        items.length?h("ol",{class:"day-list"},items.map(x=>h("li",{},h("time",{datetime:new Date(x.t).toISOString()},clock(x.t)),h("span",{class:"day-ic k-"+x.k,"aria-hidden":"true"},FEED_IC[x.k]||FEED_IC.other),h("span",{class:"day-tx"},x.parts))))
-          :h("p",{class:"empty"},"Nothing yet today. Level up or loot something good and it shows up here.")),
-      h("div",{class:"day-side"},
-        h("section",{class:"card","aria-labelledby":"dayo-h"},h("div",{class:"spread"},h("h2",{id:"dayo-h"},"Seen Today"),h("span",{class:"small ter"},on.length?String(on.length):"")),
-          on.length?h("div",{class:"day-on"},on.slice(0,14).map(m=>{const z=(scribeOf(m)||{}).zone,hot=Date.now()-Date.parse(seenOf(m))<36e5;
-            return h("div",{class:"spread",style:"flex-wrap:nowrap"},h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap;min-width:0"},classIcon(m.cls),charLink(m),h("span",{class:"small ter"},String(m.level||1))),
-              h("span",{class:"small ter day-where"},hot?h("i",{class:"dot",style:"width:.5rem;height:.5rem;background:#3ba55d",title:"On within the hour"}):null,z||ago(seenOf(m))))}),on.length>14?h("span",{class:"small ter"},"and "+(on.length-14)+" more"):null)
-            :h("p",{class:"empty",style:"margin:0"},"Nobody's been seen yet today."),
-          h("p",{class:"small ter",style:"margin:0"},"From the armory and the guild scribe. A green dot means within the hour.")),
-        zs.length?h("section",{class:"card","aria-labelledby":"dayz-h"},h("div",{class:"spread"},h("h2",{id:"dayz-h"},"Busiest Today")),
-          h("div",{class:"day-rows"},zs.map(z=>h("div",{class:"spread"},h("span",{},z.name),h("b",{},zHours(z.min))))),
-          h("a",{class:"small",href:"#activity"},"The map on Activity")):null,
-        glCard()))]}
-
-/* ---------- Weekly recap (the page) ---------- */
-// This week so far, or any finished week the server saved on Monday, as a page. The picture for Discord is the same
-// one as before (recapPng), copied or downloaded from here.
-function recapWeeks(){const weeks=Object.entries(S.recapWeeks||{}).sort((a,b)=>b[0].localeCompare(a[0]));
-  const launchOn=Date.now()>=LAUNCH_WEEK&&!weeks.some(([,r])=>!r.partial&&Date.parse(r.from)<LAUNCH_WEEK&&Date.parse(r.to)>LAUNCH+864e5);
-  return{weeks,launchOn}}
-function recapPick(key){const r=key&&key!=="launch"&&S.recapWeeks&&S.recapWeeks[key];
-  if(key==="launch")return{data:liveRecap({from:LAUNCH,to:LAUNCH_WEEK,label:"Launch week"}),since:LAUNCH,until:LAUNCH_WEEK};
-  if(r){const d=savedRecap(r);return{data:d,since:d.from,until:d.to}}
-  return{data:liveRecap(),since:Date.now()-7*864e5,until:Date.now()+1,live:true}}
-async function recapShare(data,how){toast("Making the picture…");const blob=await recapPng(data);if(!blob){toast("Couldn't make the picture.");return}
-  const save=()=>{const url=URL.createObjectURL(blob),a=h("a",{href:url,download:"blood-and-tears-recap.png"});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast("Recap saved as a picture. Drag it into Discord.")};
-  if(how==="save")return save();
-  try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);toast("Recap copied. Paste it in Discord with Ctrl+V.")}catch(e){save()}}
-function viewRecap(){
-  const{weeks,launchOn}=recapWeeks(),valid=k=>k==="launch"?launchOn:!!(S.recapWeeks||{})[k],key=S.ui.recapWk&&valid(S.ui.recapWk)?S.ui.recapWk:"";
-  const{data,since,until,live}=recapPick(key),dm=t=>new Date(t).toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long"}),ds=t=>new Date(t).toLocaleDateString("en-AU",{day:"numeric",month:"short"});
-  const pick=h("select",{id:"recap-week","aria-label":"Week",onchange:e=>setUi({recapWk:e.target.value})},h("option",{value:"",selected:!key},"This week so far"),
-    weeks.map(([k,r])=>h("option",{value:k,selected:key===k},ds(r.from)+" to "+ds(Date.parse(r.to)-1)+(r.partial?" (short week)":""))),launchOn?h("option",{value:"launch",selected:key==="launch"},"Launch week"):null);
-  const kg=killGroups(since,until),dg=new Map();for(const g of kg)dg.set(g.name,(dg.get(g.name)||0)+1);
-  const topDg=[...dg.entries()].sort((a,b)=>b[1]-a[1])[0],zsp=zoneSpan(since,until),hours=zsp.days.reduce((a,x)=>a+x[1],0)/60;
-  const fresh=S.members.filter(m=>{const t=Date.parse(m.createdAt||"");return t>=since&&t<until});
-  const bestDay=zsp.days[0],bosses=kg.reduce((a,g)=>a+g.bosses.length,0);
-  const moments=[bestDay?["Busiest day",new Date(bestDay[0]+"T12:00:00+08:00").toLocaleDateString("en-AU",{weekday:"long"})+" · "+zHours(bestDay[1])+" in game"]:null,
-    topDg?["Dungeon of the week",topDg[0]+" · "+topDg[1]+(topDg[1]===1?" run":" runs")]:null,
-    bosses?["Bosses down",bosses+" across "+dg.size+(dg.size===1?" dungeon":" dungeons")]:null,
-    zsp.zones[0]?["Most played zone",zsp.zones[0].name+" · "+zHours(zsp.zones[0].min)]:null,
-    fresh.length?["New faces",andList(fresh.slice(0,6).map(m=>charLink(m))),fresh.length>6?" and "+(fresh.length-6)+" more":""]:null].filter(Boolean);
-  const pod=[data.lev[1],data.lev[0],data.lev[2]].map((x,i)=>x?h("div",{class:"rc-pod"+(i===1?" first":"")},h("span",{class:"small ter"},["2nd","1st","3rd"][i]),h("span",{class:"rc-pod-n"},classIcon(x[0].cls),charLink(x[0])),h("b",{},x[1]),h("span",{class:"small ter"},"levels")):h("div",{class:"rc-pod empty-pod"}));
-  const gx=live?glWeek():null;
-  return[h("div",{class:"day-hero"},h("div",{},h("p",{class:"day-eb"},h("a",{href:"#roster"},"← Roster")," · Weekly recap"),
-      h("h1",{},live?"This Week in Blood and Tears":data.label?data.label:"Week of "+ds(since)),
-      h("p",{class:"sub"},(live?"The last seven days, ":"")+dm(live?since+864e5:since)+" to "+dm(until-1)+". Each finished week is saved on Monday.")),
-      h("div",{class:"row rc-acts"},pick,h("button",{class:"btn",type:"button",onclick:()=>recapShare(data,"save")},"Download"),h("button",{class:"btn primary",type:"button",onclick:()=>recapShare(data,"copy")},"Copy for Discord"))),
-    h("div",{class:"day-stats"},[...data.totals,hours?[zHours(hours*60),"in game together"]:null].filter(Boolean).slice(0,4).map(([v,l])=>h("div",{class:"day-stat"},h("b",{},v),h("span",{},l)))),
-    h("div",{class:"day-grid"},
-      h("div",{class:"day-side"},
-        h("section",{class:"card","aria-labelledby":"rcl-h"},h("div",{class:"spread"},h("h2",{id:"rcl-h"},"Top Levellers")),data.lev.length?h("div",{class:"rc-pods"},pod):h("p",{class:"empty",style:"margin:0"},"Nobody levelled up this week.")),
-        data.loot.length?h("section",{class:"card","aria-labelledby":"rcb-h"},h("div",{class:"spread"},h("h2",{id:"rcb-h"},"Best Loot"),h("span",{class:"small ter"},"blues and better")),
-          h("div",{class:"day-rows"},data.loot.map(([m,name,q,,id])=>h("div",{class:"spread",style:"flex-wrap:nowrap"},(r=>{if(r.classList.contains("item-plain"))r.style.color="var(--q"+Math.max(0,Math.min(6,+q||1))+")";return r})(itemRef(name,id?{id,q}:null)),h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap"},classIcon(m.cls),charLink(m)))))):null,
-        data.kw.length?h("section",{class:"card","aria-labelledby":"rck-h"},h("div",{class:"spread"},h("h2",{id:"rck-h"},"Most Honourable Kills")),h("div",{class:"day-rows"},data.kw.map(([m,v])=>h("div",{class:"spread"},h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap"},classIcon(m.cls),charLink(m)),h("b",{},v))))):null,
-        data.firsts.length?h("section",{class:"card","aria-labelledby":"rcf-h"},h("div",{class:"spread"},h("h2",{id:"rcf-h"},"New in the Hall of Firsts")),h("div",{class:"day-rows"},data.firsts.map(([l,f])=>{const m=f.id&&memberById(f.id);
-          return h("div",{class:"spread"},h("span",{class:"ter"},l),h("span",{class:"row",style:"gap:.375rem"},classIcon(f.cls||(m&&m.cls)),m?charLink(m):h("b",{},f.name||"")))}))):null),
-      h("div",{class:"day-side"},
-        h("section",{class:"card","aria-labelledby":"rcm-h"},h("div",{class:"spread"},h("h2",{id:"rcm-h"},"The Week's Moments")),
-          moments.length?h("div",{class:"rc-moments"},moments.map(([l,...v])=>h("div",{},h("span",{class:"small ter"},l),h("b",{},v)))):h("p",{class:"empty",style:"margin:0"},"The guild scribe didn't see much this week.")),
-        gx?h("a",{class:"card rec-link",href:"#guild"},h("span",{},h("b",{},"Guild level "+gx.level),h("span",{class:"small ter"}," · +"+fmtN(gx.week)+" guild xp this week")),h("span",{class:"rec-link-go"},"See the guild level →")):null))]}
-
-/* ---------- Guild level ---------- */
-// Everything the guild does adds up to guild xp, worked out from what's already saved (nothing new is stored):
-// levels, dungeon stamps, honourable kills and the Hall of Firsts. Each guild level needs 150 more xp than the last.
-const GL_STEP=150,glNeed=L=>GL_STEP*(L-1)*L/2;
-const GL_UNLOCKS=[[3,"A gold ring around the gingerbread"],[5,"Ember glow on every page heading"],
-  [7,"A star on the Roster for the week's top xp earner"],[10,"The gingerbread gets a crown"]];
-let GLC=null;
-function guildLevel(){const key=[S.members,S.firsts,S.scribe,DUNGEON_LOOT];if(GLC&&GLC.key.every((k,i)=>k===key[i]))return GLC.v;
-  const ms=S.members,wk=Date.now()-7*864e5,firsts=Object.values(S.firsts||{}).filter(f=>f&&f.at);
-  const parts=[["Levels","1 xp a level",ms.reduce((a,m)=>a+Math.max(0,(+m.level||1)-1),0)],
-    ["Dungeon stamps","10 xp a stamp",10*ms.reduce((a,m)=>a+passportOf(m).length,0)],
-    ["Honourable kills","1 xp per 50",Math.floor(ms.reduce((a,m)=>a+(+(m.armory||{}).hk||0),0)/50)],
-    ["Hall of Firsts","25 xp a first",25*firsts.length]];
-  const xp=parts.reduce((a,p)=>a+p[2],0);let level=1;while(glNeed(level+1)<=xp)level++;
-  const earn=ms.filter(m=>memberState(m)!=="former").map(m=>[m,weekGained(m)+Math.floor(hkWeekOf(m)/50)+10*passportOf(m).filter(s=>Date.parse(s.at||"")>=wk).length
-    +25*firsts.filter(f=>f.id===m.id&&!f.by&&Date.parse(f.at)>=wk).length]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
-  const v={xp,level,from:glNeed(level),to:glNeed(level+1),parts,earn,week:earn.reduce((a,x)=>a+x[1],0)};GLC={key,v};return v}
-// Three tiles under the Roster heading: today so far, this week's recap and the guild level.
-function hubTiles(){if(!S.members.length)return null;
-  const d0=new Date();d0.setHours(0,0,0,0);const t0=d0.getTime(),on=S.members.filter(m=>Date.parse(seenOf(m))>=t0).length;
-  const since=sinceLast(),ups=[...S.members,...S.alts].reduce((n,m)=>n+(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Reached level \d+/.test(j.t||"")&&Date.parse(j.at||"")>=t0).length,0),lv=S.members.reduce((t,m)=>t+weekGained(m),0),g=guildLevel();
-  const tile=(href,eb,big,small,extra)=>h("a",{class:"hub-t",href},h("span",{class:"hub-eb"},eb),h("b",{},big),extra||null,h("span",{class:"hub-s"},small));
-  return h("nav",{class:"hub","aria-label":"Today, this week and the guild level"},
-    since&&since.items.length?tile("#history","Since you were here",fmtN(since.items[0][0])+" "+since.items[0][1],since.items.slice(1,3).map(([k,l])=>fmtN(k)+" "+l).join(" · ")||ago(new Date(lastHere).toISOString()))
-      :tile("#today","Today",ups?ups+(ups===1?" level-up":" level-ups"):on+" on today",ups?on+" on today":"See what's new"),
-    tile("#recap","This week","+"+fmtN(lv)+(lv===1?" level":" levels"),"Weekly recap"),
-    tile("#guild","Guild level","Level "+g.level,fmtN(g.to-g.xp)+" xp to "+(g.level+1),glBar(g)))}
-const crownSvg=()=>{const n="http://www.w3.org/2000/svg",sv=document.createElementNS(n,"svg"),pa=document.createElementNS(n,"path");sv.setAttribute("viewBox","0 0 24 16");sv.setAttribute("width","22");sv.setAttribute("height","15");
-  pa.setAttribute("d","M2 14 L1 3 L7 8 L12 1 L17 8 L23 3 L22 14 Z");pa.setAttribute("fill","#e6bc77");pa.setAttribute("stroke","#5a3a12");pa.setAttribute("stroke-width","1.2");pa.setAttribute("stroke-linejoin","round");sv.append(pa);return sv};
-const glWeek=()=>S.members.length?guildLevel():null;
-const glHas=L=>S.members.length&&guildLevel().level>=L;
-const glTopId=()=>glHas(7)&&guildLevel().earn[0]?guildLevel().earn[0][0].id:null;
-function glBar(g){const pc=Math.max(2,Math.min(100,Math.round((g.xp-g.from)/(g.to-g.from)*100)));
-  return h("div",{class:"gl-bar",role:"progressbar","aria-valuemin":"0","aria-valuemax":String(g.to-g.from),"aria-valuenow":String(g.xp-g.from),"aria-label":"Guild xp towards level "+(g.level+1)},h("i",{style:"width:"+pc+"%"}))}
-// The small version, on the Roster's side column and the Today page.
-function glCard(){if(!S.members.length)return null;const g=guildLevel(),nx=GL_UNLOCKS.find(u=>u[0]>g.level);
-  return h("a",{class:"card gl-mini",href:"#guild"},h("div",{class:"spread"},h("h2",{class:"gt-eb"},"Guild Level "+g.level),h("span",{class:"small ter"},fmtN(g.to-g.xp)+" xp to "+(g.level+1))),glBar(g),
-    h("span",{class:"small ter"},g.week?"+"+fmtN(g.week)+" this week":"",nx?(g.week?" · ":"")+"Next unlock at "+nx[0]:""))}
-function viewGuild(){
-  if(!S.members.length)return h("p",{class:"ter"},"Loading…");
-  const g=guildLevel(),nx=GL_UNLOCKS.find(u=>u[0]>g.level);
-  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("a",{href:"#roster",class:"small"},"← Roster"),h("h1",{},"Guild Level"),
-      h("p",{class:"sub"},"Everything everyone does adds up. Levels, dungeon stamps, honourable kills and guild firsts all earn the guild xp, and every guild level unlocks something for everyone.")))),
-    h("section",{class:"card gl-hero"},h("div",{class:"gl-emb","aria-hidden":"true"},h("span",{},"Guild level"),h("b",{},String(g.level))),
-      h("div",{class:"gl-main"},h("p",{class:"day-eb"},"Blood and Tears · level "+g.level),h("h2",{},fmtN(g.xp-g.from)+" of "+fmtN(g.to-g.from)+" xp to level "+(g.level+1)),glBar(g),
-        h("p",{class:"small ter",style:"margin:0"},(g.week?"+"+fmtN(g.week)+" xp this week":"No xp yet this week")+(nx?" · next unlock at level "+nx[0]+": "+nx[1].replace(/^./,c=>c.toLowerCase()):" · every unlock is open")),
-        h("div",{class:"gl-parts"},g.parts.map(([l,how,v])=>h("div",{},h("b",{},fmtN(v)+" xp"),h("span",{},l),h("span",{class:"small ter"},how)))))),
-    h("div",{class:"day-grid"},
-      h("section",{class:"card","aria-labelledby":"glu-h"},h("div",{class:"spread"},h("h2",{id:"glu-h"},"Unlocks"),h("span",{class:"small ter"},"For everyone in the guild")),
-        h("ol",{class:"gl-unl"},GL_UNLOCKS.map(([L,t])=>h("li",{class:L<=g.level?"done":nx&&nx[0]===L?"next":""},h("b",{},"Level "+L),h("span",{},t),h("span",{class:"small ter"},L<=g.level?"Unlocked":nx&&nx[0]===L?fmtN(glNeed(L)-g.xp)+" xp to go":""))))),
-      h("section",{class:"card","aria-labelledby":"gle-h"},h("div",{class:"spread"},h("h2",{id:"gle-h"},"Top Earners This Week"),h("span",{class:"small ter"},"Who moved the bar")),
-        g.earn.length?h("div",{class:"day-rows"},g.earn.slice(0,8).map(([m,v],i)=>h("div",{class:"spread"},h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap"},classIcon(m.cls),charLink(m),i===0&&glHas(7)?h("span",{class:"gl-star",title:"Top earner this week"},"★︎"):null),h("b",{},fmtN(v)+" xp"))))
-          :h("p",{class:"empty",style:"margin:0"},"Nobody's earned guild xp yet this week."),
-        h("p",{class:"small ter",style:"margin:0"},"This week counts levels, new dungeon stamps, honourable kills and guild firsts from the last seven days.")))]}
-
+// "Since you were here": one tile under the Roster heading when something's happened since your last visit.
+function hubTiles(){if(!S.members.length)return null;const since=sinceLast();if(!since||!since.items.length)return null;
+  return h("nav",{class:"hub","aria-label":"Since you were here"},h("a",{class:"hub-t",href:"#history"},h("span",{class:"hub-eb"},"Since you were here"),
+    h("b",{},fmtN(since.items[0][0])+" "+since.items[0][1]),h("span",{class:"hub-s"},since.items.slice(1,3).map(([k,l])=>fmtN(k)+" "+l).join(" · ")||ago(new Date(lastHere).toISOString()))))}
 /* ---------- History ---------- */
 // Everything the feed knows, grouped by day. Each character keeps its last 40 moments, so the oldest small ones
 // drop off over time; the Hall of Firsts keeps the big ones for good.
@@ -3291,8 +3113,7 @@ function viewHistory(){
   let marked=!awhile()||!items.length||items[0].t<=lastHere;
   const mark=x=>{if(marked||x.t>lastHere)return null;marked=true;return h("div",{class:"hist-mark"},"You were last here")};
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("a",{href:"#roster",class:"small"},"← Roster"),h("h1",{},"Guild History"),
-      h("p",{class:"sub"},"Everything the site has seen, newest first. The smallest moments fade out over time; the Hall of Firsts keeps the big ones."))),
-      h("a",{class:"btn",href:"#recap"},"Weekly recap")),
+      h("p",{class:"sub"},"Everything the site has seen, newest first. The smallest moments fade out over time; the Hall of Firsts keeps the big ones.")))),
     histSummary(all),
     h("div",{class:"hist-tools"},
       h("label",{class:"hist-q"},h("span",{class:"visually-hidden"},"Find a character"),h("input",{id:"hist-q",type:"search",placeholder:"Find a character",value:S.ui.histQ||"",oninput:e=>setUi({histQ:e.target.value})})),
@@ -3323,61 +3144,6 @@ function liveRecap(past){
   const loot=all.flatMap(m=>(Array.isArray(m.journey)?m.journey:[]).filter(j=>/^Equipped /.test(j.t||"")&&j.item&&+j.item.q>=3&&inR(Date.parse(j.at))).map(j=>[m,j.t.slice(9),+j.item.q,Date.parse(j.at),+j.item.id||0]))
     .sort((a,b)=>b[2]-a[2]||b[3]-a[3]).slice(0,3);
   return past?{saved:true,label:past.label,from:since,to:until,totals,lev,kw,firsts,loot}:{from:since+864e5,to:Date.now(),totals,lev,kw,firsts,loot}}
-// A finished week saved by the server (guild/recaps), in the same shape. Characters who've since left keep their name.
-function savedRecap(r){const who=(n,c)=>S.members.find(m=>nameOf(m)===n)||{char:n,cls:c};
-  const t=r.totals||{};
-  return{saved:true,from:Date.parse(r.from),to:Date.parse(r.to),partial:r.partial,
-    totals:[["+"+(+t.levels||0).toLocaleString("en-AU"),"levels gained"],[String(+t.blues||0),"blue items on"],[String(+t.epics||0),"epic items on"],["+"+(+t.hk||0).toLocaleString("en-AU"),"honourable kills"]],
-    lev:(r.lev||[]).slice(0,3).map(([n,c,v])=>[who(n,c),"+"+v]),kw:(r.kw||[]).slice(0,3).map(([n,c,v])=>[who(n,c),(+v).toLocaleString("en-AU")]),
-    firsts:(r.firsts||[]).map(([k,n,c,at,item])=>[(FIRSTS.find(f=>f[0]===k)||[k,k])[1],{name:n,cls:c,at,item}]).slice(0,4),
-    loot:(r.loot||[]).slice(0,3).map(([n,c,name,q,id])=>[who(n,c),name,q,0,+id||0])}}
-async function recapPng(data=liveRecap()){
-  await document.fonts.ready.catch(()=>{});
-  const W=1080,PAD=72,colW=(W-PAD*2-48)/2,{totals,lev,kw,firsts,loot}=data;
-  const disp=sz=>`700 ${sz}px "Alegreya Sans SC", Georgia, serif`,body=(w,sz)=>`${w} ${sz}px Figtree, sans-serif`;
-  const QC={2:"#1eff00",3:"#3b9cff",4:"#b968f5",5:"#ff8000"};
-  const ROW=58,SEC=56,cols=lev.length||kw.length;
-  const H=PAD+112+48+132+48+(cols?SEC+3*ROW+40:0)+(firsts.length?SEC+firsts.length*ROW+40:0)+(loot.length?SEC+loot.length*ROW+40:0)+(cols||firsts.length||loot.length?0:80)+70;
-  const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
-  let g=x.createRadialGradient(W/2,0,0,W/2,0,W*.7);g.addColorStop(0,"rgba(165,13,44,.34)");g.addColorStop(1,"rgba(165,13,44,0)");
-  x.fillStyle="#0f0a09";x.fillRect(0,0,W,H);x.fillStyle=g;x.fillRect(0,0,W,H);
-  g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,"#4d0100");g.addColorStop(.5,"#a50d2c");g.addColorStop(1,"#4d0100");x.fillStyle=g;x.fillRect(0,H-10,W,10);x.fillStyle="#2f9a46";x.fillRect(0,H-13,W,3);
-  const rr=(X,Y,w,hh,r)=>{x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+hh,r);x.arcTo(X+w,Y+hh,X,Y+hh,r);x.arcTo(X,Y+hh,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath()};
-  const icon=await new Promise(ok=>{const im=new Image();im.onload=()=>ok(im);im.onerror=()=>ok(null);im.src="icon.svg";setTimeout(()=>ok(null),3000)});
-  let y=PAD;if(icon){x.save();rr(PAD,y,112,112,24);x.clip();x.drawImage(icon,PAD,y,112,112);x.restore()}
-  const from=new Date(data.from),to=new Date(data.to-1),dm=d=>d.toLocaleDateString("en-AU",{day:"numeric",month:"short"});
-  x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e2";x.font=disp(64);x.fillText("Blood and Tears",PAD+140,y+62);
-  x.fillStyle="#a6948e";x.font=body(400,26);x.fillText((data.label?data.label+" · ":data.partial?"Short week · ":"Week recap · ")+dm(from)+" to "+dm(to),PAD+140,y+100);
-  y+=112+48;
-  const tw=(W-PAD*2)/4;rr(PAD,y,W-PAD*2,132,16);x.fillStyle="#161010";x.fill();x.strokeStyle="#312625";x.lineWidth=1;x.stroke();
-  totals.forEach(([v,l],i)=>{const X=PAD+i*tw;if(i){x.beginPath();x.moveTo(X,y);x.lineTo(X,y+132);x.stroke()}
-    x.fillStyle="#efe6e2";x.font=disp(48);x.fillText(v,X+24,y+66);x.fillStyle="#a6948e";x.font=body(400,20);x.fillText(l,X+24,y+104)});
-  y+=132+48;
-  const head=(t,X,Y)=>{x.fillStyle="#e6bc77";x.font=disp(30);x.fillText(t,X,Y+30)};
-  const sq=(m,X,Y)=>{x.fillStyle=CLASSES[m.cls]||"#8b7b79";rr(X,Y-22,28,28,7);x.fill()};
-  const line=(X,Y,w)=>{x.strokeStyle="#281e1d";x.beginPath();x.moveTo(X,Y);x.lineTo(X+w,Y);x.stroke()};
-  const fit=(t,w)=>{if(x.measureText(t).width<=w)return t;while(t.length>1&&x.measureText(t+"…").width>w)t=t.slice(0,-1);return t+"…"};
-  const list=(rows,X,Y,w)=>rows.forEach(([m,v],i)=>{const ry=Y+SEC+i*ROW+30;if(i)line(X,ry-38,w);sq(m,X,ry);
-    x.fillStyle="#e0a862";x.font=body(600,26);x.textAlign="right";x.fillText(v,X+w,ry);x.textAlign="left";
-    x.fillStyle="#efe6e2";x.font=body(500,26);x.fillText(fit(nameOf(m),w-46-90),X+44,ry)});
-  if(cols){if(lev.length){head("Top levellers",PAD,y);list(lev,PAD,y,colW)}
-    if(kw.length){head("Most kills",PAD+colW+48,y);list(kw,PAD+colW+48,y,colW)}
-    y+=SEC+3*ROW+40}
-  if(firsts.length){head("New in the Hall of Firsts",PAD,y);firsts.forEach(([l,f],i)=>{const ry=y+SEC+i*ROW+30,m=(f.id&&memberById(f.id))||{cls:f.cls,name:f.name};if(i)line(PAD,ry-38,W-PAD*2);
-      x.fillStyle="#a6948e";x.font=body(400,26);x.fillText(l,PAD,ry);sq(m,PAD+200,ry);x.fillStyle="#efe6e2";x.font=body(500,26);
-      const nm=f.id&&memberById(f.id)?nameOf(m):f.name;x.fillText(fit(nm,360),PAD+244,ry);
-      if(f.item&&f.item.name){x.fillStyle=QC[f.item.q]||"#efe6e2";x.fillText(fit("["+f.item.name+"]",W-PAD*2-640),PAD+620,ry)}
-      x.fillStyle="#a6948e";x.textAlign="right";x.fillText(new Date(f.at).toLocaleDateString("en-AU",{weekday:"short"}),W-PAD,ry);x.textAlign="left"});
-    y+=SEC+firsts.length*ROW+40}
-  if(loot.length){head("Best loot",PAD,y);loot.forEach(([m,name,q],i)=>{const ry=y+SEC+i*ROW+30;if(i)line(PAD,ry-38,W-PAD*2);sq(m,PAD,ry);
-      x.fillStyle="#efe6e2";x.font=body(500,26);x.fillText(fit(nameOf(m),380),PAD+44,ry);x.fillStyle=QC[q]||"#efe6e2";x.textAlign="right";x.fillText(fit("["+name+"]",W-PAD*2-460),W-PAD,ry);x.textAlign="left"});
-    y+=SEC+loot.length*ROW+40}
-  if(!cols&&!firsts.length&&!loot.length){x.fillStyle="#a6948e";x.font=body(400,26);x.fillText("A quiet week. Go level something.",PAD,y+30);y+=80}
-  x.fillStyle="#8b7b79";x.font=body(400,22);x.fillText("bloodandtears.web.app",PAD,H-40);
-  // The raid countdown is about now, so only this week's picture shows it.
-  if(!data.saved){const rc=raidCountdown().replace(/^Open/,"Raids open");x.font=body(500,22);const rw=x.measureText(rc).width+28;rr(W-PAD-rw,H-70,rw,40,8);x.fillStyle="#301416";x.fill();
-  x.fillStyle="#e0a862";x.textAlign="right";x.fillText(rc,W-PAD-14,H-43);x.textAlign="left"}
-  return new Promise(ok=>c.toBlob(ok,"image/png"))}
 /* ---------- Level race ---------- */
 // Friendly, not a pressure board: levels gained this week, or who's furthest along. Mains only.
 // The Hall of Firsts. The server keeps these in guild/firsts (they never change once set, unless an earlier one turns up).
@@ -5073,7 +4839,7 @@ function milestoneToast({badge,title,sub},after){
 /* ---------- render ---------- */
 function route(){const p=(location.hash||"#roster").slice(1).split("/");
   // The Cards page is now the Roster's Cards view: old links (and the old card games) land there.
-  if(p[0]==="cards"||(p[0]==="roster"&&p[1]==="cards")||["duel","draft","trumps","guess"].includes(p[0])){S.ui.rView="cards";history.replaceState(null,"","#roster");return{page:"roster"}}if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(["today","recap","guild"].includes(p[0]))return{page:p[0]};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
+  if(p[0]==="cards"||(p[0]==="roster"&&p[1]==="cards")||["duel","draft","trumps","guess"].includes(p[0])){S.ui.rView="cards";history.replaceState(null,"","#roster");return{page:"roster"}}if(p[0]==="char")return{page:"char",coll:p[1],id:p[2]};if(p[0]==="history")return{page:"history"};if(["today","recap","guild"].includes(p[0])){history.replaceState(null,"","#roster");return{page:"roster"}}if(["today","recap","guild"].includes(p[0]))return{page:p[0]};const pg=p[0]==="events"||p[0]==="trades"?"lfg":p[0];return{page:pg==="raids"||PAGES.some(x=>x[0]===pg)?pg:"roster"}}
 function render(){
   const app=$("#app");
   const keep=document.activeElement&&document.activeElement.id,typed={};
@@ -5088,11 +4854,11 @@ function render(){
   keepSiteData();
   countView(r.page);
   const views={roster:viewRoster,lfg:viewLfg,raids:viewRaids,professions:viewProfessions,records:viewRecords,activity:viewActivity};
-  const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():r.page==="today"?viewToday():r.page==="recap"?viewRecap():r.page==="guild"?viewGuild():views[r.page]();
-  document.documentElement.classList.toggle("gl-ember",!!glHas(5));
+  const body=r.page==="char"?viewChar(r.coll,r.id):r.page==="history"?viewHistory():views[r.page]();
+  document.documentElement.classList.add("gl-ember");
   // Quick saves finish in well under a second, so "Syncing" only shows if a save is still waiting after 2 seconds.
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
-  app.replaceChildren(...[previewStrip(),updateStrip(),header(r.page==="char"?"":["history","today","recap","guild"].includes(r.page)?"roster":r.page==="raids"?"lfg":r.page),
+  app.replaceChildren(...[previewStrip(),updateStrip(),header(r.page==="char"?"":r.page==="history"?"roster":r.page==="raids"?"lfg":r.page),
     newsTicker(),net?h("div",{class:"netbar",role:"status"},net):null,winterVeil(),
     h("main",{class:"wrap"},
     S.error?h("div",{class:"note warn"},S.error):null,

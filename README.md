@@ -44,7 +44,7 @@ Other things worth knowing about:
 - **Short on healers:** Guild Makeup names the Shamans, Druids, Paladins and Priests who aren't set to Healer, as people who could heal as an off-spec.
 - **Up for grabs:** while nobody has an epic or a level 60, those totals say so and open the Hall of Firsts.
 - **Claim Your Character** goes for good on a device once it claims, or once "Not now" is pressed.
-- **Today** (`#today`), **Weekly recap** (`#recap`) and **Guild level** (`#guild`): three pages linked from the tiles under the Roster heading. Guild xp comes from levels (1 each), dungeon stamps (10), honourable kills (1 per 50) and guild firsts (25); each guild level needs 150 more than the last, and levels 3, 5, 7 and 10 unlock a gold ring, ember headings, a top-earner star and a crown.
+- **Today, Weekly recap and Guild level** were removed (Nov 2026): nobody used them. The gold ring round the logo and the ember glow on page headings they had unlocked stay on for good. Old `#today`, `#recap` and `#guild` links open the Roster; the server still saves finished weeks in `guild/recaps`.
 - **Guild news** runs along the top of every page: guild firsts from the last week, and epics, 50s and 60s, titles and milestones from the last three days.
 - **The guild's first epic and first 60** get a gold spot on the Roster for a week (with an × to hide it) and a gold ribbon on their character page for good.
 - **Best Dressed** goes by gear score: each slot's item level weighted by quality (green ×1.15, blue ×1.3, epic ×1.5), a two-hander counting twice. `gearScore` in both `public/index.html` and `functions/index.js`.
