@@ -303,7 +303,6 @@ dialog legend{font-weight:600;font-size:1rem;line-height:1.5rem;padding:0 0 .5re
 .chip:hover{border-color:var(--b-def);color:var(--text)}
 .chip.away{border-style:dashed;color:var(--sec)}.chip.away .cls-ic{opacity:.6}
 .chip .ter{font-size:.75rem}
-@media (max-width:600px){.range-cols{grid-template-columns:minmax(0,1fr)}}
 /* Card stamps: little seals on the picture for things the character has done */
 .lg-stamps{position:absolute;left:.5rem;bottom:.375rem;display:flex;gap:.25rem;z-index:1}
 .lg-stamp{width:1.625rem;height:1.625rem;border-radius:50%;display:grid;place-items:center;font-size:.6875rem;line-height:1;font-weight:600;letter-spacing:.02em;background:rgb(15 10 9 / .85);border:1.5px solid currentColor;box-shadow:0 1px 3px rgb(0 0 0 / .5)}
@@ -460,7 +459,17 @@ main.ch-page .card{position:relative}
 .rc-get b{font-weight:600}.rc-ups{margin-top:.375rem}.tx-o{color:#ff8040}.tx-y{color:#e6c34a}.tx-g{color:#40bf40}
 .rc-panel-msg{margin:0}
 .rc-knows{font-size:.75rem;font-weight:600;color:var(--trim)}
-.rc-pod.first{padding-top:1.5rem;background:rgb(230 188 119 / .14)}.rc-pod.empty-pod{background:none}
+
+/* Podium in light mode: the name strip stays dark (so its text stays light); step text and pills use deeper colours */
+.ap-n{color:#f3e7c8}
+:root[data-theme="light"] .ap-plate{background:linear-gradient(color-mix(in srgb,var(--p1) 22%,var(--raised)),var(--raised) 92%)}
+:root[data-theme="light"] .ap-p.top .ap-plate{background:linear-gradient(rgb(212 162 76 / .3),var(--raised) 92%)}
+:root[data-theme="light"] .ap-t{color:color-mix(in srgb,var(--p1) 60%,#2a1408)}
+:root[data-theme="light"] .ap-k{color:color-mix(in srgb,var(--p1) 55%,#5a3a28)}
+:root[data-theme="light"] .ap-p.top .ap-t,:root[data-theme="light"] .ap-p.top .ap-k{color:#8a5a12}
+:root[data-theme="light"] .ap-v{background:rgb(255 255 255 / .7);color:#2a1408}
+:root[data-theme="light"] .ap-pl{color:rgb(58 22 8 / .07)}
+.sb-up>.btn{align-self:flex-start}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -617,7 +626,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 @media (max-width:600px){.dg-cols{display:none}.dg-sum{grid-template-columns:minmax(0,1fr) auto;row-gap:0;padding-bottom:.5rem}.dg-name{grid-column:1/-1;padding-bottom:.125rem}
   .dg-n{text-align:left;font-size:.875rem;padding-left:0}.dg-n+.dg-n{padding-left:0;text-align:left}.dg-sum{grid-template-columns:auto auto 1fr 2.25rem;column-gap:1rem}.dg-name{grid-column:1/4}.dg-x{grid-column:4;grid-row:1/span 2}.dg-n-l{display:inline}}
 .pf-kind{grid-column:1/-1}
-.dg-top{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem}
+
 .dg-two{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:1rem 2rem}@media (max-width:760px){.dg-two{grid-template-columns:minmax(0,1fr)}}
 .dg-two>.dg-block{border-top:0;padding-top:0}
 .dg-roles{display:flex;flex-direction:column;gap:.5rem}
@@ -910,7 +919,7 @@ a.gs-name:hover{text-decoration:underline}
 .gslot img{width:100%;height:100%;display:block;object-fit:cover}
 .gslot.empty img{opacity:.55}
 .gslot.q0{border:2px solid #9d9d9d}.gslot.q1{border:2px solid #ffffff}.gslot.q2{border:2px solid #1eff00}.gslot.q3{border:2px solid #0070dd}.gslot.q4{border:2px solid #a335ee}.gslot.q5{border:2px solid #ff8000}.gslot.q6,.gslot.q7{border:2px solid #e6cc80}
-.qt0{color:var(--q0)}.qt1{color:var(--q1)}.qt2{color:var(--q2)}.qt3{color:var(--q3)}.qt4{color:var(--q4)}.qt5{color:var(--q5)}.qt6,.qt7{color:var(--q6)}
+
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .toast-undo{font:inherit;font-weight:600;background:none;border:0;color:#a32420;margin-left:1rem;padding:.25rem 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 :root[data-theme="light"] .toast-undo{color:#f7a097}
@@ -979,7 +988,7 @@ a.r-name:hover{color:var(--accent-text)}
 .lg-lv{position:absolute;top:.5rem;right:.5rem;z-index:1;width:2.25rem;height:2.25rem;box-sizing:border-box;border-radius:50%;border:2px solid;background:rgb(15 10 9 / .88);display:grid;place-items:center;font-weight:600;font-size:.875rem;line-height:1}
 .lg-type{margin-top:.375rem}
 /* Cards page: sets, a quieter link under each card, and two cards across on phones */
-.binder-set{display:flex;flex-direction:column;gap:.75rem}
+
 .binder{justify-content:start;grid-template-columns:repeat(auto-fill,11.375rem);gap:1rem 1.125rem}
 .binder .lg-flip{zoom:.7}
 .binder-it{gap:.25rem}
@@ -998,13 +1007,13 @@ a.r-name:hover{color:var(--accent-text)}
 @media (max-width:339px){.binder .lg-flip{zoom:.5}}
 /* Character page: face beside the name, headline numbers in a strip, professions in two columns */
 .ch-hero{display:flex;align-items:center;gap:1rem;min-width:0}
-.ch-av{flex:none;width:4.5rem;height:4.5rem;box-sizing:border-box;border-radius:50%;border:3px solid var(--cc);background:var(--sunken);overflow:hidden;display:grid;place-items:center;font:600 1.5rem/1 var(--display);color:var(--sec)}
-.ch-av img{width:100%;height:100%;object-fit:cover;display:block}
+
+
 .ch-hero h1{margin:0}
 .prof-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem 2rem;align-items:start}
 .prof-cols>div:only-child{grid-column:1/-1}
 @media (max-width:860px){.prof-cols{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:560px){.ch-hero{gap:.75rem;align-items:flex-start}.ch-av{width:3.5rem;height:3.5rem;font-size:1.25rem}}
+@media (max-width:560px){.ch-hero{gap:.75rem;align-items:flex-start}}
 /* Dungeons / Raids switch, and the Raids page */
 .dg-tabs a{display:inline-flex;align-items:center;font-weight:600;height:2rem;padding:0 .875rem;border-radius:999px;color:var(--sec);text-decoration:none}
 .dg-tabs a:hover{color:var(--text)}
@@ -1309,12 +1318,10 @@ input:not([type=checkbox]):not([type=radio]):focus,select:focus{border-color:var
 .gt .now-more{justify-self:center}
 @media (max-width:980px){.gt .now-list{grid-template-columns:repeat(auto-fill,minmax(4rem,1fr))}}
 
-.gt-eb,.label,.sb-h,.rb-h,.pf-kind,.dg-ach-eb,.lb2-k{font:600 .75rem/1rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ter)}.gt-eb{margin:0}
+.gt-eb,.label,.sb-h,.rb-h,.pf-kind,.dg-ach-eb{font:600 .75rem/1rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ter)}.gt-eb{margin:0}
 .dings{display:flex;flex-direction:column;gap:.5rem;margin-top:.625rem}
 .ding-l{font-size:.75rem;font-weight:600;line-height:1.125rem;padding:0 .4375rem;border-radius:999px;background:color-mix(in srgb,var(--cc) 18%,transparent);color:color-mix(in srgb,var(--cc) 80%,#fff)}
 :root[data-theme="light"] .ding-l{color:color-mix(in srgb,var(--cc) 40%,#1a1211)}
-@media (max-width:640px){.since-bar{border-radius:12px;padding:.625rem .5rem .625rem .875rem}}
-@media (max-width:640px){.since-bar{position:relative;padding-right:2.5rem}}
 
 /* Milestones on the stat tiles */
 .total-to{font-style:normal;font-size:.6875rem;line-height:1rem;color:var(--ter);margin-top:.125rem;padding-bottom:.375rem}
@@ -1545,24 +1552,23 @@ input:not([type=checkbox]):not([type=radio]):focus,select:focus{border-color:var
 .zm-top button::before{content:counter(zr);position:absolute;left:.25rem;top:.4375rem;font:400 1.125rem/1.25rem var(--display);color:var(--ter);width:1.25rem;text-align:center}
 .zm-top li:first-child button::before{color:var(--gold-hi)}
 /* Today, the weekly recap page and the guild level */
-.day-hero{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:1rem;padding:1.5rem 1.75rem;border-radius:var(--r-lg,14px);border:1px solid var(--sep);background:linear-gradient(135deg,rgb(165 13 44 / .28),transparent 70%),var(--raised)}
-:root[data-theme="light"] .day-hero{background:linear-gradient(135deg,rgb(165 13 44 / .1),transparent 70%),var(--raised)}
-.day-hero h1{margin:0}.day-hero .sub{margin:.25rem 0 0}.day-hero>div{min-width:0;display:flex;flex-direction:column}
-.day-eb{margin:0 0 .25rem;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--accent-text)}
-.day-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
-.day-stat{padding:.875rem 1rem;border-radius:12px;background:var(--raised);border:1px solid var(--sep);display:flex;flex-direction:column;min-width:0}
-.day-stat b{font-size:1.75rem;line-height:2.25rem;font-weight:600;color:var(--accent-text);font-variant-numeric:tabular-nums}.day-stat span{font-size:.8125rem;color:var(--ter)}
-.day-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:1.25rem;align-items:start}
-.day-side{display:flex;flex-direction:column;gap:1.25rem;min-width:0}
-.day-on{display:flex;flex-direction:column;gap:.375rem}.day-where{white-space:nowrap;display:inline-flex;align-items:center;gap:.375rem;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.day-rows{display:flex;flex-direction:column}.day-rows>div{padding:.4375rem 0;border-top:1px solid var(--sep);gap:.75rem}.day-rows>div:first-child{border-top:0}
-.gl-bar{height:.625rem;border-radius:99px;background:var(--subtle,rgb(255 255 255 / .07));overflow:hidden}.gl-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#c9932d,#f0cf8f)}
-.gl-hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1.75rem;align-items:center}
-.gl-emb{width:7.5rem;height:7.5rem;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;
-  background:radial-gradient(circle at 35% 30%,#d6a24a,#7a1428 70%);box-shadow:0 0 0 4px #2a1a14,0 0 0 6px #c9932d,0 10px 30px rgb(0 0 0/.35)}
-.gl-emb span{font-size:.6875rem;letter-spacing:.08em;text-transform:uppercase}.gl-emb b{font-size:2.5rem;line-height:2.75rem}
-.gl-parts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem;margin-top:.25rem}
-.gl-parts>div{display:flex;flex-direction:column;padding:.625rem .75rem;border-radius:10px;background:var(--subtle,rgb(255 255 255 / .05));min-width:0}.gl-parts b{color:var(--accent-text)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .brand-mk{position:relative;display:block;flex:none;line-height:0;font-style:normal}
 
 .gl-ring .brand-logo{border-radius:50%;box-shadow:0 0 0 2px #c9932d,0 0 10px rgb(230 188 119 / .45)}
@@ -1574,8 +1580,8 @@ html.gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 1
 .hub-t:hover{border-color:var(--accent-text);color:var(--text)}
 .hub-eb{font-size:.6875rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--accent-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hub-t b{font-size:.9375rem;line-height:1.25rem;font-weight:600;white-space:nowrap;grid-column:1;grid-row:2}.hub-s{font-size:.75rem;color:var(--ter);white-space:nowrap;grid-column:2;grid-row:1/3;align-self:center}
-.hub-t .gl-bar{height:.25rem;grid-column:1/-1}
-@media (max-width:640px){.hub{gap:.375rem}.hub-t{grid-template-columns:minmax(0,1fr);padding:.375rem .5rem}.hub-s{display:none}.hub-eb{font-size:.625rem;letter-spacing:.03em}.hub-t b{font-size:.875rem}.hub-t .gl-bar{grid-column:1}}
+
+@media (max-width:640px){.hub{gap:.375rem}.hub-t{grid-template-columns:minmax(0,1fr);padding:.375rem .5rem}.hub-s{display:none}.hub-eb{font-size:.625rem;letter-spacing:.03em}.hub-t b{font-size:.875rem}}
 /* Guild news ticker */
 .news{display:flex;align-items:stretch;border-bottom:1px solid var(--sep);background:color-mix(in srgb,var(--raised) 85%,#000);font-size:.875rem;line-height:1.25rem;min-height:2.25rem;overflow:hidden}
 .nt-label{flex:none;display:flex;align-items:center;gap:.5rem;padding:0 .875rem 0 1rem;background:#7a1428;color:#fff;font-weight:700;font-size:.6875rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;position:relative;z-index:1}
@@ -3952,7 +3958,6 @@ function viewProfessions(){
 // Events were cut (raid nights are sorted out in game and on Discord). The raid list stays as a heads-up.
 // Raids open on 9 December (Perth time); the tag counts down to it.
 const RAIDS_OPEN=Date.parse("2026-12-09T00:00:00+08:00");
-function raidCountdown(){const d=Math.ceil((RAIDS_OPEN-Date.now())/864e5);return d<=0?"Open now":d===1?"Open tomorrow":"Open in "+d+" days"}
 // When someone will reach 60 at their pace over the last two weeks (levels from the lasting level log and journey).
 // Rough on purpose: the last levels take longer, so it's said as "around". Null when there's no recent pace to go on.
 function fc60(m){const lv=+m.level||1;if(lv>=60)return null;
