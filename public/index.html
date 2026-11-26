@@ -348,7 +348,7 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .first-row{display:grid;grid-template-columns:6.2em minmax(0,1fr) auto;gap:.5rem;align-items:baseline;padding:.4375rem 0;border-top:1px solid var(--sep);font-size:.75rem;line-height:1.125rem}
 .first-row:first-child{border-top:0}
 .first-row .who{display:flex;flex-direction:column;gap:2px;min-width:0}
-.sb{gap:.75rem}.sb-h{display:block;font:600 .75rem 'Alegreya Sans SC',serif;letter-spacing:.08em;color:var(--accent-text);margin-bottom:.375rem}
+.sb{gap:.75rem}.sb-h{display:block;margin-bottom:.375rem}
 .sb-up{display:flex;flex-direction:column;gap:.5rem}.sb-up>.linkish{align-self:flex-start}
 .sb-lv{display:flex;flex-direction:column;gap:.375rem}.sb-lvn{font-size:.75rem;font-weight:600;color:var(--sec)}
 .sb-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:.375rem}
@@ -367,7 +367,6 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 /* The podium: title holders as little cards on steps, on a lit stage */
 .ap{gap:.75rem;overflow:hidden}
 .ap-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;width:100%}
-.ap-head h2{font-size:1.5rem;line-height:2rem}
 .ap-stage{position:relative;padding-top:1rem;margin:0 -1.5rem -1.5rem;padding-inline:1.5rem;background:radial-gradient(70% 60% at 50% 100%,rgb(212 162 76 / .1),transparent 70%)}
 .ap-light{position:absolute;left:50%;top:0;width:min(30rem,80%);height:85%;transform:translateX(-50%);pointer-events:none;background:radial-gradient(50% 50% at 50% 45%,rgb(255 220 150 / .13),rgb(255 220 150 / .04) 55%,transparent 75%);filter:blur(6px)}
 .ap-row{position:relative;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,13rem);justify-content:center;gap:.75rem;align-items:end}
@@ -395,7 +394,7 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .ap-q{position:relative;font-size:.75rem;line-height:1rem;color:var(--sec)}
 .ap-v{position:relative;margin-top:.25rem;padding:.125rem .625rem;border-radius:999px;font-size:.75rem;font-weight:700;background:rgb(0 0 0 / .45);border:1px solid color-mix(in srgb,var(--p1) 60%,transparent)}
 .ap-r{position:relative;font-size:.6875rem;color:var(--ter)}
-@media (max-width:760px){.ap-head{flex-direction:column;align-items:flex-start;gap:.5rem}.ap-head h2{font-size:1.25rem;line-height:1.75rem}
+@media (max-width:760px){.ap-head{flex-direction:column;align-items:flex-start;gap:.5rem}
   .ap-stage{margin:0 -1rem -1rem;padding-inline:.5rem}.ap-floor{margin:0 -.5rem}
   /* Phones: everything fits the screen, no sideways scrolling. 2, 1, 3 across like a real podium; 4 and 5 below. */
   /* Six narrow columns so each card takes two: 2, 1, 3 across. A 4th and 5th are left to Every title on phones. */
@@ -422,7 +421,28 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .mc{gap:.625rem}.mc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.25rem}
 .mc-list li{display:flex;justify-content:space-between;align-items:center;gap:.5rem;min-height:2rem}.mc-list a{display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--text)}
 .mc>.btn{align-self:flex-start}.am-list{display:flex;flex-direction:column;gap:.75rem;max-height:50vh;overflow:auto}
-.totals.t3{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}.totals.t3 .total{grid-column:auto!important;min-width:0}
+.totals.t2,.totals.t3,.totals.t4{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}.totals.t2{grid-template-columns:repeat(2,minmax(0,1fr))!important}.totals.t4{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.totals.t2 .total,.totals.t3 .total,.totals.t4 .total{grid-column:auto!important;min-width:0}
+@media (max-width:640px){.totals.t4{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+/* Character page hero: their card, and the page tinted with their class colour */
+.ch-card{position:relative;flex:none;width:8.5rem;padding:3px;border-radius:12px;background:linear-gradient(135deg,var(--t1),var(--t2));box-shadow:0 10px 24px rgb(0 0 0 / .5),0 0 26px color-mix(in srgb,var(--cc) 30%,transparent);
+  transform:perspective(800px) rotateX(0) rotateY(0);transition:transform .5s cubic-bezier(.23,1,.32,1)}
+.ch-card.tilt{transform:perspective(800px) rotateX(var(--rx,0)) rotateY(var(--ry,0)) scale(1.03);transition:transform .08s linear}
+.ch-card::after{content:"";position:absolute;inset:0;border-radius:12px;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgb(255 255 255 / .35),transparent 55%);mix-blend-mode:overlay}
+.ch-card.tilt::after{opacity:1}
+.ch-card-art{position:relative;display:block;height:11rem;border-radius:9px;overflow:hidden;background:#0f0a09 center/cover}
+.ch-card-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;transform:scale(1.35)}
+.ch-card-art img.ch-card-face{transform:none;object-position:50% 30%}
+.ch-card-ini{position:absolute;inset:0;display:grid;place-items:center;font:600 2rem/1 var(--display);color:var(--sec)}
+.ch-card-lv{position:absolute;top:.5rem;right:.5rem;min-width:1.75rem;height:1.75rem;padding:0 .25rem;border-radius:999px;display:grid;place-items:center;font-weight:700;font-size:.8125rem;color:#1a1211;background:linear-gradient(135deg,var(--t2),var(--t1));box-shadow:0 0 0 2px #120c0b}
+.ch-hero{align-items:flex-end}
+main.ch-page .card{border-color:color-mix(in srgb,var(--pcc) 26%,var(--sep))}
+main.ch-page .card h2{color:color-mix(in srgb,var(--pcc) 30%,var(--text))}
+main.ch-page .card::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,color-mix(in srgb,var(--pcc) 70%,transparent),transparent 70%);border-radius:inherit;pointer-events:none}
+main.ch-page .card{position:relative}
+:root[data-theme="light"] main.ch-page .card h2{color:color-mix(in srgb,var(--pcc) 45%,var(--text))}
+@media (max-width:560px){.ch-card{width:6.25rem}.ch-card-art{height:8.25rem}.ch-card-lv{min-width:1.375rem;height:1.375rem;font-size:.6875rem;top:.375rem;right:.375rem}}
+@media (prefers-reduced-motion:reduce){.ch-card{transition:none}}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -578,7 +598,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .dg-detail{display:flex;flex-direction:column;gap:.75rem;padding:.25rem 1.25rem 1.25rem;background:color-mix(in srgb,var(--subtle) 50%,transparent)}
 @media (max-width:600px){.dg-cols{display:none}.dg-sum{grid-template-columns:minmax(0,1fr) auto;row-gap:0;padding-bottom:.5rem}.dg-name{grid-column:1/-1;padding-bottom:.125rem}
   .dg-n{text-align:left;font-size:.875rem;padding-left:0}.dg-n+.dg-n{padding-left:0;text-align:left}.dg-sum{grid-template-columns:auto auto 1fr 2.25rem;column-gap:1rem}.dg-name{grid-column:1/4}.dg-x{grid-column:4;grid-row:1/span 2}.dg-n-l{display:inline}}
-.pf-kind{grid-column:1/-1;font-size:.6875rem;line-height:1rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
+.pf-kind{grid-column:1/-1}
 .dg-top{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem}
 .dg-two{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:1rem 2rem}@media (max-width:760px){.dg-two{grid-template-columns:minmax(0,1fr)}}
 .dg-two>.dg-block{border-top:0;padding-top:0}
@@ -630,7 +650,7 @@ a.total-open{text-decoration:none;align-items:baseline}a.total-open b{font-size:
 .cm-p>a{display:inline-block;margin:0 0 .5rem 1.0625rem}
 .su-r{background:#d23c3c}:root[data-theme="light"] .su-r{background:#b02a2a}
 .rb-best{margin:.25rem 0 .625rem 1.0625rem;padding:.5rem .625rem;border:1px solid rgb(212 162 76 / .45);border-radius:10px;background:rgb(212 162 76 / .07)}
-.rb-best .cm-list{padding:0;margin:0}.rb-h{display:block;font:600 .75rem 'Alegreya Sans SC',serif;letter-spacing:.08em;color:var(--gold);margin-bottom:.25rem}
+.rb-best .cm-list{padding:0;margin:0}.rb-h{display:block;margin-bottom:.25rem}
 .seg.rb-tabs{margin:0 0 .5rem 1.0625rem;flex:0 1 auto;width:fit-content}
 .rb-note{margin:0 0 .375rem 1.0625rem}.rb-more{margin:0 0 .5rem 1.0625rem}
 .rb-k{color:var(--trim);font-weight:600}.rb-where{display:block;font-size:.75rem;line-height:1rem}
@@ -922,7 +942,7 @@ a.r-name:hover{color:var(--accent-text)}
 .gt{padding:0;gap:0;overflow:hidden}
 .gt-sec{display:flex;flex-direction:column;gap:.75rem;padding:1rem 1.25rem}
 .gt-sec+.gt-sec{border-top:1px solid var(--sep)}
-.gt-sec h2{font-size:1rem;line-height:1.5rem}
+
 .gt-sec.spot{display:grid;padding:0;gap:0}
 .gt .spot-art{border-radius:0}
 .gt .spot-body{padding:.875rem 1.25rem 1rem}
@@ -1224,11 +1244,11 @@ a.r-name{font:400 1.0625rem/1.5rem var(--display)}
 input:not([type=checkbox]):not([type=radio]),select{background:var(--sunken);border-color:color-mix(in srgb,var(--field-b) 55%,transparent);border-radius:10px}
 input:not([type=checkbox]):not([type=radio]):focus,select:focus{border-color:var(--focus)}
 .r-tools .btn,.r-ctrls .btn{border-radius:999px}
-aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ter);font-family:var(--body);font-weight:600}
+/* Two heading styles inside cards: the card title (h2, display font, 20px) and the section label (.label: small, uppercase, tracked). */
 
 /* F: In Game Today faces, level-up glow, big Character of the Day */
 .now{gap:.75rem}
-.now h2,.gt-sec>h2{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ter);font-family:var(--body);font-weight:600;margin:0}
+.now h2,.gt-sec>h2{margin:0}
 .now-list{display:flex;gap:.75rem 1rem;overflow-x:auto;padding:.25rem .125rem .25rem;scrollbar-width:thin}
 .now-f{flex:none;display:flex;flex-direction:column;align-items:center;gap:.125rem;width:4rem;text-decoration:none;color:var(--text)}
 .now-av{position:relative;width:3rem;height:3rem;border-radius:50%;display:grid;place-items:center;font:600 .875rem/1 var(--display);background:color-mix(in srgb,var(--cc) 14%,var(--sunken));box-shadow:0 0 0 2px var(--raised),0 0 0 3.5px var(--cc);margin-bottom:.25rem;transition:transform .15s}
@@ -1271,7 +1291,7 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 .gt .now-more{justify-self:center}
 @media (max-width:980px){.gt .now-list{grid-template-columns:repeat(auto-fill,minmax(4rem,1fr))}}
 
-.gt-eb{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ter);font-family:var(--body);font-weight:600;margin:0}
+.gt-eb,.label,.sb-h,.rb-h,.pf-kind,.dg-ach-eb,.lb2-k{font:600 .75rem/1rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ter)}.gt-eb{margin:0}
 .dings{display:flex;flex-direction:column;gap:.5rem;margin-top:.625rem}
 .ding-l{font-size:.75rem;font-weight:600;line-height:1.125rem;padding:0 .4375rem;border-radius:999px;background:color-mix(in srgb,var(--cc) 18%,transparent);color:color-mix(in srgb,var(--cc) 80%,#fff)}
 :root[data-theme="light"] .ding-l{color:color-mix(in srgb,var(--cc) 40%,#1a1211)}
@@ -1334,7 +1354,7 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 .dg-ach2{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 2rem;margin-top:1rem;padding:1rem 1.25rem;border-radius:10px;border:1px solid color-mix(in srgb,var(--sep) 70%,transparent);background:radial-gradient(80% 140% at 0% 0%,color-mix(in srgb,var(--wine) 30%,transparent),transparent 70%),var(--raised)}
 .dg-ach-t{display:flex;flex-direction:column;gap:.125rem}
 .dg-ach-t b{font:400 1.5rem/1.75rem var(--display);color:var(--ginger)}
-.dg-ach-eb{font-size:.6875rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ter)}
+
 .dg-ach-p{display:flex;flex-direction:column;gap:.375rem;min-width:13rem}
 .dg-ach-p b{font-size:1rem}
 .dg-ach-bar{display:block;height:4px;border-radius:999px;background:color-mix(in srgb,var(--sep) 70%,transparent);overflow:hidden}
@@ -1416,7 +1436,7 @@ aside.card h2,.card>.spread>h2{font-size:.75rem;letter-spacing:.08em;text-transf
 .rf .r-search svg{width:1.125rem;height:1.125rem;margin-top:-.5625rem;left:.875rem}
 .rf .r-sort select{height:3rem}
 .rf>p.small{font-size:.75rem;line-height:1.125rem}
-.rf h2{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ter);font-family:var(--body);font-weight:600}
+
 @media (max-width:640px){
  .card.pt{gap:.5rem}
  .pt-row{padding:.75rem .875rem .875rem;gap:.5rem}
@@ -1938,6 +1958,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-26","Your card, front and centre","Character pages now open with the character's own card (their armory picture on their race backdrop, in the metal their level earns), and the whole page picks up a touch of their class colour. Headings across the site now match too.","#roster"],
   ["2026-11-26","New device? Just ask","Claimed your character on another phone or browser? Tap This is me, on a new device, and an officer or your other device approves it in one tap. Your own character page also lists your other characters, with Add another of my characters for alts.","#roster"],
   ["2026-11-26","Spellbook: already unlocked","The Spellbook's trainer section can now look back too: every ability and rank already unlocked, newest first, in case a trip to the trainer got skipped.","#roster"],
   ["2026-11-26","Spelunker progress","Every Dungeon Passport now shows how close you are to each Spelunker set, names the last few dungeons you still need, and lets you stamp them right there.","#roster"],
@@ -2362,7 +2383,7 @@ function siteUse(){
 function recentDings(){
   const ev=[];for(const m of S.members)for(const j of Array.isArray(m.journey)?m.journey:[])if(/^Reached level \d+/.test(String(j.t||""))&&Date.parse(j.at||""))ev.push([m,lvlOf(j.t),j.at]);
   ev.sort((a,b)=>Date.parse(b[2])-Date.parse(a[2]));if(!ev.length)return null;
-  return h("section",{class:"gt-sec","aria-labelledby":"dings-h"},h("div",{class:"spread"},h("h2",{id:"dings-h",class:"gt-eb"},"Latest Levels"),h("a",{class:"small",href:"#history"},"All")),
+  return h("section",{class:"gt-sec","aria-labelledby":"dings-h"},h("div",{class:"spread"},h("h2",{id:"dings-h"},"Latest Levels"),h("a",{class:"small",href:"#history"},"All")),
     h("div",{class:"dings"},ev.slice(0,5).map(([m,l,at])=>h("div",{class:"spread",style:"flex-wrap:nowrap"},
       h("span",{class:"row",style:"gap:.375rem;flex-wrap:nowrap;min-width:0"},classIcon(m.cls),charLink(m)),
       h("span",{class:"row",style:"gap:.5rem;flex-wrap:nowrap"},h("span",{class:"ding-l",style:`--cc:${CLASSES[m.cls]||"#bfaea9"}`},"Lv "+l),h("span",{class:"small ter",style:"white-space:nowrap"},ago(at)))))))}
@@ -4097,7 +4118,13 @@ function viewChar(coll,id){
     m.isAlt?null:["Gear score",fmtN(gearScore(m))]].filter(Boolean);
   const out=[h("div",{},h("div",{class:"page-head"},h("div",{style:"display:flex;flex-direction:column;gap:.375rem;min-width:0"},h("a",{href:"#roster",class:"small"},"← Roster"),
       h("div",{class:"ch-hero"},
-        h("span",{class:"ch-av",style:`--cc:${cc}`,"aria-hidden":"true"},av?fadeImg({src:av,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini),
+        // The hero: their own little card, as on the Podium (armory picture on their race backdrop, in the metal their level earns).
+        (()=>{const t=tierOf(+m.level||1),bg=genericBg(m),rd=m.armory&&m.armory.render,real=safePic(rd)&&!/\/shadow\//.test(rd),src=real?renderPic(m):"";
+          const c=h("span",{class:"ch-card",style:`--cc:${cc};--t1:${t[2][0]};--t2:${t[2][1]}`,"aria-hidden":"true"},
+            h("span",{class:"ch-card-art",style:bg?`background-image:url("${bg}")`:""},src?fadeImg({src,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))})
+              :av?fadeImg({class:"ch-card-face",src:av,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):h("span",{class:"ch-card-ini"},ini)),
+            h("span",{class:"ch-card-lv"},String(m.level||1)));
+          addTilt(c);return c})(),
         h("div",{style:"display:flex;flex-direction:column;gap:.25rem;min-width:0"},h("h1",{},nameOf(m),streakOf(m)?flameEl(streakOf(m),"big"):null),
           h("p",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),titleTags(m),firstTags(m),
           h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—"))))),
@@ -4117,7 +4144,7 @@ function viewChar(coll,id){
           h("span",{class:"small ter"},"It's claimed on another phone or computer. This asks for this one to be added; an officer or your other device approves it."))):null)),
     dupeBanner(m),
     reqOf(m)&&!myReq(m)&&(owns(m)||isOfficer())?h("div",{class:"card ask",style:"margin-top:1rem"},askRow(m)):null];
-  out.push(h("section",{class:"totals ch-nums","aria-label":"At a glance"},nums.map(([l,v])=>h("div",{class:"total"},h("b",{},v),h("span",{},l)))));
+  out.push(h("section",{class:"totals ch-nums t"+Math.min(4,nums.length),"aria-label":"At a glance"},nums.map(([l,v])=>h("div",{class:"total"},h("b",{},v),h("span",{},l)))));
   out.push(armoryLine(m,can||!!S.user));
   // On phones the page is split into sections (one at a time); on wider screens everything shows.
   const sec=(el,t)=>{if(el)el.dataset.sec=t;return el};
@@ -4861,11 +4888,12 @@ function render(){
   const net=!navigator.onLine?(S.pending?"You're offline. Your changes are saved on this device and will sync when you reconnect.":"You're offline. Showing the last copy saved on this device."):S.slowSync?"Still syncing your changes…":"";
   app.replaceChildren(...[previewStrip(),updateStrip(),header(r.page==="char"?"":r.page==="history"?"roster":r.page==="raids"?"lfg":r.page),
     newsTicker(),net?h("div",{class:"netbar",role:"status"},net):null,winterVeil(),
-    h("main",{class:"wrap"},
+    (()=>{const cm=r.page==="char"?(r.coll==="alts"?altById(r.id):memberById(r.id)):null,pcc=cm&&CLASSES[cm.cls];
+      return h("main",{class:"wrap"+(pcc?" ch-page":""),style:pcc?`--pcc:${pcc}`:null},
     S.error?h("div",{class:"note warn"},S.error):null,
     S.saveErr?h("div",{class:"note warn spread",role:"alert"},h("span",{},S.saveErr),h("button",{class:"btn sm",onclick:()=>{S.saveErr="";render()}},"OK")):null,
     !S.loaded&&!S.error?h("div",{class:"note"},"Loading the roster…"):null,
-    body),
+    body)})(),
     h("footer",{class:"site-foot wrap"},h("span",{},"Blood and Tears · a guild site, made by guildies"),h("button",{type:"button",class:"foot-link",onclick:openPrivacy},"Privacy and opting out"))].filter(Boolean));
   for(const[id,v]of Object.entries(typed)){const el=document.getElementById(id);if(!el||el.closest("dialog"))continue;el.value=v}
   if(keep){const el=document.getElementById(keep);if(el)el.focus()}
