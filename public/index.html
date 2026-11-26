@@ -422,6 +422,7 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .mc{gap:.625rem}.mc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.25rem}
 .mc-list li{display:flex;justify-content:space-between;align-items:center;gap:.5rem;min-height:2rem}.mc-list a{display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--text)}
 .mc>.btn{align-self:flex-start}.am-list{display:flex;flex-direction:column;gap:.75rem;max-height:50vh;overflow:auto}
+.totals.t3{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}.totals.t3 .total{grid-column:auto!important;min-width:0}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -2409,8 +2410,8 @@ function guildTotals(){
   const wkAgo=Date.now()-7*864e5,cur=all.filter(m=>isMine(m)||memberState(m)==="current");v.chars=cur.length;
   // Three, not five: levels this week are in the This Week tile and the guild level, and epics are in the Hall of Firsts.
   const tiles=[["chars","Characters",cur.filter(m=>Date.parse(m.joined||m.createdAt||"")>=wkAgo).length,"Joined in the last seven days"],
-    ["hk","Honourable kills",all.reduce((t,m)=>t+hkWeekOf(m),0)],["sixty","Level 60s"]];
-  return h("section",{class:"totals","aria-label":"Guild totals",style:"grid-template-columns:repeat(3,minmax(0,1fr))"},tiles.map(([k,label,wk,tip,verb])=>{const nx=MS_STEPS[k]?msNext(k,v[k]):null;
+    ["hk","Honour kills",all.reduce((t,m)=>t+hkWeekOf(m),0)],["sixty","Level 60s"]];
+  return h("section",{class:"totals t3","aria-label":"Guild totals"},tiles.map(([k,label,wk,tip,verb])=>{const nx=MS_STEPS[k]?msNext(k,v[k]):null;
     const next=nx?"Next guild milestone: "+fmtN(nx.n)+" ("+fmtN(nx.n-v[k])+" to go)":"";
     // Nobody's got there yet: say so, and point at the Hall of Firsts.
     if(!v[k]&&(k==="epics"||k==="sixty")&&!(S.firsts||{})[k==="epics"?"epic":"lv60"])return h("a",{class:"total total-open",href:"#records",title:"See the Hall of Firsts",
