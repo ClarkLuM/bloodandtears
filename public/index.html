@@ -443,6 +443,24 @@ main.ch-page .card{position:relative}
 :root[data-theme="light"] main.ch-page .card h2{color:color-mix(in srgb,var(--pcc) 45%,var(--text))}
 @media (max-width:560px){.ch-card{width:6.25rem}.ch-card-art{height:8.25rem}.ch-card-lv{min-width:1.375rem;height:1.375rem;font-size:.6875rem;top:.375rem;right:.375rem}}
 @media (prefers-reduced-motion:reduce){.ch-card{transition:none}}
+/* Recipe lists and panels (put back: removed by mistake with the old recap styles) */
+.rc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.rc-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .75rem}
+.rc-name{font-weight:600}
+.rc-meta{white-space:nowrap}.rc-top{align-items:center}.rc-end{margin-left:auto;display:inline-flex;align-items:center;gap:.5rem}
+.rc-src{font-size:.75rem;line-height:1rem;font-weight:600;padding:0 .4375rem;border-radius:6px;border:1px solid var(--sep);color:var(--sec);white-space:nowrap}
+.rc-src.A{border-color:rgb(71 194 108 / .5);color:#7fd69a}.rc-src.T{border-color:rgb(212 162 76 / .55);color:var(--gold)}
+.rc-who{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem .75rem}
+.rc-chip{display:inline-flex;align-items:center;gap:.375rem;font-size:.875rem}
+.rc-chip .ter{font-size:.75rem}
+.rc-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;padding:.75rem .875rem;background:var(--sunken);border:1px solid var(--sep);border-radius:10px}
+.rc-panel h3{margin:0 0 .375rem;font:600 .75rem 'Alegreya Sans SC',serif;letter-spacing:.08em;color:var(--accent-text)}
+.rc-panel ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.25rem;font-size:.875rem}
+.rc-n{display:inline-block;min-width:1.5rem;color:var(--sec);font-size:.75rem;font-variant-numeric:tabular-nums}
+.rc-get b{font-weight:600}.rc-ups{margin-top:.375rem}.tx-o{color:#ff8040}.tx-y{color:#e6c34a}.tx-g{color:#40bf40}
+.rc-panel-msg{margin:0}
+.rc-knows{font-size:.75rem;font-weight:600;color:var(--trim)}
+.rc-pod.first{padding-top:1.5rem;background:rgb(230 188 119 / .14)}.rc-pod.empty-pod{background:none}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -1551,7 +1569,6 @@ input:not([type=checkbox]):not([type=radio]):focus,select:focus{border-color:var
 html.gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 150 60 / .26),rgb(165 13 44 / .2) 55%,transparent)}
 :root[data-theme="light"].gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 150 60 / .16),rgb(165 13 44 / .08) 55%,transparent)}
 @media (min-width:1321px){.brand-mk{grid-row:1/3}}
-@media (max-width:760px){.day-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.day-grid{grid-template-columns:minmax(0,1fr)}.day-hero{padding:1.25rem}
 .hub{display:grid;grid-template-columns:minmax(0,24rem);gap:.5rem}
 .hub-t{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;column-gap:.5rem;row-gap:.125rem;padding:.5rem .75rem;border-radius:10px;border:1px solid var(--sep);background:var(--raised);color:var(--text);text-decoration:none;min-width:0;transition:border-color .15s}
 .hub-t:hover{border-color:var(--accent-text);color:var(--text)}
