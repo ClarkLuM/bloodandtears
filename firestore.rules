@@ -41,6 +41,9 @@ service cloud.firestore {
         (!('showoff' in d) || (d.showoff is map && d.showoff.get('name', '') is string && d.showoff.get('name', '').size() <= 120)) &&
         optStr(d, 'flavour', 40) && optStr(d, 'visitedAt', 40) && optStr(d, 'titlePick', 40) &&
         (!('cleared' in d) || (d.cleared is map && d.cleared.size() <= 40)) &&
+        (!('ownerReq' in d) || (d.ownerReq is map && d.ownerReq.keys().hasOnly(['uid', 'at']) && d.ownerReq.uid is string &&
+          d.ownerReq.at is string && d.ownerReq.at.size() <= 40)) &&
+        (!('main' in d) || d.main == true) &&
         armoryKept() &&
         request.resource.data.get('discordId', null) == (resource == null ? null : resource.data.get('discordId', null)) &&
         // Recipes only ever come from the guild scribe upload (the server).
@@ -62,6 +65,11 @@ service cloud.firestore {
         // "Not me": undoing a claim straight after, when this is the only device on it.
         (resource.data.get('owners', []) == [uid()] && !('owners' in request.resource.data) &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['owners', 'updatedAt'])) ||
+        // "This is me, on a new device": any signed-in device can ask to be added to a claimed character (only the request
+        // changes, and only with its own ID), or take back its own request. An owner or an officer approves it above.
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ownerReq']) && (
+          ('ownerReq' in request.resource.data && request.resource.data.ownerReq.uid == uid()) ||
+          (!('ownerReq' in request.resource.data) && resource.data.ownerReq.uid == uid()))) ||
         // Adding this device with a one-time code made on a device that already owns the character.
         ('link' in request.resource.data && request.resource.data.link is string &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['owners', 'link']) &&

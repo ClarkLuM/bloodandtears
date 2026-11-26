@@ -418,6 +418,11 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .spk-g.done{border-color:rgb(127 214 154 / .45)}.spk-g.done .spk-t .ter{color:#7fd69a}
 .spk-t{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem}.spk-t b{font-size:.8125rem}
 .spk-miss{color:var(--sec)}.spk-miss .linkish{font-size:inherit}
+.ask{gap:.625rem;border-color:var(--accent-b)}.ask-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem .75rem}
+.ask-wait{display:flex;flex-direction:column;align-items:flex-start;gap:.375rem;max-width:22.5rem}
+.mc{gap:.625rem}.mc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.25rem}
+.mc-list li{display:flex;justify-content:space-between;align-items:center;gap:.5rem;min-height:2rem}.mc-list a{display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--text)}
+.mc>.btn{align-self:flex-start}.am-list{display:flex;flex-direction:column;gap:.75rem;max-height:50vh;overflow:auto}
 /* Card binder */
 .binder{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.25rem),1fr));gap:1.25rem;justify-items:center}
 .binder-it{display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -1969,6 +1974,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-26","New device? Just ask","Claimed your character on another phone or browser? Tap This is me, on a new device, and an officer or your other device approves it in one tap. Your own character page also lists your other characters, with Add another of my characters for alts.","#roster"],
   ["2026-11-26","Spellbook: already unlocked","The Spellbook's trainer section can now look back too: every ability and rank already unlocked, newest first, in case a trip to the trainer got skipped.","#roster"],
   ["2026-11-26","Spelunker progress","Every Dungeon Passport now shows how close you are to each Spelunker set, names the last few dungeons you still need, and lets you stamp them right there.","#roster"],
   ["2026-11-26","The Podium","Records now opens with the guild's title holders as little trading cards in their title's frame, standing on steps, with Speed Demon (most levels this week) on the tall middle one.","#records"],
@@ -2258,7 +2264,7 @@ function viewRoster(){
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
   const at=(el,n)=>{if(el&&el.style)el.style.setProperty("--o",n);return el};
   return[head,firstsFlex()||birthdayBanner(),hubTiles(),h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(claimBanner(),1),at(spotlight(true),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
-    h("div",{class:"rl-col"},at(guildToday(),6),at(siteUse(),12),at(discordBox(),13)))]}
+    h("div",{class:"rl-col"},at(asksCard(),1),at(guildToday(),6),at(siteUse(),12),at(discordBox(),13)))]}
 
 // Their best equipped item: highest quality first (green and up).
 // Best loot: the rarest quality first (epic, then rare, then uncommon), then the highest item level, then the best stats.
@@ -4339,8 +4345,12 @@ function viewChar(coll,id){
         isOfficer()&&!m.isAlt&&Array.isArray(m.owners)&&m.owners.length?["Free up for claiming",()=>freeUp(m)]:null]),
       can?h("button",{class:"btn primary",onclick:()=>openEdit(m)},"Edit character"):null)
       :(!m.isAlt&&!Array.isArray(m.owners))?h("button",{class:"btn primary",onclick:()=>claim(m)},"This is me")
-      :!m.isAlt?h("p",{class:"small ter",style:"max-width:22.5rem;margin:0"},"Claimed on another device. If it's yours, open it there and tap Use on another device. No longer have that device? Ask "+officerNames()+" to free it up."):null)),
-    dupeBanner(m)];
+      :!m.isAlt&&S.user?(myReq(m)?h("div",{class:"ask-wait"},h("span",{class:"small"},"You asked to edit this from here "+(ago(m.ownerReq.at)||"just now")+". An officer, or a device that already has it, can approve."),
+          h("button",{class:"btn sm ghost",type:"button",onclick:()=>cancelAsk(m)},"Cancel"))
+        :h("div",{class:"ask-wait"},h("button",{class:"btn",type:"button",onclick:()=>askDevice(m)},"This is me, on a new device"),
+          h("span",{class:"small ter"},"It's claimed on another phone or computer. This asks for this one to be added; an officer or your other device approves it."))):null)),
+    dupeBanner(m),
+    reqOf(m)&&!myReq(m)&&(owns(m)||isOfficer())?h("div",{class:"card ask",style:"margin-top:1rem"},askRow(m)):null];
   out.push(h("section",{class:"totals ch-nums","aria-label":"At a glance"},nums.map(([l,v])=>h("div",{class:"total"},h("b",{},v),h("span",{},l)))));
   out.push(armoryLine(m,can||!!S.user));
   // On phones the page is split into sections (one at a time); on wider screens everything shows.
@@ -4352,7 +4362,7 @@ function viewChar(coll,id){
   // On phones the columns dissolve and --o puts each tab's sections back in reading order.
   const o=(el,n)=>{if(el)el.style.setProperty("--o",n);return el};
   const cells=[h("div",{class:"col col-main"},o(sec(gearCard(m),"gear"),4),o(sec(levelCard(m),"overview"),2),m.isAlt?null:o(sec(passportCard(m),"overview"),3),o(sec(profCard,"profs"),6),o(sec(spellbookCard(m),"gear"),5)),
-    h("div",{class:"col col-side"},o(sec(cardSection(m),"overview"),1),o(sec(talentsCard(m),"gear"),5),o(sec(journeyCard,"overview"),2))];
+    h("div",{class:"col col-side"},o(sec(myCharsCard(m),"overview"),1),o(sec(cardSection(m),"overview"),1),o(sec(talentsCard(m),"gear"),5),o(sec(journeyCard,"overview"),2))];
   const tab=["overview","gear","profs"].includes(S.ui.charTab)?S.ui.charTab:"overview";
   out.push(h("div",{class:"char-tabs"},seg("Section",[["overview","Overview"],["gear","Gear"],["profs","Professions"]],tab,k=>{S.ui.charTab=k;render()})));
   const anyIn=[...cells].some(c=>c.querySelector(`[data-sec="${tab}"]`));
@@ -4885,6 +4895,50 @@ function claim(m){write(updateDoc(charRef(m),{owners:[S.user.uid],updatedAt:nowI
   toast(nameOf(m)+" is yours now",()=>write(updateDoc(charRef(m),{owners:deleteField(),updatedAt:nowIso()}),"Undone. "+nameOf(m)+" is unclaimed again"),"Not me")}
 // Officers: when a character was claimed by the wrong device (or a lost one), take it off every device so its
 // player can tap This is me again.
+// "This is me, on a new device": a device that can't edit a claimed character asks to be added. Any device that already
+// owns it, or any officer, approves with one tap. Only one request waits at a time (a newer one replaces it).
+const reqOf=m=>m&&m.ownerReq&&typeof m.ownerReq.uid==="string"?m.ownerReq:null;
+const myReq=m=>{const r=reqOf(m);return!!(r&&S.user&&r.uid===S.user.uid)};
+function askDevice(m){write(updateDoc(charRef(m),{ownerReq:{uid:S.user.uid,at:nowIso()}}),"Asked. An officer, or a device that already has "+nameOf(m)+", can approve it")}
+function cancelAsk(m){write(updateDoc(charRef(m),{ownerReq:deleteField()}),"Request cancelled")}
+function answerAsk(m,yes){const r=reqOf(m);if(!r)return;
+  const body=yes?{owners:[...new Set([...(m.owners||[]).filter(u=>u!==r.uid),r.uid])].slice(-10),ownerReq:deleteField(),updatedAt:nowIso()}:{ownerReq:deleteField()};
+  write(updateDoc(charRef(m),body),yes?"Approved. That device can edit "+nameOf(m)+" now":"Declined")}
+const askRow=m=>{const r=reqOf(m);return h("div",{class:"ask-row"},h("span",{},h("b",{},nameOf(m)),h("span",{class:"small ter"}," · a new device asked "+(ago(r.at)||"just now"))),
+  h("div",{class:"row"},h("button",{class:"btn sm primary",type:"button",onclick:()=>answerAsk(m,true)},"Approve"),h("button",{class:"btn sm ghost",type:"button",onclick:()=>answerAsk(m,false)},"Decline")))};
+// Requests waiting on you: officers see every one, everyone else sees the ones for their own characters.
+function asksCard(){const l=S.members.filter(m=>reqOf(m)&&!myReq(m)&&(isOfficer()||owns(m)));if(!l.length)return null;
+  return h("section",{class:"card ask","aria-labelledby":"ask-h"},h("h2",{id:"ask-h"},"Device Requests"),
+    h("p",{class:"small ter",style:"margin:0"},"Someone tapped This is me on a character that's already claimed, from a phone or computer that can't edit it yet. Approve it if you know it's them."),
+    l.map(askRow))}
+// Your other characters (alts): every character this device can edit. Adding one gives it the same devices as this one.
+function myCharsCard(m){if(m.isAlt||!owns(m))return null;
+  const mine=S.members.filter(x=>owns(x)&&x.id!==m.id).sort((a,b)=>(+b.level||0)-(+a.level||0)),isMain=me()&&me().id===m.id;
+  return h("section",{class:"card mc","aria-labelledby":"mc-h"},
+    h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"mc-h"},"My Characters"),
+      !isMain?h("button",{type:"button",class:"btn sm ghost",onclick:()=>makeMain(m)},"Make this my main"):h("span",{class:"tag"},"Main")),
+    mine.length?h("ul",{class:"mc-list"},mine.map(x=>h("li",{},h("a",{href:`#char/members/${x.id}`},classIcon(x.cls),h("b",{},nameOf(x))),h("span",{class:"small ter"},"Level "+(x.level||1))))):
+      h("p",{class:"small ter",style:"margin:0"},"Got an alt in the guild? Add it here so it's linked to you and you can edit it from the same devices."),
+    h("button",{type:"button",class:"btn sm",onclick:()=>openAddMine(m)},"Add another of my characters"))}
+function makeMain(m){for(const x of S.members)if(owns(x)&&x.main&&x.id!==m.id)write(updateDoc(charRef(x),{main:deleteField()}));
+  write(updateDoc(charRef(m),{main:true}),nameOf(m)+" is your main now")}
+function openAddMine(main){
+  const dlg=$("#dlg"),f=$("#dlgForm"),q=h("input",{type:"search",placeholder:"Search the guild",autocomplete:"off",style:"max-width:20rem"});
+  const list=h("div",{class:"am-list"});
+  const draw=()=>{const t=q.value.trim().toLowerCase(),pool=S.members.filter(x=>!owns(x)&&(!t||nameOf(x).toLowerCase().includes(t))).sort((a,b)=>nameOf(a).localeCompare(nameOf(b)));
+    const free=pool.filter(x=>!Array.isArray(x.owners)),taken=pool.filter(x=>Array.isArray(x.owners)).slice(0,t?20:0);
+    list.replaceChildren(...[free.length?h("div",{class:"row"},free.map(x=>h("button",{class:"btn sm",type:"button",onclick:async()=>{
+        // Claimed with this device first (the only way the rules allow a claim), then given every device the main has.
+        try{await updateDoc(charRef(x),{owners:[S.user.uid],updatedAt:nowIso()});const devs=[...new Set([S.user.uid,...(main.owners||[])])].slice(-10);
+          if(devs.length>1)await updateDoc(charRef(x),{owners:devs,updatedAt:nowIso()});
+          dlg.close();toast(nameOf(x)+" is linked to you now")}catch(e){toast("Couldn't add it. Try again in a bit.")}}},nameOf(x)))):h("p",{class:"small ter",style:"margin:0"},t?"No unclaimed character matches.":"Everyone's claimed. Search for yours if it's claimed on another device."),
+      taken.length?h("div",{style:"display:flex;flex-direction:column;gap:.375rem"},h("span",{class:"small ter"},"Claimed on another device (ask to add this one):"),
+        h("div",{class:"row"},taken.map(x=>myReq(x)?h("span",{class:"small ter"},nameOf(x)+": asked"):h("button",{class:"btn sm ghost",type:"button",onclick:()=>{askDevice(x);dlg.close()}},nameOf(x))))):null].filter(Boolean))};
+  q.oninput=draw;draw();
+  f.replaceChildren(h("h1",{style:"font-size:1.8125rem;line-height:2.25rem"},"Add Your Character"),
+    h("p",{class:"sub"},"Pick another of your characters in the guild. It'll be linked to you, and editable from every device "+nameOf(main)+" is."),
+    q,list,h("div",{class:"dlg-actions"},h("span"),h("button",{class:"btn",type:"button",onclick:()=>dlg.close()},"Done")));
+  f.onsubmit=e=>e.preventDefault();dlg.showModal();q.focus()}
 function freeUp(m){const before=m.owners.slice();
   write(updateDoc(charRef(m),{owners:deleteField(),updatedAt:nowIso()}));
   toast(nameOf(m)+" can be claimed again. Its player taps This is me on their page.",()=>write(updateDoc(charRef(m),{owners:before,updatedAt:nowIso()}),"Put back"))}
