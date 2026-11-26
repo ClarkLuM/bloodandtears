@@ -1,0 +1,9 @@
+{
+  "name": "bt-check",
+  "private": true,
+  "type": "module",
+  "description": "Opens every page of the site with test data before a deploy and stops the deploy if something's broken.",
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}

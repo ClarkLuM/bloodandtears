@@ -36,6 +36,11 @@ jobs:
           rm -f "$KEY"
       - name: Shrink the page (the repo keeps the readable copy)
         run: cd tools/minify && npm ci --no-audit --no-fund && node minify.mjs ../../public/index.html ../../public/index.html
+      - name: Safety check (opens every page with test data; stops the deploy if anything's broken)
+        run: |
+          cd tools/check && npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          node check.mjs ../../public
       - id: deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:

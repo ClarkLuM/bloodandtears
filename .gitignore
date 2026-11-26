@@ -22,3 +22,4 @@ Thumbs.db
 
 # Small character pictures, made fresh by the deploy workflows (tools/thumbs)
 public/thumbs/
+tools/check/node_modules/
