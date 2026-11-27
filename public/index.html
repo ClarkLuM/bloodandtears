@@ -1728,7 +1728,7 @@ h2,h2.big{font-weight:400;font-size:1.375rem;line-height:1.875rem}
 .page-head{padding-bottom:1rem;border-bottom:1px solid transparent;border-image:linear-gradient(90deg,transparent,var(--gilt-deep) 12%,var(--gilt) 50%,var(--gilt-deep) 88%,transparent) 1}
 :root[data-theme="light"]{--gilt:#a87a35;--gilt-deep:#c9a66b}
 /* in-world panels: only the few that matter */
-main .spot,main .card.ask{
+main .spot,main .card.ask,main .card.ap,main .card.rr,main .dg-ach2{
   background:
    linear-gradient(var(--gilt),var(--gilt)) top left/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) top left/2px 16px no-repeat,
    linear-gradient(var(--gilt),var(--gilt)) top right/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) top right/2px 16px no-repeat,
@@ -1739,7 +1739,7 @@ main .spot,main .card.ask{
    linear-gradient(#24190f,#17100b);
   border:1px solid #5b4128;border-radius:4px;
   box-shadow:inset 0 0 0 1px rgb(0 0 0/.55),inset 0 1px 0 rgb(255 214 150/.1),0 10px 24px rgb(0 0 0/.45)}
-:root[data-theme="light"] main .spot,:root[data-theme="light"] main .card.ask{
+:root[data-theme="light"] main .spot,:root[data-theme="light"] main .card.ask,:root[data-theme="light"] main .card.ap,:root[data-theme="light"] main .card.rr,:root[data-theme="light"] main .dg-ach2{
   background:
    linear-gradient(var(--gilt),var(--gilt)) top left/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) top left/2px 16px no-repeat,
    linear-gradient(var(--gilt),var(--gilt)) top right/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) top right/2px 16px no-repeat,
@@ -1754,6 +1754,10 @@ main .rl-col>aside.card.gt,main .rl-col>section.card:not(.spot):not(.ask){backgr
 main .rl-col>aside.card.gt>.gt-sec{padding-left:0;padding-right:0}
 main .rl-col>aside.card.gt>.gt-sec:first-child{padding-top:0;border-top:0}
 main .rl-col>aside.card.gt>.gt-sec:last-child{padding-bottom:0}
+/* Every other information panel sits on the page with a hairline above it; boxes stay for things you tap. */
+main section.card:not(.ap):not(.rr):not(.spot):not(.ask):not(.rec-link):not(.dg-list):not(.pt){background:none;border:0;border-top:1px solid var(--sep);border-radius:0;box-shadow:none;padding:1.25rem 0 0}
+/* On phones the raid countdown stays on the page so the raid cards aren't a box in a box. */
+@media (max-width:640px){main .card.rr,:root[data-theme="light"] main .card.rr{background:none;border:0;box-shadow:none;padding:0}}
 main .rl-col>section.totals{background:none;border:0;border-radius:0;box-shadow:none;border-top:1px solid var(--sep);border-bottom:1px solid var(--sep);padding:.875rem 0;gap:0}
 main .rl-col>section.totals .total{background:none;border:0;box-shadow:none;border-radius:0;border-left:1px solid var(--sep);padding:.125rem 1rem}
 main .rl-col>section.totals .total:first-child{border-left:0;padding-left:0}
