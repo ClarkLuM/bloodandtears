@@ -115,6 +115,23 @@ main .card,main .tablebox,main .totals{box-shadow:0 1px 2px rgb(0 0 0 / .28)}
 .btn.ghost{border-color:var(--sep);color:var(--sec)}@media (hover:hover) and (pointer:fine){.btn.ghost:hover{border-color:var(--b-def)}}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .lc,.total span.lc{text-transform:none}
+/* Full-bleed character profile */
+main.ch-page{position:relative;isolation:isolate}
+.ch-bleed{position:absolute;z-index:-1;top:-1.5rem;left:calc(50% - 50vw);width:100vw;height:31rem;pointer-events:none;
+  background:linear-gradient(180deg,transparent 50%,var(--base) 97%),linear-gradient(90deg,var(--base) 6%,color-mix(in srgb,var(--base) 45%,transparent) 42%,transparent 68%),
+    radial-gradient(55% 75% at 74% 42%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%),
+    var(--bl-lg) 76% 12%/auto 140% no-repeat,var(--bl-bg) 50% 30%/cover no-repeat}
+.ch-page:has(.ch-bleed) .ch-card{display:none}
+.ch-page:has(.ch-bleed) .ch-hero{padding-top:11rem}
+.ch-page:has(.ch-bleed) .ch-hero h1{font-size:4rem;line-height:4.375rem;text-shadow:0 2px 18px rgb(0 0 0/.65)}
+.ch-page:has(.ch-bleed) .page-head{border-image:none;border-bottom:0}
+:root[data-theme="light"] .ch-page:has(.ch-bleed) .ch-hero h1{text-shadow:0 1px 12px rgb(255 255 255/.7)}
+.ch-lvbar{display:block;width:min(18rem,100%);height:.25rem;border-radius:2px;background:color-mix(in srgb,var(--cc) 18%,rgb(255 255 255/.06));overflow:hidden;margin:.125rem 0 .25rem}
+.ch-lvbar i{display:block;height:100%;background:var(--cc);border-radius:inherit}
+body{overflow-x:clip}
+@media (max-width:640px){.ch-bleed{top:-1rem;height:27rem;background-position:0 0,0 0,0 0,55% 0%,50% 30%;background-size:auto,auto,auto,auto 118%,cover;
+    background-image:linear-gradient(180deg,transparent 52%,var(--base) 97%),linear-gradient(90deg,color-mix(in srgb,var(--base) 55%,transparent),transparent 60%),radial-gradient(60% 60% at 55% 40%,color-mix(in srgb,var(--cc) 20%,transparent),transparent 70%),var(--bl-sm),var(--bl-bg)}
+  .ch-page:has(.ch-bleed) .ch-hero{padding-top:13rem}.ch-page:has(.ch-bleed) .ch-hero h1{font-size:2.75rem;line-height:3.125rem}}
 ::selection{background:color-mix(in srgb,var(--accent) 55%,transparent);color:var(--text)}
 html{scrollbar-color:var(--b-def) var(--base)}input,textarea{caret-color:var(--accent-text)}
 h1,h2,h3{text-wrap:balance}
@@ -4397,7 +4414,11 @@ function viewChar(coll,id){
   const nums=[["Level",String(m.level||1)],ar.hk!==undefined?["Honourable kills",(+ar.hk||0).toLocaleString("en-AU")]:null,
     m.isAlt?null:["Dungeons",passportOf(m).length+" of "+DUNGEONS.length],ar.ilvl?["Item level",String(ar.ilvl)]:null,
     m.isAlt?null:["Gear score",fmtN(gearScore(m))]].filter(Boolean);
-  const out=[h("div",{},h("div",{class:"page-head"},h("div",{style:"display:flex;flex-direction:column;gap:.375rem;min-width:0"},h("a",{href:"#roster",class:"small"},"← Roster"),
+  // Full-bleed profile: their armory render on its race backdrop, across the top of the page behind the name.
+  // Only when the armory has a real render; otherwise the little card stays as the hero.
+  const bleed=(()=>{const rd=m.armory&&m.armory.render;if(!(safePic(rd)&&!/\/shadow\//.test(rd)))return null;const bg=genericBg(m);
+    return h("div",{class:"ch-bleed","aria-hidden":"true",style:`--cc:${cc};--bl-bg:${bg?`url("${bg}")`:"none"};--bl-sm:url("${renderPic(m)}");--bl-lg:url("${charPic(m,"render")}")`})})();
+  const out=[bleed,h("div",{},h("div",{class:"page-head"},h("div",{style:"display:flex;flex-direction:column;gap:.375rem;min-width:0"},h("a",{href:"#roster",class:"small"},"← Roster"),
       h("div",{class:"ch-hero"},
         // The hero: their own little card, as on the Podium (armory picture on their race backdrop, in the metal their level earns).
         (()=>{const t=tierOf(+m.level||1),bg=genericBg(m),rd=m.armory&&m.armory.render,real=safePic(rd)&&!/\/shadow\//.test(rd),src=real?renderPic(m):"";
@@ -4407,7 +4428,8 @@ function viewChar(coll,id){
             h("span",{class:"ch-card-lv"},String(m.level||1)));
           addTilt(c);return c})(),
         h("div",{style:"display:flex;flex-direction:column;gap:.25rem;min-width:0"},h("h1",{},nameOf(m),streakOf(m)?flameEl(streakOf(m),"big"):null),
-          h("p",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),(()=>{const t=shownTitle(m);return t&&t.past?h("div",{class:"titles"},h("a",{class:"title-tag past",href:"#records",title:"Held "+t.t.replace(/^Former /,"")+" before"},h("span",{class:"title-ic","aria-hidden":"true"}),t.t)):null})(),titleTags(m),titleChooser(m),firstTags(m),
+          h("p",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),
+          h("span",{class:"ch-lvbar",style:`--cc:${cc}`,"aria-hidden":"true"},h("i",{style:`width:${Math.min(100,Math.round((+m.level||1)/60*100))}%`})),(()=>{const t=shownTitle(m);return t&&t.past?h("div",{class:"titles"},h("a",{class:"title-tag past",href:"#records",title:"Held "+t.t.replace(/^Former /,"")+" before"},h("span",{class:"title-ic","aria-hidden":"true"}),t.t)):null})(),titleTags(m),titleChooser(m),firstTags(m),
           h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—"))))),
     can||isOfficer()?h("div",{class:"row"},moreMenu([
         ["",null,"This character"],
