@@ -435,7 +435,12 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
 .mc>.btn{align-self:flex-start}.am-list{display:flex;flex-direction:column;gap:.75rem;max-height:50vh;overflow:auto}
 .totals.t2,.totals.t3,.totals.t4{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}.totals.t2{grid-template-columns:repeat(2,minmax(0,1fr))!important}.totals.t4{grid-template-columns:repeat(4,minmax(0,1fr))!important}
 .totals.t2 .total,.totals.t3 .total,.totals.t4 .total{grid-column:auto!important;min-width:0}
-@media (max-width:640px){.totals.t4{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:640px){.totals.t4{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  /* The character page's four numbers stay on one row on phones: smaller figures, labels may wrap. */
+  .totals.ch-nums.t4{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .ch-nums.t4 .total{padding:.625rem .375rem!important;text-align:center;align-items:center;justify-content:space-between}
+  .ch-nums.t4 .total b{font-size:1.1875rem!important;line-height:1.5rem!important;white-space:nowrap}
+  .ch-nums.t4 .total span{font-size:.6875rem!important;line-height:.875rem!important;letter-spacing:.04em}}
 /* Character page hero: their card, and the page tinted with their class colour */
 .ch-card{position:relative;flex:none;width:8.5rem;padding:3px;border-radius:12px;background:linear-gradient(135deg,var(--t1),var(--t2));box-shadow:0 10px 24px rgb(0 0 0 / .5),0 0 26px color-mix(in srgb,var(--cc) 30%,transparent);
   transform:perspective(800px) rotateX(0) rotateY(0);transition:transform .5s cubic-bezier(.23,1,.32,1)}
@@ -4390,7 +4395,7 @@ function viewChar(coll,id){
   const cc=CLASSES[m.cls]||"#bfaea9",av=charPic(m,"avatar"),ini=nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(),ar=m.armory||{};
   const filledN=GEAR_ALL.filter(n=>(m.gear||{})[n]&&m.gear[n].id).length;
   const nums=[["Level",String(m.level||1)],ar.hk!==undefined?["Honourable kills",(+ar.hk||0).toLocaleString("en-AU")]:null,
-    m.isAlt?null:["Dungeons",passportOf(m).length+" of "+DUNGEONS.length],ar.ilvl?["Item level",String(ar.ilvl)]:filledN?["Gear",filledN+" of "+GEAR_ALL.length]:null,
+    m.isAlt?null:["Dungeons",passportOf(m).length+" of "+DUNGEONS.length],ar.ilvl?["Item level",String(ar.ilvl)]:null,
     m.isAlt?null:["Gear score",fmtN(gearScore(m))]].filter(Boolean);
   const out=[h("div",{},h("div",{class:"page-head"},h("div",{style:"display:flex;flex-direction:column;gap:.375rem;min-width:0"},h("a",{href:"#roster",class:"small"},"← Roster"),
       h("div",{class:"ch-hero"},
