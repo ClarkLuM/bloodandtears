@@ -1085,9 +1085,6 @@ a.r-name{color:color-mix(in srgb,var(--cc) 80%,#fff)}
 .lg-tab{position:relative}.lg-tab::after{content:"";position:absolute;inset:-.375rem 0}
 .lg-tab{line-height:1.625rem;font-size:.6875rem}
 .lg-lv.lg-lv-b{position:static;flex:none;width:1.875rem;height:1.875rem;font-size:.75rem;align-self:center}
-/* Signature move on the card */
-.lg-art.has-move .lg-hd{bottom:.8125rem}
-.lg-move{position:absolute;left:.75rem;right:.75rem;bottom:.25rem;z-index:1;font-size:.6875rem;line-height:.875rem;font-weight:600;color:#e9b877;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgb(0 0 0 / .9)}
 /* An opened roster row: the card beside the details */
 .r-open{display:flex;gap:2rem;align-items:center;padding:.5rem 0}
 .r-open .r-detail{flex:1;min-width:0;grid-template-columns:repeat(2,minmax(0,1fr));align-self:flex-start}
@@ -1113,7 +1110,7 @@ a.r-name{color:color-mix(in srgb,var(--cc) 80%,#fff)}
 .lg-pvp{position:absolute;top:3.125rem;right:.5rem;width:2.25rem;z-index:1;display:flex;justify-content:center;filter:drop-shadow(0 1px 2px rgb(0 0 0 / .85))}
 .lg-rank{position:absolute;left:.75rem;bottom:1.875rem;z-index:1;display:flex;align-items:center;gap:.25rem;font:600 .6875rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:#f6d77a;text-shadow:0 1px 3px rgb(0 0 0 / .9)}
 .lg-rank>span{display:inline-flex;width:.8125rem;height:.8125rem}.lg-rank svg{width:100%;height:100%}
-.lg-art.has-move .lg-rank{bottom:2.4375rem}
+
 .lg-art.is-gm .lg-hd b{color:#f6d77a}
 .title-pick{display:flex;flex-direction:column;align-items:center;gap:.5rem;width:100%}
 .tp-row{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem}
@@ -1966,7 +1963,11 @@ const charLink=m=>h("a",{class:"linkish",href:`#char/${m.isAlt?"alts":"members"}
 const classIcon=cls=>{const c=CLASSES[cls];if(!c)return h("span",{class:"dot",style:"background:transparent"});
   return h("img",{class:"cls-ic",src:`https://wow.zamimg.com/images/wow/icons/medium/classicon_${String(cls).toLowerCase()}.jpg`,alt:"",title:cls,width:"18",height:"18",loading:"lazy",referrerpolicy:"no-referrer",style:`--cc:${c}`,
     onerror:e=>e.target.replaceWith(h("span",{class:"dot",style:`background:${c}`}))})};
-const classLine=m=>[m.race,m.spec,m.cls].filter(Boolean).join(" ");
+// A character's spec is the talent tree with the most points in it. The armory's own "active" spec can follow the
+// tree last spent in (a few points in Assassination made a Combat rogue show as Assassination).
+const specOf=m=>{const t=((m.armory||{}).talents||[]).filter(x=>x&&+x.points>0);if(!t.length)return m.spec||"";
+  const top=Math.max(...t.map(x=>+x.points)),lead=t.filter(x=>+x.points===top);return(lead.find(x=>x.active)||lead[0]).name||m.spec||""};
+const classLine=m=>[m.race,specOf(m),m.cls].filter(Boolean).join(" ");
 // Armory pictures and icons only ever come from Blizzard's image server.
 const safePic=u=>typeof u==="string"&&/^https:\/\/render\.worldofwarcraft\.com\/[\w\/.-]+$/.test(u)?u:"";
 // When the armory last heard from the game for this character (usually their last logout).
@@ -2276,7 +2277,7 @@ const inBand=(m,b)=>{if(!b||b==="all")return true;const lv=+m.level||1;if(b==="6
 const memberState=m=>{const e=rosterEntry(m);return e===null?"former":"current"};
 function rosterList(){
   const u=S.ui,q=String(u.rq||"").trim().toLowerCase().split(/\s+/).filter(Boolean),off=isOfficer();
-  const hay=m=>[nameOf(m),m.cls,m.race,m.spec,roleText(m),...Object.keys(m.profs||{})].join(" ").toLowerCase();
+  const hay=m=>[nameOf(m),m.cls,m.race,specOf(m),roleText(m),...Object.keys(m.profs||{})].join(" ").toLowerCase();
   const keep=m=>{
     if(u.role&&u.role!=="All"&&!canRole(m,u.role))return false;
     if(u.rCls&&u.rCls!=="All"&&m.cls!==u.rCls)return false;
@@ -2495,17 +2496,6 @@ function moreMenu(items){
 document.addEventListener("click",e=>{for(const d of document.querySelectorAll("details.more[open]"))if(!d.contains(e.target))d.open=false});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")for(const d of document.querySelectorAll("details.more[open]")){d.open=false;d.querySelector("summary").focus()}});
 
-/* ---------- Signature moves ---------- */
-// Every spec has a signature move, printed on its card for flavour.
-const MOVES={"Warrior|Arms":"Mortal Strike","Warrior|Fury":"Bloodthirst","Warrior|Protection":"Shield Wall",
-  "Rogue|Assassination":"Cold Blood","Rogue|Combat":"Blade Flurry","Rogue|Subtlety":"Vanish",
-  "Hunter|Beast Mastery":"Bestial Wrath","Hunter|Marksmanship":"Aimed Shot","Hunter|Survival":"Deterrence",
-  "Mage|Arcane":"Arcane Power","Mage|Fire":"Combustion","Mage|Frost":"Ice Barrier",
-  "Warlock|Affliction":"Siphon Life","Warlock|Demonology":"Soul Link","Warlock|Destruction":"Conflagrate",
-  "Priest|Discipline":"Power Infusion","Priest|Holy":"Spirit of Redemption","Priest|Shadow":"Shadowform",
-  "Shaman|Elemental":"Elemental Mastery","Shaman|Enhancement":"Stormstrike","Shaman|Restoration":"Nature's Swiftness",
-  "Druid|Balance":"Moonfury","Druid|Feral Combat":"Dire Bear Form","Druid|Restoration":"Swiftmend"};
-const moveOf=m=>{const v=MOVES[(m.cls||"")+"|"+(m.spec||"")];return v?{name:v,text:"Signature move: "+v}:null};
 const perthDay=(t=Date.now())=>new Date(t+8*36e5).toISOString().slice(0,10);
 
 /* ---------- Site use (officers only) ---------- */
@@ -2861,14 +2851,14 @@ function cardData(m){
     art:[mix(cc,"#000000",.55),mix(cc,"#000000",.25),"#0f0a09"],rows,hp:typeof st.health==="number"?Math.round(st.health):0,
     name:nameOf(m),line:["Level "+lv,classLine(m),roleText(m)].filter(Boolean).join(" · "),
     initials:nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(),
-    mini,num,rarity,flav:flavourOf(m),stamps:trimStamps(stampsOf(m).filter(s=>!/^\d+d$/.test(s[0]))),streak:streakOf(m),frame,move:moveOf(m),first:firstEd(m),gm:isGM(m),pvp:+(m.armory||{}).rank||0}}
+    mini,num,rarity,flav:flavourOf(m),stamps:trimStamps(stampsOf(m).filter(s=>!/^\d+d$/.test(s[0]))),streak:streakOf(m),frame,first:firstEd(m),gm:isGM(m),pvp:+(m.armory||{}).rank||0}}
 function cardEl(m){
   const d=cardData(m),[,tname,f,edge]=d.tier;
   const artStyle=d.bg?`background-image:linear-gradient(180deg,${d.art[0]}55,${d.art[2]}cc),url(${d.bg})`:`background:linear-gradient(160deg,${d.art[0]},${d.art[1]} 55%,${d.art[2]})`;
   const shine=TIER_SHINE[tname]||(d.frame?"rgb(255 255 255 / .32)":undefined);
-  return h("div",{class:"lg-card"+(shine?" foil":""),style:`background:linear-gradient(135deg,${f[0]},${f[1]} 35%,${f[2]} 55%,${f[3]})`+(shine?`;--shine:${shine}`:""),role:"img","aria-label":`${d.name}, ${d.line}, ${tname} card${d.frame?", "+d.frame.name:""}. ${d.gm?"Guild Master. ":""}${d.pvp?"PvP "+pvpRank(d.pvp)+". ":""}${d.move?d.move.text+". ":""}${d.flav}`+(d.stamps.length?" Stamps: "+d.stamps.map(x=>x[1]).join(", ")+".":"")},
+  return h("div",{class:"lg-card"+(shine?" foil":""),style:`background:linear-gradient(135deg,${f[0]},${f[1]} 35%,${f[2]} 55%,${f[3]})`+(shine?`;--shine:${shine}`:""),role:"img","aria-label":`${d.name}, ${d.line}, ${tname} card${d.frame?", "+d.frame.name:""}. ${d.gm?"Guild Master. ":""}${d.pvp?"PvP "+pvpRank(d.pvp)+". ":""}${d.flav}`+(d.stamps.length?" Stamps: "+d.stamps.map(x=>x[1]).join(", ")+".":"")},
     h("div",{class:"lg-card-in"},
-      h("div",{class:"lg-art"+(d.move?" has-move":"")+(d.gm?" is-gm":""),style:artStyle},
+      h("div",{class:"lg-art"+(d.gm?" is-gm":""),style:artStyle},
         d.render?fadeImg({class:"r",src:d.render,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(d.fg)})
           :h("span",{class:"lg-face",style:`border-color:${d.cc};color:${d.cc}`},d.avatar?h("img",{src:d.avatar,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(d.initials)}):d.initials),
         d.lv>=60?h("span",{class:"lg-holo","aria-hidden":"true"}):null,
@@ -2876,8 +2866,7 @@ function cardEl(m){
         h("span",{class:"lg-lv",style:`border-color:${edge};color:${edge}`,"aria-hidden":"true"},String(d.lv)),
         d.pvp?(()=>{const e=h("span",{class:"lg-pvp",title:"PvP "+pvpRank(d.pvp)});e.innerHTML=pvpSvg(d.pvp);return e})():null,
         d.gm?(()=>{const e=h("span",{class:"lg-rank"},h("span",{}),"Guild Master");e.firstChild.innerHTML=CROWN;return e})():null,
-        h("div",{class:"lg-hd"},h("span",{class:"lg-nm"},h("b",{},d.name),d.streak?flameEl(d.streak,"on-card"):null),d.hp?h("span",{class:"lg-hp"},h("small",{},"HP"),d.hp.toLocaleString("en-AU")):null),
-        d.move?h("span",{class:"lg-move"},d.move.text):null),
+        h("div",{class:"lg-hd"},h("span",{class:"lg-nm"},h("b",{},d.name),d.streak?flameEl(d.streak,"on-card"):null),d.hp?h("span",{class:"lg-hp"},h("small",{},"HP"),d.hp.toLocaleString("en-AU")):null)),
       h("div",{class:"lg-type",style:`background:${mix(d.cc,"#0f0a09",.72)};color:${mix(d.cc,"#ffffff",.25)}`},d.line.replace(/^Level \d+ · /,"")),
       h("div",{class:"lg-stats"},d.rows.map(x=>h("div",{class:"lg-st"},h("i",{style:`background:${x.col}`},x.icon),h("span",{},x.label),h("b",{},x.val),
         h("u",{},h("s",{style:`width:${x.pct.toFixed(0)}%;background:${edge}`}))))),
@@ -3025,11 +3014,10 @@ async function cardPng(m){
   x.restore();
   // Name and HP over the foot of the picture
   x.save();x.shadowColor="rgba(0,0,0,.85)";x.shadowBlur=4*K;x.shadowOffsetY=K;
-  x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e2";x.font=disp.replace("SZ",19*K);const ny=ay+ah-(d.move?21:9)*K;if(d.gm)x.fillStyle="#f6d77a";x.fillText(d.name,18*K,ny,(d.hp?150:220)*K);
+  x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#efe6e2";x.font=disp.replace("SZ",19*K);const ny=ay+ah-9*K;if(d.gm)x.fillStyle="#f6d77a";x.fillText(d.name,18*K,ny,(d.hp?150:220)*K);
   if(d.gm){x.font=disp.replace("SZ",11*K);try{x.letterSpacing=(1.1*K)+"px"}catch(e){}x.fillText("GUILD MASTER",33*K,ny-22*K);try{x.letterSpacing="0px"}catch(e){}
     const cx=18*K,cy=ny-33*K,u=12*K/16;x.beginPath();[[2,12],[14,12],[15,5],[11.5,7.8],[8,3],[4.5,7.8],[1,5]].forEach(([px,py],i)=>i?x.lineTo(cx+px*u,cy+py*u):x.moveTo(cx+px*u,cy+py*u));x.closePath();x.fill()}
   if(d.hp){x.textAlign="right";x.fillStyle="#ff7a6b";x.font=body(700,15);x.fillText(d.hp.toLocaleString("en-AU"),W-18*K,ny);const w=x.measureText(d.hp.toLocaleString("en-AU")).width;x.font=body(700,10);x.fillText("HP",W-18*K-w-3*K,ny)}
-  if(d.move){x.textAlign="left";x.fillStyle="#e9b877";x.font=body(600,10);x.fillText(d.move.text,18*K,ay+ah-6*K,W-36*K)}
   x.restore();
   // Level badge, top right
   {const bx=ax+aw-26*K,by=ay+26*K;x.beginPath();x.arc(bx,by,17*K,0,7);x.fillStyle="rgba(15,10,9,.88)";x.fill();x.lineWidth=2*K;x.strokeStyle=edge;x.stroke();

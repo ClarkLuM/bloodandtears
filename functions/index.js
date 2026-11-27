@@ -223,7 +223,11 @@ async function armoryOf(fullName) {
         out.level = +c.level; out.guild = (c.guild && c.guild.name) || ""; out.guildSlug = (c.guild && c.guild.slug) || ""; out.ilvl = +c.averageItemLevel || 0;
         out.first = String(c.name || "").slice(0, 20); out.last = String(c.surname || "").slice(0, 20);
         out.cls = c.class && c.class.name || ""; out.race = c.race && c.race.name || "";
-        const sp = (c.specs || []).find(x => x.active) || null; out.spec = sp ? sp.name : "";
+        // The spec is the tree with the most points. Blizzard's "active" flag can follow the tree last spent in, so a
+        // Combat rogue with a few points in Assassination showed as Assassination. Ties go to the active one.
+        const trees = (c.specs || []).filter(x => x && +x.spentPoints > 0), top = Math.max(0, ...trees.map(x => +x.spentPoints));
+        const sp = trees.filter(x => +x.spentPoints === top).sort((a, b) => !!b.active - !!a.active)[0] || (c.specs || []).find(x => x.active) || null;
+        out.spec = sp ? sp.name : "";
         // Pictures: the full transparent render, the square portrait and the race background the armory shows behind it.
         const md = c.media || {};
         out.render = pic(md["main-raw"] && md["main-raw"].url) || pic(md["main-sd-raw"] && md["main-sd-raw"].url);

@@ -30,7 +30,6 @@ Other things worth knowing about:
 - **Guild Master.** The character at the top rank on the guild's armory list gets a crown and "Guild Master" over a gold name on their card.
 - **PvP rank stripes.** A card shows its PvP rank under the level badge: ranks 1 to 5 are bronze chevrons (one per rank), 6 to 10 are silver chevrons over a bar, and 11 to 14 are gold, two chevrons under one to four stars. It follows whatever rank the armory shows.
 - **Choose your title.** With more than one title, the owner picks which one their card wears (its ribbon and frame) from the frame swatches under the card on their page.
-- **Signature moves.** Every spec has one (Combat rogues have Blade Flurry), printed on the card for flavour. The list is `MOVES` in `public/index.html`.
 - **Celebrations.** When your character levels up, your card flips over with the new level. Guild milestones (such as 1,000 honourable kills) get a small toast.
 - **Since You Were Last Here** sums up what happened since this device last had the site open.
 - **What's new** (the sparkle button in the header) lists the latest changes to the site, newest first, with a dot when there's something you haven't seen. Add a line to `WHATS_NEW` in `public/index.html` with each update.
