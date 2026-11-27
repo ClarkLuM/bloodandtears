@@ -115,6 +115,20 @@ main .card,main .tablebox,main .totals{box-shadow:0 1px 2px rgb(0 0 0 / .28)}
 .btn.ghost{border-color:var(--sep);color:var(--sec)}@media (hover:hover) and (pointer:fine){.btn.ghost:hover{border-color:var(--b-def)}}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .lc,.total span.lc{text-transform:none}
+/* Atmosphere: aged leather, darker edges, a warm glow from above and a few slow embers. It sits on a fixed layer
+   behind everything (background-attachment:fixed is unreliable on phones). Light mode is parchment, no embers. */
+body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:radial-gradient(110% 70% at 50% -10%,rgb(150 45 30/.28),transparent 60%),radial-gradient(140% 110% at 50% 40%,transparent 48%,rgb(0 0 0/.62) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .38 0 0 0 0 .25 0 0 0 .14 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E"),var(--base)}
+:root[data-theme="light"] body::before{background:radial-gradient(110% 70% at 50% -10%,rgb(255 236 200/.7),transparent 60%),radial-gradient(140% 110% at 50% 40%,transparent 50%,rgb(120 80 40/.2) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .22 0 0 0 0 .1 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E"),var(--base)}
+body{background:var(--base)}html{background:var(--base)}body{background:transparent}
+.embers{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.embers i{position:absolute;bottom:-8px;width:3px;height:3px;border-radius:50%;background:#ffb35c;box-shadow:0 0 6px 2px rgb(255 140 60/.55);opacity:0;animation:ember linear infinite}
+@keyframes ember{0%{transform:translate(0,0);opacity:0}12%{opacity:.75}100%{transform:translate(var(--dx,30px),-92vh);opacity:0}}
+:root[data-theme="light"] .embers{display:none}
+@media (prefers-reduced-motion:reduce){.embers{display:none}}
+.ic{display:inline-grid;place-items:center;width:1.125em;height:1.125em;flex:none;vertical-align:-.2em}.ic svg{width:100%;height:100%}
+.q-chip .ic,.rr-rl .ic{margin-right:.3125rem;color:var(--gilt)}.rr-rl{display:inline-flex;align-items:center}
+.ff-x .ic{width:1rem;height:1rem}.ft-tag .ic{width:1em;height:1em}.wk-b .ic{width:.875em;height:.875em}
 /* Full-bleed character profile */
 main.ch-page{position:relative;isolation:isolate}
 .ch-bleed{position:absolute;z-index:-1;top:-1.5rem;left:calc(50% - 50vw);width:100vw;height:31rem;pointer-events:none;
@@ -804,7 +818,7 @@ main:focus{outline:none}
 .title-tag{display:inline-flex;align-items:center;gap:.375rem;padding:.125rem .625rem .125rem .5rem;border-radius:999px;font-size:.875rem;font-weight:600;text-decoration:none;color:#f3d48a;background:rgb(226 181 82/.12);border:1px solid rgb(226 181 82/.35)}
 :root[data-theme="light"] .title-tag{color:#7a5410;background:rgb(226 181 82/.18);border-color:rgb(184 140 40/.5)}
 @media (hover:hover) and (pointer:fine){.title-tag:hover{text-decoration:underline}}
-.title-ic{width:.625rem;height:.625rem;background:currentColor;clip-path:polygon(0 100%,0 25%,25% 55%,50% 0,75% 55%,100% 25%,100% 100%)}
+.title-ic{width:.875rem;height:.875rem;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2015.5h14M4%2013l-1-7%204%203%203-5%203%205%204-3-1%207z%22/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2015.5h14M4%2013l-1-7%204%203%203-5%203%205%204-3-1%207z%22/%3E%3C/svg%3E") center/contain no-repeat}
 /* Phones: the bottom bar has an icon over each label, and taller buttons to hit. Narrow phones use short labels. */
 nav.bottom .nb-ic{display:flex}nav.bottom .nb-s{display:none}
 @media (max-width:700px){
@@ -2239,7 +2253,7 @@ function header(page){
       h("button",{class:"btn quiet srch-btn",type:"button",onclick:openSearch,"aria-label":"Search the site",title:"Search (press /)"},
         srchIcon(),h("span",{class:"srch-l"},"Search"),h("span",{class:"srch-ph","aria-hidden":"true"},h("span",{class:"sp-long"},"Search guildies, items, recipes"),h("span",{class:"sp-short"},"Search")),h("kbd",{class:"srch-k"},"/")),
       h("button",{class:"btn quiet wn-btn",type:"button",onclick:openWhatsNew,"aria-label":wnFresh().length?"What's new (new things to see)":"What's new",title:"What's new on the site"},
-        h("span",{class:"wn-ic","aria-hidden":"true"},"✦"),h("span",{class:"wn-l"},"What's new"),wnFresh().length?h("span",{class:"wn-pip","aria-hidden":"true"}):null),
+        ic("new","wn-ic"),h("span",{class:"wn-l"},"What's new"),wnFresh().length?h("span",{class:"wn-pip","aria-hidden":"true"}):null),
       h("button",{class:"btn quiet theme-btn",onclick:toggleTheme,"aria-label":isDark()?"Light mode":"Dark mode",title:isDark()?"Light mode":"Dark mode"},
         h("span",{class:"theme-ic","aria-hidden":"true"},isDark()?"\u2600":"\u263E"),
         // Both labels take the same cell, the unused one hidden, so the button keeps one width and the header doesn't shift.
@@ -2364,7 +2378,7 @@ function rosterFilters(){
   const qc=(label,n,on,patch)=>h("button",{class:"q-chip",type:"button","aria-pressed":String(!!on),onclick:()=>set({...patch,rOpen:null})},label,n!=null?h("span",{}," "+n):null);
   const quick=h("div",{class:"r-quick",role:"group","aria-label":"Quick filters"},
     qc("All",cur.length,noQuick,{role:"All",rLv:u.rLv==="60"?"all":u.rLv||"all",rSeen:false,rMine:false}),
-    ROLES.map(r=>qc(r==="DPS"?"DPS":r+"s",cur.filter(m=>canRole(m,r)).length,u.role===r,{role:u.role===r?"All":r})),
+    ROLES.map(r=>qc([ic(r),r==="DPS"?"DPS":r+"s"],cur.filter(m=>canRole(m,r)).length,u.role===r,{role:u.role===r?"All":r})),
     qc("Level 60",cur.filter(m=>(+m.level||1)>=60).length,u.rLv==="60",{rLv:u.rLv==="60"?"all":"60"}),
     qc("Seen this week",null,u.rSeen,{rSeen:!u.rSeen}),
     S.members.some(isMine)?qc("Mine",null,u.rMine,{rMine:!u.rMine}):null);
@@ -2881,6 +2895,13 @@ const STREAK_MIN=2;
 const streakLive=m=>{const r=S.streaks&&S.streaks.rows&&S.streaks.rows[m.id];if(!r)return 0;const today=perthDay(),yest=new Date(Date.now()+8*36e5-864e5).toISOString().slice(0,10);return r.last===today||r.last===yest?+r.n||0:0};
 function streakOf(m){const r=S.streaks&&S.streaks.rows&&S.streaks.rows[m.id];if(!r||!(+r.n>=STREAK_MIN))return 0;
   const today=perthDay(),yest=new Date(Date.now()+8*36e5-864e5).toISOString().slice(0,10);return r.last===today||r.last===yest?+r.n:0}
+// One icon set: gold line icons on a 20px grid, 1.6 stroke, round ends (matches the menu icons and the crest).
+const IC={"new":`<path d="M10 2.5v3M10 14.5v3M2.5 10h3M14.5 10h3"/><path d="M10 6.5l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z"/>`,"first":`<circle cx="10" cy="12" r="4.5"/><path d="M7 2.5l3 5 3-5"/><path d="M10 10l.8 1.6 1.7.2-1.2 1.1.3 1.7-1.6-.8-1.6.8.3-1.7-1.2-1.1 1.7-.2z"/>`,"title":`<path d="M3 15.5h14M4 13l-1-7 4 3 3-5 3 5 4-3-1 7z"/>`,"close":`<path d="M5 5l10 10M15 5L5 15"/>`,"Tank":`<path d="M10 2.5l6 2.2v4.8c0 4-2.6 6.7-6 8-3.4-1.3-6-4-6-8V4.7z"/>`,"Healer":`<path d="M8 3.5h4v4.5h4.5v4H12v4.5H8V12H3.5V8H8z"/>`,"DPS":`<path d="M3 3l8.5 8.5M17 3l-8.5 8.5M3 3h3v3M17 3h-3v3M6.5 13.5l-3 3M13.5 13.5l3 3M5 11.5l3.5 3.5M15 11.5L11.5 15"/>`,"done":`<path d="M4 10.5l3.8 3.8L16 6"/>`,"up":`<path d="M5 12l5-5 5 5"/>`};
+const ic=(n,cls)=>{const e=h("span",{class:"ic"+(cls?" "+cls:""),"aria-hidden":"true"});e.innerHTML=`<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${IC[n]||""}</svg>`;return e};
+// A dozen slow embers drifting up behind the page (dark theme only; hidden with reduced motion).
+(()=>{const e=document.createElement("div");e.className="embers";e.setAttribute("aria-hidden","true");
+  for(let i=0;i<12;i++){const s=document.createElement("i");s.style.left=(4+Math.random()*92)+"%";s.style.setProperty("--dx",(Math.random()*60-20)+"px");
+    s.style.animationDuration=(10+Math.random()*10)+"s";s.style.animationDelay=(-Math.random()*18)+"s";e.append(s)}document.body.prepend(e)})();
 const FLAME='<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.3 1c.3 2.2-.8 3.300-2 4.600C5.100 6.900 4 8.200 4 10.100 4 12.800 5.800 15 8 15s4-2.100 4-4.700c0-1.500-.6-2.700-1.300-3.700-.3.900-.8 1.500-1.400 1.800.4-2.500-.2-5.200-1-7.400z"/></svg>';
 const flameEl=(n,cls)=>{const e=h("span",{class:"flame"+(cls?" "+cls:""),title:"Seen in game "+n+" days running"},h("span",{"aria-hidden":"true"}),String(n),h("span",{class:"visually-hidden"}," days running"));e.firstChild.innerHTML=FLAME;return e};
 // The Guild Master (rank 0 on the guild's armory list) gets a crown and a gold name on their card.
@@ -3320,13 +3341,13 @@ function firstsFlex(){
         h("p",{class:"ff-sub"},when,h("span",{class:"ff-long"}," · "+days+(days===1?" day":" days")+" after launch · in the Hall of Firsts for good"))),
       h("a",{class:"btn sm ff-go",href:"#records",onclick:()=>{S.ui.raceTab="firsts"}},"Hall of Firsts"),
       // Seen it: hide this one on this device (it's still in the Hall of Firsts and the news strip).
-      h("button",{type:"button",class:"ff-x","aria-label":"Hide this",title:"Hide this",onclick:()=>{try{localStorage.setItem("lg-ffx",JSON.stringify([...hid,k+"|"+f.at].slice(-20)))}catch(e){}render()}},"×")))}
+      h("button",{type:"button",class:"ff-x","aria-label":"Hide this",title:"Hide this",onclick:()=>{try{localStorage.setItem("lg-ffx",JSON.stringify([...hid,k+"|"+f.at].slice(-20)))}catch(e){}render()}},ic("close"))))}
   return cards.length?h("div",{class:"ff-wrap"},cards):null}
 // On their character page, for good: a gold ribbon for each guild first they hold.
 function firstTags(m){const held=FIRSTS.filter(([k])=>{const f=(S.firsts||{})[k];return f&&f.id===m.id&&!f.by});if(!held.length)return null;
   return h("div",{class:"ft-tags"},held.map(([k])=>{const f=S.firsts[k],big=k==="epic"||k==="lv60";
     return h("a",{class:"ft-tag"+(big?" big":""),href:"#records",onclick:()=>{S.ui.raceTab="firsts"},title:"In the Hall of Firsts since "+new Date(f.at).toLocaleDateString("en-AU",{day:"numeric",month:"long"})},
-      h("span",{"aria-hidden":"true"},"★︎"),"Guild's "+FIRST_WORDS[k].replace(/^first to /,"first to "))}))}
+      ic("first"),"Guild's "+FIRST_WORDS[k].replace(/^first to /,"first to "))}))}
 /* ---------- Neck and neck ---------- */
 // Two or more players on the same level who both dinged it in the last two days (from level 10, below 60). The biggest
 // such race shows at the top of the feed while it's still true; it never goes into History.
@@ -3751,7 +3772,7 @@ function canMake(m){
       const maxed=x.sk>=300,info=open&&rinfoState==="ok"&&!maxed,su=r=>info?skillUp(x.p,r[0],x.sk):null;
       const row=(r,o={})=>{const rk=m.id+"|"+x.p+"|"+r[0],ro=S.ui.cmRc===rk,u=o.next?["r","Red: needs "+r[1]+" skill"]:su(r),where=o.where&&r[2]==="R"?rcWhere(x.p,r[0]):"";
         return h("li",{class:ro?"open":""},u?h("span",{class:"su su-"+u[0],title:u[1]},h("span",{class:"visually-hidden"},u[1])):h("span",{class:"su none","aria-hidden":"true"}),
-          h("span",{class:"cm-n"},itemRef(r[0],r[4]?{id:r[4],q:r[5]}:null),x.known&&x.k.has(String(r[0]).toLowerCase())?h("span",{class:"rb-k",title:"The guild scribe has seen them know this"}," ✓"):null,where?h("span",{class:"small ter rb-where"},where):null),
+          h("span",{class:"cm-n"},itemRef(r[0],r[4]?{id:r[4],q:r[5]}:null),x.known&&x.k.has(String(r[0]).toLowerCase())?h("span",{class:"rb-k",title:"The guild scribe has seen them know this"}," ",ic("done")):null,where?h("span",{class:"small ter rb-where"},where):null),
           h("span",{class:"rc-src "+r[2]},R_LABEL[r[2]]),h("span",{class:"small ter cm-sk"},(o.next?"at ":r[3]?"about ":"")+r[1]),
           h("button",{type:"button",class:"cm-tog","aria-expanded":String(ro),"aria-label":(ro?"Hide":"Show")+" reagents and recipe for "+r[0],onclick:()=>{if(!ro)openAnim("c:"+rk);setUi({cmRc:ro?null:rk})}},""),
           ro?(()=>{const d=recipePanel({p:x.p,name:r[0],src:r[2]});d.className+=anim("c:"+rk);return d})():null)};
@@ -4122,7 +4143,7 @@ function weekMoves(){
 function weekCard(){
   const x=weekMoves(),open=S.ui.weekAll;
   const since=x?(x.base.days<=1?"since yesterday":"since "+shortDate(x.base.key+"T12:00:00+08:00")):"";
-  const badge=e=>e.kind==="crown"?h("span",{class:"wk-b crown"},medal(1)):h("span",{class:"wk-b "+e.kind},e.kind==="up"?"▲"+e.n:e.n);
+  const badge=e=>e.kind==="crown"?h("span",{class:"wk-b crown"},medal(1)):h("span",{class:"wk-b "+e.kind},e.kind==="up"?[ic("up"),e.n]:e.n);
   const list=x?x.list:[],shown=open?list:list.slice(0,5);
   return h("section",{class:"card wk","aria-labelledby":"wk-h"},
     h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"wk-h"},"This Week"),x?h("span",{class:"small ter"},"Since "+shortDate(x.base.key+"T12:00:00+08:00")):null),
@@ -4268,7 +4289,7 @@ function raidsCard(){
       :!open&&!note?h("span",{class:"small ter"},"Loot table from 9 December"):null;
     return h("div",{class:"rr-raid"},h("div",{class:"spread",style:"align-items:baseline;gap:.25rem .75rem"},h("h3",{},name),h("span",{class:"small ter"},size+" players")),status,
       h("div",{class:"rr-roles"},ROLES.map(r=>{const n=Math.min(have[r],want[r]),pct=Math.round(n/want[r]*100);
-        return h("div",{class:"rr-role"},h("span",{class:"small"},r==="DPS"?"DPS":r+"s"),h("span",{class:"track","aria-hidden":"true"},h("i",{class:n>=want[r]?"max":"",style:`width:${pct}%`})),h("span",{class:"small ter rr-n"},have[r]+" / "+want[r]))})),
+        return h("div",{class:"rr-role"},h("span",{class:"small rr-rl"},ic(r),r==="DPS"?"DPS":r+"s"),h("span",{class:"track","aria-hidden":"true"},h("i",{class:n>=want[r]?"max":"",style:`width:${pct}%`})),h("span",{class:"small ter rr-n"},have[r]+" / "+want[r]))})),
       note?h("p",{class:"small ter",style:"margin:0"},note):null,loot)};
   const when=new Date(RAIDS_OPEN).toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long",timeZone:"Australia/Perth"});
   return h("section",{class:"card rr","aria-labelledby":"raids-h"},h("div",{class:"rr-hero"},
