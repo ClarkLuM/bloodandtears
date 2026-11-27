@@ -26,7 +26,7 @@
 <link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Alegreya+Sans+SC:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Alegreya+Sans+SC:wght@500;700&family=Marcellus&family=Marcellus+SC&display=swap">
 <link rel="stylesheet" href="ds-tokens.css">
 <style>
 *,*::before,*::after{box-sizing:border-box}
@@ -46,7 +46,7 @@ body{margin:0}
   --wine:var(--ds-color-bg-brand);--wine-text:var(--ds-color-site-wine-text);--info-subtle:var(--ds-color-bg-info-subtle);--info-text:var(--ds-color-text-info);--danger:var(--ds-color-text-danger);--bar:var(--ds-color-site-bar);--scrim:var(--ds-color-overlay-scrim);--q0:var(--ds-color-site-q0);
   --q1:var(--ds-color-site-q1);--q2:var(--ds-color-site-q2);--q3:var(--ds-color-site-q3);--q4:var(--ds-color-site-q4);--q5:var(--ds-color-site-q5);--q6:var(--ds-color-site-q6);--gold:var(--ds-color-site-gold);--lvl:var(--ds-color-site-lvl);
   --silver:var(--ds-color-site-silver);--copper:var(--ds-color-site-copper);
-  --display:"Alegreya Sans SC",Figtree,sans-serif;
+  --display:Marcellus,Georgia,serif;--gilt:#d4a65c;--gilt-deep:#8a6534;
   --body:Figtree,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   color-scheme:dark;
 }
@@ -1232,9 +1232,20 @@ dialog.srch-dlg form{padding:1rem;gap:.5rem}
 .srch-main b.q2{color:var(--q2,#1eff00)}.srch-main b.q3{color:var(--q3,#3b9cff)}.srch-main b.q4{color:var(--q4,#c06bff)}
 #boot{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:var(--base);color:var(--ter);font-size:.875rem;transition:opacity .35s ease,visibility .35s}
 #boot.gone{opacity:0;visibility:hidden;pointer-events:none}
-.boot-gb{width:7rem;height:7rem;animation:gb-spin 1.6s cubic-bezier(.55,.05,.35,1) infinite;filter:drop-shadow(0 6px 14px rgb(0 0 0 / .45))}
+.boot-gb{width:7rem;height:7rem;filter:drop-shadow(0 6px 14px rgb(0 0 0 / .45));transform-origin:center;transform-box:fill-box}
+/* The crest draws itself: the gold ring traces round, the gingerbread outline follows, then the colours fill in.
+   Once drawn it breathes gently until the guild has loaded, then flies up into the header logo (bootDone). */
+.cd-ring,.cd-gb{fill-opacity:0;stroke:#e6bc77;stroke-width:7;stroke-dasharray:1;stroke-dashoffset:1;animation:cdDraw 650ms cubic-bezier(.77,0,.175,1) forwards,cdFill 260ms ease-out forwards}
+.cd-ring{animation-delay:0ms,560ms}.cd-gb{stroke-width:5;animation-delay:220ms,760ms}
+.cd-disc{opacity:0;animation:cdIn 260ms ease-out 560ms forwards}.cd-face{opacity:0;animation:cdIn 220ms ease-out 900ms forwards}
+.boot-gb{animation:cdBreathe 1.8s ease-in-out 1.2s infinite}
+@keyframes cdDraw{to{stroke-dashoffset:0}}@keyframes cdFill{to{fill-opacity:1;stroke-opacity:0}}@keyframes cdIn{to{opacity:1}}
+@keyframes cdBreathe{50%{transform:scale(1.04)}}
+#boot.quick .boot-gb *{animation-duration:0s!important;animation-delay:0s!important}
+#boot.flying{background-color:transparent;transition:background-color 380ms ease}#boot.flying span{opacity:0;transition:opacity 150ms ease}#boot.flying .boot-gb{animation:none}
+.crest-landing header .brand-logo{opacity:0}
 @keyframes gb-spin{0%{transform:rotate(0) scale(1)}45%{transform:rotate(200deg) scale(1.06)}100%{transform:rotate(360deg) scale(1)}}
-@media (prefers-reduced-motion:reduce){.boot-gb{animation:gb-pulse 1.8s ease-in-out infinite}@keyframes gb-pulse{50%{opacity:.55}}#boot{transition:none}}
+@media (prefers-reduced-motion:reduce){.boot-gb{animation:gb-pulse 1.8s ease-in-out infinite}@keyframes gb-pulse{50%{opacity:.55}}#boot{transition:none}.boot-gb *{animation-duration:0s!important;animation-delay:0s!important}}
 /* Pictures fade in the first time they load, and a box keeps their space so nothing jumps. */
 img.fade{opacity:0;transition:opacity .3s ease}img.fade.in{opacity:1}
 @media (prefers-reduced-motion:reduce){img.fade{transition:none}}
@@ -1702,10 +1713,62 @@ html.gl-ember .ph-logo::before{background:radial-gradient(closest-side,rgb(214 1
 .vw-row.zero{color:var(--ter)}.vw-row.zero .vw-bar i{display:none}.vw-hd{font-size:.6875rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
 .vw-row>b{text-align:right;font-variant-numeric:tabular-nums}
 .vw-bar{display:flex;align-items:center;gap:.375rem}.vw-bar i{display:block;height:.375rem;border-radius:99px;background:var(--accent-text);min-width:2px}.vw-bar b{font-variant-numeric:tabular-nums}
+
+/* ===== Look B (Nov 2026): fewer boxes, Marcellus titles, a few in-world panels =====
+   Titles use Marcellus (close to the game's own lettering). Numbers stay in Figtree: Marcellus's 1 reads like an I.
+   Information sits on the page split by hairlines; boxes are kept for things you tap and for the few panels that matter,
+   which get dark leather, an iron edge and gold corner trim. */
+html{font-synthesis-weight:none}
+h1{font-weight:400;font-size:2.5rem;line-height:2.875rem;letter-spacing:.01em}
+@media (max-width:640px){h1{font-size:2.125rem;line-height:2.5rem}}
+h2,h2.big{font-weight:400;font-size:1.375rem;line-height:1.875rem}
+.brand b,.spot-name,a.r-name,.dg-name b,.pt-name b,.r-cls-n,.lg-hd b,.ap-t,.hot-txt b,.dg-ach-t b{font-weight:400}
+.total b,.r-lv b,.spot-stats b,.cow-nums b,.ap-pl,.lg-rank,.pod-b,.zm-top button::before,.uf-t,.rr-count>b{font-family:var(--body)}
+/* the page title sits on a forged gold rule */
+.page-head{padding-bottom:1rem;border-bottom:1px solid transparent;border-image:linear-gradient(90deg,transparent,var(--gilt-deep) 12%,var(--gilt) 50%,var(--gilt-deep) 88%,transparent) 1}
+:root[data-theme="light"]{--gilt:#a87a35;--gilt-deep:#c9a66b}
+/* in-world panels: only the few that matter */
+main .spot,main .card.ask{
+  background:
+   linear-gradient(var(--gilt),var(--gilt)) top left/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) top left/2px 16px no-repeat,
+   linear-gradient(var(--gilt),var(--gilt)) top right/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) top right/2px 16px no-repeat,
+   linear-gradient(var(--gilt),var(--gilt)) bottom left/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) bottom left/2px 16px no-repeat,
+   linear-gradient(var(--gilt),var(--gilt)) bottom right/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) bottom right/2px 16px no-repeat,
+   radial-gradient(120% 90% at 50% 0%,rgb(255 214 150/.07),transparent 60%),
+   repeating-linear-gradient(45deg,rgb(255 255 255/.012) 0 2px,transparent 2px 5px),
+   linear-gradient(#24190f,#17100b);
+  border:1px solid #5b4128;border-radius:4px;
+  box-shadow:inset 0 0 0 1px rgb(0 0 0/.55),inset 0 1px 0 rgb(255 214 150/.1),0 10px 24px rgb(0 0 0/.45)}
+:root[data-theme="light"] main .spot,:root[data-theme="light"] main .card.ask{
+  background:
+   linear-gradient(var(--gilt),var(--gilt)) top left/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) top left/2px 16px no-repeat,
+   linear-gradient(var(--gilt),var(--gilt)) top right/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) top right/2px 16px no-repeat,
+   linear-gradient(var(--gilt),var(--gilt)) bottom left/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) bottom left/2px 16px no-repeat,
+   linear-gradient(var(--gilt),var(--gilt)) bottom right/16px 2px no-repeat,linear-gradient(var(--gilt),var(--gilt)) bottom right/2px 16px no-repeat,
+   radial-gradient(120% 90% at 50% 0%,rgb(255 255 255/.5),transparent 60%),linear-gradient(#fbf3e3,#f1e3c6);
+  border-color:#c9a66b;box-shadow:inset 0 1px 0 rgb(255 255 255/.6),0 6px 16px rgb(90 50 10/.12)}
+main .spot-big .spot-art{border-right:1px solid #5b4128}
+main .spot .eyebrow{font-family:"Marcellus SC",var(--display);letter-spacing:.12em;font-size:.8125rem}
+/* Roster: the side column and the feed sit on the page */
+main .rl-col>aside.card.gt,main .rl-col>section.card:not(.spot):not(.ask){background:none;border:0;box-shadow:none;border-radius:0;padding:1.25rem 0 0;border-top:1px solid var(--sep)}
+main .rl-col>aside.card.gt>.gt-sec{padding-left:0;padding-right:0}
+main .rl-col>aside.card.gt>.gt-sec:first-child{padding-top:0;border-top:0}
+main .rl-col>aside.card.gt>.gt-sec:last-child{padding-bottom:0}
+main .rl-col>section.totals{background:none;border:0;border-radius:0;box-shadow:none;border-top:1px solid var(--sep);border-bottom:1px solid var(--sep);padding:.875rem 0;gap:0}
+main .rl-col>section.totals .total{background:none;border:0;box-shadow:none;border-radius:0;border-left:1px solid var(--sep);padding:.125rem 1rem}
+main .rl-col>section.totals .total:first-child{border-left:0;padding-left:0}
 </style>
 </head>
 <body>
-<div id="boot" role="status"><img class="boot-gb" src="logo.svg" alt="" width="112" height="112"><span>Gathering the guild…</span></div>
+<div id="boot" role="status"><svg class="boot-gb" xmlns="http://www.w3.org/2000/svg" viewBox="30 30 452 452" width="112" height="112" aria-hidden="true"><circle class="cd-ring" pathLength="1" cx="256" cy="256" r="226" fill="#896038"/><g class="cd-disc"><circle cx="256" cy="256" r="210" fill="#3a1608"/><circle cx="256" cy="256" r="204" fill="#9a0628"/></g><path class="cd-gb" pathLength="1" fill="#d69d56" d="M320.1 427.8C314.6 428.1 313.5 429.0 305.1 424.3C296.6 419.5 277.8 404.2 269.7 399.2C261.5 394.3 260.6 394.5 256.0 394.5C251.4 394.5 250.5 394.1 242.0 399.2C233.4 404.3 214.2 420.5 204.8 425.1C195.4 429.7 194.2 429.6 185.4 427.1C176.6 424.5 159.6 416.1 152.0 409.9C144.3 403.7 141.3 395.3 139.3 390.1C137.3 384.9 138.7 382.6 139.9 378.8C141.1 374.9 141.1 371.6 146.6 367.2C152.0 362.9 166.3 357.3 172.4 352.8C178.6 348.4 179.8 346.1 183.6 340.5C187.4 334.8 192.3 326.5 195.3 318.9C198.3 311.4 202.0 302.6 201.4 295.2C200.8 287.8 201.1 283.3 191.9 274.5C182.6 265.7 155.0 251.3 145.6 242.4C136.2 233.4 136.9 227.5 135.4 220.8C133.8 214.2 134.7 208.0 136.2 202.5C137.8 197.0 141.7 191.5 144.5 187.9C147.4 184.4 144.7 182.7 153.6 181.1C162.5 179.5 190.6 184.1 197.8 178.3C205.0 172.5 195.1 156.7 196.8 146.4C198.5 136.2 203.3 125.0 207.9 116.8C212.4 108.5 217.7 102.3 224.2 97.0C230.7 91.8 238.7 86.8 246.8 85.3C255.0 83.9 264.5 84.2 273.2 88.3C282.0 92.3 292.3 100.0 299.1 109.5C306.0 119.0 312.0 133.8 314.5 145.3C317.0 156.9 306.8 172.7 314.2 178.7C321.6 184.7 349.9 179.7 359.0 181.6C368.0 183.5 365.7 186.0 368.6 190.1C371.5 194.2 375.2 200.7 376.3 206.2C377.5 211.8 377.4 217.2 375.4 223.5C373.5 229.8 373.7 235.7 364.7 244.0C355.7 252.3 330.2 265.6 321.2 273.1C312.3 280.7 312.3 283.0 311.0 289.3C309.6 295.6 310.6 302.3 313.4 310.8C316.1 319.3 323.4 333.2 327.7 340.2C332.0 347.1 333.1 348.6 339.0 352.8C344.9 357.0 357.7 360.2 363.3 365.5C368.9 370.7 371.7 378.8 372.7 384.1C373.8 389.5 371.7 393.4 369.6 397.6C367.5 401.8 365.3 405.3 360.1 409.5C354.9 413.7 345.1 419.7 338.5 422.8C331.8 425.8 325.7 427.6 320.1 427.8Z"/><g class="cd-face"><g fill="none" stroke="#9a0628" stroke-width="9.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M228.4 126.9L250.0 139.0M280.1 126.9L258.6 139.0"/>
+<path d="M236.2 178.7Q254.3 160.5 272.4 178.7"/>
+<path d="M188.7 200.2Q173.2 220.1 179.2 247.7M319.8 200.2Q335.4 220.1 329.3 247.7"/>
+<path d="M180.1 361.5L212.0 402.0M328.4 361.5L296.5 402.0"/></g>
+<g fill="#9a0628"><clipPath id="eL"><path d="M225.4 141.4L256.4 149.2L256.4 166.1L225.4 166.1Z"/></clipPath><ellipse cx="240.9" cy="146.7" rx="9.7" ry="10.2" clip-path="url(#eL)"/><clipPath id="eR"><path d="M252.1 149.2L283.2 141.4L283.2 166.1L252.1 166.1Z"/></clipPath><ellipse cx="267.6" cy="146.7" rx="9.7" ry="10.2" clip-path="url(#eR)"/></g>
+<g fill="#9a0628" stroke="#9a0628" stroke-linejoin="round"><path d="M231.8 206.2L254.3 219.2L276.7 206.2L276.7 232.1L254.3 219.2L231.8 232.1Z" stroke-width="4.7"/>
+<circle cx="254.3" cy="273.5" r="12.1" stroke="none"/><circle cx="254.3" cy="325.3" r="11.2" stroke="none"/></g></g></svg><span>Gathering the guild…</span></div>
+<script>/* The crest draws itself on the first visit each day; after that it is already drawn. */try{var d=new Date().toDateString();if(localStorage.getItem("crestDay")===d)document.getElementById("boot").classList.add("quick");else localStorage.setItem("crestDay",d)}catch(e){}</script>
 <div id="app"></div>
 <dialog id="dlg"><form id="dlgForm" method="dialog"></form></dialog>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -4971,7 +5034,18 @@ function render(){
   if(S.loaded||S.error||S.authError||!configured)bootDone();
   S.anim=null;
   checkDing();checkMilestones();markVisit()}
-function bootDone(){const b=document.getElementById("boot");if(b&&!b.classList.contains("gone")){b.classList.add("gone");setTimeout(()=>b.remove(),500)}}
+// The loading crest finishes drawing (first visit of the day only), then flies up and lands as the header logo.
+function bootDone(){const b=document.getElementById("boot");if(!b||b.classList.contains("gone")||b.classList.contains("landing"))return;
+  const fade=()=>{b.classList.add("gone");setTimeout(()=>b.remove(),500)};
+  const mark=b.querySelector(".boot-gb"),reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  if(reduce||!mark||!mark.animate||S.error||S.authError)return fade();
+  const DRAWN=1160,left=b.classList.contains("quick")?0:DRAWN-((document.timeline&&document.timeline.currentTime)||DRAWN);
+  b.classList.add("landing");
+  setTimeout(()=>{b.classList.add("flying");document.documentElement.classList.add("crest-landing");const dst=document.querySelector("header .brand-logo");if(!dst){document.documentElement.classList.remove("crest-landing");return fade()}
+    const a=mark.getBoundingClientRect(),z=dst.getBoundingClientRect(),dx=z.left+z.width/2-(a.left+a.width/2),dy=z.top+z.height/2-(a.top+a.height/2);
+    mark.animate([{transform:"none"},{transform:`translate(${dx}px,${dy}px) scale(${z.width/a.width})`}],{duration:540,easing:"cubic-bezier(.77,0,.175,1)",fill:"forwards"}).finished
+      .then(()=>{document.documentElement.classList.remove("crest-landing");const l=document.querySelector("header .brand-logo");
+        if(l&&l.animate)l.animate([{transform:"scale(1.15)"},{transform:"none"}],{duration:220,easing:"cubic-bezier(.23,1,.32,1)"});b.remove()})},Math.max(0,left))}
 setTimeout(bootDone,10000);
 // Pictures: the first load fades in; after that the same picture shows straight away on every redraw.
 const seenImg=new Set();
