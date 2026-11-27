@@ -115,6 +115,9 @@ main .card,main .tablebox,main .totals{box-shadow:0 1px 2px rgb(0 0 0 / .28)}
 .btn.ghost{border-color:var(--sep);color:var(--sec)}@media (hover:hover) and (pointer:fine){.btn.ghost:hover{border-color:var(--b-def)}}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .lc,.total span.lc{text-transform:none}
+::selection{background:color-mix(in srgb,var(--accent) 55%,transparent);color:var(--text)}
+html{scrollbar-color:var(--b-def) var(--base)}input,textarea{caret-color:var(--accent-text)}
+h1,h2,h3{text-wrap:balance}
 .see-all{display:inline-flex;align-items:center;min-height:1.75rem;padding:0 .25rem;margin:-.25rem -.25rem -.25rem 0}
 /* Touch: no grey tap flash or double-tap wait, and every press visibly lands. */
 html{-webkit-tap-highlight-color:transparent}
@@ -158,8 +161,8 @@ label.check{display:flex;align-items:center;gap:.5rem;min-height:2.5rem;color:va
 
 /* Roster */
 .roster-layout{display:grid;grid-template-columns:minmax(0,1fr) 20rem;gap:1.5rem;align-items:start}
-.rl-col{display:flex;flex-direction:column;gap:1rem;min-width:0}
-@media (max-width:980px){.roster-layout{grid-template-columns:minmax(0,1fr);gap:1rem}.rl-col{display:contents}.rl-col>*{order:var(--o,50)}}
+.rl-col{display:flex;flex-direction:column;gap:1.5rem;min-width:0}.rl-col>.r-tools-wrap{margin-bottom:-.75rem}
+@media (max-width:980px){.roster-layout{grid-template-columns:minmax(0,1fr);gap:1.25rem}.rl-col{display:contents}.rl-col>*{order:var(--o,50)}.rl-col>.r-tools-wrap{margin-bottom:-.5rem}}
 .tablebox{background:var(--raised);border:1px solid var(--sep);border-radius:10px;container-type:inline-size;overflow:hidden}
 @container (min-width:641px) and (max-width:780px){.roster-t th:nth-child(4),.roster-t td:nth-child(4){display:none}}
 table{border-collapse:collapse;width:100%}
@@ -935,6 +938,13 @@ html[data-swipe="next"] #app main{animation:swNext .22s ease-out}html[data-swipe
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .toast-undo{font:inherit;font-weight:600;background:none;border:0;color:#a32420;margin-left:1rem;padding:.25rem 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 :root[data-theme="light"] .toast-undo{color:#f7a097}
+/* Toasts slide up from the bottom (400ms ease) and leave the same way, a little faster. */
+.toast{transition:transform 400ms ease,opacity 400ms ease,visibility 0s}
+.toast[hidden]{display:flex;visibility:hidden;opacity:0;transform:translate(-50%,calc(100% + 1.5rem));pointer-events:none;transition:transform 250ms ease,opacity 250ms ease,visibility 0s 250ms}
+.spot.opening{animation:spotSwap 220ms cubic-bezier(.23,1,.32,1)}
+@keyframes spotSwap{from{opacity:.35;filter:blur(2px)}}
+@media (prefers-reduced-motion:reduce){.toast[hidden]{transform:translateX(-50%)}.spot.opening{animation:spotFade 200ms ease}}
+@keyframes spotFade{from{opacity:.35}}
 .toast{position:fixed;display:flex;align-items:center;left:50%;transform:translateX(-50%);bottom:calc(1rem + env(safe-area-inset-bottom,0px));background:var(--text);color:var(--base);padding:.5rem 1rem;border-radius:6px;z-index:20;max-width:calc(100vw - 2rem)}
 /* Roster rows: face, class-coloured name, level bar, profession pills */
 .r-who{display:flex;align-items:center;gap:.75rem;min-width:0}
@@ -1314,7 +1324,7 @@ input:not([type=checkbox]):not([type=radio]):focus,select:focus{border-color:var
 .spot-big .eyebrow{color:color-mix(in srgb,var(--cc) 70%,var(--accent-text))}
 .spot-big .spot-name{font-size:2.5rem;line-height:2.75rem;font-weight:400;color:color-mix(in srgb,var(--cc) 75%,#fff)}
 :root[data-theme="light"] .spot-big .spot-name{color:color-mix(in srgb,var(--cc) 40%,#1a1211)}
-:root[data-theme="light"] .spot-big .eyebrow{color:color-mix(in srgb,var(--cc) 45%,#3a1608)}
+:root[data-theme="light"] .spot-big .eyebrow{color:color-mix(in srgb,var(--cc) 32%,#3a1608)}
 .spot-stats{position:relative;display:flex;gap:1.5rem;margin:.5rem 0 .375rem;padding-bottom:.625rem}
 .spot-stats span{display:flex;flex-direction:column;font-size:.6875rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ter)}
 .spot-stats b{order:-1;font:400 1.5rem/1.75rem var(--display);letter-spacing:0;text-transform:none;color:var(--text)}
@@ -1322,7 +1332,11 @@ input:not([type=checkbox]):not([type=radio]):focus,select:focus{border-color:var
 .spot-lv s{display:block;height:100%;background:var(--cc);border-radius:999px}
 @media (max-width:640px){.spot-big{grid-template-columns:minmax(0,1fr)}.spot-big .spot-art{min-height:12rem}.spot-big .spot-body{padding:1rem 1.125rem 1.25rem}.spot-big .spot-name{font-size:2rem;line-height:2.25rem}.spot-stats{gap:1rem}}
 .gt-wk .wk-line{margin:0;padding-top:0;border-top:0}
-@media (max-width:640px){.rl-col>.spot-big{order:3}}
+@media (max-width:640px){.rl-col>.spot-big{order:3}
+  /* Compact on phones so the roster list stays near the top: small picture beside the name, the extras fold away. */
+  .spot-big{grid-template-columns:6.5rem minmax(0,1fr)}.spot-big .spot-art{min-height:0}.spot-big .spot-art .face{width:3.5rem;height:3.5rem;font-size:1.25rem}
+  .spot-big .spot-body{padding:.875rem 1rem;gap:.25rem}.spot-big .spot-name{font-size:1.375rem;line-height:1.625rem}
+  .spot-big .spot-stats,.spot-big .spot-seen,.spot-big .spot-gear{display:none}.spot-big .sub{font-size:.8125rem;line-height:1.125rem}}
 
 /* G: the faces live in the side panel, in a grid */
 .gt .now-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.875rem .25rem;overflow:visible;padding:.25rem 0 0}
@@ -2184,7 +2198,7 @@ function rosterFilters(){
     h("input",{id:"r-q",type:"search",placeholder:"Search the roster","aria-label":"Search the roster by name, class, race, spec or profession",value:u.rq||"",autocomplete:"off",
       oninput:e=>{S.ui.rq=e.target.value;S.ui.rOpen=null;schedule()}}));
   const view=seg("View",[["list","List"],["class","By class"],["cards","Cards"]],u.rView||"list",k=>set({rView:k}));
-  const toggle=h("button",{class:"btn r-ftoggle",type:"button","aria-expanded":String(!!u.rFiltersOpen),"aria-controls":"r-filters",onclick:()=>setUi({rFiltersOpen:!u.rFiltersOpen})},
+  const toggle=h("button",{class:"btn r-ftoggle",type:"button","aria-expanded":String(!!u.rFiltersOpen),"aria-controls":"r-filters",onclick:()=>{if(!u.rFiltersOpen)openAnim("filters");setUi({rFiltersOpen:!u.rFiltersOpen})}},
     icon('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 4h12M4.5 8h7M7 12h2"/></svg>',"r-ficon"),"Filters",
     chips.length?h("span",{class:"r-badge","aria-label":chips.length+" on"},String(chips.length)):null);
   const sort=h("label",{class:"r-sort"},h("span",{class:"ter"},"Sort"),h("select",{id:"r-sort",onchange:e=>set({rSort:e.target.value})},R_SORTS.map(([v,l])=>h("option",{value:v,selected:(u.rSort||"level-desc")===v},l))));
@@ -2201,7 +2215,7 @@ function rosterFilters(){
   const shown=chips;
   return h("div",{class:"r-tools"},
     h("div",{class:"r-top"},search,h("div",{class:"r-ctrls"},toggle,sort,view)),
-    h("div",{class:"r-filters",id:"r-filters","data-shut":u.rFiltersOpen?null:""},quick,
+    h("div",{class:"r-filters"+anim("filters"),id:"r-filters","data-shut":u.rFiltersOpen?null:""},quick,
       sel("r-role","Role",[["All","Any role"],...ROLES.map(r=>[r,r])],u.role||"All",v=>set({role:v})),
       sel("r-cls","Class",[["All","Any class"],...classes.map(c=>[c,c])],u.rCls||"All",v=>set({rCls:v})),
       sel("r-prof","Profession",[["All","Any profession"],...profs.map(p=>[p,p])],u.rProf||"All",v=>set({rProf:v})),
@@ -2595,19 +2609,19 @@ function spotlight(big){
     render?fadeImg({class:"r",src:render,alt:"",referrerpolicy:"no-referrer",onerror:picFallback(genericFg(m))})
       :h("span",{class:"face",style:`border-color:${cc};color:${cc}`},avatar?h("img",{src:avatar,alt:"",referrerpolicy:"no-referrer"}):nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase()));
   const lvP=Math.round(Math.min(60,+m.level||1)/60*100);
-  return h("section",{class:"card spot"+(big?" spot-big":""),style:`--cc:${cc}`,"aria-labelledby":"spot-h"},art,
+  return h("section",{class:"card spot"+(big?" spot-big":"")+anim("spot"),style:`--cc:${cc}`,"aria-labelledby":"spot-h"},art,
     h("div",{class:"spot-body"},
       h("span",{class:"eyebrow"},shift?"Spotlight":"Character of the day"),
       h("a",{class:"spot-name",id:"spot-h",href:link},nameOf(m)),
       h("span",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),
-      h("span",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m)):""),
+      h("span",{class:"small ter spot-seen"},seenOf(m)?"Last seen in game "+ago(seenOf(m)):""),
       big?h("div",{class:"spot-stats"},h("span",{},h("b",{},String(m.level||1)),"Level"),
         h("span",{},h("b",{},fmtN(((m.armory||{}).hk)||0)),"Honourable kills"),
         h("span",{},h("b",{},String(Object.values(m.gear||{}).filter(g=>g&&g.id).length)),"Items equipped"),
         h("i",{class:"spot-lv","aria-hidden":"true"},h("s",{style:`width:${lvP}%`}))):null,
-      best.length?h("span",{class:"small"},h("span",{class:"ter"},"Best gear "),best.map((g,i)=>[i?", ":"",qLink(g)])):null,
+      best.length?h("span",{class:"small spot-gear"},h("span",{class:"ter"},"Best gear "),best.map((g,i)=>[i?", ":"",qLink(g)])):null,
       h("div",{class:"row",style:"margin-top:auto;padding-top:.25rem"},h("a",{class:"btn sm",href:link},"See their page"),
-        pool.length>1?h("button",{class:"btn ghost sm",onclick:()=>setUi({spot:shift+1})},"Someone else"):null)))}
+        pool.length>1?h("button",{class:"btn ghost sm",onclick:()=>{openAnim("spot");setUi({spot:shift+1})}},"Someone else"):null)))}
 
 /* ---------- Level milestones ---------- */
 // Every tenth level and 60: the Ding mentions being first in the guild to one (from the Hall of Firsts).
@@ -4729,11 +4743,13 @@ const reqOf=m=>m&&m.ownerReq&&typeof m.ownerReq.uid==="string"?m.ownerReq:null;
 const myReq=m=>{const r=reqOf(m);return!!(r&&S.user&&r.uid===S.user.uid)};
 function askDevice(m){write(updateDoc(charRef(m),{ownerReq:{uid:S.user.uid,at:nowIso()}}),"Asked. An officer, or a device that already has "+nameOf(m)+", can approve it")}
 function cancelAsk(m){write(updateDoc(charRef(m),{ownerReq:deleteField()}),"Request cancelled")}
-function answerAsk(m,yes){const r=reqOf(m);if(!r)return;
+function answerAsk(m,yes,row){const r=reqOf(m);if(!r)return;
+  // The row fades out first so the answer visibly lands, then the write removes it.
+  if(row&&row.animate&&!matchMedia("(prefers-reduced-motion:reduce)").matches&&!answerAsk.busy){answerAsk.busy=1;row.animate([{opacity:1},{opacity:0,transform:"translateY(-4px)"}],{duration:200,easing:"cubic-bezier(.23,1,.32,1)",fill:"forwards"}).finished.then(()=>{answerAsk.busy=0;answerAsk(m,yes)});return}
   const body=yes?{owners:[...new Set([...(m.owners||[]).filter(u=>u!==r.uid),r.uid])].slice(-10),ownerReq:deleteField(),updatedAt:nowIso()}:{ownerReq:deleteField()};
   write(updateDoc(charRef(m),body),yes?"Approved. That device can edit "+nameOf(m)+" now":"Declined")}
 const askRow=m=>{const r=reqOf(m);return h("div",{class:"ask-row"},h("span",{},h("b",{},nameOf(m)),h("span",{class:"small ter"}," · a new device asked "+(ago(r.at)||"just now"))),
-  h("div",{class:"row"},h("button",{class:"btn sm primary",type:"button",onclick:()=>answerAsk(m,true)},"Approve"),h("button",{class:"btn sm ghost",type:"button",onclick:()=>answerAsk(m,false)},"Decline")))};
+  h("div",{class:"row"},h("button",{class:"btn sm primary",type:"button",onclick:e=>answerAsk(m,true,e.currentTarget.closest(".ask-row"))},"Approve"),h("button",{class:"btn sm ghost",type:"button",onclick:e=>answerAsk(m,false,e.currentTarget.closest(".ask-row"))},"Decline")))};
 // Requests waiting on you: officers see every one, everyone else sees the ones for their own characters.
 function asksCard(){const l=S.members.filter(m=>reqOf(m)&&!myReq(m)&&(isOfficer()||owns(m)));if(!l.length)return null;
   return h("section",{class:"card ask","aria-labelledby":"ask-h"},h("h2",{id:"ask-h"},"Device Requests"),
