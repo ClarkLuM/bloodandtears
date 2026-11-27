@@ -736,7 +736,7 @@ main:focus{outline:none}
 .pt-row{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 2.25rem;gap:.75rem;align-items:center;padding:.625rem 1.125rem;border-top:1px solid var(--sep)}
 .pt-row.open{align-items:start;background:var(--subtle)}
 .pt-name{display:flex;flex-direction:column;align-items:flex-start;background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;line-height:1.25rem}
-.pt-name:disabled{cursor:default}.pt-name b{font-size:.875rem}
+.pt-name:disabled{cursor:default}.pt-name{min-height:1.75rem}.pt-name b{font-size:.875rem}
 .pt-ppl{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.5rem}
 .pt-p{display:flex;flex-direction:column;gap:.25rem;min-width:9.5rem;padding:.375rem .5625rem .4375rem;background:var(--sunken);border:1px solid var(--sep);border-radius:10px}
 .pt-p.me{border-color:color-mix(in srgb,var(--accent) 55%,var(--sep))}.pt-p.spoon{border-style:dashed}
@@ -1477,7 +1477,7 @@ input:not([type=checkbox]):not([type=radio]):focus,select:focus{border-color:var
 .pt-row>span[aria-hidden]{display:none}
 .pt-ppl{flex-direction:column;flex-wrap:nowrap;gap:.625rem}
 .pt-p{min-width:0;padding:0;background:none;border:0;border-radius:0;gap:.3125rem}
-.pt-p.me .pt-t a{text-decoration:underline;text-decoration-color:var(--accent-text);text-underline-offset:3px}
+.pt-you{color:var(--ter);font-weight:400;font-size:.8125rem}
 .pt-p.spoon{border:0;opacity:.8}
 .pt-t{font-weight:400}
 .pt-t a{color:color-mix(in srgb,var(--cc) 80%,#fff);text-decoration:none}
@@ -3475,7 +3475,7 @@ function recipeFinder(){
   const u=S.ui,words=String(u.pq||"").trim().toLowerCase().split(/\s+/).filter(Boolean),prof=u.pProf||"All";
   const profs=S.recipes?Object.keys(S.recipes):[],people=crafters();
   const search=h("div",{class:"r-search",style:"flex:1 1 16.25rem"},(()=>{const e=h("span",{"aria-hidden":"true"});e.innerHTML='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5" stroke-linecap="round"/></svg>';return e})(),
-    h("input",{id:"p-q",type:"search",placeholder:"Search for something to craft","aria-label":"Search recipes by name",value:u.pq||"",autocomplete:"off",
+    h("input",{id:"p-q",type:"search",placeholder:"Search for a craft\u2026","aria-label":"Search recipes by name",value:u.pq||"",autocomplete:"off",
       oninput:e=>{S.ui.pq=e.target.value;S.ui.pMore=false;schedule()}}));
   const pick=h("label",{class:"r-sort"},h("span",{class:"ter"},"Profession"),h("select",{id:"p-prof",onchange:e=>setUi({pProf:e.target.value,pMore:false})},
     [h("option",{value:"All",selected:prof==="All"},"Any"),...profs.map(x=>h("option",{value:x,selected:prof===x},x))]));
@@ -3488,8 +3488,8 @@ function recipeFinder(){
   // Someone whose recipes the scribe has seen counts only if they know it; everyone else, by skill.
   const whoFor=x=>people.filter(m=>{const k=knowsRecipe(m,x.p,x.name);return k===null?skillIn(m,x.p)>=x.sk:k})
     .sort((a,b)=>(!!knowsRecipe(b,x.p,x.name)-!!knowsRecipe(a,x.p,x.name))||skillIn(b,x.p)-skillIn(a,x.p)||nameOf(a).localeCompare(nameOf(b)));
-  const note=h("p",{class:"small ter",style:"margin:0"},"Skills come from the armory. ",h("b",{},"Known")," and ",h("b",{},"Trainer")," recipes are ones they make now or can learn now. ",
-    h("b",{},"Recipe needed")," means the recipe drops or comes from a vendor or quest, so a name there is skilled enough, not proof they have it. \u201cAbout\u201d skills are estimates.");
+  const note=h("details",{class:"wf"},h("summary",{},"How this works"),h("p",{class:"small ter",style:"margin:0"},"Skills come from the armory. ",h("b",{},"Known")," and ",h("b",{},"Trainer")," recipes are ones they make now or can learn now. ",
+    h("b",{},"Recipe needed")," means the recipe drops or comes from a vendor or quest, so a name there is skilled enough, not proof they have it. \u201cAbout\u201d skills are estimates."));
   if(!words.length&&prof==="All")return wrap([h("p",{class:"sub",style:"margin:0"},"Type what you need, like \u201cMithril Spurs\u201d or \u201cSilk Bandage\u201d, or pick a profession to see everything the guild can make with it."),note]);
   let list=all.filter(x=>(prof==="All"||x.p===prof)&&words.every(w=>x.name.toLowerCase().includes(w))).map(x=>({...x,who:whoFor(x)}));
   const reach=list.filter(x=>x.who.length);
@@ -3964,7 +3964,7 @@ function viewProfessions(){
   const t=S.ui.profTab||"All",openP=S.ui.pfOpen;
   // One chip per character: place, name, skill and a bar. The rank (Expert and so on) is in the tooltip.
   const chip=(x,p,spoon)=>h("li",{class:"pt-p"+(spoon?" spoon":"")+(isMine(x.m)?" me":""),style:`--cc:${CLASSES[x.m.cls]||"#bfaea9"}`,title:CLASS_SKILLS[p]?"":rankOf(x.sk)+" · "+x.sk+" / 300"},
-    h("span",{class:"pt-t"},x.pl<=3&&!spoon?medal(x.pl):null,classIcon(x.m.cls),charLink(x.m),h("span",{class:"pt-v"+(x.sk>=300?" max":"")},String(x.sk))),
+    h("span",{class:"pt-t"},x.pl<=3&&!spoon?medal(x.pl):null,classIcon(x.m.cls),charLink(x.m),isMine(x.m)?h("span",{class:"pt-you"},"(you)"):null,h("span",{class:"pt-v"+(x.sk>=300?" max":"")},String(x.sk))),
     h("span",{class:"track","aria-hidden":"true"},h("i",{class:x.sk>=300?"max":"",style:`width:${(x.sk/300*100).toFixed(1)}%`})),
     spoon?h("span",{class:"pt-spoon"},"Wooden spoon"):null);
   const row=p=>{const l=by[p]||[],open=openP===p,N=3,shown=open?l:l.slice(0,N);
@@ -3985,7 +3985,7 @@ function viewProfessions(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Professions"),h("p",{class:"sub"},"Who to whisper for crafts and mats.")))),recipeFinder(),
     h("div",{class:"spread",style:"gap:.5rem 1rem;margin-top:.5rem"},h("h2",{class:"big",id:"pt-h"},"Who Has What"),seg("Show",[["All","All"],["Primary","Primary"],["Secondary","Secondary"]],t,k=>setUi({profTab:k},true))),
     h("section",{class:"card pt","aria-labelledby":"pt-h"},body),
-    h("p",{class:"small ter"},(missing.length&&t!=="Secondary"?"Nobody has "+missing.join(", ")+" yet. ":"")+"Medals go to the top three; the wooden spoon to the lowest, once there are four. Tap a profession to see everyone.")]}
+    h("p",{class:"small ter"},(missing.length&&t!=="Secondary"?"Nobody has "+missing.join(", ")+" yet. ":"")+"Medals go to the top three; the wooden spoon to the lowest, once there are four. Open a profession to see everyone.")]}
 
 /* ---------- Raids ---------- */
 // Events were cut (raid nights are sorted out in game and on Discord). The raid list stays as a heads-up.
