@@ -2377,7 +2377,8 @@ function viewRoster(){
   requestAnimationFrame(()=>{const t=document.querySelector(".r-tools-wrap"),l=document.querySelector(".roster-layout");if(!t||!l)return;
     const fit=()=>l.style.setProperty("--rt-h",t.offsetHeight+"px");fit();if(window.ResizeObserver&&!t._ro){t._ro=new ResizeObserver(fit);t._ro.observe(t)}});
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
-  const at=(el,n)=>{if(el&&el.style)el.style.setProperty("--o",n);return el};
+  // Phones stack both columns into one, ordered by --o. Cards view hands back two pieces (Card of the Week and the binder), so each gets the number.
+  const at=(el,n)=>{if(Array.isArray(el))return el.map(x=>at(x,n));if(el&&el.style)el.style.setProperty("--o",n);return el};
   return[head,firstsFlex()||birthdayBanner(),hubTiles(),h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(claimBanner(),1),at(spotlight(true),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
     h("div",{class:"rl-col"},at(asksCard(),1),at(guildToday(),6),at(siteUse(),12),at(discordBox(),13)))]}
 
