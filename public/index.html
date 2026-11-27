@@ -520,7 +520,17 @@ button.pass-st{cursor:pointer}@media (hover:hover) and (pointer:fine){button.pas
 .pass-crew{display:flex;align-items:center;justify-content:center;margin-top:.125rem}.pass-crew .crew-f+.crew-f{margin-left:-.3125rem}.pass-crew i{font-style:normal;font-size:.6875rem;color:var(--ter);margin-left:.25rem}
 .run-pick{gap:.375rem}.run-chip{display:inline-flex;align-items:center;gap:.375rem}.run-chip.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--text)}
 .run-fixed{display:flex;flex-direction:column;gap:.375rem}.run-fx{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}.run-fx .btn{margin-left:auto}
-.crew-line{margin:0}.pass-st:not(.on) b{color:var(--sec);font-weight:400}
+.crew-line{margin:0;display:flex;flex-direction:column;gap:.5rem}
+.buddies{display:flex;flex-wrap:wrap;gap:.375rem}
+.buddy{display:inline-flex;align-items:center;gap:.375rem;padding:.1875rem .5rem .1875rem .25rem;border-radius:999px;border:1px solid color-mix(in srgb,var(--gilt) 55%,transparent);background:color-mix(in srgb,var(--gilt) 10%,transparent);color:var(--text);text-decoration:none;font-size:.8125rem}
+.buddy b{font-family:var(--body);font-weight:600;color:var(--gilt)}
+.duo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.duo-list li{display:flex;align-items:center;gap:.625rem;padding:.5rem 0;border-top:1px solid var(--sep)}.duo-list li:first-child{border-top:0}
+.duo-rk{width:1rem;text-align:center;color:var(--ter);font-variant-numeric:tabular-nums}
+.duo-fs{display:flex}.duo-fs .crew-f{width:1.75rem;height:1.75rem;font-size:.625rem}.duo-fs .crew-f+.crew-f{margin-left:-.3125rem}
+.duo-n{flex:1;min-width:0;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}.duo-n a{color:var(--text)}
+.duo-v{font-variant-numeric:tabular-nums;color:var(--gilt)}
+.buddy-tag{font-size:.6875rem;line-height:1rem;padding:0 .375rem;border-radius:999px;color:var(--gilt);border:1px solid color-mix(in srgb,var(--gilt) 50%,transparent)}.pass-st:not(.on) b{color:var(--sec);font-weight:400}
 .pass-st small{font-size:.6875rem;line-height:.875rem;color:var(--ter)}
 @media (max-width:600px){.pass-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem .25rem}.pass-seal{width:2.75rem;height:2.75rem;font-size:.6875rem}}.pass-st.on small{color:var(--lvl)}
 .lg-none{margin:0;font-size:.6875rem;line-height:.9375rem;color:#8b7b79}
@@ -1567,9 +1577,9 @@ input:not([type=checkbox]):not([type=radio]):focus,select:focus{border-color:var
 /* Phones and tablets: This Week above the leaderboards (the two-column rule above was winning on small screens) */
 @media (max-width:960px){.rec-a{grid-template-columns:minmax(0,1fr)}}
 /* Records top: This Week and the page links on the left, the leaderboards on the right */
-.rec-a{grid-template-columns:minmax(0,27rem) minmax(0,1fr);grid-template-areas:"lb week" "lb links";grid-template-rows:auto 1fr;align-items:start}
+.rec-a{grid-template-columns:minmax(0,27rem) minmax(0,1fr);grid-template-areas:"lb week" "lb duos" "lb links";grid-template-rows:auto auto 1fr;align-items:start}.rec-a>.duos{grid-area:duos}
 .rec-a>:nth-child(2){grid-area:week}.rec-a>.lb{grid-area:lb}.rec-a>.rec-links{grid-area:links;grid-template-columns:minmax(0,1fr);gap:.75rem}
-@media (max-width:960px){.rec-a{grid-template-columns:minmax(0,1fr);grid-template-areas:"lb" "week" "links";grid-template-rows:auto}}
+@media (max-width:960px){.rec-a{grid-template-columns:minmax(0,1fr);grid-template-areas:"lb" "week" "duos" "links";grid-template-rows:auto}}
 .rec-a .rec-link{flex-direction:column;align-items:flex-start;gap:.25rem}
 
 /* Phones vs wider screens: some parts come in two versions and only one shows. */
@@ -2126,6 +2136,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-27","Dungeon buddies","Clear three dungeons with the same guildie and you're dungeon buddies: a badge on both your Passports. Records has a new Best Duos board for the pairs who've run the most together.","#records"],
   ["2026-11-27","Who did you run with?","Stamp a dungeon in your Passport and pick who was with you: they get the stamp too, and their faces sit under it. Your page shows who you run with most. Tagged by mistake? Tap the stamp and choose Not me.","#roster"],
   ["2026-11-27","Titles you keep","Once you've held a title, it's yours to show. On your character page, pick which title sits by your name: one you hold now, a former one (shown as Former Speed Demon), or none.","#records"],
   ["2026-11-27","Item stats on phones","Tap any item or enchant on a phone to see its stats in a panel from the bottom of the screen, with a link through to Wowhead.","#roster"],
@@ -2470,6 +2481,22 @@ function crewAt(m,d){const out=new Map(),put=(id,how)=>{if(id&&id!==m.id&&!out.h
   for(const x of Object.values(sc.runs||{}))if((x.ids||[]).includes(m.id)&&dgName(x.zone)===d)for(const i of x.ids)put(i,"scribe");
   for(const k of Array.isArray(sc.kills)?sc.kills:[])if((k.ids||[]).includes(m.id)&&dgName(k.zone,k.boss)===d)for(const i of k.ids)put(i,"scribe");
   return[...out.values()]}
+// Dungeon buddies: every pair of guildies and the dungeons they've cleared together (from either one's passport).
+// Three or more together and they're buddies: a badge on both passports. The best pairs go on Records as Best Duos.
+const BUDDY_AT=3;
+function buddyPairs(){const pairs=new Map();
+  for(const a of S.members||[])for(const x of passportOf(a))for(const c of crewAt(a,x.name)){
+    const[i,j]=[a.id,c.m.id].sort(),k=i+"|"+j;if(!pairs.has(k))pairs.set(k,{a:memberById(i),b:memberById(j),d:new Set()});pairs.get(k).d.add(x.name)}
+  return[...pairs.values()].filter(p=>p.a&&p.b).map(p=>({...p,n:p.d.size})).sort((x,y)=>y.n-x.n||nameOf(x.a).localeCompare(nameOf(y.a)))}
+function duosCard(){const top=buddyPairs().filter(p=>p.n>=2).slice(0,5);if(!top.length)return null;
+  return h("section",{class:"card duos","aria-labelledby":"duo-h"},
+    h("div",{class:"spread"},h("h2",{id:"duo-h"},"Best Duos"),h("span",{class:"small ter"},"Dungeons cleared together")),
+    h("ol",{class:"duo-list"},top.map((p,i)=>h("li",{},h("span",{class:"duo-rk"},i+1),
+      h("span",{class:"duo-fs"},crewFace(p.a),crewFace(p.b)),
+      h("span",{class:"duo-n"},h("a",{href:`#char/members/${p.a.id}`},nameOf(p.a).split(/\s+/)[0])," & ",h("a",{href:`#char/members/${p.b.id}`},nameOf(p.b).split(/\s+/)[0]),
+        p.n>=BUDDY_AT?h("span",{class:"buddy-tag"},"Buddies"):null),
+      h("b",{class:"duo-v"},p.n)))),
+    h("p",{class:"small ter",style:"margin:0"},"From who's tagged on Passport stamps and the guild scribe's group runs. Three together makes you dungeon buddies."))}
 // Who m runs with most, across every stamped dungeon.
 function crewOf(m){const n=new Map();for(const x of passportOf(m))for(const c of crewAt(m,x.name))n.set(c.m.id,{m:c.m,n:((n.get(c.m.id)||{}).n||0)+1});
   return[...n.values()].sort((a,b)=>b.n-a.n||nameOf(a.m).localeCompare(nameOf(b.m)))}
@@ -2516,7 +2543,10 @@ function passportCard(m){
     h("div",{class:"spread"},h("h2",{id:"pass-h"},"Dungeon Passport"),h("span",{class:"small ter"},pass.length+" of "+DUNGEONS.length+" cleared")),
     h("span",{class:"track","aria-hidden":"true"},h("i",{style:`width:${(pass.length/DUNGEONS.length*100).toFixed(0)}%`})),
     h("p",{class:"small ter",style:"margin:0"},can?"Tap a dungeon when you've cleared it and say who was with you: they get the stamp too. Tap a stamp to change who was there or take it off.":"A stamp for every dungeon "+nameOf(m)+" has cleared."),
-    (()=>{const c=crewOf(m).slice(0,4);return c.length?h("p",{class:"crew-line small"},h("span",{class:"ter"},"Runs most with "),c.map((x,i)=>[i?", ":"",h("a",{href:`#char/members/${x.m.id}`},nameOf(x.m)),h("span",{class:"ter"}," \u00d7"+x.n)])):null})(),
+    (()=>{const c=crewOf(m),bud=c.filter(x=>x.n>=BUDDY_AT),rest=c.filter(x=>x.n<BUDDY_AT).slice(0,Math.max(0,4-bud.length));
+      return c.length?h("div",{class:"crew-line small"},
+        bud.length?h("div",{class:"buddies"},bud.slice(0,6).map(x=>h("a",{class:"buddy",href:`#char/members/${x.m.id}`,title:"Dungeon buddies: "+x.n+" dungeons together"},crewFace(x.m),h("span",{},nameOf(x.m).split(/\s+/)[0]),h("b",{},x.n)))):null,
+        rest.length?h("p",{style:"margin:0"},h("span",{class:"ter"},bud.length?"Also runs with ":"Runs most with "),rest.map((x,i)=>[i?", ":"",h("a",{href:`#char/members/${x.m.id}`},nameOf(x.m)),h("span",{class:"ter"}," \u00d7"+x.n)])):null):null})(),
     spelunkers(m,by,can),
     whereFrom("Three places: the dungeons ticked here, the guild scribe (the in-game addon) when it sees the guild finish one, and loot that only one dungeon drops, once the armory shows it being worn. The armory can't see what you've run, so tick any it missed. A Spelunker set lands on the card once every dungeon in it is stamped."),
     h("div",{class:"pass-grid"},shownDungeons(m,by).map(([n,r])=>{const x=by.get(n),mine=!!(m.cleared&&m.cleared[n]);
@@ -3838,7 +3868,7 @@ function viewRecords(){
     // Who's top first: the Podium, then the Leaderboards (left on a computer, next on a phone), then This Week and the page links.
     // The page order matches what you see, so keyboards and screen readers go the same way.
     podiumCard(),
-    h("div",{class:"rec-top rec-a"},recBoards(),raceCard(),
+    h("div",{class:"rec-top rec-a"},recBoards(),raceCard(),duosCard(),
     h("div",{class:"rec-links"},S.scribe?h("a",{class:"card rec-link",href:"#activity"},h("span",{},h("b",{},"When and where the guild plays"),h("span",{class:"small ter"}," · the busiest hours and a map of the zones")),h("span",{class:"rec-link-go"},"On the Activity page →")):null,
     h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →")))),
     h("p",{class:"small ter"},"Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
