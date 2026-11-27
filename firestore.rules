@@ -44,6 +44,8 @@ service cloud.firestore {
         (!('ownerReq' in d) || (d.ownerReq is map && d.ownerReq.keys().hasOnly(['uid', 'at']) && d.ownerReq.uid is string &&
           d.ownerReq.at is string && d.ownerReq.at.size() <= 40)) &&
         (!('main' in d) || d.main == true) &&
+        // Titles this character has ever held: { <title key>: when }, added by the site.
+        (!('titlesEver' in d) || (d.titlesEver is map && d.titlesEver.size() <= 80)) &&
         armoryKept() &&
         request.resource.data.get('discordId', null) == (resource == null ? null : resource.data.get('discordId', null)) &&
         // Recipes only ever come from the guild scribe upload (the server).
