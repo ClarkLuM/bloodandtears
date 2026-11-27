@@ -131,10 +131,14 @@ body{background:var(--base)}html{background:var(--base)}body{background:transpar
 .ff-x .ic{width:1rem;height:1rem}.ft-tag .ic{width:1em;height:1em}.wk-b .ic{width:.875em;height:.875em}
 /* Full-bleed character profile */
 main.ch-page{position:relative;isolation:isolate}
-.ch-bleed{position:absolute;z-index:-1;top:0;left:calc(50% - 50vw);width:100vw;height:31rem;pointer-events:none;
+/* Blizzard's race backdrops have a shadow of the race standing where the character goes, so the backdrop is blurred
+   into colour and light (::before) and the render sits sharp on top with the fades (::after). */
+.ch-bleed{position:absolute;z-index:-1;top:0;left:calc(50% - 50vw);width:100vw;height:31rem;pointer-events:none;overflow:hidden}
+.ch-bleed::before{content:"";position:absolute;inset:-2rem;background:var(--bl-bg) 50% 30%/cover no-repeat;filter:blur(18px) brightness(.65) saturate(1.2)}
+.ch-bleed::after{content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,transparent 50%,var(--base) 97%),linear-gradient(90deg,var(--base) 6%,color-mix(in srgb,var(--base) 45%,transparent) 42%,transparent 68%),
-    radial-gradient(55% 75% at 74% 42%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%),
-    var(--bl-lg) 76% 12%/auto 140% no-repeat,var(--bl-bg) 50% 30%/cover no-repeat}
+    radial-gradient(55% 75% at 74% 42%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%),var(--bl-lg) 76% 12%/auto 140% no-repeat}
+:root[data-theme="light"] .ch-bleed::before{filter:blur(18px) brightness(.95) saturate(.9);opacity:.55}
 .ch-page:has(.ch-bleed) .ch-card{display:none}
 .ch-page:has(.ch-bleed) .ch-hero{padding-top:11rem}
 .ch-page:has(.ch-bleed) .ch-hero h1{font-size:4rem;line-height:4.375rem;text-shadow:0 2px 18px rgb(0 0 0/.65)}
@@ -143,8 +147,8 @@ main.ch-page{position:relative;isolation:isolate}
 .ch-lvbar{display:block;width:min(18rem,100%);height:.25rem;border-radius:2px;background:color-mix(in srgb,var(--cc) 18%,rgb(255 255 255/.06));overflow:hidden;margin:.125rem 0 .25rem}
 .ch-lvbar i{display:block;height:100%;background:var(--cc);border-radius:inherit}
 body{overflow-x:clip}
-@media (max-width:640px){.ch-bleed{top:0;height:27rem;background-position:0 0,0 0,0 0,55% 0%,50% 30%;background-size:auto,auto,auto,auto 118%,cover;
-    background-image:linear-gradient(180deg,transparent 52%,var(--base) 97%),linear-gradient(90deg,color-mix(in srgb,var(--base) 55%,transparent),transparent 60%),radial-gradient(60% 60% at 55% 40%,color-mix(in srgb,var(--cc) 20%,transparent),transparent 70%),var(--bl-sm),var(--bl-bg)}
+@media (max-width:640px){.ch-bleed{height:27rem}
+  .ch-bleed::after{background:linear-gradient(180deg,transparent 52%,var(--base) 97%),linear-gradient(90deg,color-mix(in srgb,var(--base) 55%,transparent),transparent 60%),radial-gradient(60% 60% at 55% 40%,color-mix(in srgb,var(--cc) 20%,transparent),transparent 70%),var(--bl-sm) 55% 0%/auto 118% no-repeat}
   .ch-page:has(.ch-bleed) .ch-hero{padding-top:13rem}.ch-page:has(.ch-bleed) .ch-hero h1{font-size:2.75rem;line-height:3.125rem}}
 ::selection{background:color-mix(in srgb,var(--accent) 55%,transparent);color:var(--text)}
 html{scrollbar-color:var(--b-def) var(--base)}input,textarea{caret-color:var(--accent-text)}
