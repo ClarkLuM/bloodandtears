@@ -927,6 +927,15 @@ h2.rr-eyebrow{font-family:var(--body);line-height:1rem;margin:0}
 .whtip .wt-name{display:block;color:#fff;font-size:.875rem;line-height:1.1875rem}.whtip .wt-rank{color:#9d9d9d;font-size:.75rem;line-height:1.0625rem}.whtip .wt-desc{color:#ffd100;font-size:.875rem;line-height:1.125rem;margin-top:.25rem;max-width:18.75rem}
 .whtip{position:fixed;z-index:60;max-width:20.625rem;pointer-events:none;background:#070a14;border:1px solid #3a3f55;border-radius:6px;padding:.625rem .75rem;color:#fff;font:.8125rem/1.125rem var(--body);box-shadow:0 8px 24px rgb(0 0 0 / .5)}
 .whtip .hd{display:flex;gap:.75rem;align-items:flex-start}
+/* Item sheet on phones: slides up from the bottom, leaves the same way a little faster. */
+.tsh{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;justify-content:flex-end}
+.tsh-scrim{position:absolute;inset:0;background:rgb(0 0 0/.5);animation:tshFade 200ms ease}
+.tsh-panel{position:relative;background:#070a14;border-top:1px solid #3a3f55;border-radius:14px 14px 0 0;padding:1rem 1rem calc(1rem + env(safe-area-inset-bottom,0px));max-height:80dvh;overflow:auto;overscroll-behavior:contain;animation:tshUp 260ms cubic-bezier(.32,.72,0,1)}
+.tsh-tip{position:static;max-width:none;border:0;box-shadow:none;padding:0;pointer-events:auto;background:none}
+.tsh-acts{display:flex;gap:.5rem;margin-top:1rem}.tsh-acts>*{flex:1;justify-content:center}
+.tsh.out .tsh-panel{transform:translateY(100%);transition:transform 180ms ease}.tsh.out .tsh-scrim{opacity:0;transition:opacity 180ms ease}
+@keyframes tshUp{from{transform:translateY(100%)}}@keyframes tshFade{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){.tsh-panel,.tsh-scrim{animation:tshFade 150ms ease}.tsh.out .tsh-panel{transform:none;opacity:0;transition:opacity 150ms ease}}
 .whtip .hd img{width:2.25rem;height:2.25rem;border-radius:4px;border:1px solid #3a3f55;flex:none}
 .whtip table{border-collapse:collapse;width:100%}.whtip td,.whtip th{padding:0;vertical-align:top;text-align:left}.whtip th{text-align:right;font-weight:400;padding-left:.75rem}
 .whtip b{font-weight:600}.whtip .q{color:#ffd100}.whtip .q0{color:#9d9d9d}.whtip .q1{color:#fff}.whtip .q2{color:#1eff00}.whtip .q3{color:#0070dd}.whtip .q4{color:#a335ee}.whtip .q5{color:#ff8000}.whtip .q6,.whtip .q7{color:#e6cc80}
@@ -1870,6 +1879,26 @@ function cleanTip(html){const doc=new DOMParser().parseFromString(String(html),"
   document.addEventListener("mousemove",e=>{mx=e.clientX;my=e.clientY;place()},{passive:true});
   document.addEventListener("mouseout",e=>{if(cur&&!cur.contains(e.relatedTarget))hide()});
   addEventListener("scroll",hide,{passive:true});addEventListener("hashchange",hide)})();
+// Phones and tablets: tapping an item or spell link opens its tooltip in a sheet from the bottom of the screen,
+// with "Open on Wowhead" for the full page. (Hover tooltips above are for mouse and trackpad.)
+(()=>{if(matchMedia("(hover: hover)").matches)return;
+  let sheet=null;
+  const close=()=>{if(!sheet)return;const s0=sheet;sheet=null;s0.classList.add("out");setTimeout(()=>s0.remove(),200)};
+  document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest("a[href*='wowhead.com']");if(!a)return;
+    const u=a.getAttribute("href")||"",i=/item=(\d+)/.exec(u),sp=/spell=(\d+)/.exec(u),id=i?i[1]:sp?"-"+sp[1]:null;if(!id)return;
+    e.preventDefault();close();
+    const body=h("div",{class:"tsh-body"},h("p",{class:"small ter",style:"margin:0"},"Loading\u2026"));
+    const s1=h("div",{class:"tsh",role:"dialog","aria-modal":"true","aria-label":(a.textContent||"Item").replace(/^\[|\]$/g,"")},
+      h("div",{class:"tsh-scrim",onclick:close}),
+      h("div",{class:"tsh-panel"},body,h("div",{class:"tsh-acts"},
+        h("a",{class:"btn",href:u,target:"_blank",rel:"noopener",onclick:close},"Open on Wowhead"),
+        h("button",{class:"btn primary",type:"button",onclick:close},"Close"))));
+    sheet=s1;(a.closest("dialog[open]")||document.body).append(s1);s1.querySelector(".tsh-acts .primary").focus({preventScroll:true});
+    tipData(id).then(d=>{if(sheet!==s1)return;body.replaceChildren();
+      if(!d){body.append(h("p",{class:"small",style:"margin:0"},"Couldn\u2019t load this one. Open it on Wowhead instead."));return}
+      const t=h("div",{class:"whtip tsh-tip"});const tb=h("div",{});tb.innerHTML=cleanTip(d.tooltip);
+      t.append(h("div",{class:"hd"},d.icon?h("img",{src:WH_ICON(d.icon),alt:""}):null,tb));body.append(t)})},true);
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});addEventListener("hashchange",close)})();
 
 /* ---------- state ---------- */
 const S={user:null,officer:false,members:[],alts:[],guild:{},pending:false,loaded:false,error:"",unsub:[],
