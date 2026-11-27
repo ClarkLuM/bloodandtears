@@ -625,9 +625,9 @@ main:focus{outline:none}
 .r-tools{display:flex;flex-direction:column;gap:.75rem}
 .r-top{display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:center}
 /* Dungeons: who's been, what drops */
-.dg-list{margin-top:1rem;padding:0;gap:0}.dg-list-head{padding:1.25rem 1.25rem .75rem}
+.dg-list{margin-top:0;padding:0;gap:0}.dg-list-head{padding:1.25rem 1.25rem .75rem}
 .dg-ach{margin:.5rem 0 0}.dg-ach b{color:var(--sec)}
-.dg-bands{margin-top:.75rem;overflow-x:auto;max-width:100%}.dg-bands .seg span{color:var(--ter);font-variant-numeric:tabular-nums}
+.dg-bands{overflow-x:auto;max-width:100%}.dg-bands .seg span{color:var(--ter);font-variant-numeric:tabular-nums}
 .dg-cols,.dg-sum{display:grid;grid-template-columns:minmax(0,1fr) 5.5rem 4rem 4.5rem 2.25rem;gap:1rem;align-items:center;padding:0 1.25rem}
 .dg-cols{padding-bottom:.375rem;border-bottom:1px solid var(--sep)}.dg-cols span+span,.dg-n{text-align:right}
 .dg-item+.dg-item{border-top:1px solid var(--sep)}
@@ -806,6 +806,13 @@ html[data-swipe="next"] #app main{animation:swNext .22s ease-out}html[data-swipe
 @media (max-width:360px){.brand{gap:.375rem}.brand b{font-size:.875rem}.brand-logo{width:1.875rem;height:1.875rem}}
 .tab-empty{display:none}
 .rr{gap:.75rem}
+@media (max-width:640px){.seg.dg-band{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+  .seg.dg-band button{height:auto;min-height:2.75rem;padding:.25rem;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.8125rem;line-height:1.125rem}
+  .seg.dg-band button span{font-size:.75rem;line-height:1rem}
+  /* Raids: the raid cards sit straight on the page, not in a box inside a box. */
+  .card.rr{background:none;border:0;box-shadow:none;padding:0}}
+.rd-blank{color:var(--ter)}
+h2.rr-eyebrow{font-family:var(--body);line-height:1rem;margin:0}
 .rr-hero{display:grid;grid-template-columns:minmax(12rem,15rem) minmax(0,1fr);gap:1.25rem;align-items:center}
 @media (max-width:900px){.rr-hero{grid-template-columns:minmax(0,1fr)}}
 .rr-count{display:flex;flex-direction:column;gap:.125rem}
@@ -3311,7 +3318,7 @@ async function loadWidget(){
 // out in game and on Discord.
 function viewLfg(){
   const my=me();
-  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Dungeons"),h("p",{class:"sub"},"Who's the right level for each dungeon, who's been, who still needs it, and what drops."))),
+  return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Dungeons"),h("p",{class:"sub"},"Who's the right level for each dungeon, who's been, who still needs it, and what drops. Open one to see who."))),
       dgTabs("lfg")),
     rangeBoard()]}
 // Who's the right level for a dungeon. Pick one from the list; people are sorted into tank, healer and DPS.
@@ -3332,8 +3339,7 @@ function rangeBoard(){
   const myBand=(my&&DG_GROUPS.find(g=>all.some(x=>bandOf(x)===g[0]&&fits(x)))||DG_GROUPS[0])[0];
   const band=S.ui.dgGroup&&(S.ui.dgGroup==="All"||DG_GROUPS.some(b=>b[0]===S.ui.dgGroup))?S.ui.dgGroup:myBand;
   const opts=band==="All"?all:all.filter(x=>bandOf(x)===band);
-  const head=h("div",{},h("h2",{id:"range-h",class:"visually-hidden"},"Dungeon list"),
-    h("p",{class:"sub",style:"margin:0"},"How many of the guild are the right level and how many have been. Open one to see who, and what drops."));
+  const head=h("div",{style:"display:contents"},h("h2",{id:"range-h",class:"visually-hidden"},"Dungeon list"));
   if(!opts.length)return h("section",{class:"card","aria-labelledby":"range-h",style:"gap:.75rem;margin-top:1rem"},head,h("p",{class:"empty"},"Nobody else is in range of a dungeon at your level yet."));
   // Start on the saved pick, else the busiest dungeon at your level, else the busiest one overall.
   const busiest=list=>list.slice().sort((a,b)=>b.active.length-a.active.length)[0];
@@ -3342,7 +3348,7 @@ function rangeBoard(){
   // The level window the tracks show: the lowest to highest level of the dungeons on screen.
   const win=(l=>[Math.min(...l.map(r=>r[0])),Math.max(...l.map(r=>r[1]))])(opts.map(o=>rangeOf(o.range))),pos=v=>Math.max(0,Math.min(100,(v-win[0])/(win[1]-win[0])*100));
   const mineStamped=o=>[...S.members,...S.alts].some(m=>isMine(m)&&passportOf(m).some(p=>p.name===o.name));
-  const bandSeg=seg("Achievement",[...DG_GROUPS.map(([k,l])=>[k,l,all.filter(x=>bandOf(x)===k).length]),["All","All"]],band,k=>setUi({dgGroup:k},true));
+  const bandSeg=seg("Achievement",[...DG_GROUPS.map(([k,l])=>[k,l,all.filter(x=>bandOf(x)===k).length]),["All","All"]],band,k=>setUi({dgGroup:k},true));bandSeg.classList.add("dg-band");
   return h("section",{class:"card dg-list","aria-labelledby":"range-h"},h("div",{class:"dg-list-head"},head,h("div",{class:"dg-bands"},bandSeg),
     band!=="All"?(()=>{const g=DG_GROUPS.find(x=>x[0]===band),done=opts.filter(mineStamped).length;
       // Your way to the Spelunker achievement for this group: how many you've stamped, as a bar.
@@ -4023,7 +4029,7 @@ function raidsCard(){
       note?h("p",{class:"small ter",style:"margin:0"},note):null,loot)};
   const when=new Date(RAIDS_OPEN).toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long",timeZone:"Australia/Perth"});
   return h("section",{class:"card rr","aria-labelledby":"raids-h"},h("div",{class:"rr-hero"},
-    h("div",{class:"rr-count"},h("span",{class:"rr-eyebrow",id:"raids-h"},open?"Raids are open":"Raids open in"),
+    h("div",{class:"rr-count"},h("h2",{class:"rr-eyebrow",id:"raids-h"},open?"Raids are open":"Raids open in"),
       h("b",{},open?"Now":days===1?"1 day":days+" days"),h("span",{class:"small",style:"color:var(--sec)"},open?"Since "+when:when),
       h("span",{class:"small ter",style:"margin-top:.375rem"},ready.length+(ready.length===1?" level 60":" level 60s")+(away?" (+"+away+" away)":"")+" · "+close+" at 55 to 59"),
       !open&&onPace?h("span",{class:"small",style:"color:var(--sec)"},h("b",{},String(onPace))," more on pace to hit 60 before raids open"):null,
@@ -4045,8 +4051,8 @@ function viewRaids(){
   const seen=m=>h("td",{"data-label":"Last seen"},seenOf(m)?h("span",{style:"white-space:nowrap"},ago(seenOf(m))):null,isAway(m)?h("span",{class:"l2"},"Away two weeks or more"):null);
   const row=m=>{const g=Object.values(m.gear||{}).filter(x=>x&&x.id),ep=g.filter(x=>+x.q>=4).length,bl=g.filter(x=>+x.q===3).length,a=m.armory||{};
     return h("tr",{class:isAway(m)?"rd-away":""},h("td",{"data-label":"Character"},who(m)),role(m),
-      h("td",{"data-label":"Gear"},a.ilvl?h("span",{},"Item level "+a.ilvl):g.length?h("span",{},g.length+" of "+GEAR_ALL.length+" slots"):null,ep||bl?h("span",{class:"l2"},[ep?ep+(ep===1?" epic":" epics"):"",bl?bl+(bl===1?" blue":" blues"):""].filter(Boolean).join(" · ")):null),
-      h("td",{"data-label":"Onyxia amulet"},hasAmulet(m)?h("span",{class:"tag rr-ok"},"Wearing it"):null),seen(m))};
+      h("td",{"data-label":"Gear"},a.ilvl?h("span",{},"Item level "+a.ilvl):g.length?h("span",{},g.length+" of "+GEAR_ALL.length+" slots"):h("span",{class:"rd-blank","aria-label":"Not known yet"},"—"),ep||bl?h("span",{class:"l2"},[ep?ep+(ep===1?" epic":" epics"):"",bl?bl+(bl===1?" blue":" blues"):""].filter(Boolean).join(" · ")):null),
+      h("td",{"data-label":"Onyxia amulet"},hasAmulet(m)?h("span",{class:"tag rr-ok"},"Wearing it"):h("span",{class:"rd-blank","aria-label":"Not worn"},"—")),seen(m))};
   const nearRow=m=>{const lv=+m.level||1;
     return h("tr",{class:"rd-near"+(isAway(m)?" rd-away":"")},h("td",{"data-label":"Character"},who(m)),role(m),
       h("td",{"data-label":"Level"},h("span",{class:"rd-lv"},h("span",{},"Level "+lv),h("span",{class:"track","aria-hidden":"true"},h("i",{style:`width:${(lv-50)*10+5}%`}))),h("span",{class:"l2"},(60-lv)+" to go"+(fc60(m)?" · 60 around "+fcText(fc60(m)):""))),
