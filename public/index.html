@@ -417,7 +417,7 @@ details.more[open] summary::after{transform:translateY(2px) rotate(-135deg)}
   .ap-n{font-size:.75rem;padding:.25rem .25rem .3125rem;gap:.25rem;border-radius:0 0 7px 7px}.ap-n .cls-ic{width:.875rem;height:.875rem}
   .ap-lv{min-width:1.375rem;height:1.375rem;font-size:.6875rem;top:.25rem;right:.25rem}
   .ap-plate,.ap-p.top .ap-plate{min-height:6.5rem;padding:.5rem .25rem .5rem;gap:.125rem}.ap-p.top .ap-plate{min-height:7.75rem}
-  .ap-k{font-size:.5625rem;letter-spacing:.08em}.ap-t,.ap-p.top .ap-t{font-size:.875rem;line-height:1.0625rem}.ap-p.top .ap-t{font-size:.9375rem}
+  .ap-k{font-size:.625rem;letter-spacing:.08em}.ap-t,.ap-p.top .ap-t{font-size:.875rem;line-height:1.0625rem}.ap-p.top .ap-t{font-size:.9375rem}
   .ap-nl{display:none}.ap-ns{display:inline}.ap-q,.ap-r{display:none}.ap-v{font-size:.625rem;padding:.0625rem .375rem;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}.ap-pl{font-size:3rem;right:.125rem;bottom:-.5rem}}
 @media (prefers-reduced-motion:reduce){.ap-card{transition:none}}
 .wf{font-size:.75rem;line-height:1.125rem;color:var(--ter)}.wf>summary{cursor:pointer;width:fit-content;list-style:none;display:inline-flex;align-items:center;gap:.25rem;min-height:1.5rem;color:var(--sec)}
@@ -478,7 +478,7 @@ main.ch-page .card{position:relative}
 :root[data-theme="light"] .ap-plate{background:linear-gradient(color-mix(in srgb,var(--p1) 22%,var(--raised)),var(--raised) 92%)}
 :root[data-theme="light"] .ap-p.top .ap-plate{background:linear-gradient(rgb(212 162 76 / .3),var(--raised) 92%)}
 :root[data-theme="light"] .ap-t{color:color-mix(in srgb,var(--p1) 60%,#2a1408)}
-:root[data-theme="light"] .ap-k{color:color-mix(in srgb,var(--p1) 55%,#5a3a28)}
+:root[data-theme="light"] .ap-k{color:color-mix(in srgb,var(--p1) 40%,#4a2c1c)}
 :root[data-theme="light"] .ap-p.top .ap-t,:root[data-theme="light"] .ap-p.top .ap-k{color:#8a5a12}
 :root[data-theme="light"] .ap-v{background:rgb(255 255 255 / .7);color:#2a1408}
 :root[data-theme="light"] .ap-pl{color:rgb(58 22 8 / .07)}
@@ -709,8 +709,15 @@ main:focus{outline:none}
 .rec-more{align-self:flex-start;margin:.25rem 0 0 -.75rem}
 .rec-top{display:grid;grid-template-columns:minmax(0,27rem) minmax(0,1fr);gap:.75rem;align-items:start}
 @media (max-width:960px){.rec-top,.rec-a{grid-template-columns:minmax(0,1fr)}}
-.lb{gap:.75rem}.lb .seg{width:100%}.lb .seg button{flex:1}.lb-title{margin:0;padding:.4375rem .625rem;background:var(--sunken);border:1px solid var(--sep);border-radius:10px;color:var(--sec)}
+.lb{gap:.75rem}.lb .seg{width:100%}.lb .seg button{flex:1}.lb-title{margin:0;color:var(--sec)}
 .lb-title b{color:var(--accent-text)}
+.rec-list:empty{display:none}
+/* The podium rises once each time you open Records: winner first, then 2 and 3, then the outside spots. */
+.ap.rise .ap-p{animation:apRise 360ms cubic-bezier(.23,1,.32,1) both}
+.ap.rise .ap-p.rk2{animation-delay:70ms}.ap.rise .ap-p.rk3{animation-delay:120ms}.ap.rise .ap-p.rk4{animation-delay:160ms}.ap.rise .ap-p.rk5{animation-delay:190ms}
+@keyframes apRise{from{opacity:0;transform:translateY(12px)}}
+@media (prefers-reduced-motion:reduce){.ap.rise .ap-p{animation:apFade 200ms ease both}}
+@keyframes apFade{from{opacity:0}}
 .rec-link{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.25rem 1rem;text-decoration:none;color:inherit}
 @media (hover:hover) and (pointer:fine){.rec-link:hover{border-color:var(--b-def)}}.rec-link-go{color:var(--accent-text);font-size:.875rem}
 .hot-tiles{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem}
@@ -1536,7 +1543,7 @@ input:not([type=checkbox]):not([type=radio]):focus,select:focus{border-color:var
 @media (max-width:960px){.rec-a{grid-template-columns:minmax(0,1fr)}}
 /* Records top: This Week and the page links on the left, the leaderboards on the right */
 .rec-a{grid-template-columns:minmax(0,27rem) minmax(0,1fr);grid-template-areas:"lb week" "lb links";grid-template-rows:auto 1fr;align-items:start}
-.rec-a>:first-child{grid-area:week}.rec-a>.lb{grid-area:lb}.rec-a>.rec-links{grid-area:links;grid-template-columns:minmax(0,1fr);gap:.75rem}
+.rec-a>:nth-child(2){grid-area:week}.rec-a>.lb{grid-area:lb}.rec-a>.rec-links{grid-area:links;grid-template-columns:minmax(0,1fr);gap:.75rem}
 @media (max-width:960px){.rec-a{grid-template-columns:minmax(0,1fr);grid-template-areas:"lb" "week" "links";grid-template-rows:auto}}
 .rec-a .rec-link{flex-direction:column;align-items:flex-start;gap:.25rem}
 
@@ -3660,7 +3667,9 @@ function podiumCard(){
   rest.forEach((x,i)=>i%2?row.push(x):row.unshift(x));
   const rank=x=>x===top?1:rest.indexOf(x)+2;
   const pic=m=>{const r=m.armory&&m.armory.render;return safePic(r)&&!/\/shadow\//.test(r)?renderPic(m)||r:genericFg(m)};
-  return h("section",{class:"card ap ap-n"+row.length,"aria-labelledby":"ap-h"},
+  // Rises on the renders in the first moment after you arrive (the page redraws as data lands), not on later redraws.
+  if(podiumCard.t==null)podiumCard.t=performance.now();const rise=performance.now()-podiumCard.t<700;
+  return h("section",{class:"card ap ap-n"+row.length+(rise?" rise":""),"aria-labelledby":"ap-h"},
     h("div",{class:"ap-head"},h("div",{},h("h2",{id:"ap-h"},"The Podium"),h("p",{class:"small ter",style:"margin:.125rem 0 0"},"The guild's title holders. Speed Demon resets every week.")),
       h("button",{type:"button",class:"btn ghost sm","aria-expanded":String(!!S.ui.apAll),"aria-controls":"ap-all",onclick:()=>{if(!S.ui.apAll)openAnim("apAll");setUi({apAll:!S.ui.apAll},true)}},S.ui.apAll?"Hide the other titles":"Every title ("+hot.held+" of "+hot.total+" held)")),
     h("div",{class:"ap-stage"},h("div",{class:"ap-light","aria-hidden":"true"}),
@@ -3678,8 +3687,9 @@ function podiumCard(){
 function viewRecords(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
     // Who's top first: the Podium, then the Leaderboards (left on a computer, next on a phone), then This Week and the page links.
+    // The page order matches what you see, so keyboards and screen readers go the same way.
     podiumCard(),
-    h("div",{class:"rec-top rec-a"},raceCard(),recBoards(),
+    h("div",{class:"rec-top rec-a"},recBoards(),raceCard(),
     h("div",{class:"rec-links"},S.scribe?h("a",{class:"card rec-link",href:"#activity"},h("span",{},h("b",{},"When and where the guild plays"),h("span",{class:"small ter"}," · the busiest hours and a map of the zones")),h("span",{class:"rec-link-go"},"On the Activity page →")):null,
     h("a",{class:"card rec-link",href:"#professions",onclick:()=>{S.ui.profJump=1}},h("span",{},h("b",{},"Profession leaderboards"),h("span",{class:"small ter"}," · top three and the wooden spoon in every profession")),h("span",{class:"rec-link-go"},"On the Professions page →")))),
     h("p",{class:"small ter"},"Characters who've left the guild aren't counted. Honour and professions are only as fresh as each character's last sync.")]}
@@ -5010,7 +5020,7 @@ if(DISCORD_SERVER_ID){loadWidget();setInterval(loadWidget,60000);document.addEve
 // Each page remembers how far down it was scrolled (in the browser's history entry), so Back returns to the same spot.
 let scrollSave=0;
 addEventListener("scroll",()=>{if(scrollSave)return;scrollSave=setTimeout(()=>{scrollSave=0;try{history.replaceState({...(history.state||{}),y:scrollY},"")}catch(e){}},150)},{passive:true});
-addEventListener("hashchange",()=>{if(/^#link\//.test(location.hash))return checkLinkHash();clearTimeout(scrollSave);scrollSave=0;
+addEventListener("hashchange",()=>{podiumCard.t=null;if(/^#link\//.test(location.hash))return checkLinkHash();clearTimeout(scrollSave);scrollSave=0;
   const y=history.state&&typeof history.state.y==="number"?history.state.y:0;render();
   if(y)requestAnimationFrame(()=>scrollTo(0,y));else scrollTo(0,0)});
 if("scrollRestoration" in history)history.scrollRestoration="manual";
