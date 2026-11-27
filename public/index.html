@@ -1502,9 +1502,9 @@ input:not([type=checkbox]):not([type=radio]):focus,select:focus{border-color:var
 /* Phones and tablets: This Week above the leaderboards (the two-column rule above was winning on small screens) */
 @media (max-width:960px){.rec-a{grid-template-columns:minmax(0,1fr)}}
 /* Records top: This Week and the page links on the left, the leaderboards on the right */
-.rec-a{grid-template-areas:"week lb" "links lb";grid-template-rows:auto 1fr;align-items:start}
+.rec-a{grid-template-columns:minmax(0,27rem) minmax(0,1fr);grid-template-areas:"lb week" "lb links";grid-template-rows:auto 1fr;align-items:start}
 .rec-a>:first-child{grid-area:week}.rec-a>.lb{grid-area:lb}.rec-a>.rec-links{grid-area:links;grid-template-columns:minmax(0,1fr);gap:.75rem}
-@media (max-width:960px){.rec-a{grid-template-areas:"week" "lb" "links";grid-template-rows:auto}}
+@media (max-width:960px){.rec-a{grid-template-columns:minmax(0,1fr);grid-template-areas:"lb" "week" "links";grid-template-rows:auto}}
 .rec-a .rec-link{flex-direction:column;align-items:flex-start;gap:.25rem}
 
 /* Phones vs wider screens: some parts come in two versions and only one shows. */
@@ -3644,7 +3644,7 @@ function podiumCard(){
     S.ui.apAll?h("div",{id:"ap-all",class:"ap-all hot"+anim("apAll")},hot.body):null)}
 function viewRecords(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Records"),h("p",{class:"sub"},"Who's top of the guild, straight from the armory. It moves every time someone syncs.")))),
-    // This Week at its own height with the two page links under it, beside the leaderboards.
+    // Who's top first: the Podium, then the Leaderboards (left on a computer, next on a phone), then This Week and the page links.
     podiumCard(),
     h("div",{class:"rec-top rec-a"},raceCard(),recBoards(),
     h("div",{class:"rec-links"},S.scribe?h("a",{class:"card rec-link",href:"#activity"},h("span",{},h("b",{},"When and where the guild plays"),h("span",{class:"small ter"}," · the busiest hours and a map of the zones")),h("span",{class:"rec-link-go"},"On the Activity page →")):null,
