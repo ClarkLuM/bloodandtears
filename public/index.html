@@ -1233,19 +1233,19 @@ dialog.srch-dlg form{padding:1rem;gap:.5rem}
 #boot{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:var(--base);color:var(--ter);font-size:.875rem;transition:opacity .35s ease,visibility .35s}
 #boot.gone{opacity:0;visibility:hidden;pointer-events:none}
 .boot-gb{width:7rem;height:7rem;filter:drop-shadow(0 6px 14px rgb(0 0 0 / .45));transform-origin:center;transform-box:fill-box}
-/* The crest draws itself: the gold ring traces round, the gingerbread outline follows, then the colours fill in.
-   Once drawn it breathes gently until the guild has loaded, then flies up into the header logo (bootDone). */
-.cd-ring,.cd-gb{fill-opacity:0;stroke:#e6bc77;stroke-width:7;stroke-dasharray:1;stroke-dashoffset:1;animation:cdDraw 650ms cubic-bezier(.77,0,.175,1) forwards,cdFill 260ms ease-out forwards}
-.cd-ring{animation-delay:0ms,560ms}.cd-gb{stroke-width:5;animation-delay:220ms,760ms}
-.cd-disc{opacity:0;animation:cdIn 260ms ease-out 560ms forwards}.cd-face{opacity:0;animation:cdIn 220ms ease-out 900ms forwards}
-.boot-gb{animation:cdBreathe 1.8s ease-in-out 1.2s infinite}
+/* Loading crest: it spins while the guild loads. Once everything is in, it settles upright, redraws itself
+   (the gold ring traces round, the gingerbread outline follows, the colours fill in), then flies up and lands
+   as the header logo. Timings live in bootDone. */
+.boot-gb{animation:gb-spin 1.6s cubic-bezier(.55,.05,.35,1) infinite}
+#boot.settle .boot-gb{animation:none}
+#boot.drawing .cd-ring,#boot.drawing .cd-gb{stroke:#e6bc77;stroke-width:7;stroke-dasharray:1;stroke-dashoffset:1;fill-opacity:.12;animation:cdDraw 520ms cubic-bezier(.77,0,.175,1) forwards,cdFill 220ms ease-out forwards}
+#boot.drawing .cd-ring{animation-delay:0ms,440ms}#boot.drawing .cd-gb{stroke-width:5;animation-delay:160ms,560ms}
+#boot.drawing .cd-disc{opacity:.12;animation:cdIn 220ms ease-out 440ms forwards}#boot.drawing .cd-face{opacity:.12;animation:cdIn 200ms ease-out 640ms forwards}
 @keyframes cdDraw{to{stroke-dashoffset:0}}@keyframes cdFill{to{fill-opacity:1;stroke-opacity:0}}@keyframes cdIn{to{opacity:1}}
-@keyframes cdBreathe{50%{transform:scale(1.04)}}
-#boot.quick .boot-gb *{animation-duration:0s!important;animation-delay:0s!important}
-#boot.flying{background-color:transparent;transition:background-color 380ms ease}#boot.flying span{opacity:0;transition:opacity 150ms ease}#boot.flying .boot-gb{animation:none}
+#boot.flying{background-color:transparent;transition:background-color 380ms ease}#boot.flying span{opacity:0;transition:opacity 150ms ease}
 .crest-landing header .brand-logo{opacity:0}
 @keyframes gb-spin{0%{transform:rotate(0) scale(1)}45%{transform:rotate(200deg) scale(1.06)}100%{transform:rotate(360deg) scale(1)}}
-@media (prefers-reduced-motion:reduce){.boot-gb{animation:gb-pulse 1.8s ease-in-out infinite}@keyframes gb-pulse{50%{opacity:.55}}#boot{transition:none}.boot-gb *{animation-duration:0s!important;animation-delay:0s!important}}
+@media (prefers-reduced-motion:reduce){.boot-gb{animation:gb-pulse 1.8s ease-in-out infinite}@keyframes gb-pulse{50%{opacity:.55}}#boot{transition:none}}
 /* Pictures fade in the first time they load, and a box keeps their space so nothing jumps. */
 img.fade{opacity:0;transition:opacity .3s ease}img.fade.in{opacity:1}
 @media (prefers-reduced-motion:reduce){img.fade{transition:none}}
@@ -1772,7 +1772,6 @@ main .rl-col>section.totals .total:first-child{border-left:0;padding-left:0}
 <g fill="#9a0628"><clipPath id="eL"><path d="M225.4 141.4L256.4 149.2L256.4 166.1L225.4 166.1Z"/></clipPath><ellipse cx="240.9" cy="146.7" rx="9.7" ry="10.2" clip-path="url(#eL)"/><clipPath id="eR"><path d="M252.1 149.2L283.2 141.4L283.2 166.1L252.1 166.1Z"/></clipPath><ellipse cx="267.6" cy="146.7" rx="9.7" ry="10.2" clip-path="url(#eR)"/></g>
 <g fill="#9a0628" stroke="#9a0628" stroke-linejoin="round"><path d="M231.8 206.2L254.3 219.2L276.7 206.2L276.7 232.1L254.3 219.2L231.8 232.1Z" stroke-width="4.7"/>
 <circle cx="254.3" cy="273.5" r="12.1" stroke="none"/><circle cx="254.3" cy="325.3" r="11.2" stroke="none"/></g></g></svg><span>Gathering the guild…</span></div>
-<script>/* The crest draws itself on the first visit each day; after that it is already drawn. */try{var d=new Date().toDateString();if(localStorage.getItem("crestDay")===d)document.getElementById("boot").classList.add("quick");else localStorage.setItem("crestDay",d)}catch(e){}</script>
 <div id="app"></div>
 <dialog id="dlg"><form id="dlgForm" method="dialog"></form></dialog>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -5039,18 +5038,23 @@ function render(){
   if(S.loaded||S.error||S.authError||!configured)bootDone();
   S.anim=null;
   checkDing();checkMilestones();markVisit()}
-// The loading crest finishes drawing (first visit of the day only), then flies up and lands as the header logo.
+// The loading crest: spins while loading; when the guild is in, it eases upright (240ms), redraws itself (860ms),
+// then flies up and lands as the header logo (540ms). Reduced motion, or an error, just fades it as before.
 function bootDone(){const b=document.getElementById("boot");if(!b||b.classList.contains("gone")||b.classList.contains("landing"))return;
   const fade=()=>{b.classList.add("gone");setTimeout(()=>b.remove(),500)};
   const mark=b.querySelector(".boot-gb"),reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
   if(reduce||!mark||!mark.animate||S.error||S.authError)return fade();
-  const DRAWN=1160,left=b.classList.contains("quick")?0:DRAWN-((document.timeline&&document.timeline.currentTime)||DRAWN);
   b.classList.add("landing");
+  // Where the spin is right now, so it finishes the turn instead of snapping.
+  const m=new DOMMatrix(getComputedStyle(mark).transform),deg=(Math.atan2(m.b,m.a)*180/Math.PI+360)%360,sc=Math.hypot(m.a,m.b)||1;
+  b.classList.add("settle");
+  mark.animate([{transform:`rotate(${deg}deg) scale(${sc})`},{transform:"rotate(360deg) scale(1)"}],{duration:240,easing:"cubic-bezier(.23,1,.32,1)"});
+  setTimeout(()=>b.classList.add("drawing"),240);
   setTimeout(()=>{b.classList.add("flying");document.documentElement.classList.add("crest-landing");const dst=document.querySelector("header .brand-logo");if(!dst){document.documentElement.classList.remove("crest-landing");return fade()}
     const a=mark.getBoundingClientRect(),z=dst.getBoundingClientRect(),dx=z.left+z.width/2-(a.left+a.width/2),dy=z.top+z.height/2-(a.top+a.height/2);
     mark.animate([{transform:"none"},{transform:`translate(${dx}px,${dy}px) scale(${z.width/a.width})`}],{duration:540,easing:"cubic-bezier(.77,0,.175,1)",fill:"forwards"}).finished
       .then(()=>{document.documentElement.classList.remove("crest-landing");const l=document.querySelector("header .brand-logo");
-        if(l&&l.animate)l.animate([{transform:"scale(1.15)"},{transform:"none"}],{duration:220,easing:"cubic-bezier(.23,1,.32,1)"});b.remove()})},Math.max(0,left))}
+        if(l&&l.animate)l.animate([{transform:"scale(1.15)"},{transform:"none"}],{duration:220,easing:"cubic-bezier(.23,1,.32,1)"});b.remove()})},240+860)}
 setTimeout(bootDone,10000);
 // Pictures: the first load fades in; after that the same picture shows straight away on every redraw.
 const seenImg=new Set();
