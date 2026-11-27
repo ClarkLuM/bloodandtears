@@ -514,7 +514,13 @@ main.ch-page .card{position:relative}
 button.pass-st{cursor:pointer}@media (hover:hover) and (pointer:fine){button.pass-st:hover .pass-seal{border-color:var(--lvl)}}
 .pass-seal{width:3.375rem;height:3.375rem;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:600;font-size:.75rem;line-height:1;border:2px dashed var(--b-def);color:var(--ter);background:var(--sunken)}
 .pass-st.on .pass-seal{border:2px solid #e6bc77;color:#ffd77a;background:radial-gradient(circle at 40% 35%,#5a1f20,#2a1213 70%);box-shadow:0 0 0 3px rgb(230 188 119 / .12);transform:rotate(-8deg)}
-.pass-st b{font-weight:600;font-size:.75rem;line-height:1rem}.pass-st:not(.on) b{color:var(--sec);font-weight:400}
+.pass-st b{font-weight:600;font-size:.75rem;line-height:1rem}
+.crew-f{display:inline-grid;place-items:center;width:1.25rem;height:1.25rem;border-radius:50%;overflow:hidden;flex:none;background:color-mix(in srgb,var(--cc) 30%,#1a1211);color:#fff;font:600 .5rem/1 var(--body);box-shadow:0 0 0 1.5px var(--cc),0 0 0 3px var(--base)}
+.crew-f img{width:100%;height:100%;object-fit:cover}
+.pass-crew{display:flex;align-items:center;justify-content:center;margin-top:.125rem}.pass-crew .crew-f+.crew-f{margin-left:-.3125rem}.pass-crew i{font-style:normal;font-size:.6875rem;color:var(--ter);margin-left:.25rem}
+.run-pick{gap:.375rem}.run-chip{display:inline-flex;align-items:center;gap:.375rem}.run-chip.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--text)}
+.run-fixed{display:flex;flex-direction:column;gap:.375rem}.run-fx{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}.run-fx .btn{margin-left:auto}
+.crew-line{margin:0}.pass-st:not(.on) b{color:var(--sec);font-weight:400}
 .pass-st small{font-size:.6875rem;line-height:.875rem;color:var(--ter)}
 @media (max-width:600px){.pass-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem .25rem}.pass-seal{width:2.75rem;height:2.75rem;font-size:.6875rem}}.pass-st.on small{color:var(--lvl)}
 .lg-none{margin:0;font-size:.6875rem;line-height:.9375rem;color:#8b7b79}
@@ -2120,6 +2126,7 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-27","Who did you run with?","Stamp a dungeon in your Passport and pick who was with you: they get the stamp too, and their faces sit under it. Your page shows who you run with most. Tagged by mistake? Tap the stamp and choose Not me.","#roster"],
   ["2026-11-27","Titles you keep","Once you've held a title, it's yours to show. On your character page, pick which title sits by your name: one you hold now, a former one (shown as Former Speed Demon), or none.","#records"],
   ["2026-11-27","Item stats on phones","Tap any item or enchant on a phone to see its stats in a panel from the bottom of the screen, with a link through to Wowhead.","#roster"],
   ["2026-11-27","A new look","Titles in a new typeface, fewer boxes, gold-trimmed panels for the things that matter, and a loading crest that draws itself and lands in the corner.","#roster"],
@@ -2447,6 +2454,53 @@ function cardOfWeek(){
       profs.length?h("div",{class:"cow-profs"},profs.map(([p,v])=>profBar(p,v))):null,
       h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>copyCard(m)},"Copy for Discord"),h("a",{class:"btn ghost",href:`#char/members/${m.id}`},"See their page"))))}
 
+/* ---------- Who you ran with ---------- */
+// Each passport stamp can say who was there. Three sources: who the character's owner tagged (clearedWith, on their
+// own character), anyone who tagged *them* for that dungeon, and the guild scribe's record of the group inside
+// (its runs and boss kills). Being tagged stamps the dungeon for you too; "Not me" on your stamp undoes it (notWith).
+const notWith=(m,d,id)=>((m.notWith||{})[d]||[]).includes(id);
+function taggedStamps(m){const out=[];for(const o of S.members||[]){if(o.id===m.id)continue;
+  for(const[d,ids]of Object.entries(o.clearedWith||{}))if(Array.isArray(ids)&&ids.includes(m.id)&&!notWith(m,d,o.id))out.push([d,(o.cleared||{})[d]||"",o.id])}return out}
+// Who was with m in dungeon d: [{m, how}] where how is "tagged" (m's owner picked them), "tagged-you" (they tagged m),
+// "group" (tagged alongside m by someone else) or "scribe".
+function crewAt(m,d){const out=new Map(),put=(id,how)=>{if(id&&id!==m.id&&!out.has(id)){const x=memberById(id);if(x)out.set(id,{m:x,how})}};
+  for(const id of (m.clearedWith||{})[d]||[])put(id,"tagged");
+  for(const o of S.members||[]){const g=(o.clearedWith||{})[d]||[];if(o.id!==m.id&&g.includes(m.id)&&!notWith(m,d,o.id)){put(o.id,"tagged-you");for(const i of g)put(i,"group")}}
+  const sc=S.scribe||{};
+  for(const x of Object.values(sc.runs||{}))if((x.ids||[]).includes(m.id)&&dgName(x.zone)===d)for(const i of x.ids)put(i,"scribe");
+  for(const k of Array.isArray(sc.kills)?sc.kills:[])if((k.ids||[]).includes(m.id)&&dgName(k.zone,k.boss)===d)for(const i of k.ids)put(i,"scribe");
+  return[...out.values()]}
+// Who m runs with most, across every stamped dungeon.
+function crewOf(m){const n=new Map();for(const x of passportOf(m))for(const c of crewAt(m,x.name))n.set(c.m.id,{m:c.m,n:((n.get(c.m.id)||{}).n||0)+1});
+  return[...n.values()].sort((a,b)=>b.n-a.n||nameOf(a.m).localeCompare(nameOf(b.m)))}
+const crewFace=x=>{const av=charPic(x,"avatar"),ini=nameOf(x).split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase();
+  return h("span",{class:"crew-f",style:`--cc:${CLASSES[x.cls]||"#bfaea9"}`,title:nameOf(x)},av?fadeImg({src:av,alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):ini)};
+// The stamp dialog: who was with you, and taking the stamp off. Opens right after stamping, and on any stamp you own.
+function runDialog(m,d,fresh){
+  const dlg=$("#dlg"),f=$("#dlgForm"),cw=m.clearedWith||{},picked=new Set(cw[d]||[]),range=(DUNGEONS.find(x=>x[0]===d)||[])[1]||"";
+  const [lo,hi]=String(range).split(/[–-]/).map(Number),fits=x=>lo&&(x.level||1)>=lo-3&&(x.level||1)<=(hi||lo)+5;
+  const fixed=crewAt(m,d).filter(c=>c.how!=="tagged"),mine=!!(m.cleared||{})[d];
+  const q=h("input",{type:"search",placeholder:"Search the guild\u2026",autocomplete:"off","aria-label":"Search the guild"}),list=h("div",{class:"row run-pick"});
+  const draw=()=>{const t=q.value.trim().toLowerCase(),today=Date.now()-864e5*2;
+    const pool=S.members.filter(x=>x.id!==m.id&&!owns(x)&&!fixed.some(c=>c.m.id===x.id)&&(!t||nameOf(x).toLowerCase().includes(t)))
+      .sort((a,b)=>picked.has(b.id)-picked.has(a.id)||fits(b)-fits(a)||(Date.parse(seenOf(b))>today)-(Date.parse(seenOf(a))>today)||nameOf(a).localeCompare(nameOf(b)));
+    list.replaceChildren(...pool.slice(0,t?24:12).map(x=>h("button",{type:"button",class:"btn sm run-chip"+(picked.has(x.id)?" on":""),"aria-pressed":String(picked.has(x.id)),
+      onclick:()=>{if(picked.has(x.id))picked.delete(x.id);else if(picked.size<9)picked.add(x.id);draw()}},crewFace(x),nameOf(x))))};
+  q.oninput=draw;draw();
+  const save=()=>{const ids=[...picked].slice(0,9),next={...cw};if(ids.length)next[d]=ids;else delete next[d];
+    if(JSON.stringify(next[d]||[])!==JSON.stringify(cw[d]||[]))write(updateDoc(charRef(m),{clearedWith:Object.keys(next).length?next:deleteField(),updatedAt:nowIso()}));dlg.close()};
+  const notMe=o=>{const nw={...(m.notWith||{})};nw[d]=[...new Set([...(nw[d]||[]),o.id])].slice(-9);write(updateDoc(charRef(m),{notWith:nw,updatedAt:nowIso()}));dlg.close();toast("Took "+d+" off. "+nameOf(o)+"'s tag no longer counts for you.")};
+  const unstamp=()=>{const c={...(m.cleared||{})};delete c[d];const next={...cw};delete next[d];
+    write(updateDoc(charRef(m),{cleared:c,clearedWith:Object.keys(next).length?next:deleteField(),updatedAt:nowIso()}));dlg.close()};
+  f.replaceChildren(...[h("h1",{style:"font-size:1.8125rem;line-height:2.25rem"},d),
+    h("p",{class:"sub"},fresh?"Stamped! Who was with you? They'll get the stamp too.":"Who was with you? Anyone you pick gets the stamp too."),
+    fixed.length?h("div",{class:"run-fixed"},fixed.map(c=>h("div",{class:"run-fx"},crewFace(c.m),h("span",{},nameOf(c.m)),
+      h("span",{class:"small ter"},c.how==="scribe"?"seen by the guild scribe":c.how==="group"?"in the same group":"tagged you"),
+      c.how==="tagged-you"?h("button",{type:"button",class:"btn sm ghost",onclick:()=>notMe(c.m)},"Not me"):null))):null,
+    q,list,
+    h("div",{class:"dlg-actions"},mine&&!fresh?h("button",{class:"btn ghost",type:"button",onclick:unstamp},"Take the stamp off"):h("span"),
+      h("button",{class:"btn primary",type:"button",onclick:save},picked.size?"Save":"Done"))].filter(Boolean));
+  f.onsubmit=e=>{e.preventDefault();save()};dlg.showModal()}
 /* ---------- Dungeon passport section ---------- */
 // "Where's this from?": one short answer under a heading, so guildies don't have to ask in Discord.
 const whereFrom=text=>h("details",{class:"wf"},h("summary",{},"Where's this from?"),h("p",{},text));
@@ -2461,16 +2515,20 @@ function passportCard(m){
   return h("section",{class:"card","aria-labelledby":"pass-h",style:"gap:.75rem"},
     h("div",{class:"spread"},h("h2",{id:"pass-h"},"Dungeon Passport"),h("span",{class:"small ter"},pass.length+" of "+DUNGEONS.length+" cleared")),
     h("span",{class:"track","aria-hidden":"true"},h("i",{style:`width:${(pass.length/DUNGEONS.length*100).toFixed(0)}%`})),
-    h("p",{class:"small ter",style:"margin:0"},can?"Tap a dungeon when you've cleared it. Tap again to take the stamp off. It's just for fun, so fill in as much or as little as you like.":"A stamp for every dungeon "+nameOf(m)+" has cleared."),
+    h("p",{class:"small ter",style:"margin:0"},can?"Tap a dungeon when you've cleared it and say who was with you: they get the stamp too. Tap a stamp to change who was there or take it off.":"A stamp for every dungeon "+nameOf(m)+" has cleared."),
+    (()=>{const c=crewOf(m).slice(0,4);return c.length?h("p",{class:"crew-line small"},h("span",{class:"ter"},"Runs most with "),c.map((x,i)=>[i?", ":"",h("a",{href:`#char/members/${x.m.id}`},nameOf(x.m)),h("span",{class:"ter"}," \u00d7"+x.n)])):null})(),
     spelunkers(m,by,can),
     whereFrom("Three places: the dungeons ticked here, the guild scribe (the in-game addon) when it sees the guild finish one, and loot that only one dungeon drops, once the armory shows it being worn. The armory can't see what you've run, so tick any it missed. A Spelunker set lands on the card once every dungeon in it is stamped."),
     h("div",{class:"pass-grid"},shownDungeons(m,by).map(([n,r])=>{const x=by.get(n),mine=!!(m.cleared&&m.cleared[n]);
       // A dungeon stamped from loot looks like any other stamp; the line under it says which item did it.
       const loot=x&&x.via==="loot",cls="pass-st"+(x?" on":""),tip=loot?n+": stamped automatically, from "+x.item+" ("+x.boss+")":n;
+      const crew=x?crewAt(m,n):[];
       const kids=[h("span",{class:"pass-seal","aria-hidden":"true"},dungAbbr(n)),h("b",{},n),
-        h("small",{},loot?["Looted: ",itemRef(x.item,x.itemRef)]:x?(x.at?"Cleared "+dayMonth(x.at):"Cleared"):"Levels "+r)];
-      return can&&(!x||mine)?h("button",{type:"button",class:cls,"aria-pressed":String(!!x),title:tip,onclick:()=>{const c={...(m.cleared||{})};
-          if(c[n])delete c[n];else c[n]=nowIso();write(updateDoc(charRef(m),{cleared:c,updatedAt:nowIso()}))}},...kids)
+        h("small",{},loot?["Looted: ",itemRef(x.item,x.itemRef)]:x?(x.at?"Cleared "+dayMonth(x.at):"Cleared"):"Levels "+r),
+        crew.length?h("span",{class:"pass-crew","aria-label":"With "+crew.map(c=>nameOf(c.m)).join(", ")},crew.slice(0,3).map(c=>crewFace(c.m)),crew.length>3?h("i",{},"+"+(crew.length-3)):null):null];
+      return can&&!loot?h("button",{type:"button",class:cls,"aria-pressed":String(!!x),title:x?n+": who was there?":"Stamp "+n,onclick:()=>{
+          if(x)return runDialog(m,n,false);
+          const c={...(m.cleared||{}),[n]:nowIso()};write(updateDoc(charRef(m),{cleared:c,updatedAt:nowIso()}));m.cleared=c;runDialog(m,n,true)}},...kids)
         :h("div",{class:cls,title:tip},...kids)})),
     S.ui.passAll||DUNGEONS.length>shownDungeons(m,by).length?h("div",{},h("button",{class:"btn sm ghost",type:"button","aria-expanded":String(!!S.ui.passAll),onclick:()=>setUi({passAll:!S.ui.passAll})},
       S.ui.passAll?"Show fewer":"Show all "+DUNGEONS.length)):null)}
@@ -2887,6 +2945,7 @@ function passportOf(m){
   for(const j of Array.isArray(m.journey)?m.journey:[]){const t=String(j.t||"");if(/^Finished /.test(t))add(t.slice(9),j.at)}
   const c=m.cleared&&typeof m.cleared==="object"?m.cleared:{};for(const t of Object.keys(c))if(c[t])add(t,c[t]);
   for(const[t,at]of scribeStamps(m))add(t,at);
+  for(const[t,at]of taggedStamps(m))add(t,at);
   const loot=lootStampsOf(m);
   return DUNGEONS.filter(d=>got.has(d[0])||loot.has(d[0])).map(d=>got.has(d[0])?{name:d[0],range:d[1],abbr:dungAbbr(d[0]),at:got.get(d[0])}
     :{name:d[0],range:d[1],abbr:dungAbbr(d[0]),at:loot.get(d[0]).at,via:"loot",item:loot.get(d[0]).item,boss:loot.get(d[0]).boss,itemRef:loot.get(d[0]).ref})}

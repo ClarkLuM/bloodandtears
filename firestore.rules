@@ -46,6 +46,9 @@ service cloud.firestore {
         (!('main' in d) || d.main == true) &&
         // Titles this character has ever held: { <title key>: when }, added by the site.
         (!('titlesEver' in d) || (d.titlesEver is map && d.titlesEver.size() <= 80)) &&
+        // Who was with you in each stamped dungeon, and tags from others that you said weren't you.
+        (!('clearedWith' in d) || (d.clearedWith is map && d.clearedWith.size() <= 40)) &&
+        (!('notWith' in d) || (d.notWith is map && d.notWith.size() <= 40)) &&
         armoryKept() &&
         request.resource.data.get('discordId', null) == (resource == null ? null : resource.data.get('discordId', null)) &&
         // Recipes only ever come from the guild scribe upload (the server).
