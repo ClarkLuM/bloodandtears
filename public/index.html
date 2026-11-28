@@ -1830,6 +1830,14 @@ main section.card:not(.ap):not(.rr):not(.spot):not(.ask):not(.rec-link):not(.dg-
 main .rl-col>section.totals{background:none;border:0;border-radius:0;box-shadow:none;border-top:1px solid var(--sep);border-bottom:1px solid var(--sep);padding:.875rem 0;gap:0}
 main .rl-col>section.totals .total{background:none;border:0;box-shadow:none;border-radius:0;border-left:1px solid var(--sep);padding:.125rem 1rem}
 main .rl-col>section.totals .total:first-child{border-left:0;padding-left:0}
+/* Empty-state drawings */
+.empty-art{display:flex;align-items:center;gap:1rem;padding:.5rem 0;min-width:0}
+.empty-art .ea-pic{flex:none;width:3.25rem;height:3.25rem;color:color-mix(in srgb,var(--gilt) 72%,var(--ter))}.empty-art .ea-pic svg{width:100%;height:100%;display:block}
+.empty-art .empty,.empty-art p{margin:0;padding:0;text-wrap:pretty}
+.ea-pic.draw path,.ea-pic.draw circle,.ea-pic.draw rect{stroke-dasharray:1;stroke-dashoffset:1;animation:ea-draw .9s cubic-bezier(.23,1,.32,1) .12s forwards}
+@keyframes ea-draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.ea-pic.draw path,.ea-pic.draw circle,.ea-pic.draw rect{animation:none;stroke-dashoffset:0}}
+@media (max-width:640px){.empty-art .ea-pic{width:2.75rem;height:2.75rem}}
 </style>
 </head>
 <body>
@@ -2465,7 +2473,7 @@ function viewRoster(){
   }else{const isOut=m=>!isMine(m)&&rosterEntry(m)===null,inG=list.filter(m=>!isOut(m)),out=list.filter(isOut);
     body=[...inG.flatMap(row),...(out.length&&inG.length?[h("tr",{class:"r-group"},h("td",{colspan:"6"},h("span",{class:"r-group-in"},"Not in the guild",h("span",{class:"small ter"},String(out.length)))))]:[]),...out.flatMap(row)]}
   const empty=h("div",{class:"card"},h("h3",{},total?"Nobody matches":"No one's on the roster yet"),
-    h("p",{class:"sub"},total?"Try fewer filters, or a different search.":"The guild list from the armory fills this in within the hour."),total?h("div",{},h("button",{class:"btn sm",type:"button",onclick:clear},"Clear filters")):null);
+    total?h("p",{class:"sub"},"Try fewer filters, or a different search."):emptyArt("banner",h("p",{class:"sub"},"The guild list from the armory fills this in within the hour.")),total?h("div",{},h("button",{class:"btn sm",type:"button",onclick:clear},"Clear filters")):null);
   const results=!list.length?empty:view==="cards"?[cardOfWeek(),h("div",{class:"binder"},list.map(binderIt))]
     :h("div",{class:"tablebox"},h("table",{class:"roster-t"},h("thead",{},h("tr",{},[...["Character","Level","Professions","Best loot","Last seen"].map(t=>h("th",{scope:"col"},t)),h("th",{scope:"col"},h("span",{class:"visually-hidden"},"Details"))])),h("tbody",{},body)));
   const tools=h("div",{class:"r-tools-wrap"+(u.rFiltersOpen?" open":"")},rosterFilters(),count);
@@ -2476,7 +2484,7 @@ function viewRoster(){
   // On phones both columns merge into one, in this order: what people come for first, then what they can act on.
   // Phones stack both columns into one, ordered by --o. Cards view hands back two pieces (Card of the Week and the binder), so each gets the number.
   const at=(el,n)=>{if(Array.isArray(el))return el.map(x=>at(x,n));if(el&&el.style)el.style.setProperty("--o",n);return el};
-  return[head,firstsFlex()||birthdayBanner(),hubTiles(),h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(claimBanner(),1),at(spotlight(true),1),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
+  return[head,firstsFlex()||birthdayBanner(),hubTiles(),h("div",{class:"roster-layout"},h("div",{class:"rl-col"},at(claimBanner(),1),at(spotlight(true),5),at(guildTotals(),2),at(tools,3),at(results,4),at(guildFeed(),8)),
     h("div",{class:"rl-col"},at(asksCard(),1),at(guildToday(),6),at(siteUse(),12),at(discordBox(),13)))]}
 
 // Their best equipped item: highest quality first (green and up).
@@ -2688,7 +2696,7 @@ function nowRow(){
   return h("section",{class:"card now","aria-labelledby":"now-h"},
     h("div",{class:"spread"},h("h2",{id:"now-h"},"In Game Today"),h("span",{class:"row",style:"gap:.75rem"},h("span",{class:"small ter"},list.length?list.length+(list.length===1?" character":" characters"):""))),
     list.length?h("div",{class:"now-list"},list.slice(0,16).map(face),list.length>16?h("span",{class:"now-more"},"+"+(list.length-16)):null)
-      :h("p",{class:"empty",style:"margin:0"},"Nobody's logged off yet today."),
+      :emptyArt("moon","Nobody's logged off yet today."),
     h("p",{class:"small ter",style:"margin:0"},"From the armory, which updates when someone logs off."))}
 function weekLine(){const wk=weekMoves(),l=wk?wk.list:[];
   const n=k=>l.filter(e=>e.kind===k).length,crowns=n("crown"),ups=n("up"),gains=l.filter(e=>e.kind==="gain");
@@ -2907,6 +2915,14 @@ function streakOf(m){const r=S.streaks&&S.streaks.rows&&S.streaks.rows[m.id];if(
 // One icon set: gold line icons on a 20px grid, 1.6 stroke, round ends (matches the menu icons and the crest).
 const IC={"new":`<path d="M10 2.5v3M10 14.5v3M2.5 10h3M14.5 10h3"/><path d="M10 6.5l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z"/>`,"first":`<circle cx="10" cy="12" r="4.5"/><path d="M7 2.5l3 5 3-5"/><path d="M10 10l.8 1.6 1.7.2-1.2 1.1.3 1.7-1.6-.8-1.6.8.3-1.7-1.2-1.1 1.7-.2z"/>`,"title":`<path d="M3 15.5h14M4 13l-1-7 4 3 3-5 3 5 4-3-1 7z"/>`,"close":`<path d="M5 5l10 10M15 5L5 15"/>`,"Tank":`<path d="M10 2.5l6 2.2v4.8c0 4-2.6 6.7-6 8-3.4-1.3-6-4-6-8V4.7z"/>`,"Healer":`<path d="M8 3.5h4v4.5h4.5v4H12v4.5H8V12H3.5V8H8z"/>`,"DPS":`<path d="M3 3l8.5 8.5M17 3l-8.5 8.5M3 3h3v3M17 3h-3v3M6.5 13.5l-3 3M13.5 13.5l3 3M5 11.5l3.5 3.5M15 11.5L11.5 15"/>`,"done":`<path d="M4 10.5l3.8 3.8L16 6"/>`,"up":`<path d="M5 12l5-5 5 5"/>`};
 const ic=(n,cls)=>{const e=h("span",{class:"ic"+(cls?" "+cls:""),"aria-hidden":"true"});e.innerHTML=`<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${IC[n]||""}</svg>`;return e};
+// Empty-state drawings: small line drawings for spots with nothing in them yet, in the icon set's style on a 48 grid.
+// Each kind draws itself in the first time it shows this visit; after that (and with reduced motion) it just sits there.
+const EA={scroll:`<path d="M15 11h21a3 3 0 0 1 3 3v21"/><path d="M15 11a4 4 0 0 0-4 4v2h7v-2a4 4 0 0 0-3-4"/><path d="M18 17v20a4 4 0 0 0 4 4h17a4 4 0 0 0 4-4v-2H26v2a4 4 0 0 1-4 4"/><path d="M23 19h10M23 25h10M23 31h6"/>`,moon:`<path d="M27 9a14 14 0 1 0 12 22A12 12 0 0 1 27 9z"/><path d="M36 8v5M33.5 10.5h5M41 19v3M39.5 20.5h3"/>`,podium:`<path d="M6 41h36M9 41V31h10M19 41V25h10v16M29 41V35h10v6"/><path d="M24 8l1.9 3.9 4.3.6-3.1 3 .7 4.2-3.8-2-3.8 2 .7-4.2-3.1-3 4.3-.6z"/>`,flask:`<path d="M20 7h8M21.5 7v11L12 35.5A3.5 3.5 0 0 0 15 41h18a3.5 3.5 0 0 0 3-5.5L26.5 18V7"/><path d="M15.5 30h17"/><path d="M22 35h.01M27 33.5h.01"/>`,compass:`<circle cx="24" cy="24" r="15"/><path d="M30.5 17.5l-4 9-9 4 4-9z"/><path d="M24 5v3M24 40v3M5 24h3M40 24h3"/>`,hourglass:`<path d="M13 7h22M13 41h22"/><path d="M16 7c0 9 7 11 7 17s-7 8-7 17M32 7c0 9-7 11-7 17s7 8 7 17"/><path d="M20 37c1.5-2 2.6-3 4-3s2.5 1 4 3"/>`,peak:`<path d="M5 40l13-19 6 8 7-11 12 22z"/><path d="M31 18V8l7 2.5-7 2.5"/>`,banner:`<path d="M13 6v36"/><path d="M13 9h22l-5 7 5 7H13"/><path d="M9 42h8"/>`,hammer:`<path d="M25 21L9.5 36.5a3 3 0 0 0 4.2 4.2L29 25"/><path d="M21 17l9-9 9 9-3 3-3-1.5-3.5 3.5 1.5 3-3 3z"/>`,trophy:`<path d="M16 8h16v9a8 8 0 0 1-16 0z"/><path d="M16 11h-5v2a6 6 0 0 0 6 6M32 11h5v2a6 6 0 0 1-6 6"/><path d="M24 25v7M19 32h10v6H19zM16 41h16"/>`,swords:`<path d="M10 10l21 21M27 35l8-8M31 31l7 7M38 10L17 31M13 27l8 8M17 31l-7 7"/>`,chest:`<rect x="8" y="20" width="32" height="19" rx="2"/><path d="M8 20a8 8 0 0 1 8-8h16a8 8 0 0 1 8 8M8 26h32"/><path d="M21.5 23h5v7h-5z"/>`,door:`<path d="M12 41V20a12 12 0 0 1 24 0v21"/><path d="M8 41h32"/><path d="M24 8v33"/><path d="M20.5 28h.01M27.5 28h.01"/>`};
+const eaDrawn=new Set();
+function emptyArt(kind,text,style){
+  const pic=h("span",{class:"ea-pic","aria-hidden":"true"});pic.innerHTML=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${EA[kind]||""}</svg>`;
+  if(!eaDrawn.has(kind)){eaDrawn.add(kind);pic.classList.add("draw");pic.querySelectorAll("path,circle,rect").forEach(e=>e.setAttribute("pathLength","1"))}
+  return h("div",{class:"empty-art",style:style||null},pic,typeof text==="string"?h("p",{class:"empty"},text):text)}
 // A dozen slow embers drifting up behind the page (dark theme only; hidden with reduced motion).
 (()=>{const e=document.createElement("div");e.className="embers";e.setAttribute("aria-hidden","true");
   for(let i=0;i<12;i++){const s=document.createElement("i");s.style.left=(4+Math.random()*92)+"%";s.style.setProperty("--dx",(Math.random()*60-20)+"px");
@@ -3394,7 +3410,7 @@ function guildFeed(){
   const line=(parts,when,now)=>h("div",{class:"spread",style:"padding:.5rem 0;border-top:1px solid var(--sep);flex-wrap:nowrap;align-items:baseline"},h("span",{style:"min-width:0"},parts),h("span",{class:"small ter"+(now?" feed-now":""),style:"white-space:nowrap"},when));
   return h("section",{class:"card","aria-labelledby":"feed-h",style:"gap:0"},h("div",{class:"spread",style:"padding-bottom:.5rem"},h("h2",{id:"feed-h"},"Guild Feed"),h("span",{class:"small ter"},"What everyone's been up to")),
     races.map(x=>line(x.parts,"now",true)),
-    items.length?items.slice(0,n).map(x=>line(x.parts,rel(new Date(x.t).toISOString()))):races.length?null:h("p",{class:"empty"},"Nothing yet. Level up or loot something good and it shows up here."),
+    items.length?items.slice(0,n).map(x=>line(x.parts,rel(new Date(x.t).toISOString()))):races.length?null:emptyArt("scroll","Nothing yet. Level up or loot something good and it shows up here."),
     h("div",{class:"row",style:"margin-top:.5rem"},items.length>8?h("button",{class:"btn ghost sm",onclick:()=>setUi({feedAll:!S.ui.feedAll})},S.ui.feedAll?"Show less":"Show more"):null,
       h("a",{class:"btn ghost sm",href:"#history"},"Full history")))}
 
@@ -3442,7 +3458,7 @@ function viewHistory(){
       return h("details",{class:"hist-day",open:open||null,ontoggle:e=>{if(e.target.open!==(S.ui.histOpen&&l in S.ui.histOpen?S.ui.histOpen[l]:open))S.ui.histOpen={...(S.ui.histOpen||{}),[l]:e.target.open}}},
         h("summary",{},h("h2",{},l),(c=>h("span",{class:"small ter"},c+(c===1?" thing":" things")))(list.reduce((t,x)=>t+(x.n||1),0))),
         list.map(x=>[mark(x),h("div",{class:"hist-row"},h("span",{style:"min-width:0"},x.parts),h("span",{class:"small ter",style:"white-space:nowrap"},time(x.t)))]))}))
-      :h("p",{class:"empty"},all.length?"Nothing matches. Try another character or show everything.":"Nothing yet. Level up and it starts here.")]}
+      :all.length?h("p",{class:"empty"},"Nothing matches. Try another character or show everything."):emptyArt("scroll","Nothing yet. Level up and it starts here.")]}
 
 /* ---------- Weekly recap ---------- */
 // A picture of the last seven days that anyone can paste into Discord (no webhooks needed): totals, top levellers,
@@ -3510,7 +3526,7 @@ function raceCard(){
       h("span",{class:"spread",style:"flex-wrap:nowrap"},h("span",{class:"row",style:"gap:.5rem;flex-wrap:nowrap;min-width:0"},h("span",{class:"small ter",style:"width:1.2em"},String(i+1)),classIcon(m.cls),charLink(m)),
         h("span",{class:"small",title:tab==="hk"?pvpRank(+m.armory.rank||0):null,style:"white-space:nowrap;color:"+(i===0?"var(--accent-text)":"var(--sec)")},label(m,v))),
       h("span",{class:"track","aria-hidden":"true"},h("i",{class:i===0?"max":"",style:`width:${Math.max(4,v/top*100).toFixed(0)}%`}))))
-    :h("p",{class:"empty"},tab==="week"&&gearMode?"No new loot this week yet.":tab==="week"?"Nobody's levelled this week yet.":"Nobody has an honourable kill yet. Go gank something."),
+    :emptyArt(tab==="week"&&gearMode?"chest":tab==="week"?"hourglass":"swords",tab==="week"&&gearMode?"No new loot this week yet.":tab==="week"?"Nobody's levelled this week yet.":"Nobody has an honourable kill yet. Go gank something."),
     tab==="hk"?h("p",{class:"small ter",style:"margin:0"},"From the armory, so it's only as up to date as the last logout."):null)}
 // The roster's side box: just the week's top three moves, and a way to the rest on Records.
 /* ---------- Discord online box ---------- */
@@ -3543,7 +3559,7 @@ function discordBox(){
     playing.length?h("div",{class:"dc-sec"},h("span",{class:"small"},"Playing World of Warcraft"),playing.map(person)):null,
     voice.length||playing.length
       ?(others?h("p",{class:"small ter",style:"margin:0;padding-top:.5rem;border-top:1px solid var(--sep)"},"+"+others+" other"+(others===1?"":"s")+" online"):null)
-      :h("p",{class:"empty",style:"padding-top:.5rem;border-top:1px solid var(--sep)"},total?"Nobody's in voice or playing right now. "+total+" online.":"Nobody's online right now."),
+      :emptyArt("moon",total?"Nobody's in voice or playing right now. "+total+" online.":"Nobody's online right now.","padding-top:.75rem;border-top:1px solid var(--sep)"),
     w.instant_invite?h("a",{class:"btn sm",href:w.instant_invite,target:"_blank",rel:"noopener",style:"align-self:flex-start"},"Open Discord"):null)}
 async function loadWidget(){
   if(!DISCORD_SERVER_ID||document.hidden)return;
@@ -3578,7 +3594,7 @@ function rangeBoard(){
   const band=S.ui.dgGroup&&(S.ui.dgGroup==="All"||DG_GROUPS.some(b=>b[0]===S.ui.dgGroup))?S.ui.dgGroup:myBand;
   const opts=band==="All"?all:all.filter(x=>bandOf(x)===band);
   const head=h("div",{style:"display:contents"},h("h2",{id:"range-h",class:"visually-hidden"},"Dungeon list"));
-  if(!opts.length)return h("section",{class:"card","aria-labelledby":"range-h",style:"gap:.75rem;margin-top:1rem"},head,h("p",{class:"empty"},"Nobody else is in range of a dungeon at your level yet."));
+  if(!opts.length)return h("section",{class:"card","aria-labelledby":"range-h",style:"gap:.75rem;margin-top:1rem"},head,emptyArt("compass","Nobody else is in range of a dungeon at your level yet."));
   // Start on the saved pick, else the busiest dungeon at your level, else the busiest one overall.
   const busiest=list=>list.slice().sort((a,b)=>b.active.length-a.active.length)[0];
   // "-" means they closed every dungeon on purpose.
@@ -3640,7 +3656,7 @@ function dungeonBeen(name){
     .sort((a,b)=>(+b[0].level||0)-(+a[0].level||0)||nameOf(a[0]).localeCompare(nameOf(b[0])));
   return h("div",{class:"dg-block"},h("h3",{class:"dg-h"},"Who's Been",h("span",{class:"small ter"},String(ppl.length))),
     ppl.length?h("div",{class:"dg-ppl"},ppl.map(([m,st])=>{const a=dgPerson(m);a.classList.remove("away");a.title=st.via==="loot"?"Stamped from loot: "+st.item:st.at?"Cleared "+dayMonth(st.at):"Cleared";return a}))
-      :h("p",{class:"small ter",style:"margin:0"},"Nobody yet. Stamps come from each character's Dungeon Passport, or from loot only this dungeon drops."))}
+      :emptyArt("door",h("p",{class:"small ter"},"Nobody yet. Stamps come from each character's Dungeon Passport, or from loot only this dungeon drops.")))}
 // Each boss's notable drops, in the order you meet them, with who in the guild has each one.
 function dungeonLoot(name){
   const items=Object.values(DUNGEON_LOOT).filter(v=>v[0]===name).sort((a,b)=>a[3]-b[3]);
@@ -3751,7 +3767,7 @@ function recipeFinder(){
     :list.length+(kind==="learn"?" known or trainer recipes":kind==="recipe"?" recipes they're skilled enough for":" recipes")+" in reach";
   const kinds=!words.length?seg("Show",[["learn","Trainer"],["recipe","Recipe"],["all","All"]],kind,k=>setUi({pKind:k,pMore:false})):null;
   return wrap([kinds,h("p",{class:"small ter",role:"status",style:"margin:0"},count),
-    list.length?h("ul",{class:"rc-list"},shown.map(row)):h("p",{class:"empty"},words.length?"No recipe matches that.":"Nothing in reach here yet."),
+    list.length?h("ul",{class:"rc-list"},shown.map(row)):words.length?h("p",{class:"empty"},"No recipe matches that."):emptyArt("flask","Nothing in reach here yet."),
     list.length>n?h("div",{},h("button",{class:"btn sm ghost",type:"button",onclick:()=>setUi({pMore:true})},"Show all "+list.length)):null,note])}
 // "Can make" on a character's Professions card: per crafting profession, the recipes their armory skill covers that are
 // learned automatically or taught by the trainer, hardest first. Recipes that need a drop, vendor or quest item are only
@@ -3851,7 +3867,7 @@ function recBoards(){
     seg("Board",REC_BOARDS.map(b=>[b[0],names[b[0]]]),k,v=>setUi({recBoard:v},true)),
     h("h3",{class:"visually-hidden"},title),
     h("p",{class:"lb-title small ter"},rows.length+(rows.length===1?" character":" characters")),
-    rows.length>=3?[podium(rows,fmt),recList(k,rows.slice(3),fmt,2,rows.length)]:rows.length?recList(k,rows,fmt,5):h("p",{class:"empty"},"Nobody on this board yet."))}
+    rows.length>=3?[podium(rows,fmt),recList(k,rows.slice(3),fmt,2,rows.length)]:rows.length?recList(k,rows,fmt,5):emptyArt("podium","Nobody on this board yet."))}
 // Profession rankings by value, for the Professions page table (members and alts; former members left off).
 // Hall of Titles: a grid of frame tiles, one per title. Tap one for how it's won, its frame, the reign and who's next.
 // Professions and classes show only the held titles until "Show every title".
@@ -3883,7 +3899,7 @@ function viewActivity(){
   return[h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Activity"),h("p",{class:"sub"},"Where the guild plays and when, from the guild scribe's notes in game.")))),
     wherePlays(),
     whenWePlay(),
-    any?null:h("section",{class:"card",style:"gap:.5rem"},h("h2",{},"Nothing noted yet"),h("p",{class:"small ter",style:"margin:0"},"This page fills in from the guild scribe, an in-game addon an officer runs. Once its notes are uploaded, the busiest hours and a map of the zones show here."))]}
+    any?null:h("section",{class:"card",style:"gap:.5rem"},h("h2",{},"Nothing noted yet"),emptyArt("compass",h("p",{class:"small ter"},"This page fills in from the guild scribe, an in-game addon an officer runs. Once its notes are uploaded, the busiest hours and a map of the zones show here.")))]}
 // The podium: each title holder as a little trading card in their title's frame, standing on a step with the title,
 // like the end-of-dungeon awards in the Podium addon.
 // Speed Demon (most levels this week) takes the tall middle spot when someone holds it; otherwise the first held title does.
@@ -4156,8 +4172,8 @@ function weekCard(){
   const list=x?x.list:[],shown=open?list:list.slice(0,5);
   return h("section",{class:"card wk","aria-labelledby":"wk-h"},
     h("div",{class:"spread",style:"align-items:baseline"},h("h2",{id:"wk-h"},"This Week"),x?h("span",{class:"small ter"},"Since "+shortDate(x.base.key+"T12:00:00+08:00")):null),
-    !x?h("p",{class:"empty"},"This fills in after the first day: the site saves everyone's numbers once a day and compares."):
-    !list.length?h("p",{class:"empty"},"No big moves "+since+". Somebody go grind."):
+    !x?emptyArt("hourglass","This fills in after the first day: the site saves everyone's numbers once a day and compares."):
+    !list.length?emptyArt("hourglass","No big moves "+since+". Somebody go grind."):
     [h("ul",{class:"wk-list"},shown.map(e=>h("li",{},badge(e),h("span",{},e.parts)))),
      list.length>5?h("button",{type:"button",class:"btn ghost sm rec-more","aria-expanded":String(!!open),onclick:()=>setUi({weekAll:!open},true)},open?"Show fewer":"See all "+list.length):null])}
 
@@ -4333,7 +4349,7 @@ function viewRaids(){
   const grp=(t,n)=>h("tr",{class:"r-group"},h("td",{colspan:"5"},h("span",{class:"r-group-in"},t,h("span",{class:"small ter"},String(n)))));
   const table=sixty.length||close.length?h("div",{class:"tablebox"},h("table",{class:"rd-t"},h("thead",{},h("tr",{},["Character","Role","Gear","Onyxia amulet","Last seen"].map(t=>h("th",{scope:"col"},t)))),
       h("tbody",{},sixty.length?[grp("Level 60",sixty.length),...sixty.map(row)]:[],close.length?[grp("Nearly there · 50 to 59",close.length),...close.map(nearRow)]:[])))
-    :h("p",{class:"empty"},"Nobody's level 50 or over yet. They'll be listed here as they get there.");
+    :emptyArt("peak","Nobody's level 50 or over yet. They'll be listed here as they get there.");
   const lootRaids=RAIDS.map(r=>r[0]).filter(raidHasLoot);
   const lootCard=lootRaids.length?h("section",{class:"card","aria-labelledby":"rl-h",style:"gap:.75rem"},h("h2",{id:"rl-h"},"Raid Loot"),
       lootRaids.map(n=>h("div",{id:"rl-"+n.replace(/\W+/g,"-"),class:"rl-raid"},h("h3",{},n),dungeonLoot(n)))):null;
@@ -4361,7 +4377,7 @@ function aboutCard(inner){
   if(!basics.length&&!isOfficer())return null;
   return h(inner?"div":"aside",{class:inner?"mk-about":"card","aria-labelledby":inner?null:"about-h"},h("div",{class:"spread"},h(inner?"h3":"h2",{id:"about-h"},"About the Guild"),isOfficer()?h("div",{class:"row",style:"gap:.375rem"},h("button",{class:"btn sm",onclick:openGuild},"Edit")):null),
     basics.length?basics.map(([l,k])=>h("div",{style:"display:flex;flex-direction:column;gap:2px;padding:.5rem 0;border-top:1px solid var(--sep)"},h("span",{class:"small ter",style:"font-weight:600"},l),h("span",{style:"white-space:pre-wrap;overflow-wrap:anywhere"},gi[k])))
-      :h("p",{class:"empty"},"Add the Guild Master, officers, loot rules and guild events so new guildies know how things work."))}
+      :emptyArt("banner","Add the Guild Master, officers, loot rules and guild events so new guildies know how things work."))}
 
 /* ---------- Levelling timeline ---------- */
 // A character's level over time, from the "Reached level N" entries the site records (armory and scribe), drawn as a line
@@ -4433,10 +4449,10 @@ function viewChar(coll,id){
     jdays.length?jdays.map(([l,list],i)=>{const key=m.id+"|"+l,open=key in jOpen?jOpen[key]:(l==="Today"||(!hasToday&&i===0));
       return h("details",{class:"hist-day",open:open||null,ontoggle:e=>{if(e.target.open!==(key in (S.ui.jOpen||{})?S.ui.jOpen[key]:open))S.ui.jOpen={...(S.ui.jOpen||{}),[key]:e.target.open}}},
         h("summary",{},h("h2",{},l),h("span",{class:"small ter"},list.length+(list.length===1?" thing":" things"))),
-        h("div",{class:"journey"},list.map(journeyRow)))}):h("p",{class:"empty"},"Nothing yet. Levels, loot and professions show up here."));
+        h("div",{class:"journey"},list.map(journeyRow)))}):emptyArt("scroll","Nothing yet. Levels, loot and professions show up here."));
   const groups=[["Primary",PRIMARY],["Secondary",SECONDARY]].map(([t,l])=>[t,l.filter(p=>m.profs&&p in m.profs)]).filter(x=>x[1].length);
   const profCard=h("section",{class:"card",style:"gap:.75rem"},h("h2",{},"Professions"),whereFrom("Skill levels come from Blizzard's armory. The recipes they know come from the guild scribe (the in-game addon), once it has seen their profession window; without it, the recipe book shows what their skill allows."),
-    groups.length?h("div",{class:"prof-cols"},groups.map(([t,l])=>h("div",{style:"display:flex;flex-direction:column;gap:.625rem;min-width:0"},h("span",{class:"small ter",style:"font-weight:600"},t),l.map(p=>h("div",{class:"pbar-wrap"},profBar(p,m.profs[p]),rankLine(profBoard(p)[2],m,PROF_NOUN[p]||p.toLowerCase())))))):h("p",{class:"empty"},"No professions logged yet."),
+    groups.length?h("div",{class:"prof-cols"},groups.map(([t,l])=>h("div",{style:"display:flex;flex-direction:column;gap:.625rem;min-width:0"},h("span",{class:"small ter",style:"font-weight:600"},t),l.map(p=>h("div",{class:"pbar-wrap"},profBar(p,m.profs[p]),rankLine(profBoard(p)[2],m,PROF_NOUN[p]||p.toLowerCase())))))):emptyArt("hammer","No professions logged yet."),
     canMake(m));
   // The top of the page: their face in a class-coloured ring beside the name, then their headline numbers in one strip.
   const cc=CLASSES[m.cls]||"#bfaea9",av=charPic(m,"avatar"),ini=nameOf(m).split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(),ar=m.armory||{};
@@ -4492,7 +4508,7 @@ function viewChar(coll,id){
   const tab=["overview","gear","profs"].includes(S.ui.charTab)?S.ui.charTab:"overview";
   out.push(h("div",{class:"char-tabs"},seg("Section",[["overview","Overview"],["gear","Gear"],["profs","Professions"]],tab,k=>{S.ui.charTab=k;render()})));
   const anyIn=[...cells].some(c=>c.querySelector(`[data-sec="${tab}"]`));
-  if(!anyIn)cells[0].append(h("section",{class:"card tab-empty","data-sec":tab},h("p",{class:"empty"},"Nothing here yet. Gear and talents fill in once the armory finds this character.")));
+  if(!anyIn)cells[0].append(h("section",{class:"card tab-empty","data-sec":tab},emptyArt("chest","Nothing here yet. Gear and talents fill in once the armory finds this character.")));
   out.push(h("div",{class:"profile","data-tab":tab},cells));
   return out}
 /* ---------- Gear ---------- */
