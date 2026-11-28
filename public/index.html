@@ -5298,8 +5298,11 @@ function subscribe(){
   const stripped=new Set();
   const strip=list=>{for(const m of list){if(!canEdit(m)||stripped.has(m.id)||!("player" in m))continue;
     stripped.add(m.id);updateDoc(charRef(m),{player:deleteField()}).catch(()=>{})}};
-  live("members",x=>{S.members=x;strip(x);setTimeout(checkLinkHash)});
-  live("alts",x=>{S.alts=x.map(a=>({...a,isAlt:true}));strip(S.alts)});
+  // Older journeys can say "Equipped X" twice for the same item (swapped out for a fishing pole and back on). Only
+  // the first one counts; the server no longer writes repeats (gearSeen, functions/index.js).
+  const once=list=>{for(const m of list)if(Array.isArray(m.journey)){const had=new Set();m.journey=m.journey.slice().reverse().filter(j=>{const id=j&&j.item&&j.item.id&&/^Equipped /.test(String(j.t||""))?String(j.item.id):null;if(!id)return true;if(had.has(id))return false;had.add(id);return true}).reverse()}return list};
+  live("members",x=>{S.members=once(x);strip(x);setTimeout(checkLinkHash)});
+  live("alts",x=>{S.alts=once(x.map(a=>({...a,isAlt:true})));strip(S.alts)});
   S.unsub.push(onSnapshot(doc(db,"guild","helpers"),snap=>{S.helpers=snap.exists()?snap.data():{};schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","officers"),snap=>{S.officers=snap.exists()?snap.data():null;schedule()},()=>{}));
   S.unsub.push(onSnapshot(doc(db,"guild","itemIds"),snap=>{S.itemIds=snap.exists()?snap.data().items||{}:{};S.itemIdsReady=true;schedule()},()=>{S.itemIdsReady=true}));

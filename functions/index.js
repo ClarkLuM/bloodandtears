@@ -125,7 +125,7 @@ async function charChanged(e, coll) {
   const firstSync = !bA.at && !!aA.at;
   if (firstSync) return;
   // Rare, epic or legendary items that weren't equipped before (from the armory or picked on the site).
-  const bG = before.gear || {}, seen = new Set(Object.values(bG).map(g => g && String(g.id)));
+  const seen = gearSeenOf(before);
   const fresh = Object.values(after.gear || {}).filter(g => g && +g.q >= 3 && !seen.has(String(g.id)))
     .filter((g, i, l) => l.findIndex(x => String(x.id) === String(g.id)) === i).sort((x, y) => y.q - x.q);
   const blues = fresh.filter(g => +g.q === 3), big = fresh.filter(g => +g.q >= 4);
@@ -191,6 +191,24 @@ const INV_TEXT = { HEAD: "Head", NECK: "Neck", SHOULDER: "Shoulder", CLOAK: "Bac
   HAND: "Hands", WAIST: "Waist", LEGS: "Legs", FEET: "Feet", FINGER: "Finger", TRINKET: "Trinket", WEAPON: "One-Hand", TWOHWEAPON: "Two-Hand",
   WEAPONMAINHAND: "Main Hand", WEAPONOFFHAND: "Off Hand", SHIELD: "Off Hand", HOLDABLE: "Held In Off-hand", RANGED: "Ranged", RANGEDRIGHT: "Ranged", THROWN: "Thrown", RELIC: "Relic" };
 const Q_NUM = { POOR: 0, COMMON: 1, UNCOMMON: 2, RARE: 3, EPIC: 4, LEGENDARY: 5, ARTIFACT: 6, HEIRLOOM: 7 };
+// Rare-or-better items a character has ever had on: gearSeen ({ "<item id>": first seen }), plus what they're wearing
+// and any "Equipped" lines in their journey (for characters from before gearSeen existed).
+function gearSeenOf(d) {
+  d = d || {};
+  const s = new Set(Object.keys(d.gearSeen && typeof d.gearSeen === "object" ? d.gearSeen : {}));
+  for (const g of Object.values(d.gear || {})) if (g && g.id) s.add(String(g.id));
+  for (const j of Array.isArray(d.journey) ? d.journey : []) if (j && j.item && j.item.id && /^Equipped /.test(String(j.t || ""))) s.add(String(j.item.id));
+  return s;
+}
+function gearSeenMap(d, gear, now) {
+  const m = { ...(d.gearSeen && typeof d.gearSeen === "object" ? d.gearSeen : {}) };
+  for (const id of gearSeenOf(d)) if (!m[id]) m[id] = now;
+  for (const g of Object.values(gear || {})) if (g && g.id && +g.q >= 3 && !m[String(g.id)]) m[String(g.id)] = now;
+  // Keep it small: the newest 400 is plenty.
+  const keys = Object.keys(m);
+  if (keys.length > 400) for (const k of keys.sort((a, b) => String(m[a]).localeCompare(String(m[b]))).slice(0, keys.length - 400)) delete m[k];
+  return m;
+}
 // When each level was first reached, kept for good as lvlog { "<level>": iso } (the journey only keeps its last 40 lines,
 // so a long levelling history falls off it). The levelling chart on the character page draws from both.
 const LV_RE = /^Reached level (\d+)/;
@@ -339,7 +357,11 @@ async function syncChar(coll, id, data) {
     const strip = g => JSON.stringify(Object.keys(g || {}).sort().map(k => [k, String(g[k].id)]));
     if (strip(a.gear) !== strip(data.gear)) {
       const prev = data.gear || {};
-      for (const [slot, g] of Object.entries(a.gear)) if (g.q >= 3 && !(prev[slot] && String(prev[slot].id) === g.id)) journey.unshift({ t: "Equipped " + g.name, at: now, item: { id: g.id, q: g.q } });
+      // Only items they've never had on before count as new: swapping a weapon out for a fishing pole and back,
+      // or moving a ring to the other finger, isn't loot. gearSeen keeps every rare-or-better item id they've worn.
+      const seen = gearSeenOf(data);
+      for (const [slot, g] of Object.entries(a.gear)) if (g.q >= 3 && !seen.has(String(g.id))) { seen.add(String(g.id)); journey.unshift({ t: "Equipped " + g.name, at: now, item: { id: g.id, q: g.q } }); }
+      patch.gearSeen = gearSeenMap(data, a.gear, now);
       patch.gear = a.gear; changed = true; what.push("gear");
     } else if (Object.entries(a.gear).some(([k, g]) => g.il && !(data.gear && data.gear[k] && data.gear[k].il))) {
       patch.gear = a.gear; changed = true; // same items, now with their item levels (for the gear score)
