@@ -2803,7 +2803,7 @@ function wrappedOf(m){const M=wrapMonth(),inM=at=>{const t=Date.parse(at||"");re
   const lv=wrapLevels(m,M);
   if(lv&&lv.n>0){const others=S.members.filter(x=>memberState(x)!=="former").map(x=>(wrapLevels(x,M)||{n:0}).n).filter(n=>n>0).sort((a,b)=>b-a);
     const rank=others.indexOf(lv.n)+1,days=new Map();for(let i=1;i<lv.pts.length;i++){const d=lv.pts[i].lv-lv.pts[i-1].lv;if(d>0&&d<=5&&!lv.pts[i].gap&&lv.pts[i].t<M.b){const k=new Date(lv.pts[i].t+8*36e5).toISOString().slice(0,10);days.set(k,(days.get(k)||0)+d)}}
-    const best=[...days].sort((a,b)=>b[1]-a[1])[0];out.lv={...lv,rank,of:others.length,best:best&&best[1]>=2?best:null}}
+    const best=[...days].sort((a,b)=>b[1]-a[1])[0];out.lv={...lv,rank,of:others.length,best:best&&best[1]>=4?best:null}}
   const pass=passportOf(m).filter(x=>inM(x.at));
   if(pass.length){const counts=S.members.filter(x=>memberState(x)!=="former"&&x.id!==m.id).map(x=>passportOf(x).filter(y=>inM(y.at)).length);
     out.dg={n:pass.length,list:pass.slice().sort((a,b)=>Date.parse(b.at)-Date.parse(a.at)),beat:counts.length?Math.round(counts.filter(c=>c<pass.length).length/counts.length*100):0}}
