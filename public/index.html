@@ -1958,6 +1958,51 @@ main .rl-col>section.totals .total:first-child{border-left:0;padding-left:0}
 @keyframes pp-turn-p{from{transform:rotateY(70deg);filter:brightness(.7)}to{transform:none;filter:none}}
 @keyframes pp-fade{from{opacity:.4}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.pp-book .pp-page{animation:none!important}}
+/* Passport map */
+.jm-wrap{display:flex;flex-direction:column;gap:.75rem}
+.jm-map svg{display:block;width:100%;height:auto}
+.jm-map .zm-dg path{opacity:.5}
+.jm-route{fill:none;stroke:#c0303c;stroke-width:2;stroke-dasharray:1.5 6;stroke-linecap:round;opacity:.9}
+.jm-st circle{fill:#8e1b22;stroke:none}.jm-st .jm-in{fill:none;stroke:#f3e6c8;stroke-width:.8;opacity:.8}
+.jm-st text{text-anchor:middle;font-family:Figtree,sans-serif;font-weight:700;fill:#f6ead0}
+.jm-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:.25rem 1.25rem;margin:0;padding:0;list-style:none}
+.jm-list li{display:grid;grid-template-columns:1.75rem minmax(0,1fr) auto;gap:.5rem;align-items:baseline;padding:.25rem 0;border-top:1px solid var(--sep)}
+.jm-list b{color:var(--gilt);font-weight:600;text-align:right}
+/* Wrapped */
+.wr-btn{align-self:flex-start;margin-top:.5rem;gap:.375rem;border-color:color-mix(in srgb,var(--gilt) 45%,var(--b-sub))}
+.wr-ov:focus{outline:none}
+.wr-ov{position:fixed;inset:0;z-index:300;display:grid;place-items:center;background:rgb(8 4 4/.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:wr-in .22s ease-out both}
+@keyframes wr-in{from{opacity:0}}
+.wr-box{position:relative;width:min(24rem,100vw);height:min(44rem,100dvh);border-radius:22px;overflow:hidden;box-shadow:0 30px 60px rgb(0 0 0/.6);color:#f5ede8}
+.wr-stage,.wr-slide{position:absolute;inset:0}
+.wr-slide{display:flex;flex-direction:column;padding:2.25rem 1.5rem 1.75rem;animation:wr-sl .28s cubic-bezier(.23,1,.32,1) both}
+@keyframes wr-sl{from{opacity:0;transform:scale(.98)}}
+.wr-bars{position:absolute;z-index:3;top:.75rem;left:.875rem;right:3rem;display:flex;gap:.25rem}.wr-bars i{flex:1;height:3px;border-radius:2px;background:rgb(255 255 255/.25)}.wr-bars i.on{background:#fff}
+.wr-prev,.wr-next{position:absolute;z-index:2;top:0;bottom:0;border:0;background:none;cursor:pointer;padding:0}.wr-prev{left:0;width:30%}.wr-next{right:0;width:70%}
+.wr-prev:focus-visible,.wr-next:focus-visible{outline:2px solid rgb(255 255 255/.6);outline-offset:-4px;border-radius:20px}
+.wr-x{position:absolute;z-index:4;top:.375rem;right:.375rem;width:2.5rem;height:2.5rem;display:grid;place-items:center;border:0;border-radius:50%;background:none;color:#fff;cursor:pointer}
+.wr-k{font-size:.6875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-top:.75rem}
+.wr-big{font:400 6rem/1 var(--display);margin-top:auto}
+.wr-h{font:400 1.875rem/1.15 var(--display);margin:.625rem 0 0;color:#fff;text-wrap:balance}
+.wr-p{font-size:.9375rem;line-height:1.45;opacity:.85;margin:.75rem 0 0;text-wrap:pretty}
+.wr-lv{display:flex;align-items:baseline;gap:.75rem;margin-top:auto}.wr-lv b{font:400 4rem/1 var(--display)}.wr-lv span{font-size:1.75rem;opacity:.6}
+.wr-spark svg{display:block;width:100%;height:4.5rem;margin-top:1.25rem}
+.wr-list{display:flex;flex-direction:column;gap:.5rem;margin-top:1.125rem;position:relative;z-index:3}.wr-list div{display:flex;justify-content:space-between;gap:1rem;font-size:.875rem;padding:.5rem .625rem;border-radius:8px;background:rgb(255 255 255/.07)}
+.wr-pair{display:flex;justify-content:center;margin:auto 0 .5rem}.wr-pair .crew-f{width:5.75rem;height:5.75rem;font-size:1.75rem;border-width:3px;box-shadow:0 0 0 3px var(--cc)}.wr-pair .crew-f+.crew-f{margin-left:-1.125rem}
+.wr-item{margin:auto 0 0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.25rem}
+.wr-icon{display:grid;place-items:center;width:5.5rem;height:5.5rem;border-radius:12px;border:2px solid var(--qc);background:rgb(0 0 0/.3);box-shadow:0 0 30px color-mix(in srgb,var(--qc) 45%,transparent);margin-bottom:.5rem}
+.wr-icon img{width:4.5rem;height:4.5rem;border-radius:8px}
+.wr-slide.q3{--qc:#0070dd}.wr-slide.q4{--qc:#a335ee}.wr-slide.q5{--qc:#ff8000}.wr-slide.q3 .wr-h{color:#6fb1ff}.wr-slide.q4 .wr-h{color:#d9b3ff}.wr-slide.q5 .wr-h{color:#ffb766}
+.wr-card{margin-top:auto;border-radius:14px;padding:.875rem 1rem;background:rgb(0 0 0/.35);border:1px solid rgb(212 166 92/.3)}
+.wr-row{display:flex;justify-content:space-between;gap:1rem;padding:.375rem 0;border-top:1px solid rgb(255 255 255/.08);font-size:.8125rem}.wr-row:first-child{border:0}.wr-row b{color:var(--gilt);font-weight:600;text-align:right}
+.wr-share{position:relative;z-index:3;align-self:center;margin-top:1rem;padding:.625rem 1.25rem;border:0;border-radius:999px;background:var(--gilt);color:#1a0f08;font-weight:700;font-size:.875rem;cursor:pointer}
+.wr-slide.s1{background:radial-gradient(80% 60% at 30% 20%,rgb(255 106 61/.33),transparent 60%),linear-gradient(160deg,#5a0d1c,#1a0508)}
+.wr-slide.s2{background:radial-gradient(70% 50% at 80% 80%,rgb(63 199 235/.27),transparent 60%),linear-gradient(200deg,#0d2a3a,#08121a)}
+.wr-slide.s3{background:radial-gradient(70% 60% at 50% 30%,color-mix(in srgb,var(--cc) 30%,transparent),transparent 60%),linear-gradient(170deg,#2a2608,#100e04)}
+.wr-slide.s4{background:radial-gradient(70% 60% at 50% 35%,color-mix(in srgb,var(--qc,#a335ee) 40%,transparent),transparent 60%),linear-gradient(170deg,#1b1230,#0b0714)}
+.wr-slide.s5{background:linear-gradient(160deg,#3b0d15,#150407);box-shadow:inset 0 0 0 1px rgb(212 166 92/.35);border-radius:22px}
+@media (max-width:480px){.wr-box{width:100vw;height:100dvh;border-radius:0}.wr-slide.s5{border-radius:0}}
+@media (prefers-reduced-motion:reduce){.wr-slide,.wr-ov{animation:none}}
 </style>
 </head>
 <body>
@@ -2312,6 +2357,8 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-28","Your month, wrapped","On your character page: tap through your month in slides. Levels, dungeons, your dungeon buddy and your best loot, with a summary to copy into Discord.","#roster"],
+  ["2026-11-28","Your journey on the map","The Dungeon Passport has a Map view now: every stamp numbered in the order you cleared it, on our map of Azeroth.","#roster"],
   ["2026-11-28","Dungeon art","Every dungeon on Dungeons and Raids now shows its loading screen. Open one to see the whole scene across the top.","#lfg"],
   ["2026-11-28","A real passport","Your Dungeon Passport is now a little book: each clear is an ink stamp with the date, and the faces of who you ran with sit underneath.","#roster"],
   ["2026-11-28","The guild's story","Guild History reads day by day now, with the big moments (firsts, milestones, level 60s) written up larger.","#history"],
@@ -2733,7 +2780,8 @@ function passportCard(m){
         rest.length?h("p",{style:"margin:0"},h("span",{class:"ter"},bud.length?"Also runs with ":"Runs most with "),rest.map((x,i)=>[i?", ":"",h("a",{href:`#char/members/${x.m.id}`},nameOf(x.m)),h("span",{class:"ter"}," \u00d7"+x.n)])):null):null})(),
     spelunkers(m,by,can),
     whereFrom("Three places: the dungeons ticked here, the guild scribe (the in-game addon) when it sees the guild finish one, and loot that only one dungeon drops, once the armory shows it being worn. The armory can't see what you've run, so tick any it missed. A Spelunker set lands on the card once every dungeon in it is stamped."),
-    passBook(m,by,DUNGEONS.map(([n,r])=>{const x=by.get(n),mine=!!(m.cleared&&m.cleared[n]);
+    seg("Passport view",[["book","Book"],["map","Map"]],S.ui.passView==="map"?"map":"book",k=>setUi({passView:k},true)),
+    S.ui.passView==="map"?journeyMap(m,pass):passBook(m,by,DUNGEONS.map(([n,r])=>{const x=by.get(n),mine=!!(m.cleared&&m.cleared[n]);
       // A dungeon stamped from loot looks like any other stamp; the line under it says which item did it.
       const loot=x&&x.via==="loot",cls="pass-st"+(x?" on":""),tip=loot?n+": stamped automatically, from "+x.item+" ("+x.boss+")":n;
       const crew=x?crewAt(m,n):[];
@@ -2744,6 +2792,84 @@ function passportCard(m){
           if(x)return runDialog(m,n,false);
           justStamped=[n,Date.now()];const c={...(m.cleared||{}),[n]:nowIso()};write(updateDoc(charRef(m),{cleared:c,updatedAt:nowIso()}));m.cleared=c;runDialog(m,n,true)}},...kids)
         :h("div",{class:cls,title:tip},...kids)})))}
+/* ---------- Wrapped: a character's month, as tap-through slides ---------- */
+// Everything here is already on the site: levels (levelPoints), stamps (passportOf), who was there (crewAt), loot from
+// the journey. A month shows from its 7th day on; before that, last month. Slides with nothing to say are skipped.
+function wrapMonth(){const now=new Date(Date.now()+8*36e5);let y=now.getUTCFullYear(),mo=now.getUTCMonth();if(now.getUTCDate()<7){mo--;if(mo<0){mo=11;y--}}
+  const a=Date.UTC(y,mo,1)-8*36e5,b=Date.UTC(y,mo+1,1)-8*36e5;return{a,b,name:new Date(Date.UTC(y,mo,15)).toLocaleDateString("en-AU",{month:"long",timeZone:"UTC"})}}
+function wrapLevels(m,M){const pts=levelPoints(m);if(!pts.length)return null;const lvAt=t=>{let v=pts[0].lv;for(const p of pts)if(p.t<=t)v=p.lv;return v};
+  const from=lvAt(M.a),to=lvAt(Math.min(M.b,Date.now()));return{from,to,n:to-from,pts:[{t:M.a,lv:from},...pts.filter(p=>p.t>M.a&&p.t<M.b),{t:Math.min(M.b,Date.now()),lv:to}]}}
+function wrappedOf(m){const M=wrapMonth(),inM=at=>{const t=Date.parse(at||"");return t>=M.a&&t<M.b},out={M,slides:[]};
+  const lv=wrapLevels(m,M);
+  if(lv&&lv.n>0){const others=S.members.filter(x=>memberState(x)!=="former").map(x=>(wrapLevels(x,M)||{n:0}).n).filter(n=>n>0).sort((a,b)=>b-a);
+    const rank=others.indexOf(lv.n)+1,days=new Map();for(let i=1;i<lv.pts.length;i++){const d=lv.pts[i].lv-lv.pts[i-1].lv;if(d>0&&lv.pts[i].t<M.b){const k=new Date(lv.pts[i].t+8*36e5).toISOString().slice(0,10);days.set(k,(days.get(k)||0)+d)}}
+    const best=[...days].sort((a,b)=>b[1]-a[1])[0];out.lv={...lv,rank,of:others.length,best:best&&best[1]>=2?best:null}}
+  const pass=passportOf(m).filter(x=>inM(x.at));
+  if(pass.length){const counts=S.members.filter(x=>memberState(x)!=="former"&&x.id!==m.id).map(x=>passportOf(x).filter(y=>inM(y.at)).length);
+    out.dg={n:pass.length,list:pass.slice().sort((a,b)=>Date.parse(b.at)-Date.parse(a.at)),beat:counts.length?Math.round(counts.filter(c=>c<pass.length).length/counts.length*100):0}}
+  const crew=new Map();for(const x of pass)for(const c of crewAt(m,x.name))crew.set(c.m.id,{m:c.m,n:((crew.get(c.m.id)||{}).n||0)+1,d:[...((crew.get(c.m.id)||{}).d||[]),x.name]});
+  const cr=[...crew.values()].sort((a,b)=>b.n-a.n||nameOf(a.m).localeCompare(nameOf(b.m)));if(cr.length)out.crew={top:cr[0],all:cr.length};
+  const loot=(Array.isArray(m.journey)?m.journey:[]).filter(j=>j&&j.item&&/^Equipped /.test(String(j.t||""))&&inM(j.at)&&+j.item.q>=3);
+  if(loot.length){const top=loot.slice().sort((a,b)=>+b.item.q-+a.item.q||Date.parse(a.at)-Date.parse(b.at))[0];
+    out.loot={top,name:String(top.t).slice(9),blues:loot.filter(j=>+j.item.q===3).length,epics:loot.filter(j=>+j.item.q>=4).length}}
+  const titles=titlesEverOf(m).filter(v=>inM(v.since)).length;if(titles)out.titles=titles;
+  return out}
+// The button only needs to know there's something to show, so it skips the guild-wide comparisons.
+function wrappedBtn(m){const M=wrapMonth(),inM=at=>{const t=Date.parse(at||"");return t>=M.a&&t<M.b},lv=wrapLevels(m,M);
+  const any=(lv&&lv.n>0)||passportOf(m).some(x=>inM(x.at))||(Array.isArray(m.journey)?m.journey:[]).some(j=>j&&j.item&&+j.item.q>=3&&inM(j.at));if(!any)return null;
+  return h("button",{type:"button",class:"btn sm wr-btn",onclick:()=>openWrapped(m)},ic("new"),(owns(m)?"Your ":nameOf(m).split(/\s+/)[0]+"'s ")+M.name+", wrapped")}
+function openWrapped(m){const w=wrappedOf(m),cc=CLASSES[m.cls]||"#d4a65c",first=nameOf(m).split(/\s+/)[0],you=owns(m);
+  const Y=(a,b)=>you?a:b,slides=[];
+  const k=t=>h("div",{class:"wr-k"},t),big=t=>h("div",{class:"wr-big"},t),hh=t=>h("h2",{class:"wr-h"},t),pp=(...t)=>h("p",{class:"wr-p"},...t);
+  if(w.lv){const L=w.lv,t0=w.M.a,t1=L.pts[L.pts.length-1].t,lo=L.from,hi=Math.max(L.to,lo+1),X=t=>((t-t0)/Math.max(1,t1-t0)*236).toFixed(1),Yv=v=>(66-(v-lo)/(hi-lo)*60).toFixed(1);
+    const d=L.pts.map((p,i)=>(i?"L":"M")+X(p.t)+" "+Yv(p.lv)).join("");const sp=h("span",{class:"wr-spark","aria-hidden":"true"});sp.innerHTML=`<svg viewBox="0 0 236 70" fill="none"><path d="${d}V70H0z" fill="${cc}" fill-opacity=".14"/><path d="${d}" stroke="${cc}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    slides.push({c:"s1",kids:[k(nameOf(m)+" \u00b7 "+w.M.name),h("div",{class:"wr-lv"},h("b",{},L.from),h("span",{},"\u2192"),h("b",{style:`color:${cc}`},L.to)),
+      hh(L.n===1?"A level in "+w.M.name+".":L.n+" levels in "+w.M.name+"."),
+      pp(L.rank===1&&L.of>1?Y("You levelled faster than anyone in the guild.",first+" levelled faster than anyone in the guild."):L.rank&&L.of>2&&L.rank<=Math.ceil(L.of/3)?Y("You were the ",first+" was the ")+ordinal(L.rank)+"-fastest leveller in Blood and Tears.":"",
+        L.best?" "+Y("Your","Their")+" biggest day was the "+ordinal(+L.best[0].slice(8))+": "+L.best[1]+" levels.":""),sp]})}
+  if(w.dg){const D=w.dg;slides.push({c:"s2",kids:[k("Dungeons"),big(D.n),hh(D.n===1?"dungeon stamped.":"dungeons stamped."),
+      pp(D.beat>=100?"More than anyone else in the guild. ":D.beat>=50?"More than "+D.beat+"% of the guild managed. ":"",D.n>3?"The latest:":""),h("div",{class:"wr-list"},D.list.slice(0,3).map(x=>h("div",{},h("span",{},x.name),h("b",{},dayMonth(x.at)))))]})}
+  if(w.crew){const C=w.crew;slides.push({c:"s3",kids:[k(Y("Your dungeon buddy","Their dungeon buddy")),h("div",{class:"wr-pair"},crewFace(m),crewFace(C.top.m)),
+      hh(Y("You and ",first+" and ")+nameOf(C.top.m)+"."),pp(C.top.n===1?"One dungeon together":C.top.n+" dungeons together",C.top.n>1?", including "+C.top.d[C.top.d.length-1]+".":": "+C.top.d[0]+".",
+        C.all>1?" "+Y("You","They")+" ran with "+C.all+" different guildies in all.":"")]})}
+  if(w.loot){const T=w.loot,q=+T.top.item.q;slides.push({c:"s4 q"+q,kids:[k("Best loot"),h("div",{class:"wr-item"},h("span",{class:"wr-icon"},itemIcon(T.top.item.id)),hh(T.name),pp("On "+dayMonth(T.top.at)+".")),
+      pp([T.epics>(q>=4?1:0)?(T.epics-(q>=4?1:0))+" more epic"+(T.epics-(q>=4?1:0)>1?"s":""):"",T.blues>(q===3?1:0)?(T.blues-(q===3?1:0))+" "+(q===3?"more ":"")+"blue"+(T.blues-(q===3?1:0)>1?"s":""):"",w.titles?w.titles+" new title"+(w.titles>1?"s":""):""].filter(Boolean).reduce((a,x,i,arr)=>a+(i?(i===arr.length-1?" and ":", "):"Plus ")+x,"")+(T.epics+T.blues>1||w.titles?".":""))]})}
+  const rows=[w.lv?["Levels",w.lv.from+" \u2192 "+w.lv.to]:null,w.dg?["Dungeons",String(w.dg.n)]:null,w.crew?["Buddy",nameOf(w.crew.top.m)]:null,w.loot?["Best loot",w.loot.name]:null].filter(Boolean);
+  const text=nameOf(m)+"'s "+w.M.name+" in Blood and Tears\n"+rows.map(r=>r[0]+": "+r[1]).join("\n");
+  slides.push({c:"s5",kids:[k(Y("Your ",first+"'s ")+w.M.name),hh(nameOf(m)),pp(classLine?classLine(m):""),h("div",{class:"wr-card"},rows.map(r=>h("div",{class:"wr-row"},h("span",{},r[0]),h("b",{},r[1])))),
+    h("button",{type:"button",class:"wr-share",onclick:e=>{e.stopPropagation();(navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).then(()=>toast("Copied. Paste it in Discord."),()=>toast("Couldn't copy here."))}},"Copy for Discord")]});
+  let i=0;const back=document.activeElement;
+  const bars=h("div",{class:"wr-bars","aria-hidden":"true"},slides.map(()=>h("i")));
+  const stage=h("div",{class:"wr-stage"});
+  const show=d=>{i=Math.max(0,Math.min(slides.length-1,i+d));const sl=slides[i];stage.replaceChildren(h("div",{class:"wr-slide "+sl.c,style:`--cc:${cc}`},...sl.kids));
+    [...bars.children].forEach((b,j)=>b.classList.toggle("on",j<=i));live.textContent="Slide "+(i+1)+" of "+slides.length};
+  const live=h("span",{class:"visually-hidden",role:"status"});
+  const close=()=>{ov.remove();removeEventListener("keydown",key,true);if(back&&back.focus)back.focus()};
+  const key=e=>{if(e.key==="Escape"){e.preventDefault();close()}else if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();show(1)}else if(e.key==="ArrowLeft"){e.preventDefault();show(-1)}};
+  const ov=h("div",{class:"wr-ov",tabindex:"-1",role:"dialog","aria-modal":"true","aria-label":(you?"Your ":first+"'s ")+w.M.name+", wrapped",onclick:e=>{if(e.target===ov)close()}},
+    h("div",{class:"wr-box"},bars,stage,live,
+      h("button",{type:"button",class:"wr-prev","aria-label":"Previous",onclick:()=>show(-1)}),h("button",{type:"button",class:"wr-next","aria-label":"Next",onclick:()=>show(1)}),
+      h("button",{type:"button",class:"wr-x","aria-label":"Close",onclick:close},ic("close"))));
+  document.body.append(ov);addEventListener("keydown",key,true);show(0);ov.focus()}
+
+// The passport as a map: every stamp numbered in the order it was cleared, on our drawn map of Azeroth, joined by a
+// dotted route. Wings of one place share a stamp ("9–11"). Crossing the sea bows out further, like a voyage.
+function journeyMap(m,pass){
+  if(!ZMAPS){loadZoneMaps();return h("p",{class:"small ter",style:"margin:0"},"Drawing the map\u2026")}
+  const W=ZMAPS.world||{w:860,h:660,ek:[470,10]},idx=n=>DUNGEONS.findIndex(d=>d[0]===n);
+  const pin=n=>{const e=DG_ENTRANCE(n);for(const[c,o]of[["kalimdor",[0,0]],["ek",W.ek]]){const p=ZMAPS[c]&&ZMAPS[c].dg&&ZMAPS[c].dg[e];if(p)return{x:p[0]+o[0],y:p[1]+o[1],c,e}}return null};
+  const done=pass.filter(x=>Date.parse(x.at||"")).sort((a,b)=>Date.parse(a.at)-Date.parse(b.at)||idx(a.name)-idx(b.name)).map((x,i)=>({...x,i:i+1,p:pin(x.name)})).filter(x=>x.p);
+  const at=new Map();for(const x of done){const k=x.p.e;if(!at.has(k))at.set(k,{p:x.p,l:[]});at.get(k).l.push(x)}
+  const runs=l=>{const n=l.map(x=>x.i),o=[];for(let i=0;i<n.length;i++){let j=i;while(j+1<n.length&&n[j+1]===n[j]+1)j++;o.push(j>i?n[i]+"\u2013"+n[j]:String(n[i]));i=j}return o.join(", ")};
+  let route="";for(let i=1;i<done.length;i++){const a=done[i-1].p,b=done[i].p;if(a.e===b.e)continue;
+    const dx=b.x-a.x,dy=b.y-a.y,k=a.c===b.c?.16:.22,cx=(a.x+b.x)/2-dy*k,cy=(a.y+b.y)/2+dx*k;route+=`M${a.x.toFixed(1)} ${a.y.toFixed(1)}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`}
+  let stamps="";for(const{p,l}of at.values()){const lab=runs(l),r=lab.length>6?17:lab.length>2?14:11,rot=(ppHash(p.e)%15)-7,fs=lab.length>6?7:lab.length>2?8.5:10;
+    stamps+=`<g class="jm-st" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${rot})"><title>${xmlEsc(l.map(x=>x.i+". "+x.name+", "+dayMonth(x.at)).join("\n"))}</title><circle r="${r}"/><circle r="${r-3}" class="jm-in"/><text y="${fs*.36}" style="font-size:${fs}px">${lab}</text></g>`}
+  const map=h("div",{class:"zm-map jm-map"});
+  map.innerHTML=zoneMapSvg("world",new Map(),null).replace(/<\/svg>\s*$/,`<g class="jm" aria-hidden="true"><path d="${route}" class="jm-route"/>${stamps}</g></svg>`);
+  const svg=map.querySelector("svg");if(svg)svg.setAttribute("aria-label",nameOf(m)+"'s dungeon journey: "+done.map(x=>x.i+". "+x.name).join(", "));
+  return h("div",{class:"jm-wrap"},done.length?map:h("p",{class:"empty"},"Stamps show up here, numbered in the order they were cleared."),
+    done.length?h("ol",{class:"jm-list small"},done.map(x=>h("li",{},h("b",{},x.i),h("span",{},x.name),h("span",{class:"ter"},dayMonth(x.at))))):null)}
 // The passport as a little book: cream pages in a leather cover, 12 stamps to a page, two pages side by side when
 // there's room. Each clear is an ink stamp, tilted and inked by the dungeon's name so it always looks the same.
 const PASS_PER_PAGE=12;
@@ -3212,7 +3338,7 @@ const DUNG_ABBR={"Ragefire Chasm":"RFC","Hall of Thanes":"HoT","Ruins of Lordaer
   "Shaper's Terrace":"SHT","Stratholme: Living":"STL","Stratholme: Undead":"STU","Scholomance":"SCH","Upper Blackrock Spire":"UBRS","Dire Maul: West":"DMW","Dire Maul: North":"DMN"};
 const dungAbbr=n=>DUNG_ABBR[n]||n.slice(0,3).toUpperCase();
 function passportOf(m){
-  const names=new Set(DUNGEONS.map(d=>d[0])),got=new Map(),add=(t,at)=>{if(names.has(t)&&(!got.has(t)||(at&&at<got.get(t))))got.set(t,at||"")};
+  const names=new Set(DUNGEONS.map(d=>d[0])),got=new Map(),add=(t,at)=>{if(names.has(t)&&(!got.has(t)||(at&&(!got.get(t)||at<got.get(t)))))got.set(t,at||"")};
   for(const g of Array.isArray(m.goals)?m.goals:[])if(g&&g.done)add(g.t,g.doneAt||g.at);
   for(const j of Array.isArray(m.journey)?m.journey:[]){const t=String(j.t||"");if(/^Finished /.test(t))add(t.slice(9),j.at)}
   const c=m.cleared&&typeof m.cleared==="object"?m.cleared:{};for(const t of Object.keys(c))if(c[t])add(t,c[t]);
@@ -4670,7 +4796,7 @@ function viewChar(coll,id){
         h("div",{style:"display:flex;flex-direction:column;gap:.25rem;min-width:0"},h("h1",{},h("span",{class:"ch-nm"},nameOf(m)),streakOf(m)?flameEl(streakOf(m),"big"):null),
           h("p",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),
           h("span",{class:"ch-lvbar",style:`--cc:${cc}`,"aria-hidden":"true"},h("i",{style:`width:${Math.min(100,Math.round((+m.level||1)/60*100))}%`})),(()=>{const t=shownTitle(m);return t&&t.past?h("div",{class:"titles"},h("a",{class:"title-tag past",href:"#records",title:"Held "+t.t.replace(/^Former /,"")+" before"},h("span",{class:"title-ic","aria-hidden":"true"}),t.t)):null})(),titleTags(m),titleChooser(m),firstTags(m),
-          h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—"))))),
+          h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—")),wrappedBtn(m)))),
     can||isOfficer()?h("div",{class:"row"},moreMenu([
         ["",null,"This character"],
         !m.isAlt&&owns(m)?["Use on another device",()=>makeCode(m)]:null,
