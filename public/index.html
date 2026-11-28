@@ -1836,6 +1836,111 @@ main .rl-col>section.totals .total:first-child{border-left:0;padding-left:0}
 @keyframes ea-draw{to{stroke-dashoffset:0}}
 @media (prefers-reduced-motion:reduce){.ea-pic.draw path,.ea-pic.draw circle,.ea-pic.draw rect{animation:none;stroke-dashoffset:0}}
 @media (max-width:640px){.empty-art .ea-pic{width:2.75rem;height:2.75rem}}
+/* The passport book */
+.pp-book{container-type:inline-size;display:grid;grid-template-columns:1fr 1fr;padding:.625rem;border-radius:10px;background:linear-gradient(135deg,#3b0d15,#22070c);box-shadow:0 10px 26px rgb(0 0 0/.4),inset 0 0 0 1px rgb(212 166 92/.25)}
+.pp-page{position:relative;padding:1.125rem .875rem 1.75rem;min-width:0;color:#3a2a1c;
+  background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgb(120 80 40/.26) 100%),linear-gradient(#efe3c8,#e4d3b0)}
+.pp-page::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.3;mix-blend-mode:multiply;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .3 0 0 0 0 .15 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+.pp-page:nth-child(odd){border-radius:6px 0 0 6px;box-shadow:inset -16px 0 20px -14px rgb(60 30 10/.45)}
+.pp-page:nth-child(even){border-radius:0 6px 6px 0;box-shadow:inset 16px 0 20px -14px rgb(60 30 10/.45)}
+.pp-page:last-child:nth-child(odd){border-radius:6px}
+.pp-n{position:absolute;left:0;right:0;bottom:.5rem;text-align:center;font:400 .75rem var(--display);color:#8a6a48}
+.pp-book .pass-grid{grid-template-columns:repeat(auto-fill,minmax(6rem,1fr));gap:1rem .375rem}
+.pp-book .pass-st b{color:#3a2a1c;font-weight:600}.pp-book .pass-st:not(.on) b{color:#6b5440;font-weight:500}
+.pp-book .pass-st small,.pp-book .pass-st.on small{color:#7a5f44}.pp-book .pass-st small a{color:#5b3d8a}
+.pp-book .pass-seal{width:4.5rem;height:4.5rem;border:1.5px dashed rgb(110 80 50/.5);background:none;color:#9b7d5c;font-weight:400;font-size:.875rem;box-shadow:none}
+.pp-book .pass-st.on .pass-seal{border:0;background:none;box-shadow:none}
+.pp-book .pass-st.on .pp-ink{transform:rotate(var(--rot))}
+.pp-ink{color:var(--ink)!important;opacity:.85;mix-blend-mode:multiply;transform:rotate(var(--rot));
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.6' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 1.75'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)'/%3E%3C/svg%3E") center/100% 100%;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.6' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 1.75'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)'/%3E%3C/svg%3E") center/100% 100%}
+.pp-ink svg{width:100%;height:100%;display:block;overflow:visible}
+.pp-ink.thunk{animation:pp-thunk .42s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes pp-thunk{0%{opacity:0;transform:rotate(var(--rot)) scale(1.7)}60%{opacity:.9}100%{opacity:.85;transform:rotate(var(--rot)) scale(1)}}
+@media (prefers-reduced-motion:reduce){.pp-ink.thunk{animation:none}}
+@media (hover:hover) and (pointer:fine){.pp-book button.pass-st:hover .pass-seal:not(.pp-ink){border-color:#8a6534;color:#6b4a2a}.pp-book button.pass-st:hover .pp-ink{opacity:1}}
+.pp-book .pass-crew .crew-f{box-shadow:0 0 0 1.5px var(--cc),0 0 0 3px #e9dcc0}.pp-book .pass-crew i{color:#7a5f44}
+.pp-book .pass-st:focus-visible{outline:2px solid #8a6534;outline-offset:2px}
+@container (max-width:34rem){.pp-book .pass-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:720px){.pp-book{grid-template-columns:1fr;gap:.5rem}.pp-page,.pp-page:nth-child(odd),.pp-page:nth-child(even){border-radius:6px;box-shadow:none}
+  .pp-book .pass-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:.875rem .25rem}.pp-book .pass-seal{width:4rem;height:4rem}}
+/* Leaderboard podium: cards standing on stone steps, a soft light on first place */
+.podium{position:relative;isolation:isolate;gap:1rem;padding:1.5rem 1.25rem 0;border-radius:10px;overflow:hidden;border:1px solid var(--sep);
+  background:radial-gradient(50% 70% at 50% 0%,color-mix(in srgb,var(--gilt) 11%,transparent),transparent 72%),linear-gradient(color-mix(in srgb,var(--raised) 70%,transparent),var(--sunken))}
+.podium .pod{gap:0}
+.pod-card{display:flex;flex-direction:column;align-items:center;gap:.125rem;width:100%;max-width:13rem;min-width:0;padding:1rem .75rem .875rem;border-radius:10px;background:var(--raised);border:1px solid var(--b-sub);box-shadow:0 8px 20px rgb(0 0 0/.3)}
+.pod-1 .pod-card{border-color:color-mix(in srgb,var(--gilt) 40%,var(--b-sub))}
+.podium .pod-f{margin-bottom:.5rem}
+.podium .pod-n{font-size:.9375rem;line-height:1.25rem;white-space:normal;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.podium .pod-v{font-size:1.375rem;line-height:1.75rem;font-weight:600;color:var(--text)}
+.podium .pod-b,.podium .pod-1 .pod-b,.podium .pod-2 .pod-b,.podium .pod-3 .pod-b{margin-top:.75rem;place-items:center;padding:0;border-radius:6px 6px 0 0;border:1px solid var(--b-sub);border-bottom:0;color:var(--ter);font-size:1.5rem;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--text) 8%,var(--sunken)),var(--sunken));box-shadow:inset 0 1px 0 rgb(255 255 255/.06)}
+.podium .pod-1 .pod-b{height:6.5rem;color:var(--gilt)}.podium .pod-2 .pod-b{height:4.5rem}.podium .pod-3 .pod-b{height:3.25rem}
+.podium .pod-1 .pod-f{box-shadow:0 0 0 2px var(--raised),0 0 0 3.5px var(--cc),0 0 20px 2px color-mix(in srgb,var(--gilt) 30%,transparent)}
+:root[data-theme="light"] .pod-card{box-shadow:0 6px 16px rgb(80 50 30/.12)}
+@media (hover:hover) and (pointer:fine){.podium .pod:hover .pod-card{border-color:var(--b-def)}}
+@media (max-width:640px){.podium{gap:.375rem;padding:1rem .5rem 0}.pod-card{padding:.75rem .375rem .625rem}.podium .pod-n{font-size:.8125rem}.podium .pod-v{font-size:1rem;line-height:1.375rem}
+  .podium .pod-1 .pod-b{height:4.5rem}.podium .pod-2 .pod-b{height:3.25rem}.podium .pod-3 .pod-b{height:2.25rem}.podium .pod-b{font-size:1.125rem!important}}
+/* Page moves (view transitions): a quick crossfade, and the tapped name gliding into place */
+::view-transition-old(root){animation-duration:140ms}
+::view-transition-new(root){animation-duration:260ms;animation-delay:40ms}
+::view-transition-group(vt-name){animation-duration:420ms;animation-timing-function:cubic-bezier(.32,.72,0,1)}
+@media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
+.ch-nm{display:inline}
+/* Guild History as a chronicle */
+.chron{display:flex;flex-direction:column;margin-top:.5rem}
+.chr-day{display:grid;grid-template-columns:9.5rem minmax(0,1fr);gap:1.75rem;padding:1.25rem 0 1rem;border-top:1px solid var(--sep)}
+.chr-when{position:sticky;top:5rem;align-self:start}
+.chr-when b{display:block;font:400 1.375rem/1.2 var(--display);color:var(--gilt)}
+.chr-when span{display:block;margin-top:.125rem;font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ter)}
+.chr-ents{display:flex;flex-direction:column;min-width:0}
+.chr-row{border-top:0;padding:.375rem 0;color:var(--sec)}
+.chr-big{display:grid;grid-template-columns:3.25rem minmax(0,1fr);gap:1rem;align-items:center;margin:.375rem 0 .5rem;padding:.875rem 1rem;border-radius:4px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--gilt) 12%,transparent),transparent 85%);border-block:1px solid color-mix(in srgb,var(--gilt) 35%,transparent)}
+.chr-big .ea-pic{width:3.25rem;height:3.25rem;color:var(--gilt)}.chr-big .ea-pic svg{width:100%;height:100%;display:block}
+.chr-big h3{font-size:1.25rem;line-height:1.625rem;color:var(--text);text-wrap:pretty}
+.chr-big h3 b{font-weight:400}
+.chr-more{padding:1rem 0;border-top:1px solid var(--sep);display:flex;justify-content:center}
+.chron .hist-mark{margin:.25rem 0}
+@media (max-width:720px){.chr-day{grid-template-columns:minmax(0,1fr);gap:.5rem}.chr-when{position:static;display:flex;align-items:baseline;gap:.625rem}.chr-when b{font-size:1.25rem}
+  .chr-big{grid-template-columns:2.5rem minmax(0,1fr);gap:.75rem;padding:.75rem}.chr-big .ea-pic{width:2.5rem;height:2.5rem}.chr-big h3{font-size:1.0625rem;line-height:1.4}}
+/* The front page's guild header */
+.gh{flex-direction:column;align-items:center;text-align:center;gap:.75rem;position:relative;isolation:isolate;padding:1rem 0 1.25rem}
+.gh::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:50%;top:-2.5rem;width:min(44rem,100%);height:calc(100% + 2rem);transform:translateX(-50%);
+  background:radial-gradient(45% 60% at 50% 25%,rgb(165 13 44/.32),transparent 75%),radial-gradient(22% 35% at 50% 25%,color-mix(in srgb,var(--gilt) 12%,transparent),transparent 75%)}
+:root[data-theme="light"] .gh::before{background:radial-gradient(45% 60% at 50% 25%,rgb(165 13 44/.1),transparent 75%)}
+.page-head.gh>div.gh-id{display:flex;flex-direction:column;align-items:center;gap:.625rem;min-width:0}
+.gh-crest{width:6rem;height:6rem;filter:drop-shadow(0 6px 18px rgb(0 0 0/.5))}
+.gh-txt{display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:0}
+.gh h1{font-size:3.25rem;line-height:3.5rem;letter-spacing:.01em}
+.gh-orn{display:flex;align-items:center;gap:.75rem;width:min(26rem,100%);color:var(--gilt)}
+.gh-orn::before,.gh-orn::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gilt-deep))}.gh-orn::after{transform:scaleX(-1)}
+.gh-orn span{font:400 .8125rem "Marcellus SC",var(--display);letter-spacing:.18em;white-space:nowrap}
+.gh-week{margin:.25rem 0 0;color:var(--sec);font-size:1rem;text-wrap:balance}.gh-week b{color:var(--text);font-weight:600}
+.gh-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem}
+.gh-chip{display:inline-flex;align-items:center;gap:.5rem;padding:.3125rem .75rem;border-radius:999px;border:1px solid var(--sep);background:color-mix(in srgb,var(--raised) 70%,transparent);font-size:.8125rem;color:var(--sec)}
+.gh-dot{width:.5rem;height:.5rem;border-radius:50%;background:#3fb950;box-shadow:0 0 8px #3fb950}
+.gh .sync-all{text-align:center}.gh .sync-all .row{justify-content:center}
+.gh-acts{justify-content:center}
+@media (max-width:640px){
+  /* Small on phones so the roster list stays near the top: crest beside the name, one line on the week. */
+  .gh{align-items:stretch;text-align:left;padding:.25rem 0 .5rem;gap:.625rem}.gh::before{left:0;transform:none;width:100%}
+  .page-head.gh>div.gh-id{flex-direction:row;align-items:flex-start;gap:.75rem}.gh-crest{width:3.25rem;height:3.25rem}
+  .gh-txt{align-items:flex-start;gap:.125rem}.gh h1{font-size:1.875rem;line-height:2.25rem}
+  .gh-orn,.gh-chips{display:none}.gh-week{font-size:.875rem;margin:0}
+  .gh .sync-all{text-align:left}.gh .sync-all .row{justify-content:flex-start}.gh-acts{justify-content:flex-start}}
+/* Dungeon loading screens: a faint strip on each row on computers, and the full scene across the top when it's open */
+.dg-item.has-art{position:relative;isolation:isolate}
+.dg-art{position:absolute;z-index:-1;inset:0 0 auto 0;height:100%;pointer-events:none;overflow:hidden}
+@media (min-width:901px){.dg-item.has-art:not(.open) .dg-art::before{content:"";position:absolute;inset:0 0 0 auto;width:46%;background:var(--art) 50% 45%/cover no-repeat;opacity:.3;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 70%);mask:linear-gradient(90deg,transparent,#000 70%)}}
+.dg-item.has-art.open .dg-art{height:17rem}
+.dg-item.has-art.open .dg-art::before{content:"";position:absolute;inset:0;background:var(--art) 50% 40%/cover no-repeat}
+.dg-item.has-art.open .dg-art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 25%,var(--raised) 98%),linear-gradient(90deg,color-mix(in srgb,var(--raised) 55%,transparent),transparent 65%)}
+.dg-item.has-art.open .dg-sum{background:none!important;padding-top:9.5rem;align-items:end}
+.dg-item.has-art.open .dg-name b{font:400 1.75rem/1.2 var(--display);text-shadow:0 2px 14px rgb(0 0 0/.7)}
+:root[data-theme="light"] .dg-item.has-art.open .dg-name b{text-shadow:0 1px 10px rgb(255 255 255/.8)}
+.dg-item.has-art.open .dg-detail{border-top:0;background:none}
+@media (max-width:640px){.dg-item.has-art.open .dg-art{height:12rem}.dg-item.has-art.open .dg-sum{padding-top:6.5rem}.dg-item.has-art.open .dg-name b{font-size:1.375rem}}
 </style>
 </head>
 <body>
@@ -2190,6 +2295,9 @@ function birthdayBanner(){const d=dayKey(Date.now()),b=birthdays().find(x=>dayKe
 // A short dated list of changes to the site, newest first. The header button gets a red dot when there's something
 // newer than the last time this browser looked; "Got it" clears it. Add a line here with each update.
 const WHATS_NEW=[
+  ["2026-11-28","Dungeon art","Every dungeon on Dungeons and Raids now shows its loading screen. Open one to see the whole scene across the top.","#lfg"],
+  ["2026-11-28","A real passport","Your Dungeon Passport is now a little book: each clear is an ink stamp with the date, and the faces of who you ran with sit underneath.","#roster"],
+  ["2026-11-28","The guild's story","Guild History reads day by day now, with the big moments (firsts, milestones, level 60s) written up larger.","#history"],
   ["2026-11-27","Dungeon buddies","Clear three dungeons with the same guildie and you're dungeon buddies: a badge on both your Passports. Records has a new Best Duos board for the pairs who've run the most together.","#records"],
   ["2026-11-27","Who did you run with?","Stamp a dungeon in your Passport and pick who was with you: they get the stamp too, and their faces sit under it. Your page shows who you run with most. Tagged by mistake? Tap the stamp and choose Not me.","#roster"],
   ["2026-11-27","Titles you keep","Once you've held a title, it's yours to show. On your character page, pick which title sits by your name: one you hold now, a former one (shown as Former Speed Demon), or none.","#records"],
@@ -2430,8 +2538,13 @@ function rosterDetail(m){
       )))}
 function viewRoster(){
   const my=me(),u=S.ui;
-  const head=h("div",{class:"page-head ph-logo"},h("div",{class:"ph-id"},h("img",{class:"ph-mark",src:"logo.svg",alt:"",width:"56",height:"56"}),h("div",{},h("h1",{},"Roster"),armoryAllLine())),
-    h("div",{class:"row"},
+  // The front page opens on the guild itself: the crest, the name, and one line on how the week is going.
+  const head=h("div",{class:"page-head gh"},h("div",{class:"gh-id"},h("img",{class:"gh-crest",src:"logo.svg",alt:"",width:"96",height:"96"}),
+      h("div",{class:"gh-txt"},h("h1",{},"Blood and Tears"),h("div",{class:"gh-orn"},h("span",{},"Horde \u00b7 WoW Forever")),h("p",{class:"gh-week"},weekHeadline()),
+        h("div",{class:"gh-chips"},(()=>{const hot=S.members.filter(m=>Date.now()-Date.parse(seenOf(m)||"")<36e5).length,dc=S.widget?Math.max(+S.widget.presence_count||0,(S.widget.members||[]).length):0;
+          return[hot?h("span",{class:"gh-chip"},h("i",{class:"gh-dot"}),hot+" on in the last hour"):null,dc?h("span",{class:"gh-chip"},dc+" on Discord"):null,h("span",{class:"gh-chip"},S.members.filter(m=>memberState(m)!=="former").length+" characters")]})()),
+        armoryAllLine())),
+    h("div",{class:"row gh-acts"},
       isOfficer()?h("button",{class:"btn ghost",onclick:()=>openEdit(null,{})},"Add someone else"):null,
       // Characters come from the guild list; only officers add one by hand (so nobody can pad the roster).
       my?[isOfficer()?h("button",{class:"btn",onclick:()=>openEdit(null,{self:true})},"Add another character"):null,h("a",{class:"btn primary",href:`#char/members/${my.id}`},"My character")]
@@ -2603,19 +2716,37 @@ function passportCard(m){
         rest.length?h("p",{style:"margin:0"},h("span",{class:"ter"},bud.length?"Also runs with ":"Runs most with "),rest.map((x,i)=>[i?", ":"",h("a",{href:`#char/members/${x.m.id}`},nameOf(x.m)),h("span",{class:"ter"}," \u00d7"+x.n)])):null):null})(),
     spelunkers(m,by,can),
     whereFrom("Three places: the dungeons ticked here, the guild scribe (the in-game addon) when it sees the guild finish one, and loot that only one dungeon drops, once the armory shows it being worn. The armory can't see what you've run, so tick any it missed. A Spelunker set lands on the card once every dungeon in it is stamped."),
-    h("div",{class:"pass-grid"},shownDungeons(m,by).map(([n,r])=>{const x=by.get(n),mine=!!(m.cleared&&m.cleared[n]);
+    passBook(shownDungeons(m,by).map(([n,r])=>{const x=by.get(n),mine=!!(m.cleared&&m.cleared[n]);
       // A dungeon stamped from loot looks like any other stamp; the line under it says which item did it.
       const loot=x&&x.via==="loot",cls="pass-st"+(x?" on":""),tip=loot?n+": stamped automatically, from "+x.item+" ("+x.boss+")":n;
       const crew=x?crewAt(m,n):[];
-      const kids=[h("span",{class:"pass-seal","aria-hidden":"true"},dungAbbr(n)),h("b",{},n),
-        h("small",{},loot?["Looted: ",itemRef(x.item,x.itemRef)]:x?(x.at?"Cleared "+dayMonth(x.at):"Cleared"):"Levels "+r),
+      const kids=[x?inkStamp(n,x.at):h("span",{class:"pass-seal","aria-hidden":"true"},dungAbbr(n)),h("b",{},n),
+        loot?h("small",{},"Looted: ",itemRef(x.item,x.itemRef)):x?null:h("small",{},"Levels "+r),
         crew.length?h("span",{class:"pass-crew","aria-label":"With "+crew.map(c=>nameOf(c.m)).join(", ")},crew.slice(0,3).map(c=>crewFace(c.m)),crew.length>3?h("i",{},"+"+(crew.length-3)):null):null];
       return can&&!loot?h("button",{type:"button",class:cls,"aria-pressed":String(!!x),title:x?n+": who was there?":"Stamp "+n,onclick:()=>{
           if(x)return runDialog(m,n,false);
-          const c={...(m.cleared||{}),[n]:nowIso()};write(updateDoc(charRef(m),{cleared:c,updatedAt:nowIso()}));m.cleared=c;runDialog(m,n,true)}},...kids)
+          justStamped=[n,Date.now()];const c={...(m.cleared||{}),[n]:nowIso()};write(updateDoc(charRef(m),{cleared:c,updatedAt:nowIso()}));m.cleared=c;runDialog(m,n,true)}},...kids)
         :h("div",{class:cls,title:tip},...kids)})),
     S.ui.passAll||DUNGEONS.length>shownDungeons(m,by).length?h("div",{},h("button",{class:"btn sm ghost",type:"button","aria-expanded":String(!!S.ui.passAll),onclick:()=>setUi({passAll:!S.ui.passAll})},
       S.ui.passAll?"Show fewer":"Show all "+DUNGEONS.length)):null)}
+// The passport as a little book: cream pages in a leather cover, 12 stamps to a page, two pages side by side when
+// there's room. Each clear is an ink stamp, tilted and inked by the dungeon's name so it always looks the same.
+const PASS_PER_PAGE=12;
+let justStamped=null;
+function passBook(stamps){
+  const pages=[];for(let i=0;i<stamps.length;i+=PASS_PER_PAGE)pages.push(stamps.slice(i,i+PASS_PER_PAGE));
+  return h("div",{class:"pp-book"},pages.map((l,i)=>h("div",{class:"pp-page"},h("div",{class:"pass-grid"},l),h("span",{class:"pp-n","aria-hidden":"true"},"\u2014 "+(i+1)+" \u2014"))))}
+const PP_INK=["#8e1b22","#1d3a6e","#2d5a2a","#4a2370"];
+const ppHash=n=>{let x=0;for(const c of n)x=(x*31+c.charCodeAt(0))>>>0;return x};
+function inkStamp(n,at){
+  const k=ppHash(n),rot=(k%19)-9,ink=PP_INK[(k>>>3)%PP_INK.length],d=Date.parse(at||"");
+  const date=d?new Date(d+8*36e5).toLocaleDateString("en-AU",{day:"numeric",month:"short",timeZone:"UTC"}).toUpperCase():"CLEARED";
+  const el=h("span",{class:"pass-seal pp-ink"+(justStamped&&justStamped[0]===n&&Date.now()-justStamped[1]<2500?" thunk":""),"aria-hidden":"true",style:`--ink:${ink};--rot:${rot}deg`});
+  el.innerHTML=`<svg viewBox="0 0 100 100" fill="none" stroke="currentColor"><circle cx="50" cy="50" r="46" stroke-width="3"/><circle cx="50" cy="50" r="40" stroke-width="1.2"/>`+
+    `<path d="M14 50h7M79 50h7" stroke-width="1.5"/><text x="50" y="${dungAbbr(n).length>3?54:56}" text-anchor="middle" fill="currentColor" stroke="none" font-family="Marcellus,Georgia,serif" font-size="${dungAbbr(n).length>3?19:23}">${dungAbbr(n)}</text>`+
+    `<text x="50" y="72" text-anchor="middle" fill="currentColor" stroke="none" font-family="Figtree,sans-serif" font-weight="700" font-size="9" letter-spacing="1.5">${date}</text>`+
+    `<text x="50" y="31" text-anchor="middle" fill="currentColor" stroke="none" font-size="9">\u2605</text></svg>`;
+  return el}
 // By default: what they've cleared, plus the dungeons right for their level now (or the next few if none are),
 // so the passport doesn't fill the page with 35 empty stamps.
 function shownDungeons(m,by){
@@ -2675,6 +2806,20 @@ function siteUse(){
       h("div",{class:"total"},h("b",{},String(visited.length)),h("span",{},"opened the site this week"))),
     free.length?h("p",{class:"small ter",style:"margin:0"},"Not claimed yet: ",free.slice(0,8).map((m,i)=>[i?", ":"",charLink(m)]),free.length>8?" and "+(free.length-8)+" more":""):null,
     h("h3",{class:"gt-eb",style:"margin:.25rem 0 0"},"Page opens"),viewsTable())}
+
+/* ---------- The front page's week line ---------- */
+// "This week: 12 dings, 2 epics and Scholomance cleared." Counted from everyone's history over the last seven days.
+function weekHeadline(){
+  const since=Date.now()-7*864e5,inWk=at=>Date.parse(at||"")>=since;let dings=0,epics=0,blues=0;const clears=new Set();
+  for(const m of S.members)for(const j of Array.isArray(m.journey)?m.journey:[]){if(!j||!inWk(j.at))continue;const t=String(j.t||"");
+    if(/^Reached level \d+/.test(t))dings++;else if(/^Equipped /.test(t)&&j.item){if(+j.item.q>=4)epics++;else if(+j.item.q===3)blues++}
+    else if(/^Finished /.test(t)&&DUNGEONS.some(d=>d[0]===t.slice(9)))clears.add(t.slice(9))}
+  for(const m of S.members)for(const[d,at]of Object.entries(m.cleared||{}))if(inWk(at))clears.add(d);
+  const wk=weekMoves(),crowns=wk?wk.list.filter(e=>e.kind==="crown").length:0;
+  const bits=[dings?[h("b",{},dings+(dings===1?" ding":" dings"))]:null,epics?[h("b",{},epics+(epics===1?" epic":" epics"))]:blues?[h("b",{},blues+(blues===1?" new blue":" new blues"))]:null,
+    crowns?[h("b",{},crowns===1?"a new top spot":crowns+" new top spots")]:null,clears.size===1?[h("b",{},[...clears][0])," cleared"]:clears.size?[h("b",{},clears.size+" dungeons")," cleared"]:null].filter(Boolean);
+  if(!bits.length)return"A quiet week so far.";
+  return["This week: ",...bits.flatMap((b,i)=>[i?(i===bits.length-1?" and ":", "):"",...b]),"."]}
 
 /* ---------- In game today ---------- */
 // The latest level-ups across the guild (from everyone's journey), newest first.
@@ -2920,10 +3065,11 @@ const ic=(n,cls)=>{const e=h("span",{class:"ic"+(cls?" "+cls:""),"aria-hidden":"
 // Each kind draws itself in the first time it shows this visit; after that (and with reduced motion) it just sits there.
 const EA={scroll:`<path d="M15 11h21a3 3 0 0 1 3 3v21"/><path d="M15 11a4 4 0 0 0-4 4v2h7v-2a4 4 0 0 0-3-4"/><path d="M18 17v20a4 4 0 0 0 4 4h17a4 4 0 0 0 4-4v-2H26v2a4 4 0 0 1-4 4"/><path d="M23 19h10M23 25h10M23 31h6"/>`,moon:`<path d="M27 9a14 14 0 1 0 12 22A12 12 0 0 1 27 9z"/><path d="M36 8v5M33.5 10.5h5M41 19v3M39.5 20.5h3"/>`,podium:`<path d="M6 41h36M9 41V31h10M19 41V25h10v16M29 41V35h10v6"/><path d="M24 8l1.9 3.9 4.3.6-3.1 3 .7 4.2-3.8-2-3.8 2 .7-4.2-3.1-3 4.3-.6z"/>`,flask:`<path d="M20 7h8M21.5 7v11L12 35.5A3.5 3.5 0 0 0 15 41h18a3.5 3.5 0 0 0 3-5.5L26.5 18V7"/><path d="M15.5 30h17"/><path d="M22 35h.01M27 33.5h.01"/>`,compass:`<circle cx="24" cy="24" r="15"/><path d="M30.5 17.5l-4 9-9 4 4-9z"/><path d="M24 5v3M24 40v3M5 24h3M40 24h3"/>`,hourglass:`<path d="M13 7h22M13 41h22"/><path d="M16 7c0 9 7 11 7 17s-7 8-7 17M32 7c0 9-7 11-7 17s7 8 7 17"/><path d="M20 37c1.5-2 2.6-3 4-3s2.5 1 4 3"/>`,peak:`<path d="M5 40l13-19 6 8 7-11 12 22z"/><path d="M31 18V8l7 2.5-7 2.5"/>`,banner:`<path d="M13 6v36"/><path d="M13 9h22l-5 7 5 7H13"/><path d="M9 42h8"/>`,hammer:`<path d="M25 21L9.5 36.5a3 3 0 0 0 4.2 4.2L29 25"/><path d="M21 17l9-9 9 9-3 3-3-1.5-3.5 3.5 1.5 3-3 3z"/>`,trophy:`<path d="M16 8h16v9a8 8 0 0 1-16 0z"/><path d="M16 11h-5v2a6 6 0 0 0 6 6M32 11h5v2a6 6 0 0 1-6 6"/><path d="M24 25v7M19 32h10v6H19zM16 41h16"/>`,swords:`<path d="M10 10l21 21M27 35l8-8M31 31l7 7M38 10L17 31M13 27l8 8M17 31l-7 7"/>`,chest:`<rect x="8" y="20" width="32" height="19" rx="2"/><path d="M8 20a8 8 0 0 1 8-8h16a8 8 0 0 1 8 8M8 26h32"/><path d="M21.5 23h5v7h-5z"/>`,door:`<path d="M12 41V20a12 12 0 0 1 24 0v21"/><path d="M8 41h32"/><path d="M24 8v33"/><path d="M20.5 28h.01M27.5 28h.01"/>`};
 const eaDrawn=new Set();
-function emptyArt(kind,text,style){
+function emptyArt(kind,text,style){return h("div",{class:"empty-art",style:style||null},eaPic(kind),typeof text==="string"?h("p",{class:"empty"},text):text)}
+function eaPic(kind){
   const pic=h("span",{class:"ea-pic","aria-hidden":"true"});pic.innerHTML=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${EA[kind]||""}</svg>`;
   if(!eaDrawn.has(kind)){eaDrawn.add(kind);pic.classList.add("draw");pic.querySelectorAll("path,circle,rect").forEach(e=>e.setAttribute("pathLength","1"))}
-  return h("div",{class:"empty-art",style:style||null},pic,typeof text==="string"?h("p",{class:"empty"},text):text)}
+  return pic}
 // A dozen slow embers drifting up behind the page (dark theme only; hidden with reduced motion).
 (()=>{const e=document.createElement("div");e.className="embers";e.setAttribute("aria-hidden","true");
   for(let i=0;i<12;i++){const s=document.createElement("i");s.style.left=(4+Math.random()*92)+"%";s.style.setProperty("--dx",(Math.random()*60-20)+"px");
@@ -3302,7 +3448,8 @@ function feedItems(){
   // Guild firsts get their own line (not the "by" ones: those happened before the site saw them).
   for(const[k]of FIRSTS){const f=(S.firsts||{})[k],m=f&&!f.by&&memberById(f.id);if(!m)continue;
     push(f.at,[who(m),k.startsWith("lv")?" was first in the guild to level "+k.slice(2):k==="blue"||k==="epic"?[" found the guild's first "+(k==="epic"?"epic":"blue")+", ",f.item&&f.item.id?qLink(f.item):""]
-      :k==="pvp"?" got the guild's first PvP rank":k==="hk100"?" was first to 100 honourable kills":" was first to 300 in "+(f.note||"a profession")],"title",m)}
+      :k==="pvp"?" got the guild's first PvP rank":k==="hk100"?" was first to 100 honourable kills":" was first to 300 in "+(f.note||"a profession")],"title",m);
+    if(out.length&&out[out.length-1].t===Date.parse(f.at||""))out[out.length-1].big=k.startsWith("lv")?"peak":k==="blue"||k==="epic"?"chest":k==="pvp"||k==="hk100"?"swords":"hammer"}
   // Anniversaries: a month, three months, six months and a year (and on) in the guild.
   for(const m of S.members){if(memberState(m)==="former")continue;for(const a of annivsOf(m))push(new Date(a.at).toISOString(),[who(m)," has been in Blood and Tears ",h("b",{},a.l)],"guild",m)}
   for(const[what,n,at]of birthdays())push(new Date(at).toISOString(),[h("b",{},what==="guild"?"Blood and Tears":"The guild site"),what==="guild"?" turned "+yearsWord(n)+" old":" turned "+yearsWord(n)+" old"],"guild");
@@ -3311,7 +3458,7 @@ function feedItems(){
     for(let n=1;n<=5;n++){const at=plusMonths(t,12*n);if(at>Date.now())break;
       push(new Date(at).toISOString(),[(n===1?"A year":yearsWord(n))+" ago today, ",who(m),k.startsWith("lv")?" was first in the guild to level "+k.slice(2):k==="blue"||k==="epic"?" found the guild's first "+(k==="epic"?"epic":"blue"):k==="pvp"?" got the guild's first PvP rank":k==="hk100"?" was first to 100 honourable kills":" was first to 300 in "+(f.note||"a profession")],"title",m)}}
   // Guild milestones (not ones already passed when they were first counted; the first epic and 60 have their firsts line).
-  for(const[k,v]of Object.entries(S.milestones||{})){const x=msInfo(k,v);if(x&&!x.by&&x.feed)push(x.at,[h("b",{},"Blood and Tears"),x.feed],"title")}
+  for(const[k,v]of Object.entries(S.milestones||{})){const x=msInfo(k,v);if(x&&!x.by&&x.feed){push(x.at,[h("b",{},"Blood and Tears"),x.feed],"title");if(out.length)out[out.length-1].big="trophy"}}
   return out.filter(x=>x.t<=Date.now()+6e4).sort((a,b)=>b.t-a.t)}
 /* ---------- Guild news ticker and the big firsts ---------- */
 // Headlines along the top of every page: only the big moments of the last few days (epics, guild firsts, 50s and 60s,
@@ -3455,10 +3602,16 @@ function viewHistory(){
     // One fold per day: today is open (or the latest day, if nothing has happened today), the rest are rolled up.
     // Days opened or closed by hand stay that way while the page updates. The toggle compares with what's saved now,
     // not what was saved when the fold was drawn, so closing then reopening without a redraw is remembered too.
-    days.length?h("section",{class:"card hist-days"},days.map(([l,list],i)=>{const open=S.ui.histOpen&&l in S.ui.histOpen?S.ui.histOpen[l]:(l==="Today"||(i===0&&days[0][0]!=="Today"&&!days.some(d=>d[0]==="Today")));
-      return h("details",{class:"hist-day",open:open||null,ontoggle:e=>{if(e.target.open!==(S.ui.histOpen&&l in S.ui.histOpen?S.ui.histOpen[l]:open))S.ui.histOpen={...(S.ui.histOpen||{}),[l]:e.target.open}}},
-        h("summary",{},h("h2",{},l),(c=>h("span",{class:"small ter"},c+(c===1?" thing":" things")))(list.reduce((t,x)=>t+(x.n||1),0))),
-        list.map(x=>[mark(x),h("div",{class:"hist-row"},h("span",{style:"min-width:0"},x.parts),h("span",{class:"small ter",style:"white-space:nowrap"},time(x.t)))]))}))
+    // The chronicle: one stretch per day, the day in the margin, the big moments (firsts, guild milestones, level 60s)
+    // written up larger with a drawing. A week shows to start; older days load a fortnight at a time.
+    days.length?(()=>{const n=Math.max(7,+S.ui.histDays||7),shown=days.slice(0,n);
+      const when=list=>{const d=new Date(list[0].t),l=label(list[0].t);return[l==="Today"||l==="Yesterday"?l:d.toLocaleDateString("en-AU",{weekday:"long"}),d.toLocaleDateString("en-AU",{day:"numeric",month:"long"})]};
+      const isBig=x=>x.big||(x.k==="level"&&(x.bits||[x.bit]).some(v=>+v>=60));
+      return h("div",{class:"chron"},shown.map(([l,list])=>{const[w,dm]=when(list);
+        return h("section",{class:"chr-day","aria-label":w+", "+dm},h("div",{class:"chr-when","aria-hidden":"true"},h("b",{},w),h("span",{},dm)),
+          h("div",{class:"chr-ents"},list.map(x=>[mark(x),isBig(x)?h("div",{class:"chr-big"},eaPic(x.big||"peak"),h("div",{style:"min-width:0"},h("h3",{},x.parts),h("span",{class:"small ter"},time(x.t))))
+            :h("div",{class:"hist-row chr-row"},h("span",{style:"min-width:0"},x.parts),h("span",{class:"small ter",style:"white-space:nowrap"},time(x.t)))])))}),
+        days.length>n?h("div",{class:"chr-more"},h("button",{type:"button",class:"btn ghost",onclick:()=>setUi({histDays:n+14})},"Show earlier days")):null)})()
       :all.length?h("p",{class:"empty"},"Nothing matches. Try another character or show everything."):emptyArt("scroll","Nothing yet. Level up and it starts here.")]}
 
 /* ---------- Weekly recap ---------- */
@@ -3618,7 +3771,9 @@ function rangeBoard(){
       // The dungeon's level range on a track, with a dot for everyone in the guild inside the window (lit if they fit, ringed if it's you).
       const track=h("span",{class:"dg-tr","aria-hidden":"true"},h("i",{class:"dg-tr-r",style:`left:${pos(r[0])}%;width:${pos(r[1])-pos(r[0])}%`}),
         cur.map(m=>{const lv=+m.level||1,inr=lv>=r[0]&&lv<=r[1];return h("b",{class:"dg-dot"+(inr?" in":"")+(isMine(m)?" me":""),style:`left:${pos(lv)}%;--cc:${CLASSES[m.cls]||"#bfaea9"}`,title:nameOf(m)+" "+lv})}));
-      return h("div",{class:"dg-item"+(open?" open":"")+(mine?" need":""),style:"--o:0"},
+      const art=dgArt(o.name);
+      return h("div",{class:"dg-item"+(open?" open":"")+(mine?" need":"")+(art?" has-art":""),style:"--o:0"+(art?`;--art:url("${art}")`:"")},
+        art?h("span",{class:"dg-art","aria-hidden":"true"}):null,
         h("div",{class:"dg-sum",onclick:e=>{if(!e.target.closest("a,button")){if(!open)openAnim("d:"+o.name);setUi({rangeD:open?"-":o.name},true)}}},
           h("button",{type:"button",class:"dg-name","aria-expanded":String(!!open),onclick:()=>{if(!open)openAnim("d:"+o.name);setUi({rangeD:open?"-":o.name},true)}},
             h("b",{},o.name),h("span",{class:"small ter"},"Levels "+o.range),DG_ALLIANCE.includes(o.name)?h("span",{class:"tag",title:"An Alliance-side dungeon. Horde can run it, but it's a trek to get to, and it doesn't count toward the Horde Spelunker achievement or give Legacy points."},"Alliance · no Legacy points"):null,mine?h("span",{class:"dg-you",title:"One of your characters is the right level and hasn't been"},"You need this"):null),
@@ -3631,6 +3786,16 @@ function rangeBoard(){
 // The game's Spelunker achievements (legacy points). Master is everything not in the first two.
 // Hall of Thanes and The Stockade are Alliance-side, so they don't count for us; the board folds them away at the bottom.
 const DG_ALLIANCE=["Hall of Thanes","The Stockade"];
+// Each dungeon's loading screen (public/art/dungeons): the classic ones from the Warcraft Wiki with the frame and logo
+// cropped off, WoW Forever's new ones from Conquest Capped. Wings of one place share a picture.
+const DG_ART={"Ragefire Chasm":"ragefire","Hall of Thanes":"thanes","Ruins of Lordaeron":"lordaeron","Wailing Caverns":"wailing","The Deadmines":"deadmines",
+  "Shadowfang Keep":"shadowfang","Blackfathom Deeps":"blackfathom","The Stockade":"stockade","Excavation Site: Wetlands":"excavation","City of Dalaran":"dalaran",
+  "Razorfen Kraul":"kraul","Gnomeregan":"gnomeregan","Scarlet Monastery: Graveyard":"scarlet-old","Scarlet Monastery: Library":"scarlet-old","The Drowned City":"drowned",
+  "Scarlet Monastery: Armory":"scarlet","Razorfen Downs":"downs","Scarlet Monastery: Cathedral":"scarlet","Krol'Dok Stronghold":"kroldok","Uldaman":"uldaman",
+  "Zul'Farrak":"zulfarrak","Maraudon":"maraudon","Alcaz Island Prison":"alcaz","Sunken Temple":"sunken","Blackrock Depths":"brd","Dire Maul: East":"diremaul",
+  "Lower Blackrock Spire":"spire","Blackmaw Hold":"blackmaw","Dire Maul: West":"diremaul","Dire Maul: North":"diremaul","Shaper's Terrace":"shapers",
+  "Stratholme: Living":"stratholme","Stratholme: Undead":"stratholme","Scholomance":"scholomance","Upper Blackrock Spire":"spire","Onyxia's Lair":"onyxia"};
+const dgArt=n=>DG_ART[n]?`art/dungeons/${DG_ART[n]}.jpg`:"";
 const DG_GROUPS=[["novice","Novice",["Ragefire Chasm","Ruins of Lordaeron","Wailing Caverns","The Deadmines","Shadowfang Keep","Excavation Site: Wetlands"],"Novice Spelunker"],
   ["experienced","Experienced",["City of Dalaran","Blackfathom Deeps","Gnomeregan","The Drowned City","Scarlet Monastery: Graveyard","Scarlet Monastery: Library",
     "Scarlet Monastery: Armory","Scarlet Monastery: Cathedral","Razorfen Kraul","Krol'Dok Stronghold"],"Experienced Spelunker"],
@@ -3856,8 +4021,9 @@ function recList(k,rows,fmt,n=3,total=0){const open=recOpen(k),top=open?rows:row
 // The top three on a podium: first in the middle and tallest, a face ringed in class colour, the number under it.
 function podium(rows,fmt){const seat=(r,i)=>{if(!r)return h("div",{class:"pod pod-empty"});const[m,v,pl]=r,cc=CLASSES[m.cls]||"#bfaea9";
     return h("a",{class:"pod pod-"+i+(isMine(m)?" me":""),href:`#char/${m.isAlt?"alts":"members"}/${m.id}`,style:`--cc:${cc}`,title:nameOf(m)+" · "+fmt(v)},
-      h("span",{class:"pod-f"},nameOf(m).split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase(),safePic(m.armory&&m.armory.avatar)?h("img",{class:"pod-pic",src:safePic(m.armory.avatar),alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.remove()}):null,h("span",{class:"pod-m"},medal(pl))),
-      h("span",{class:"pod-n"},nameOf(m).split(/\s+/)[0]),h("span",{class:"pod-v"},fmt(v)),h("span",{class:"pod-b","aria-hidden":"true"},String(pl)))};
+      // A card standing on its step: the step carries the place, so there's no medal on the face.
+      h("span",{class:"pod-card"},h("span",{class:"pod-f"},nameOf(m).split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase(),safePic(m.armory&&m.armory.avatar)?h("img",{class:"pod-pic",src:safePic(m.armory.avatar),alt:"",loading:"lazy",referrerpolicy:"no-referrer",onerror:e=>e.target.remove()}):null),
+        h("span",{class:"pod-n"},nameOf(m)),h("span",{class:"pod-v"},fmt(v))),h("span",{class:"pod-b"},h("span",{class:"visually-hidden"},ordinal(pl)+" place"),h("span",{"aria-hidden":"true"},String(pl))))};
   return h("div",{class:"podium"},seat(rows[1],2),seat(rows[0],1),seat(rows[2],3))}
 // The four main boards share one card with a switch. The title and who holds it sit above the list.
 function recBoards(){
@@ -4474,7 +4640,7 @@ function viewChar(coll,id){
               :av?fadeImg({class:"ch-card-face",src:av,alt:"",referrerpolicy:"no-referrer",onerror:e=>e.target.replaceWith(ini)}):h("span",{class:"ch-card-ini"},ini)),
             h("span",{class:"ch-card-lv"},String(m.level||1)));
           addTilt(c);return c})(),
-        h("div",{style:"display:flex;flex-direction:column;gap:.25rem;min-width:0"},h("h1",{},nameOf(m),streakOf(m)?flameEl(streakOf(m),"big"):null),
+        h("div",{style:"display:flex;flex-direction:column;gap:.25rem;min-width:0"},h("h1",{},h("span",{class:"ch-nm"},nameOf(m)),streakOf(m)?flameEl(streakOf(m),"big"):null),
           h("p",{class:"sub"},[classLine(m),roleText(m),"Level "+(m.level||1)].filter(Boolean).join(" · ")),
           h("span",{class:"ch-lvbar",style:`--cc:${cc}`,"aria-hidden":"true"},h("i",{style:`width:${Math.min(100,Math.round((+m.level||1)/60*100))}%`})),(()=>{const t=shownTitle(m);return t&&t.past?h("div",{class:"titles"},h("a",{class:"title-tag past",href:"#records",title:"Held "+t.t.replace(/^Former /,"")+" before"},h("span",{class:"title-ic","aria-hidden":"true"}),t.t)):null})(),titleTags(m),titleChooser(m),firstTags(m),
           h("p",{class:"small ter"},seenOf(m)?"Last seen in game "+ago(seenOf(m))+" · ":"","Updated on the site "+(rel(m.updatedAt)||"—"))))),
@@ -5324,9 +5490,27 @@ if(DISCORD_SERVER_ID){loadWidget();setInterval(loadWidget,60000);document.addEve
 // Each page remembers how far down it was scrolled (in the browser's history entry), so Back returns to the same spot.
 let scrollSave=0;
 addEventListener("scroll",()=>{if(scrollSave)return;scrollSave=setTimeout(()=>{scrollSave=0;try{history.replaceState({...(history.state||{}),y:scrollY},"")}catch(e){}},150)},{passive:true});
+// Moving between a list and a character page: their name glides from the row up into the page's big heading, and
+// back again (the browser's view transitions). Everything else crossfades. Skipped with reduced motion, in browsers
+// without view transitions, and when the name you tapped isn't on screen.
+let lastHash=location.hash;
+const vtCharId=x=>{const m=/^#char\/(?:members|alts)\/([^/?#]+)/.exec(x||"");return m?m[1]:null};
+function vtNameIn(hash,name){
+  const seen=el=>{const r=el.getBoundingClientRect();return r.width>0&&r.bottom>0&&r.top<innerHeight};
+  for(const a of document.querySelectorAll("#app a[href]")){if(a.getAttribute("href")!==hash||!seen(a))continue;
+    const hit=[a,...a.querySelectorAll("*")].reverse().find(el=>el.childElementCount===0&&el.textContent.trim()===name);if(hit)return hit}
+  return null}
+const vtTag=el=>{el.style.viewTransitionName="vt-name";if(getComputedStyle(el).display==="inline")el.style.display="inline-block";return el};
 addEventListener("hashchange",()=>{podiumCard.t=null;if(/^#link\//.test(location.hash))return checkLinkHash();clearTimeout(scrollSave);scrollSave=0;
-  const y=history.state&&typeof history.state.y==="number"?history.state.y:0;render();
-  if(y)requestAnimationFrame(()=>scrollTo(0,y));else scrollTo(0,0)});
+  const y=history.state&&typeof history.state.y==="number"?history.state.y:0,prev=lastHash;lastHash=location.hash;
+  const go=()=>{render();scrollTo(0,y||0)};
+  const to=vtCharId(location.hash),from=vtCharId(prev),id=to||from;
+  const m=id&&[...S.members,...(S.alts||[])].find(x=>x.id===id),name=m&&nameOf(m);
+  const old=!document.startViewTransition||matchMedia("(prefers-reduced-motion: reduce)").matches||!name||(to&&from)?null
+    :to?vtNameIn(location.hash,name):document.querySelector(".ch-hero .ch-nm");
+  if(!old){render();if(y)requestAnimationFrame(()=>scrollTo(0,y));else scrollTo(0,0);return}
+  vtTag(old);
+  document.startViewTransition(()=>{go();const nw=to?document.querySelector(".ch-hero .ch-nm"):vtNameIn(prev,name);if(nw)vtTag(nw)});});
 if("scrollRestoration" in history)history.scrollRestoration="manual";
 // Pull down to refresh, for the site added to a phone's home screen (a browser tab has its own already). Pulling from
 // the very top shows a ring that fills as you pull; let go once it's full and the page reloads with the newest version.
