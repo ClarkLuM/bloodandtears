@@ -1941,6 +1941,23 @@ main .rl-col>section.totals .total:first-child{border-left:0;padding-left:0}
 :root[data-theme="light"] .dg-item.has-art.open .dg-name b{text-shadow:0 1px 10px rgb(255 255 255/.8)}
 .dg-item.has-art.open .dg-detail{border-top:0;background:none}
 @media (max-width:640px){.dg-item.has-art.open .dg-art{height:12rem}.dg-item.has-art.open .dg-sum{padding-top:6.5rem}.dg-item.has-art.open .dg-name b{font-size:1.375rem}}
+/* The passport turns like a book */
+.pp-wrap{display:flex;flex-direction:column;gap:.625rem}
+.pp-book{perspective:1800px}
+.pp-book.one{grid-template-columns:1fr}
+.pp-book.one .pp-page{border-radius:6px;box-shadow:inset 14px 0 18px -14px rgb(60 30 10/.4)}
+.pp-nav{display:flex;align-items:center;justify-content:center;gap:1rem}
+.pp-back{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;text-align:center;color:#6b4a2a}
+.pp-back img{width:5.5rem;height:5.5rem;opacity:.5;filter:sepia(.6) saturate(.6);mix-blend-mode:multiply}
+.pp-back b{font:400 1.375rem var(--display);color:#5b3d22}.pp-back span:not(.pp-n){font-size:.8125rem;color:#7a5f44}
+.pp-book.turn-next .pp-page:last-child{transform-origin:0 50%;animation:pp-turn-n .45s cubic-bezier(.32,.72,0,1) both}
+.pp-book.turn-prev .pp-page:first-child{transform-origin:100% 50%;animation:pp-turn-p .45s cubic-bezier(.32,.72,0,1) both}
+.pp-book.one.turn-prev .pp-page:first-child{transform-origin:0 50%}
+.pp-book.turn-next .pp-page:first-child:not(:last-child),.pp-book.turn-prev .pp-page:last-child:not(:first-child){animation:pp-fade .3s ease-out both}
+@keyframes pp-turn-n{from{transform:rotateY(-70deg);filter:brightness(.7)}to{transform:none;filter:none}}
+@keyframes pp-turn-p{from{transform:rotateY(70deg);filter:brightness(.7)}to{transform:none;filter:none}}
+@keyframes pp-fade{from{opacity:.4}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.pp-book .pp-page{animation:none!important}}
 </style>
 </head>
 <body>
@@ -2716,7 +2733,7 @@ function passportCard(m){
         rest.length?h("p",{style:"margin:0"},h("span",{class:"ter"},bud.length?"Also runs with ":"Runs most with "),rest.map((x,i)=>[i?", ":"",h("a",{href:`#char/members/${x.m.id}`},nameOf(x.m)),h("span",{class:"ter"}," \u00d7"+x.n)])):null):null})(),
     spelunkers(m,by,can),
     whereFrom("Three places: the dungeons ticked here, the guild scribe (the in-game addon) when it sees the guild finish one, and loot that only one dungeon drops, once the armory shows it being worn. The armory can't see what you've run, so tick any it missed. A Spelunker set lands on the card once every dungeon in it is stamped."),
-    passBook(shownDungeons(m,by).map(([n,r])=>{const x=by.get(n),mine=!!(m.cleared&&m.cleared[n]);
+    passBook(m,by,DUNGEONS.map(([n,r])=>{const x=by.get(n),mine=!!(m.cleared&&m.cleared[n]);
       // A dungeon stamped from loot looks like any other stamp; the line under it says which item did it.
       const loot=x&&x.via==="loot",cls="pass-st"+(x?" on":""),tip=loot?n+": stamped automatically, from "+x.item+" ("+x.boss+")":n;
       const crew=x?crewAt(m,n):[];
@@ -2726,16 +2743,35 @@ function passportCard(m){
       return can&&!loot?h("button",{type:"button",class:cls,"aria-pressed":String(!!x),title:x?n+": who was there?":"Stamp "+n,onclick:()=>{
           if(x)return runDialog(m,n,false);
           justStamped=[n,Date.now()];const c={...(m.cleared||{}),[n]:nowIso()};write(updateDoc(charRef(m),{cleared:c,updatedAt:nowIso()}));m.cleared=c;runDialog(m,n,true)}},...kids)
-        :h("div",{class:cls,title:tip},...kids)})),
-    S.ui.passAll||DUNGEONS.length>shownDungeons(m,by).length?h("div",{},h("button",{class:"btn sm ghost",type:"button","aria-expanded":String(!!S.ui.passAll),onclick:()=>setUi({passAll:!S.ui.passAll})},
-      S.ui.passAll?"Show fewer":"Show all "+DUNGEONS.length)):null)}
+        :h("div",{class:cls,title:tip},...kids)})))}
 // The passport as a little book: cream pages in a leather cover, 12 stamps to a page, two pages side by side when
 // there's room. Each clear is an ink stamp, tilted and inked by the dungeon's name so it always looks the same.
 const PASS_PER_PAGE=12;
 let justStamped=null;
-function passBook(stamps){
+// Like a real book it shows one spread at a time (one page on a phone) and you turn the pages. It opens where you're
+// up to: the page with the first dungeon right for your level that isn't stamped yet. The book always has an even
+// number of pages; a spare last page gets the guild crest and a tally, like the back page of a passport.
+const ppOne=matchMedia("(max-width:720px)");ppOne.addEventListener("change",()=>{if(typeof schedule==="function")schedule()});
+function passBook(m,by,stamps){
   const pages=[];for(let i=0;i<stamps.length;i+=PASS_PER_PAGE)pages.push(stamps.slice(i,i+PASS_PER_PAGE));
-  return h("div",{class:"pp-book"},pages.map((l,i)=>h("div",{class:"pp-page"},h("div",{class:"pass-grid"},l),h("span",{class:"pp-n","aria-hidden":"true"},"\u2014 "+(i+1)+" \u2014"))))}
+  if(pages.length%2)pages.push(null);
+  const one=ppOne.matches,step=one?1:2,lv=+m.level||1;
+  const want=DUNGEONS.findIndex(([n,r])=>{const[lo,hi]=String(r).split(/[–-]/).map(Number);return !by.has(n)&&lv>=lo-3&&lv<=(hi||lo)});
+  const last=DUNGEONS.map(d=>by.has(d[0])).lastIndexOf(true);
+  const st=S.ui.passPg&&S.ui.passPg.id===m.id?S.ui.passPg:null;
+  let at=st?st.p:Math.floor(Math.max(0,want>=0?want:last)/PASS_PER_PAGE);
+  at=Math.max(0,Math.min(pages.length-1,at));at-=at%step;
+  const turn=st&&st.dir&&Date.now()-st.t<600?" turn-"+st.dir:"";
+  const go=(d)=>{const p=at+d*step;if(p<0||p>=pages.length)return;S.ui.passPg={id:m.id,p,dir:d>0?"next":"prev",t:Date.now()};render()};
+  const page=(l,i)=>l?h("div",{class:"pp-page"},h("div",{class:"pass-grid"},l),h("span",{class:"pp-n","aria-hidden":"true"},"\u2014 "+(i+1)+" \u2014"))
+    :h("div",{class:"pp-page pp-back"},h("img",{src:"logo.svg",alt:"",width:"88",height:"88"}),h("b",{},"Blood and Tears"),h("span",{},by.size+" of "+DUNGEONS.length+" stamped"),h("span",{class:"pp-n","aria-hidden":"true"},"\u2014 "+(i+1)+" \u2014"));
+  const shown=pages.slice(at,at+step);
+  const label=one?"Page "+(at+1)+" of "+pages.length:"Pages "+(at+1)+"\u2013"+(at+2)+" of "+pages.length;
+  return h("div",{class:"pp-wrap"},
+    h("div",{class:"pp-book"+(one?" one":"")+turn},shown.map((l,i)=>page(l,at+i))),
+    h("div",{class:"pp-nav"},h("button",{type:"button",class:"btn sm ghost",disabled:at===0||null,"aria-label":"Previous page",onclick:()=>go(-1)},"\u2039 Back"),
+      h("span",{class:"small ter",role:"status"},label),
+      h("button",{type:"button",class:"btn sm ghost",disabled:at+step>=pages.length||null,"aria-label":"Next page",onclick:()=>go(1)},"Turn \u203a")))}
 const PP_INK=["#8e1b22","#1d3a6e","#2d5a2a","#4a2370"];
 const ppHash=n=>{let x=0;for(const c of n)x=(x*31+c.charCodeAt(0))>>>0;return x};
 function inkStamp(n,at){
@@ -2747,15 +2783,6 @@ function inkStamp(n,at){
     `<text x="50" y="72" text-anchor="middle" fill="currentColor" stroke="none" font-family="Figtree,sans-serif" font-weight="700" font-size="9" letter-spacing="1.5">${date}</text>`+
     `<text x="50" y="31" text-anchor="middle" fill="currentColor" stroke="none" font-size="9">\u2605</text></svg>`;
   return el}
-// By default: what they've cleared, plus the dungeons right for their level now (or the next few if none are),
-// so the passport doesn't fill the page with 35 empty stamps.
-function shownDungeons(m,by){
-  if(S.ui.passAll)return DUNGEONS;
-  const lv=+m.level||1,range=r=>{const[lo,hi]=String(r).split(/[–-]/).map(Number);return[lo,hi||lo]};
-  const near=([n,r])=>{const[lo,hi]=range(r);return lv>=lo-3&&lv<=hi};
-  let out=DUNGEONS.filter(d=>by.has(d[0])||near(d));
-  if(out.filter(d=>!by.has(d[0])).length<3)out=DUNGEONS.filter(d=>by.has(d[0])||near(d)||range(d[1])[0]>lv).filter((d,i,a)=>by.has(d[0])||near(d)||a.slice(0,i).filter(x=>!by.has(x[0])&&!near(x)).length<3);
-  return out}
 
 /* ---------- More menu ---------- */
 // The less common actions sit behind one button. Headings with nothing under them are dropped.
