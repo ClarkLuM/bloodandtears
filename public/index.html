@@ -5537,7 +5537,10 @@ addEventListener("hashchange",()=>{podiumCard.t=null;if(/^#link\//.test(location
     :to?vtNameIn(location.hash,name):document.querySelector(".ch-hero .ch-nm");
   if(!old){render();if(y)requestAnimationFrame(()=>scrollTo(0,y));else scrollTo(0,0);return}
   vtTag(old);
-  document.startViewTransition(()=>{go();const nw=to?document.querySelector(".ch-hero .ch-nm"):vtNameIn(prev,name);if(nw)vtTag(nw)});});
+  // The browser only runs the swap on its next frame. If no frame comes (a tab that isn't drawing), don't leave the old
+  // page up: after a moment, drop the animation and swap anyway. The guard stops it running twice.
+  let done=false;const swap=()=>{if(done)return;done=true;go();const nw=to?document.querySelector(".ch-hero .ch-nm"):vtNameIn(prev,name);if(nw)vtTag(nw)};
+  const t=document.startViewTransition(swap);setTimeout(()=>{if(!done){try{t.skipTransition()}catch(e){}swap()}},250);});
 if("scrollRestoration" in history)history.scrollRestoration="manual";
 // Pull down to refresh, for the site added to a phone's home screen (a browser tab has its own already). Pulling from
 // the very top shows a ring that fills as you pull; let go once it's full and the page reloads with the newest version.
