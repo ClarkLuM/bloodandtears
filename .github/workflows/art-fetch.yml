@@ -2,13 +2,19 @@ name: Fetch dungeon art (one-off)
 on:
   push:
     branches: [art-fetch]
+    paths: [tools/**, .github/**]
+permissions:
+  contents: write
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: python3 tools/fetch.py
-      - uses: actions/upload-artifact@v4
-        with:
-          name: art
-          path: out
+      - name: Shrink and save to the branch
+        run: |
+          mkdir -p art
+          for f in out/*.jpg out/*.png; do n=$(basename "${f%.*}"); convert "$f" -resize '1600x>' -strip -quality 82 "art/$n.jpg"; done
+          cp out/found.json art/
+          git config user.email noreply@anthropic.com; git config user.name "art fetch"
+          git add art && git commit -qm "Fetched art" && git push -q origin art-fetch
