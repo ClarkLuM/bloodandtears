@@ -10,11 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python3 tools/fetch.py
+      - run: pip install -q pillow && python3 tools/fetch.py
       - name: Shrink and save to the branch
         run: |
-          mkdir -p art
-          for f in out/*.jpg out/*.png; do n=$(basename "${f%.*}"); convert "$f" -resize '1600x>' -strip -quality 82 "art/$n.jpg"; done
+          python3 tools/shrink.py
           cp out/found.json art/
           git config user.email noreply@anthropic.com; git config user.name "art fetch"
           git add art && git commit -qm "Fetched art" && git push -q origin art-fetch
